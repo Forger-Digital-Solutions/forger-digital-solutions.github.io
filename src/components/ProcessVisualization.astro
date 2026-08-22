@@ -1,0 +1,90 @@
+---
+const steps = [
+  { step: "01", label: "IDEA" },
+  { step: "02", label: "BUILD" },
+  { step: "03", label: "TEST" },
+  { step: "04", label: "MEASURE" },
+  { step: "05", label: "LEARN" },
+  { step: "06", label: "EVOLVE" }
+];
+---
+
+<div class="process-container">
+  <div class="process-track">
+    {steps.map((item, index) => (
+      <div class="process-node">
+        <div class="node-box">
+          <span class="node-step">{item.step}</span>
+          <span class="node-label">{item.label}</span>
+        </div>
+        {index < steps.length - 1 && (
+          <div class="node-arrow" aria-hidden="true">→</div>
+        )}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .process-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem 0;
+  }
+
+  .process-track {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 640px;
+    gap: 0.5rem;
+  }
+
+  .process-node {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .node-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 0.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    position: relative;
+    transition: border-color 0.2s ease;
+  }
+
+  .node-box:hover {
+    border-color: var(--forge-orange);
+  }
+
+  .node-step {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+  }
+
+  .node-label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+  }
+
+  .node-arrow {
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    user-select: none;
+  }
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://forger-digital-solutions.github.io/sitemap-index.xml

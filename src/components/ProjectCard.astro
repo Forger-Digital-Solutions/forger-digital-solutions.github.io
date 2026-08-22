@@ -1,0 +1,165 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const isPrivate = project.status === "PRIVATE DEVELOPMENT";
+---
+
+<div class={`project-card ${project.isFlagship ? 'flagship-card' : ''}`}>
+  <div class="card-header">
+    <div class="category-meta">{project.category}</div>
+    <span class={`badge ${isPrivate ? 'badge-private' : ''}`}>
+      <span class="status-indicator"></span>
+      {project.status}
+    </span>
+  </div>
+
+  <h3 class="project-title">{project.name}</h3>
+  {project.subtitle && <p class="project-subtitle">{project.subtitle}</p>}
+
+  <p class="project-description">{project.description}</p>
+
+  <div class="tags-container">
+    {project.tags.map((tag) => (
+      <span class="tag">{tag}</span>
+    ))}
+  </div>
+
+  <div class="card-footer">
+    {project.githubUrl && (
+      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="card-link">
+        Source Repository ↗
+      </a>
+    )}
+    {project.websiteUrl && (
+      <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="card-link">
+        Live Application ↗
+      </a>
+    )}
+    {project.docsUrl && (
+      <a href={project.docsUrl} target="_blank" rel="noopener noreferrer" class="card-link">
+        Documentation ↗
+      </a>
+    )}
+    {!project.githubUrl && !project.websiteUrl && !project.docsUrl && (
+      <span class="card-note mono">// RESEARCH & DEVELOPMENT IN PROGRESS</span>
+    )}
+  </div>
+</div>
+
+<style>
+  .project-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card:hover {
+    border-color: var(--border-medium);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .flagship-card {
+    border-color: rgba(249, 115, 22, 0.35);
+    background: linear-gradient(180deg, rgba(249, 115, 22, 0.04) 0%, var(--bg-surface) 100%);
+  }
+
+  .flagship-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--forge-orange), var(--forge-amber));
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .project-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+  }
+
+  .project-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--forge-orange);
+    margin-bottom: 0.85rem;
+  }
+
+  .project-description {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .card-link {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    transition: color 0.2s ease;
+  }
+
+  .card-link:hover {
+    color: #fb923c;
+    text-decoration: underline;
+  }
+
+  .card-note {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+</style>

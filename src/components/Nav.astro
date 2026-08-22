@@ -1,0 +1,165 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<header class="navbar">
+  <div class="container nav-container">
+    <a href="/" class="brand">
+      <span class="brand-symbol">❖</span>
+      <span class="brand-text">FORGER <span class="brand-sub">DIGITAL SOLUTIONS</span></span>
+    </a>
+
+    <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+
+    <nav id="nav-menu" class="nav-links">
+      <a href="/projects" class="nav-link">Projects</a>
+      <a href="/lab" class="nav-link">Lab</a>
+      <a href="/technology" class="nav-link">Technology</a>
+      <a href="/certifications" class="nav-link">Certifications</a>
+      <a href="/about" class="nav-link">About</a>
+      <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="nav-link nav-external">
+        GitHub ↗
+      </a>
+      <a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer" class="btn btn-support nav-support-btn">
+        Support FDS
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(9, 13, 22, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1rem 0;
+  }
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+  }
+
+  .brand-symbol {
+    color: var(--forge-orange);
+    font-size: 1.25rem;
+  }
+
+  .brand-sub {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text-main);
+  }
+
+  .nav-external {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .nav-support-btn {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .mobile-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .icon-bar {
+    height: 2px;
+    width: 100%;
+    background-color: var(--text-main);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-toggle {
+      display: flex;
+    }
+
+    .nav-links {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-medium);
+      flex-direction: column;
+      align-items: stretch;
+      padding: 1.5rem;
+      gap: 1rem;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-links.is-active {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 0.5rem 0;
+    }
+
+    .nav-support-btn {
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+
+  if (toggleBtn && navMenu) {
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', (!isExpanded).toString());
+      navMenu.classList.toggle('is-active');
+    });
+  }
+</script>

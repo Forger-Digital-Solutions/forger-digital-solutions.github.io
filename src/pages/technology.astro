@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const techCategories = [
+  {
+    title: "Languages",
+    items: ["Python", "C#", ".NET", "TypeScript", "JavaScript", "PowerShell", "Luau"]
+  },
+  {
+    title: "AI & Intelligence",
+    items: [
+      "Custom AI Research",
+      "Model Training",
+      "Evaluation Systems",
+      "Curriculum Systems",
+      "Agentic Systems",
+      "Context Learning",
+      "Adaptive Compute"
+    ]
+  },
+  {
+    title: "Compute & Infrastructure",
+    items: [
+      "NVIDIA CUDA",
+      "AWS",
+      "Modal",
+      "Lightning AI",
+      "Kaggle / TPU",
+      "Local GPU infrastructure"
+    ]
+  }
+];
+---
+
+<BaseLayout title="Technology" description="Technical stack, languages, compute environments, and artificial intelligence tooling utilized across FDS projects.">
+  <div class="page-header">
+    <div class="container">
+      <span class="mono page-subtitle">// TECHNICAL STACK & INFRASTRUCTURE</span>
+      <h1>Technology</h1>
+      <p class="page-desc">
+        Overview of languages, AI research domains, and adaptive compute environments utilized across Forger Digital Solutions initiatives.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="disclaimer-banner">
+        <span class="mono note-label">NOTE:</span>
+        Utilization of specific tools, platforms, or hardware ecosystems reflects internal engineering workflows and does not imply direct commercial partnership or endorsement.
+      </div>
+
+      <div class="tech-grid">
+        {techCategories.map((cat) => (
+          <div class="tech-card">
+            <h3>{cat.title}</h3>
+            <ul class="tech-list">
+              {cat.items.map((item) => (
+                <li class="tech-item">
+                  <span class="bullet">▹</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 4rem 0 2rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.05) 0%, transparent 60%);
+  }
+
+  .page-subtitle {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-desc {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    max-width: 700px;
+  }
+
+  .disclaimer-banner {
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid var(--border-subtle);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .note-label {
+    color: var(--forge-orange);
+    font-weight: 700;
+    margin-right: 0.5rem;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .tech-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+  }
+
+  .tech-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 0.75rem;
+  }
+
+  .tech-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tech-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+  }
+
+  .bullet {
+    color: var(--forge-orange);
+  }
+</style>

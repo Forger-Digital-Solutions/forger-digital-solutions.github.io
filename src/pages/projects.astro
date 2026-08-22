@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<BaseLayout title="Projects" description="Explore all software research, platforms, and developer tooling developed by Forger Digital Solutions.">
+  <div class="page-header">
+    <div class="container">
+      <span class="mono page-subtitle">// FDS SOFTWARE & SYSTEMS</span>
+      <h1>Projects</h1>
+      <p class="page-desc">
+        A directory of active research initiatives, intelligent tooling platforms, creative software, and community infrastructure.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="projects-list">
+        {projects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 4rem 0 2rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.05) 0%, transparent 60%);
+  }
+
+  .page-subtitle {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-desc {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    max-width: 700px;
+  }
+
+  .projects-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+</style>
