@@ -37,11 +37,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:image" content={new URL(siteConfig.ogImage, siteConfig.siteUrl).href} />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={pageDesc} />
-
     <!-- Structured data -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
@@ -51,7 +46,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
       url: siteConfig.siteUrl,
       founder: { '@type': 'Person', name: siteConfig.author },
       description: pageDesc,
-      sameAs: siteConfig.githubUrl ? [siteConfig.githubUrl] : undefined
+      sameAs: [siteConfig.githubUrl, siteConfig.youtubeUrl].filter(Boolean)
     })} />
   </head>
   <body>

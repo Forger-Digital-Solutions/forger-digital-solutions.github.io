@@ -33,7 +33,17 @@ import { siteConfig } from '../config/site';
       </div>
       <div class="about-detail">
         <dt>Contact</dt>
-        <dd><a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a></dd>
+        <dd><a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a></dd>
+      </div>
+      <div class="about-detail">
+        <dt>Community</dt>
+        <dd>
+          <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <span aria-hidden="true"> · </span>
+          <a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube</a>
+          <span aria-hidden="true"> · </span>
+          <a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Discord</a>
+        </dd>
       </div>
     </dl>
 
