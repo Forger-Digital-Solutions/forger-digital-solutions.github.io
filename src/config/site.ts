@@ -5,7 +5,7 @@ export const siteConfig = {
   siteUrl: "https://forger-digital-solutions.github.io",
   githubUrl: "https://github.com/forger-digital-solutions",
   youtubeUrl: "https://www.youtube.com/@Forger_Digital_Solutions",
-  discordUrl: "https://discord.gg/Ea3qn5vc",
+  discordUrl: "https://discord.gg/E34XavFDpJ",
   supportUrl: "https://ko-fi.com/forgerdigitalsolutions",
   supportEmail: "forgerdigisolsupport@gmail.com",
   author: "Edward Schmidt",

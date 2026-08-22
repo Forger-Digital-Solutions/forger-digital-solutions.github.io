@@ -15,7 +15,7 @@ export const projects: Project[] = [
     highlights: ["Training and evaluation are treated as connected, evidence-producing work.", "Compute awareness informs planning across available environments.", "Public descriptions focus on research direction, not private datasets or protected implementations."],
     flagship: true,
     stageLabel: "Flagship research initiative",
-    accentColor: "#e59a52",
+    accentColor: "#2f6bff",
     sortOrder: 1
   },
   {
