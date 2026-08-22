@@ -20,6 +20,7 @@ const featuredProjects = projects.filter(p => p.featured);
       <ul>
         <li><a href="/projects">Projects</a></li>
         <li><a href="/lab">Lab</a></li>
+        <li><a href="/notes">Notes</a></li>
         <li><a href="/technology">Technology</a></li>
         <li><a href="/certifications">Certifications</a></li>
         <li><a href="/about">About</a></li>
@@ -36,7 +37,16 @@ const featuredProjects = projects.filter(p => p.featured);
         <li><a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer">Support FDS</a></li>
       </ul>
     </div>
-    
+
+    <div class="footer-links">
+      <h3>Legal</h3>
+      <ul>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+        <li><a href="/terms">Terms of Use</a></li>
+      </ul>
+    </div>
+
     <div class="footer-featured">
       <h3>Featured Projects</h3>
       {featuredProjects.map(project => (

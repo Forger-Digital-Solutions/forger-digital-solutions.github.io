@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+
+const faqs = [
+  {
+    q: 'What is Forger Digital Solutions?',
+    a: `FDS is an independent software research and development studio focused on intelligent
+        systems, developer infrastructure, creative technology, and experimental computing.`
+  },
+  {
+    q: 'What does FDS build?',
+    a: `Work spans AI research and training infrastructure, game-development tooling, AI-assisted
+        publishing, civic and community software, and developer tools. You can see the current
+        line-up on the Projects page.`
+  },
+  {
+    q: 'Are FDS projects open source or available to use right now?',
+    a: `Most projects are in active development or research. Public descriptions are intentionally
+        high-level while the work is being shaped, so availability varies by project. Where a
+        project has a public repository or release, it will be linked from its page.`
+  },
+  {
+    q: 'How can I support FDS?',
+    a: `FDS is independently developed. The most direct way to help is through Ko-fi, linked as
+        "Support FDS" throughout the site. Following along on YouTube and Discord helps too.`
+  },
+  {
+    q: 'How do I get in touch?',
+    a: `Email is the best way to reach us. You can also join the community on Discord for more
+        casual conversation.`
+  },
+  {
+    q: 'Do you collect my data when I visit?',
+    a: `The site itself uses no cookies, analytics, or trackers. See the Privacy Policy for the
+        full details on what is and isn't collected.`
+  },
+  {
+    q: 'Where can I follow updates?',
+    a: `Check the Notes section for build logs and research write-ups, and subscribe on YouTube or
+        join Discord for ongoing updates.`
+  }
+];
+---
+<BaseLayout
+  title="FAQ"
+  description="Answers to common questions about Forger Digital Solutions."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">FAQ</span>
+  </nav>
+  <article class="doc">
+    <p class="doc__updated">Frequently Asked Questions</p>
+    <h1>FAQ</h1>
+    <p class="doc__lead">
+      Answers to the questions we hear most. Can't find yours? Email
+      {' '}<a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>.
+    </p>
+
+    <div class="faq-list">
+      {faqs.map((item, index) => (
+        <details class="faq-item" open={index === 0}>
+          <summary>{item.q}</summary>
+          <div class="faq-item__answer">
+            <p>{item.a}</p>
+            {item.q === 'How can I support FDS?' && (
+              <p><a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer">Support FDS on Ko-fi &rarr;</a></p>
+            )}
+            {item.q === 'How do I get in touch?' && (
+              <p>
+                <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>
+                {' · '}
+                <a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Join our Discord</a>
+              </p>
+            )}
+            {item.q === 'Do you collect my data when I visit?' && (
+              <p><a href="/privacy">Read the Privacy Policy &rarr;</a></p>
+            )}
+            {item.q === 'Where can I follow updates?' && (
+              <p>
+                <a href="/notes">Notes</a>
+                {' · '}
+                <a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube</a>
+                {' · '}
+                <a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Discord</a>
+              </p>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <a class="doc__back" href="/">&larr; Back home</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .doc__back { display: inline-block; margin-top: 3rem; font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+</style>

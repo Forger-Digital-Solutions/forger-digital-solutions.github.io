@@ -30,7 +30,7 @@ export const projects: Project[] = [
     tags: ["Roblox", "Unreal Engine", "Unity", "Godot", "AI Development", "Developer Tools"],
     focusAreas: ["Roblox", "Unreal Engine", "Unity", "Godot", "AI development", "Developer tools"],
     highlights: ["Explores specialized tooling for game-development workflows.", "Designed as a research and development platform, not a promise of any particular shipped capability."],
-    accentColor: "#4d9cff",
+    accentColor: "#b487ff",
     sortOrder: 2
   },
   {
@@ -45,7 +45,7 @@ export const projects: Project[] = [
     tags: ["Writing", "Editing", "Publishing", "Multilingual Content", "Creative Software", "Intelligent Workflow"],
     focusAreas: ["Writing", "Editing", "Publishing", "Multilingual content", "Creative software", "Intelligent workflow"],
     highlights: ["Explores helpful organization and production workflows.", "Public materials describe active exploration rather than unsupported shipping claims."],
-    accentColor: "#b487ff",
+    accentColor: "#d9813f",
     sortOrder: 3
   },
   {

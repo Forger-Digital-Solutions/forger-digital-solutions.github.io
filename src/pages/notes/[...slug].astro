@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+
+const fmtDate = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<BaseLayout title={note.data.title} description={note.data.description}>
+  <article class="doc">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span><a href="/notes">Notes</a><span aria-hidden="true">/</span><span aria-current="page">{note.data.title}</span>
+    </nav>
+    <p class="doc__updated">{fmtDate(note.data.date)}</p>
+    <h1>{note.data.title}</h1>
+    {note.data.tags.length > 0 && (
+      <div class="doc__tags">{note.data.tags.map((tag) => <span class="tag">{tag}</span>)}</div>
+    )}
+    <div class="doc__body">
+      <Content />
+    </div>
+    <a class="doc__back" href="/notes"><span aria-hidden="true">←</span> All notes</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .doc__tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+  .doc__back { display: inline-block; margin-top: 3rem; font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+</style>

@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+
+const effective = 'August 22, 2026';
+---
+<BaseLayout
+  title="Privacy Policy"
+  description="How Forger Digital Solutions handles information on its public website."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Privacy Policy</span>
+  </nav>
+  <article class="doc">
+    <p class="doc__updated">Last updated: {effective}</p>
+    <h1>Privacy Policy</h1>
+    <p class="doc__lead">
+      Forger Digital Solutions ("FDS", "we", "us") builds software and publishes this website as
+      an independent studio. We aim to collect as little personal information as possible. This
+      policy explains what that means in practice.
+    </p>
+
+    <div class="doc__body">
+      <h2>The short version</h2>
+      <p>
+        This website is a static, informational site. It does not use cookies or analytics,
+        does not run advertising or trackers, and does not ask you to create an account or
+        submit personal information to browse it.
+      </p>
+
+      <h2>Information collected automatically</h2>
+      <p>
+        The site is hosted on GitHub Pages. Like most web hosts, GitHub may automatically log
+        technical information — such as your IP address, browser type, and the pages requested —
+        for security and operational purposes. That data is handled by GitHub under its own
+        privacy practices, not by FDS.
+      </p>
+
+      <h2>Information you choose to send us</h2>
+      <p>
+        If you email us at <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>,
+        we receive whatever you include — typically your email address and message. We use it only
+        to respond to you and keep it no longer than needed. Our email is provided by Google
+        (Gmail) and is subject to Google's privacy practices.
+      </p>
+
+      <h2>Third-party links and services</h2>
+      <p>
+        The site links to external services we use, including GitHub, YouTube, Discord, and
+        Ko-fi. If you follow those links or interact with those services, their own privacy
+        policies apply — we do not control them and are not responsible for their practices.
+      </p>
+      <p>
+        Support contributions are handled entirely by Ko-fi. FDS does not receive or store your
+        payment card details; any payment information is processed by Ko-fi and its providers.
+      </p>
+
+      <h2>Children's privacy</h2>
+      <p>
+        This site is not directed to children under 13, and we do not knowingly collect personal
+        information from them.
+      </p>
+
+      <h2>Your choices</h2>
+      <p>
+        Because we don't maintain accounts or a marketing database, there's little for you to
+        manage. If you've emailed us and would like your message deleted, just ask.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        We may update this policy as the site evolves. When we do, we'll revise the "last updated"
+        date above.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy? Email
+        <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>.
+      </p>
+    </div>
+
+    <a class="doc__back" href="/">&larr; Back home</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .doc__back { display: inline-block; margin-top: 3rem; font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+</style>

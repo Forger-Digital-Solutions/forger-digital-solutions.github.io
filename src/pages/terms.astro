@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+
+const effective = 'August 22, 2026';
+---
+<BaseLayout
+  title="Terms of Use"
+  description="The terms that govern use of the Forger Digital Solutions website."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Terms of Use</span>
+  </nav>
+  <article class="doc">
+    <p class="doc__updated">Last updated: {effective}</p>
+    <h1>Terms of Use</h1>
+    <p class="doc__lead">
+      These terms govern your use of the Forger Digital Solutions ("FDS") website at
+      {' '}{siteConfig.siteUrl}. By using the site, you agree to them. If you don't agree, please
+      don't use the site.
+    </p>
+
+    <div class="doc__body">
+      <h2>The website</h2>
+      <p>
+        This site is an informational showcase for FDS and its projects. Content is provided for
+        general information only and may change or be removed at any time without notice. Project
+        descriptions reflect work in progress and are not commitments, guarantees, or offers.
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        The FDS name, logo, branding, site design, and written content are the property of Forger
+        Digital Solutions unless otherwise noted, and are protected by applicable law. You may view
+        and share links to the site, but you may not copy, reuse, or redistribute our branding or
+        content as your own without permission.
+      </p>
+      <p>
+        Third-party names, trademarks, engines, and platforms referenced on the site belong to
+        their respective owners. Their appearance indicates use or experimentation, not
+        endorsement, sponsorship, certification, or partnership.
+      </p>
+
+      <h2>Acceptable use</h2>
+      <p>You agree not to:</p>
+      <ul>
+        <li>use the site for any unlawful purpose or in violation of these terms;</li>
+        <li>attempt to disrupt, attack, or gain unauthorized access to the site or its hosting;</li>
+        <li>misrepresent your affiliation with FDS.</li>
+      </ul>
+
+      <h2>External links</h2>
+      <p>
+        The site links to third-party services such as GitHub, YouTube, Discord, and Ko-fi. We
+        don't control those services and aren't responsible for their content, policies, or
+        availability. Your use of them is governed by their terms.
+      </p>
+
+      <h2>Support contributions</h2>
+      <p>
+        Voluntary support is handled through Ko-fi and is subject to Ko-fi's terms. Contributions
+        help sustain independent development and are not a purchase of any product, service, or
+        deliverable unless expressly stated. They are generally non-refundable except where
+        required by law.
+      </p>
+
+      <h2>Disclaimer of warranties</h2>
+      <p>
+        The site is provided "as is" and "as available", without warranties of any kind, whether
+        express or implied, including fitness for a particular purpose and non-infringement. We do
+        not warrant that the site will be uninterrupted, error-free, or free of harmful components.
+      </p>
+
+      <h2>Limitation of liability</h2>
+      <p>
+        To the fullest extent permitted by law, FDS will not be liable for any indirect,
+        incidental, or consequential damages arising from your use of, or inability to use, the
+        site.
+      </p>
+
+      <h2>Governing law</h2>
+      <p>
+        These terms are governed by the laws of the State of New Jersey, United States, without
+        regard to its conflict-of-laws rules.
+      </p>
+
+      <h2>Changes to these terms</h2>
+      <p>
+        We may update these terms from time to time. Continued use of the site after changes take
+        effect means you accept the revised terms. We'll revise the "last updated" date above when
+        we make changes.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about these terms? Email
+        <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>.
+      </p>
+    </div>
+
+    <a class="doc__back" href="/">&larr; Back home</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .doc__back { display: inline-block; margin-top: 3rem; font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+</style>
