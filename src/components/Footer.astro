@@ -1,0 +1,156 @@
+---
+import { siteConfig } from '../config/site';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-container">
+    <div class="footer-brand">
+      <div class="footer-title">
+        <span class="symbol">❖</span> {siteConfig.name}
+      </div>
+      <p class="footer-desc">
+        {siteConfig.description}
+      </p>
+      <div class="footer-status">
+        <span class="status-dot"></span> {siteConfig.statusText}
+      </div>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="col-heading">Navigation</div>
+        <a href="/projects">Projects</a>
+        <a href="/lab">FDS Lab</a>
+        <a href="/technology">Technology</a>
+        <a href="/certifications">Certifications</a>
+        <a href="/about">About Studio</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="col-heading">External</div>
+        <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub Organization ↗</a>
+        <a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer">Support FDS (Ko-fi) ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <div class="copyright">
+      &copy; {currentYear} {siteConfig.name}. All rights reserved.
+    </div>
+    <div class="location">
+      {siteConfig.location}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    padding: 4rem 0 2rem 0;
+    margin-top: auto;
+  }
+
+  .footer-container {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .footer-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .symbol {
+    color: var(--forge-orange);
+  }
+
+  .footer-desc {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #22c55e;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .col-heading {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .footer-col a {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+  }
+
+  .footer-col a:hover {
+    color: var(--forge-orange);
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+  }
+
+  @media (max-width: 768px) {
+    .footer-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+  }
+</style>

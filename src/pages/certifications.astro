@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { certifications } from '../data/certifications';
+---
+
+<BaseLayout title="Certifications" description="Public verification documents, technical credentials, and certifications for Forger Digital Solutions.">
+  <div class="page-header">
+    <div class="container">
+      <span class="mono page-subtitle">// VERIFICATION & CREDENTIALS</span>
+      <h1>Certifications</h1>
+      <p class="page-desc">
+        Public verification documents and technical credentials published by Forger Digital Solutions.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      {certifications.length === 0 ? (
+        <div class="empty-state">
+          <div class="empty-icon">📜</div>
+          <h3>No Public Certifications Published</h3>
+          <p>
+            Certification documents and technical credentials will be published here as they become available.
+          </p>
+        </div>
+      ) : (
+        <div class="certifications-grid">
+          {certifications.map((cert) => (
+            <div class="cert-card">
+              <div class="cert-header">
+                <span class="cert-issuer">{cert.issuer}</span>
+                <span class="cert-date mono">{cert.date}</span>
+              </div>
+              <h3 class="cert-title">{cert.title}</h3>
+              <p class="cert-desc">{cert.description}</p>
+              {cert.pdf && (
+                <div class="cert-action">
+                  <a href={cert.pdf} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    View PDF ↗
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 4rem 0 2rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.05) 0%, transparent 60%);
+  }
+
+  .page-subtitle {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-desc {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    max-width: 700px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: var(--bg-surface);
+    border: 1px dashed var(--border-medium);
+    border-radius: var(--radius-lg);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-state p {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .cert-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .cert-issuer {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    font-weight: 600;
+  }
+
+  .cert-date {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+  .cert-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cert-desc {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .cert-action {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+</style>

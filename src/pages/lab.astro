@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProcessVisualization from '../components/ProcessVisualization.astro';
+---
+
+<BaseLayout title="FDS Lab" description="Engineering principles, research methodology, and adaptive computing guidelines at Forger Digital Solutions.">
+  <div class="page-header">
+    <div class="container">
+      <span class="mono page-subtitle">// RESEARCH & DEVELOPMENT LAB</span>
+      <h1>FDS Lab</h1>
+      <p class="page-desc">
+        We build, break, measure, and rebuild. FDS operates on structured engineering principles designed for experimental software and adaptive systems.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="mono section-subtitle">// OPERATIONAL CYCLE</span>
+        <h2>The FDS Method</h2>
+      </div>
+      <ProcessVisualization />
+    </div>
+  </section>
+
+  <section class="section principles-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="mono section-subtitle">// CORE TENETS</span>
+        <h2>FDS Engineering Principles</h2>
+      </div>
+
+      <div class="principles-stack">
+        <div class="principle-card">
+          <div class="card-num">01</div>
+          <div class="card-body">
+            <h3>Evidence over assumptions</h3>
+            <p>
+              Systems are not considered successful simply because they executed. Results should provide evidence that the intended objective was achieved. We validate hypotheses through execution data, benchmark telemetry, and empirical verification.
+            </p>
+          </div>
+        </div>
+
+        <div class="principle-card">
+          <div class="card-num">02</div>
+          <div class="card-body">
+            <h3>Adaptive computation</h3>
+            <p>
+              Software should understand and adapt to the hardware and compute environments available to it. Whether operating on local consumer GPUs, cloud clusters, or heterogenous node networks, systems must dynamic scale and degrade gracefully.
+            </p>
+          </div>
+        </div>
+
+        <div class="principle-card">
+          <div class="card-num">03</div>
+          <div class="card-body">
+            <h3>Governed intelligence</h3>
+            <p>
+              Training, evaluation, experimentation, and deployment should leave understandable evidence. Machine learning workflows require rigorous lineage tracking, reproducible dataset evaluation, and transparent decision boundaries.
+            </p>
+          </div>
+        </div>
+
+        <div class="principle-card">
+          <div class="card-num">04</div>
+          <div class="card-body">
+            <h3>Build through experimentation</h3>
+            <p>
+              Research findings should become reusable architecture only after surviving meaningful real-world use. We iterate fast in experimental sandbox environments before distilling code into production tooling.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 4rem 0 2rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.05) 0%, transparent 60%);
+  }
+
+  .page-subtitle {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-desc {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    max-width: 700px;
+  }
+
+  .section {
+    padding: 4rem 0;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .principles-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .principle-card {
+    display: flex;
+    gap: 2rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    align-items: flex-start;
+  }
+
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--forge-orange);
+    background: rgba(249, 115, 22, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+  }
+
+  .card-body h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-body p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    .principle-card {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>

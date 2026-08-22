@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout title="About Studio" description="Learn about Forger Digital Solutions, our software research mission, and founder Edward Schmidt.">
+  <div class="page-header">
+    <div class="container">
+      <span class="mono page-subtitle">// STUDIO OVERVIEW</span>
+      <h1>About FDS</h1>
+      <p class="page-desc">
+        Independent software research and development studio focused on intelligent systems, developer tooling, creative technology, and experimental computing.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-content">
+          <h2>Research & Development Mission</h2>
+          <p>
+            Forger Digital Solutions (FDS) operates as an independent software R&D studio. FDS projects often begin as targeted experiments and evolve through repeated implementation, measurement, testing, and refinement.
+          </p>
+          <p>
+            Rather than pursuing generic software platforms or standard SaaS templates, FDS concentrates on intelligent systems engineering, training infrastructure, agentic developer tooling, civic software platforms, and local discovery applications.
+          </p>
+
+          <div class="meta-box">
+            <div class="meta-item">
+              <span class="meta-label">FOUNDED BY</span>
+              <span class="meta-value">{siteConfig.founder}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">LOCATION</span>
+              <span class="meta-value">{siteConfig.location}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">STATUS</span>
+              <span class="meta-value">{siteConfig.statusText}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-sidebar">
+          <div class="contact-card">
+            <h3>Connect & Follow</h3>
+            <p>
+              For public inquiries, code repositories, and technical research updates, visit our GitHub organization.
+            </p>
+            <div class="contact-actions">
+              <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-secondary w-full">
+                FDS GitHub Profile ↗
+              </a>
+              <a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer" class="btn btn-support w-full">
+                Support FDS Research
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 4rem 0 2rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.05) 0%, transparent 60%);
+  }
+
+  .page-subtitle {
+    font-size: 0.8125rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-desc {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    max-width: 700px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+  }
+
+  .about-content h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-content p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .meta-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--forge-orange);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .meta-value {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.9375rem;
+  }
+
+  .contact-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+  }
+
+  .contact-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-card p {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .w-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 Page Not Found" description="The requested page could not be found on Forger Digital Solutions.">
+  <section class="section error-section">
+    <div class="container text-center">
+      <div class="error-code mono">404 // NOT FOUND</div>
+      <h1>Requested Resource Unavailable</h1>
+      <p class="error-desc">
+        The specified path does not exist or has been relocated within the FDS ecosystem.
+      </p>
+      <div class="error-actions">
+        <a href="/" class="btn btn-primary">Return to Homepage</a>
+        <a href="/projects" class="btn btn-secondary">View Projects</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .error-section {
+    padding: 8rem 0;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .error-code {
+    font-size: 1rem;
+    color: var(--forge-orange);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .error-desc {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    max-width: 500px;
+    margin: 0 auto 2rem auto;
+  }
+
+  .error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+
+# Environment / local files
+.env
+.env.*
+!.env.example
+
+# Astro / Vite cache
+.astro/
+.vite/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.log
