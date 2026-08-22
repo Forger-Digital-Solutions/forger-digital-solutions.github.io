@@ -2,6 +2,7 @@
 title: "Evidence over assumptions"
 description: "Why FDS treats 'it ran' and 'it worked' as two very different claims."
 date: 2026-08-20
+category: "Research"
 tags: ["Principles", "Engineering"]
 ---
 

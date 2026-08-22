@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { projects } from '../../data/projects';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes');
@@ -9,17 +10,31 @@ export async function getStaticPaths() {
 
 const { note } = Astro.props;
 const { Content } = await render(note);
+const relatedProject = note.data.projectSlug
+  ? projects.find((p) => p.slug === note.data.projectSlug)
+  : undefined;
 
 const fmtDate = (date: Date) =>
-  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
 <BaseLayout title={note.data.title} description={note.data.description}>
   <article class="doc">
     <nav class="breadcrumbs" aria-label="Breadcrumb">
       <a href="/">Home</a><span aria-hidden="true">/</span><a href="/notes">Notes</a><span aria-hidden="true">/</span><span aria-current="page">{note.data.title}</span>
     </nav>
-    <p class="doc__updated">{fmtDate(note.data.date)}</p>
+    <p class="doc__updated">
+      {fmtDate(note.data.date)}{note.data.category && <span class="doc__cat"> · {note.data.category}</span>}
+    </p>
     <h1>{note.data.title}</h1>
+    {relatedProject && (
+      <a
+        class="doc__project"
+        href={`/projects/${relatedProject.slug}`}
+        style={`--project-accent: ${relatedProject.accentColor || 'var(--color-accent)'}`}
+      >
+        <span class="doc__project-dot" aria-hidden="true"></span>Related project: {relatedProject.name}
+      </a>
+    )}
     {note.data.tags.length > 0 && (
       <div class="doc__tags">{note.data.tags.map((tag) => <span class="tag">{tag}</span>)}</div>
     )}
@@ -31,6 +46,10 @@ const fmtDate = (date: Date) =>
 </BaseLayout>
 
 <style>
+  .doc__cat { color: var(--color-accent-secondary); }
+  .doc__project { display: inline-flex; gap: .5rem; align-items: center; margin-top: 1rem; padding: .5rem .8rem; border: 1px solid color-mix(in srgb, var(--project-accent) 40%, var(--color-border)); border-radius: 999px; color: var(--color-text); font: 700 .72rem/1 var(--font-mono); letter-spacing: .03em; }
+  .doc__project:hover { opacity: 1; border-color: var(--project-accent); }
+  .doc__project-dot { width: .55rem; height: .55rem; border-radius: 50%; background: var(--project-accent); }
   .doc__tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
   .doc__back { display: inline-block; margin-top: 3rem; font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
 </style>

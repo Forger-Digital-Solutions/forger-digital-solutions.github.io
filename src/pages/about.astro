@@ -29,6 +29,7 @@ import { siteConfig } from '../config/site';
       <div class="founder__meta">
         <p class="founder__name">{siteConfig.author}</p>
         <p class="founder__role">Founder &amp; Developer</p>
+        <p class="founder__statement">Building Forger Digital Solutions as an independent software development and research effort focused on intelligent systems, creative tools, and practical software.</p>
         <a class="founder__link" href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">Connect on LinkedIn <span aria-hidden="true">&#8599;</span></a>
       </div>
     </div>
@@ -116,13 +117,26 @@ import { siteConfig } from '../config/site';
     background: var(--color-surface);
   }
 
+  .founder {
+    align-items: flex-start;
+  }
+
   .founder__photo {
     width: 112px;
     height: 112px;
     border-radius: 50%;
     object-fit: cover;
+    object-position: center 18%;
     border: 2px solid var(--color-border-strong);
     flex-shrink: 0;
+  }
+
+  .founder__statement {
+    margin-top: 0.7rem;
+    max-width: 32rem;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
   }
 
   .founder__photo--monogram {

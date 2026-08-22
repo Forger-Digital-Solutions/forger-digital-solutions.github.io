@@ -16,6 +16,14 @@ export const projects: Project[] = [
     flagship: true,
     stageLabel: "Flagship research initiative",
     accentColor: "#2f6bff",
+    visualStyle: "nodes",
+    building: [
+      "Model training systems and evaluation infrastructure",
+      "Curriculum experimentation and governed experimentation",
+      "Adaptive, hardware-aware compute execution",
+      "Evidence-driven development where results — not just runs — decide what survives"
+    ],
+    roadmap: "Continued research, evaluation, and adaptive-compute experimentation.",
     sortOrder: 1
   },
   {
@@ -31,6 +39,14 @@ export const projects: Project[] = [
     focusAreas: ["Roblox", "Unreal Engine", "Unity", "Godot", "AI development", "Developer tools"],
     highlights: ["Explores specialized tooling for game-development workflows.", "Designed as a research and development platform, not a promise of any particular shipped capability."],
     accentColor: "#b487ff",
+    visualStyle: "blocks",
+    building: [
+      "AI-assisted development workflows for game creation",
+      "Project-aware development assistance and tooling",
+      "Multi-engine experimentation across modern game engines",
+      "Specialized game-development agents and utilities"
+    ],
+    roadmap: "Expanded AI-assisted development workflows and tooling.",
     sortOrder: 2
   },
   {
@@ -46,6 +62,14 @@ export const projects: Project[] = [
     focusAreas: ["Writing", "Editing", "Publishing", "Multilingual content", "Creative software", "Intelligent workflow"],
     highlights: ["Explores helpful organization and production workflows.", "Public materials describe active exploration rather than unsupported shipping claims."],
     accentColor: "#d9813f",
+    visualStyle: "manuscript",
+    building: [
+      "Writing and editing workflows",
+      "Publishing preparation and manuscript organization",
+      "Translation-aware and multilingual publishing support",
+      "Intelligent content tooling from draft through production"
+    ],
+    roadmap: "Publishing and multilingual workflow development.",
     sortOrder: 3
   },
   {
@@ -61,6 +85,14 @@ export const projects: Project[] = [
     focusAreas: ["Accessible digital tools", "Civic technology", "Software infrastructure", "Useful public-facing systems"],
     privacyNotice: "Portions of this project remain private while development is ongoing.",
     accentColor: "#8792a8",
+    visualStyle: "civic",
+    building: [
+      "Digital civic tools and accessible software workflows",
+      "Structured public information",
+      "Platform infrastructure",
+      "A useful, accessible foundation for public-facing software"
+    ],
+    roadmap: "Continued private platform development.",
     sortOrder: 4
   },
   {
@@ -76,6 +108,14 @@ export const projects: Project[] = [
     focusAreas: ["Local discovery", "Agriculture", "Mapping", "Community", "Local food", "Small business"],
     highlights: ["Designed around practical discovery of local food and growers.", "Explores community-oriented software with a clear, accessible experience."],
     accentColor: "#76b77d",
+    visualStyle: "map",
+    building: [
+      "Local farm stand and grower discovery",
+      "Location-based browsing of nearby markets",
+      "Community-focused listings for local food",
+      "A clear, accessible experience for finding local food"
+    ],
+    roadmap: "Local discovery features and application development.",
     sortOrder: 5
   }
 ];

@@ -8,14 +8,16 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogImage } = Astro.props;
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
 const pageDesc =
   description ||
   'Independent software research and development focused on intelligent systems, developer infrastructure, creative technology, and experimental computing.';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
+const ogImageUrl = new URL(ogImage || siteConfig.ogImage, siteConfig.siteUrl).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -28,6 +30,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
     <meta name="author" content={siteConfig.author} />
     <meta name="theme-color" content="#090a0c" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={pageTitle} />
@@ -35,7 +39,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={siteConfig.name} />
-    <meta property="og:image" content={new URL(siteConfig.ogImage, siteConfig.siteUrl).href} />
+    <meta property="og:image" content={ogImageUrl} />
 
     <!-- Structured data -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify({

@@ -10,6 +10,11 @@ const notes = defineCollection({
     date: coerce.date(),
     tags: array(string()).default([]),
     draft: boolean().default(false),
+    // Optional relation to a project (use the project slug). Renders a project badge
+    // and surfaces the entry under that project's "Latest Project Updates".
+    projectSlug: string().optional(),
+    // One of: Research, Development, Milestone, Release, Infrastructure, Website.
+    category: string().optional(),
   }),
 });
 

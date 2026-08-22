@@ -11,8 +11,8 @@ export const siteConfig = {
   supportEmail: "forgerdigisolsupport@gmail.com",
   author: "Edward Schmidt",
   location: "New Jersey, United States",
-  // Path to the founder photo in /public (e.g. "/images/brand/edward-schmidt.jpg").
+  // Path to the founder photo in /public (e.g. "/images/brand/edward-schmidt.png").
   // Leave empty to show a monogram avatar on the About page instead.
-  authorImage: "",
+  authorImage: "/images/brand/edward-schmidt.png",
   ogImage: "/images/og/fds-default.svg"
 };

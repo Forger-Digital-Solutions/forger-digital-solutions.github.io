@@ -1,0 +1,50 @@
+---
+import type { Note } from '../lib/notes';
+import { formatNoteDate } from '../lib/notes';
+import { projects } from '../data/projects';
+
+interface Props {
+  note: Note;
+  /** Show the related-project badge (hidden on a project's own page). */
+  showProject?: boolean;
+}
+
+const { note, showProject = true } = Astro.props;
+const { title, description, date, tags, category, projectSlug } = note.data;
+const relatedProject = projectSlug ? projects.find((p) => p.slug === projectSlug) : undefined;
+---
+<a class="note-card" href={`/notes/${note.id}`}>
+  <div class="note-card__meta">
+    <span class="note-card__date">{formatNoteDate(date)}</span>
+    {category && <span class="note-card__cat">{category}</span>}
+  </div>
+  <h3 class="note-card__title">{title}</h3>
+  <p class="note-card__desc">{description}</p>
+  <div class="note-card__foot">
+    {showProject && relatedProject && (
+      <span class="note-card__project" style={`--project-accent: ${relatedProject.accentColor || 'var(--color-accent)'}`}>
+        <span class="note-card__project-dot" aria-hidden="true"></span>{relatedProject.name}
+      </span>
+    )}
+    {tags.length > 0 && (
+      <div class="note-card__tags">{tags.slice(0, 3).map((tag) => <span class="tag">{tag}</span>)}</div>
+    )}
+  </div>
+  <span class="note-card__more">Read note <span aria-hidden="true">→</span></span>
+</a>
+
+<style>
+  .note-card { display: flex; flex-direction: column; height: 100%; padding: 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+  .note-card:hover { border-color: var(--color-accent-secondary); transform: translateY(-3px); box-shadow: var(--shadow-md); opacity: 1; }
+  .note-card__meta { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+  .note-card__date { color: var(--color-text-subtle); font: 700 .68rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .note-card__cat { padding: .2rem .5rem; border: 1px solid var(--color-border-strong); border-radius: 999px; color: var(--color-accent-secondary); font: 700 .62rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .note-card__title { margin: .7rem 0 .45rem; font-size: 1.2rem; line-height: 1.2; letter-spacing: -.02em; color: var(--color-text); }
+  .note-card__desc { flex-grow: 1; color: var(--color-text-muted); font-size: .95rem; line-height: 1.6; }
+  .note-card__foot { display: flex; flex-wrap: wrap; gap: .5rem .8rem; align-items: center; margin-top: 1rem; }
+  .note-card__project { display: inline-flex; gap: .4rem; align-items: center; color: var(--color-text-muted); font: 700 .66rem/1 var(--font-mono); letter-spacing: .04em; }
+  .note-card__project-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--project-accent); }
+  .note-card__tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .note-card__more { margin-top: 1rem; color: var(--color-text); font: 700 .72rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+  .note-card__more span { color: var(--color-accent); }
+</style>

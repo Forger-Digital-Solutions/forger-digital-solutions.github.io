@@ -2,6 +2,7 @@
 title: "Introducing FDS Notes"
 description: "A place for build logs, research notes, and thinking-out-loud from the FDS workshop."
 date: 2026-08-22
+category: "Website"
 tags: ["Meta", "FDS"]
 ---
 

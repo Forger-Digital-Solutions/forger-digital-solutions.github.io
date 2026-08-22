@@ -1,3 +1,17 @@
+export type ProjectStatusValue =
+  | "ACTIVE RESEARCH"
+  | "ACTIVE DEVELOPMENT"
+  | "EXPERIMENTAL"
+  | "PRIVATE DEVELOPMENT"
+  | "PLANNED"
+  | "RELEASED";
+
+export interface ProjectImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -6,7 +20,7 @@ export interface Project {
   category: string;
   summary: string;
   description: string;
-  status: "ACTIVE RESEARCH" | "ACTIVE DEVELOPMENT" | "EXPERIMENTAL" | "PRIVATE DEVELOPMENT" | "PLANNED" | "RELEASED";
+  status: ProjectStatusValue;
   featured: boolean;
   tags: string[];
   githubUrl?: string;
@@ -16,10 +30,20 @@ export interface Project {
   accentColor?: string;
   focusAreas?: string[];
   highlights?: string[];
+  building?: string[];
+  roadmap?: string;
   privacyNotice?: string;
   stageLabel?: string;
   flagship?: boolean;
   sortOrder?: number;
+  /** Selects the abstract FDS visual identity motif for this project. */
+  visualStyle?: "nodes" | "blocks" | "manuscript" | "civic" | "map";
+  /** Optional real hero screenshot/photo; falls back to the abstract visual when absent. */
+  heroImage?: ProjectImage;
+  /** Optional real media gallery; the section is omitted entirely when empty. */
+  gallery?: ProjectImage[];
+  /** Optional per-project social share image; falls back to the global FDS OG image. */
+  ogImage?: string;
 }
 
 export interface TechnologyCategory {
