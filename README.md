@@ -29,7 +29,7 @@ This creates a production-ready site in the `dist/` directory.
 npm run validate
 ```
 
-This runs Astro's type/content checks, verifies every configured certification PDF exists, and creates a production build.
+This runs Astro's type/content checks and creates a production build.
 
 ## Preview
 
@@ -60,36 +60,6 @@ Preview your production build locally.
 
 3. Build and deploy.
 
-## Adding a certification
-
-1. Copy the public PDF into:
-   ```
-   public/certifications/
-   ```
-
-2. Add its metadata to `src/data/certifications.ts`:
-```typescript
-{
-  title: "Certification Title",
-  issuer: "Issuing Organization",
-  date: "2024-01-01",
-  description: "Brief description",
-  category: "Technical",
-  pdf: "/certifications/filename.pdf"
-}
-```
-
-3. Run the complete validation:
-   ```bash
-   npm run validate
-   ```
-
-4. Verify locally with `npm run dev` if needed.
-
-5. Commit and push. GitHub Pages deployment publishes it automatically.
-
-> **Security Warning**: Files placed in `public/certifications/` are publicly accessible after deployment. Do not publish certificates containing private identification numbers, a home address, private account data, signatures not intended for publication, QR codes exposing private information, or other personally sensitive identifiers.
-
 ## Updating support link
 
 The Ko-fi support URL is defined in `src/config/site.ts`:
@@ -107,7 +77,6 @@ Update the `supportUrl` value to change the support button destination.
 
 ```
 ├── public/
-│   ├── certifications/    # Upload certification PDFs here
 │   ├── images/            # Project images and assets
 │   └── robots.txt         # Search engine configuration
 ├── src/

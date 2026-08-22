@@ -22,16 +22,6 @@ export interface Project {
   sortOrder?: number;
 }
 
-export interface Certification {
-  title: string;
-  issuer: string;
-  date: string;
-  description?: string;
-  category?: string;
-  featured?: boolean;
-  pdf: string;
-}
-
 export interface TechnologyCategory {
   name: string;
   items: string[];

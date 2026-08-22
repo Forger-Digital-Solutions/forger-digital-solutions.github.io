@@ -1,14 +1,15 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { object, string, array, boolean, coerce } from 'astro:schema';
 import { glob } from 'astro/loaders';
 
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.coerce.date(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
+  schema: object({
+    title: string(),
+    description: string(),
+    date: coerce.date(),
+    tags: array(string()).default([]),
+    draft: boolean().default(false),
   }),
 });
 

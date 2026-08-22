@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "validate": "astro check && node scripts/validate-certifications.mjs && astro build",
+    "validate": "astro check && astro build",
     "astro": "astro"
   },
   "dependencies": {

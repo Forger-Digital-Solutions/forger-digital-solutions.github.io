@@ -46,7 +46,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
       url: siteConfig.siteUrl,
       founder: { '@type': 'Person', name: siteConfig.author },
       description: pageDesc,
-      sameAs: [siteConfig.githubUrl, siteConfig.youtubeUrl].filter(Boolean)
+      sameAs: [siteConfig.githubUrl, siteConfig.youtubeUrl, siteConfig.linkedinUrl].filter(Boolean)
     })} />
   </head>
   <body>
