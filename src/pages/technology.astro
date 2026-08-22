@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { technologyCategories } from '../data/technology';
+---
+<BaseLayout
+  title="Technology"
+  description="Technologies, languages, and compute environments FDS works with across AI research, development tooling, and experimental computing."
+>
+  <div class="page-head">
+    <h1 class="page-title">Technology</h1>
+    <p class="page-description">
+      FDS works across a diverse technology stack, favoring tools that enable rapid
+      experimentation and adaptive systems.
+    </p>
+  </div>
+
+  <div class="tech-grid">
+    {technologyCategories.map((category) => (
+      <section class="tech-category" aria-labelledby={`tech-${category.name.replaceAll(/[^a-z0-9]/gi, '-').toLowerCase()}`}>
+        <h2 class="tech-category-title" id={`tech-${category.name.replaceAll(/[^a-z0-9]/gi, '-').toLowerCase()}`}>{category.name}</h2>
+        {category.description && (
+          <p class="tech-category-note">{category.description}</p>
+        )}
+        <ul class="tech-list">
+          {category.items.map((item) => (
+            <li class="tech-item">{item}</li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <p class="tech-disclaimer">
+    Product and platform names belong to their respective owners. Their appearance here indicates technology usage or experimentation, not endorsement, sponsorship, certification, or partnership.
+  </p>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 3rem 0 2rem;
+    max-width: 720px;
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tech-category {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    border-top: 3px solid var(--color-accent);
+  }
+
+  .tech-category-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .tech-category-note {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .tech-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tech-item {
+    padding: 0.55rem 0;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tech-item:last-child {
+    border-bottom: none;
+  }
+
+  .tech-disclaimer {
+    max-width: 640px;
+    margin: 2.5rem auto 4rem;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    opacity: 0.8;
+  }
+</style>

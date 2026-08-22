@@ -1,0 +1,97 @@
+---
+import type { Certification } from '../types';
+
+interface Props {
+  cert: Certification;
+}
+
+const { cert } = Astro.props;
+---
+<article class="certification-card">
+  <div class="cert-header">
+    <h3 class="cert-title">{cert.title}</h3>
+    <span class="cert-date">{cert.date}</span>
+  </div>
+
+  <p class="cert-issuer">{cert.issuer}</p>
+
+  {cert.description && (
+    <p class="cert-description">{cert.description}</p>
+  )}
+
+  <div class="cert-footer">
+    {cert.category && (
+      <span class="tag">{cert.category}</span>
+    )}
+    <a href={cert.pdf} target="_blank" rel="noopener noreferrer" class="btn-view-pdf">
+      View Certificate
+    </a>
+  </div>
+</article>
+
+<style>
+.certification-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.certification-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.cert-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.cert-date {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.cert-issuer {
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.cert-description {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1rem;
+}
+
+.btn-view-pdf {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+</style>

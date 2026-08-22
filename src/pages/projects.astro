@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { projects } from '../data/projects';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const ordered = [...projects].sort((a, b) => Number(b.featured) - Number(a.featured));
+---
+<BaseLayout
+  title="Projects"
+  description="FDS projects spanning AI research, game development tooling, publishing software, civic technology, and community discovery platforms."
+>
+  <div class="page-head">
+    <h1 class="page-title">Projects</h1>
+    <p class="page-description">
+      FDS develops experimental software across artificial intelligence, game development,
+      publishing, civic technology, and community discovery. Each project follows the same
+      loop: build, test, measure, learn, evolve.
+    </p>
+  </div>
+
+  <div class="projects-full-grid">
+    {ordered.map((project) => (
+      <ProjectCard project={project} featured={project.featured} />
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 3rem 0 2rem;
+    max-width: 720px;
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .projects-full-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 4rem;
+  }
+</style>

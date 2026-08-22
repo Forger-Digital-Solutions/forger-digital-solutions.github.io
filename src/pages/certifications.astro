@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { certifications } from '../data/certifications';
+import CertificationCard from '../components/CertificationCard.astro';
+---
+<BaseLayout
+  title="Certifications"
+  description="Public certification documents and technical credentials published by Forger Digital Solutions."
+>
+  <div class="page-head">
+    <h1 class="page-title">Certifications</h1>
+    <p class="page-description">
+      Public certification documents and technical credentials, published selectively as reviewed evidence becomes available.
+    </p>
+  </div>
+
+  {certifications.length === 0 ? (
+    <div class="certifications-empty">
+      <p>Certification documents and technical credentials will be published here as they become available. This archive is intentionally curated rather than automatically populated.</p>
+    </div>
+  ) : (
+    <div class="certifications-grid">
+      {certifications.map((cert) => (
+        <CertificationCard cert={cert} />
+      ))}
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: 3rem 0 2rem;
+    max-width: 720px;
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .certifications-empty {
+    text-align: center;
+    padding: 4rem 2rem 8rem;
+    color: var(--color-text-muted);
+  }
+
+  .certifications-empty p {
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 4rem;
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+const steps = ['IDEA', 'BUILD', 'TEST', 'MEASURE', 'LEARN', 'EVOLVE'];
+---
+<div class="process-container" role="img" aria-label="FDS process: idea, build, test, measure, learn, evolve">
+  <div class="process-line">
+    {steps.map((step, index) => (
+      <div class="process-step" style={`--step-delay: ${index * 0.4}s`}>
+        <div class="process-circle">{index + 1}</div>
+        <span class="process-label">{step}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+.process-container {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.process-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.process-step {
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+/* Connecting line between steps */
+.process-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 24px);
+  width: calc(100% - 48px);
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, color-mix(in srgb, var(--color-accent) 25%, transparent) 100%);
+}
+
+.process-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin: 0 auto 0.5rem;
+  position: relative;
+  z-index: 1;
+  animation: step-glow 4.8s ease-in-out infinite;
+  animation-delay: var(--step-delay);
+}
+
+@keyframes step-glow {
+  0%, 100% {
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+}
+
+.process-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 480px) {
+  .process-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.7rem;
+  }
+
+  .process-step:not(:last-child)::after {
+    top: 15px;
+    left: calc(50% + 18px);
+    width: calc(100% - 36px);
+  }
+
+  .process-label {
+    font-size: 0.55rem;
+  }
+}
+</style>
