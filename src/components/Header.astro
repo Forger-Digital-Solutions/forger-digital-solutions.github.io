@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '../config/site';
+import VisitorCounter from './VisitorCounter.astro';
 const { githubUrl, youtubeUrl, discordUrl, linkedinUrl, tiktokUrl } = siteConfig;
 ---
 <nav class="navbar" aria-label="Main navigation">
@@ -8,6 +9,7 @@ const { githubUrl, youtubeUrl, discordUrl, linkedinUrl, tiktokUrl } = siteConfig
       <img src="/images/brand/fds-logo.png" width="44" height="44" alt="" />
       <span class="logo-text">FDS</span>
     </a>
+    <VisitorCounter />
     <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-navigation"><span class="hamburger"></span></button>
     <ul class="nav-links" id="site-navigation">
       <li><a href="/projects">Projects</a></li><li><a href="/lab">Lab</a></li><li><a href="/notes">Notes</a></li><li><a href="/technology">Technology</a></li><li><a href="/about">About</a></li>

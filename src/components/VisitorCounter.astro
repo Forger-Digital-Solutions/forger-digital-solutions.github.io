@@ -1,0 +1,61 @@
+---
+import { siteConfig } from '../config/site';
+const key = siteConfig.visitorCounterKey;
+---
+<span class="visitor-counter" id="fds-visitor-counter" aria-label="Visitor count">
+  <span class="visitor-counter__dot" aria-hidden="true"></span>
+  <span class="visitor-counter__label">Visitors</span>
+  <span class="visitor-counter__value" id="fds-visitor-count">--</span>
+</span>
+<script>
+  (async () => {
+    const valueEl = document.getElementById('fds-visitor-count');
+    if (!valueEl) return;
+    try {
+      const res = await fetch('https://countapi.mileshilliard.com/api/v1/hit/${key}');
+      if (!res.ok) throw new Error('Counter request failed');
+      const data = await res.json();
+      if (data.value != null) {
+        valueEl.textContent = Number(data.value).toLocaleString();
+      }
+    } catch {
+      valueEl.textContent = '0';
+    }
+  })();
+</script>
+<style>
+  .visitor-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .35rem .7rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font: 700 .68rem/1 var(--font-mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .visitor-counter__dot {
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 .5rem var(--color-accent);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity:0.6; transform: scale(.85); }
+  }
+  .visitor-counter__value {
+    color: var(--color-text);
+    min-width: 1.6rem;
+    text-align: right;
+  }
+  @media (max-width: 640px) {
+    .visitor-counter { display: none; }
+  }
+</style>

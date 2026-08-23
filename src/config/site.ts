@@ -12,7 +12,7 @@ export const siteConfig = {
   // FDS TikTok profile URL. Intentionally empty until the founder confirms the
   // real handle — social components hide TikTok automatically while empty.
   // Never invent a username here.
-  tiktokUrl: "",
+  tiktokUrl: "https://www.tiktok.com/@forgerdigitalsolutions?_r=1&_t=ZP-997YyZZUZ2t",
 
   // --- FDS Development & Hardware Support ---
   // Direct support for FDS development, operations, and development hardware.
@@ -62,6 +62,10 @@ Anything else we should know:`,
 
   // --- Community Impact initiatives (future concepts, not active programs) ---
   communityImpactStatus: "Exploring",
+
+  // --- Visitor counter ---
+  // Free no-signup counter API key. Change this to a unique string if needed.
+  visitorCounterKey: "fds_website_visits",
 
   // --- Community Projects Fund ---
   // Community-project funding is intentionally DISABLED. It must stay separate

@@ -64,67 +64,44 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
   .sdialog__continue { flex: 1 1 12rem; }
   .sdialog__later { padding: .5rem; border: 0; background: transparent; color: var(--color-text-muted); font-size: .88rem; cursor: pointer; transition: color .2s ease; }.sdialog__later:hover { color: var(--color-text); }
 </style>
-<script>
-  // First-visit support dialog.
-  // - Shows once per ~30 days per browser (localStorage), never on every page.
-  // - Native <dialog> provides role=dialog semantics, aria-modal behavior,
-  //   focus trapping, Escape handling, and focus restoration for free.
-  // - All storage access is guarded so private mode / blocked storage never
-  //   breaks the site (the dialog simply shows more often or not at all).
-  const STORAGE_KEY = 'fds-support-dismissed-at';
-  const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
-  const OPEN_DELAY_MS = 900;
+  <script>
+    // Always show the support dialog on every visit.
+    // Native <dialog> provides role=dialog semantics, aria-modal behavior,
+    // focus trapping, Escape handling, and focus restoration for free.
+    // All storage access is guarded so private mode / blocked storage never
+    // breaks the site (the dialog simply shows).
+    const OPEN_DELAY_MS = 900;
 
-  const dialog = document.getElementById('fds-support-dialog') as HTMLDialogElement | null;
-  if (dialog && typeof dialog.showModal === 'function') {
-    const storageWorks = (() => {
-      try {
-        const probe = '__fds_probe__';
-        window.localStorage.setItem(probe, probe);
-        window.localStorage.removeItem(probe);
-        return true;
-      } catch {
-        return false;
-      }
-    })();
+    const dialog = document.getElementById('fds-support-dialog') as HTMLDialogElement | null;
+    if (dialog && typeof dialog.showModal === 'function') {
+      const storageWorks = (() => {
+        try {
+          const probe = '__fds_probe__';
+          window.localStorage.setItem(probe, probe);
+          window.localStorage.removeItem(probe);
+          return true;
+        } catch {
+          return false;
+        }
+      })();
 
-    let dismissedAt = 0;
-    if (storageWorks) {
-      try {
-        dismissedAt = Number(window.localStorage.getItem(STORAGE_KEY)) || 0;
-      } catch {
-        dismissedAt = 0;
-      }
-    }
-
-    const expired = dismissedAt > 0 && Date.now() - dismissedAt > THIRTY_DAYS_MS;
-    if (expired && storageWorks) {
-      try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* noop */ }
-    }
-
-    if (!dismissedAt || expired) {
       window.setTimeout(() => {
         if (dialog.open || document.hidden) return;
         document.documentElement.classList.add('has-open-dialog');
         dialog.showModal();
       }, OPEN_DELAY_MS);
+
+      dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('has-open-dialog');
+      });
+
+      // Click on the backdrop (the dialog element itself) closes it.
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog && dialog.open) dialog.close();
+      });
+
+      dialog.querySelector('[data-sdialog-close]')?.addEventListener('click', () => {
+        if (dialog.open) dialog.close();
+      });
     }
-
-    dialog.addEventListener('close', () => {
-      document.documentElement.classList.remove('has-open-dialog');
-      if (!storageWorks) return;
-      try {
-        window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
-      } catch { /* noop */ }
-    });
-
-    // Click on the backdrop (the dialog element itself) closes it.
-    dialog.addEventListener('click', (event) => {
-      if (event.target === dialog && dialog.open) dialog.close();
-    });
-
-    dialog.querySelector('[data-sdialog-close]')?.addEventListener('click', () => {
-      if (dialog.open) dialog.close();
-    });
-  }
-</script>
+  </script>
