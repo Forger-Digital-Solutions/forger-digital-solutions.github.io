@@ -23,6 +23,22 @@ export interface Product {
   comingSoon?: boolean;
 }
 
-export const products: Product[] = [];
+export const products: Product[] = [
+  {
+    name: "ForgerEMS",
+    slug: "forgerems",
+    tagline: "Energy management and monitoring platform.",
+    description: "ForgerEMS is an energy management application for monitoring, controlling, and optimizing energy usage across connected systems and environments.",
+    category: "Application",
+    platform: ["Windows"],
+    status: "public-beta",
+    version: "v1.2.4-preview.5",
+    pricingModel: "free",
+    downloadUrl: "/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip",
+    docsUrl: "/projects/forgerems",
+    featured: true,
+    comingSoon: false,
+  },
+];
 
 export const featuredProducts = products.filter((p) => p.featured);
