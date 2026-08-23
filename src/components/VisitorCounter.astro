@@ -11,6 +11,7 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
   (function () {
     const STORAGE_KEY = 'fds_visitor_id';
     const EXPIRY_KEY = 'fds_visitor_expiry';
+    const COUNTED_KEY = 'fds_visitor_counted_at';
     const DEDUP_MS = 24 * 60 * 60 * 1000;
     const url = document.getElementById('fds-visitor-counter')?.dataset.counterUrl;
 
@@ -47,26 +48,10 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
     }
 
     let counted = false;
-
-    const tryCount = async () => {
-      if (counted) return;
-      counted = true;
-      try {
-        const res = await fetch(url, { method: 'GET', keepalive: true });
-        if (!res.ok) throw new Error('Counter request failed');
-        const data = await res.json();
-        if (data.value != null) {
-          valueEl.textContent = Number(data.value).toLocaleString();
-        }
-      } catch {
-        valueEl.textContent = '0';
-      }
-    };
-
-    tryCount();
+    let bc: BroadcastChannel | null = null;
 
     try {
-      const bc = new BroadcastChannel('fds_visitor_counter');
+      bc = new BroadcastChannel('fds_visitor_counter');
       bc.addEventListener('message', (ev) => {
         if (ev.data && ev.data.type === 'fds_counted') {
           counted = true;
@@ -76,6 +61,39 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
     } catch {
       // BroadcastChannel not supported — ignore
     }
+
+    const tryCount = async () => {
+      if (counted) return;
+      counted = true;
+      try {
+        const res = await fetch(url, { method: 'GET', keepalive: true });
+        if (!res.ok) throw new Error('Counter request failed');
+        const data = await res.json();
+        const value = data.value != null ? Number(data.value).toLocaleString() : '0';
+        valueEl.textContent = value;
+        bc?.postMessage({ type: 'fds_counted', value: data.value });
+        try { window.localStorage.setItem(COUNTED_KEY, String(Date.now())); } catch {}
+      } catch {
+        valueEl.textContent = '0';
+      }
+    };
+
+    const recentLocalCount = (() => {
+      try {
+        const raw = window.localStorage.getItem(COUNTED_KEY);
+        if (!raw) return false;
+        return Date.now() - Number(raw) < 2000;
+      } catch {
+        return false;
+      }
+    })();
+
+    if (recentLocalCount) return;
+
+    setTimeout(() => {
+      if (counted) return;
+      tryCount();
+    }, 150);
   })();
 </script>
 <style>
