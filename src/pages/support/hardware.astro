@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { siteConfig } from '../../config/site';
+
+const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeURIComponent(siteConfig.hardwareDonationSubject)}&body=${encodeURIComponent(siteConfig.hardwareDonationBody)}`;
+const examples = siteConfig.hardwareExamples;
+---
+<BaseLayout
+  title="Hardware Donations"
+  description="Give your old tech a second life. Laptops, workstations, GPUs, servers, storage, and other usable equipment can support FDS development, testing, research, education, or future community technology initiatives."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><a href="/support">Support</a><span aria-hidden="true">/</span><span aria-current="page">Hardware Donations</span>
+  </nav>
+
+  <header class="hw-hero">
+    <p class="hw-hero__eyebrow">Hardware Donations</p>
+    <h1>Give Your Old Tech a Second Life</h1>
+    <p class="hw-hero__lead">
+      Capable technology that would otherwise sit unused may be useful for
+      development, testing, research, education, or future community technology
+      initiatives. If you have equipment you're no longer using, FDS would
+      rather put it to work than see it collect dust.
+    </p>
+  </header>
+
+  <section class="hw-section" aria-labelledby="what-title">
+    <SectionHeader eyebrow="What FDS Can Use" title="Examples of useful equipment" />
+    <ul class="hw-examples" role="list">
+      {examples.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="hw-note">
+      This is not an exhaustive list — if it computes, stores, moves data, or
+      helps people build and learn, it's worth asking about.
+    </p>
+  </section>
+
+  <section class="hw-section" aria-labelledby="how-title">
+    <SectionHeader eyebrow="How It Works" title="Contact first — always" description="FDS does not publish a shipping address. Equipment donations are coordinated privately after an initial conversation so nothing gets lost or wasted." />
+    <div class="hw-steps">
+      <article><span>01</span><h3>Reach out</h3><p>Email FDS with the button below and include what you have.</p></article>
+      <article><span>02</span><h3>Talk details</h3><p>FDS will confirm whether the equipment can be put to productive use and coordinate next steps privately.</p></article>
+      <article><span>03</span><h3>Put to work</h3><p>Accepted equipment supports development, testing, research, education, or future community technology initiatives.</p></article>
+    </div>
+    <div class="hw-ask">
+      <h3>Helpful things to include</h3>
+      <ul role="list">
+        <li>Device / model</li>
+        <li>Basic specifications</li>
+        <li>Working condition</li>
+        <li>Approximate location (city / region)</li>
+        <li>Whether shipping is possible</li>
+      </ul>
+      <p>Please don't include serial numbers, accounts, or any sensitive information in a first message.</p>
+    </div>
+    <div class="hw-actions">
+      <a href={hardwareMailtoHref} class="btn btn-primary">Email FDS About a Hardware Donation</a>
+      <a href="/support" class="btn btn-outline">Back to Support</a>
+    </div>
+  </section>
+
+  <aside class="disclosure" aria-label="Hardware donation notes">
+    <p>
+      Contact FDS first so we can determine whether the equipment can be put to
+      productive use and coordinate next steps privately. Not every device can
+      be accepted — but every offer is genuinely appreciated. Technology
+      contributions are voluntary support for FDS's mission; they are not
+      tax-deductible charitable donations.
+    </p>
+  </aside>
+</BaseLayout>
+<style>
+  .hw-hero { max-width: 52rem; padding: clamp(2.5rem, 6vw, 4rem) 0 var(--space-5); }.hw-hero__eyebrow { margin-bottom: .65rem; color: var(--color-accent); font: 700 .72rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }.hw-hero h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.6rem); line-height: 1.05; letter-spacing: -.04em; }.hw-hero__lead { margin-top: 1.1rem; color: var(--color-text-muted); font-size: 1.08rem; line-height: 1.75; }
+
+  .hw-section { padding-bottom: var(--space-6); }
+  .hw-examples { display: flex; flex-wrap: wrap; gap: .55rem; margin: 0; padding: 0; list-style: none; }.hw-examples li { padding: .55rem .8rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text-muted); font: 700 .78rem/1 var(--font-mono); }.hw-note { margin-top: 1rem; color: var(--color-text-subtle); font-size: .9rem; }
+
+  .hw-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-border); margin-bottom: 1rem; }.hw-steps article { padding: 1.4rem; background: var(--color-bg); }.hw-steps span { color: var(--color-accent); font: 700 .72rem/1 var(--font-mono); }.hw-steps h3 { margin: 1.4rem 0 .5rem; font-size: 1.02rem; }.hw-steps p { margin: 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.6; }
+
+  .hw-ask { max-width: 46rem; padding: 1.4rem 1.5rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg-secondary); }.hw-ask h3 { margin: 0 0 .7rem; font-size: 1rem; }.hw-ask ul { margin: 0 0 .9rem; padding-left: 1.2rem; color: var(--color-text-muted); line-height: 1.8; }.hw-ask p { margin: 0; color: var(--color-text-subtle); font-size: .88rem; }
+
+  .hw-actions { display: flex; flex-wrap: wrap; gap: .85rem; align-items: center; margin-top: 1.6rem; }
+
+  .disclosure { max-width: 46rem; margin-bottom: var(--space-7); padding: 1.3rem 1.5rem; border: 1px solid var(--color-border); border-left: 3px solid var(--color-silver); border-radius: var(--radius-md); background: var(--color-bg-secondary); }.disclosure p { margin: 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.7; }
+
+  @media (max-width: 760px) { .hw-steps { grid-template-columns: 1fr; } }
+</style>

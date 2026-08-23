@@ -23,9 +23,12 @@ const featuredProjects = projects.filter(p => p.featured);
         <li><a href="/notes">Notes</a></li>
         <li><a href="/technology">Technology</a></li>
         <li><a href="/about">About</a></li>
+        <li><a href="/support">Support FDS</a></li>
+        <li><a href="/support/hardware">Hardware Donations</a></li>
+        <li><a href="/community-impact">Community Impact</a></li>
       </ul>
     </div>
-    
+
     <div class="footer-links">
       <h3>Connect</h3>
       <ul>
@@ -33,8 +36,8 @@ const featuredProjects = projects.filter(p => p.featured);
         <li><a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube</a></li>
         <li><a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Discord</a></li>
         <li><a href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        {siteConfig.tiktokUrl && <li><a href={siteConfig.tiktokUrl} target="_blank" rel="noopener noreferrer">TikTok</a></li>}
         <li><a href={`mailto:${siteConfig.supportEmail}`}>Support Email</a></li>
-        <li><a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer">Support FDS</a></li>
       </ul>
     </div>
 

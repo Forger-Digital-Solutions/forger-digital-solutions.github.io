@@ -23,7 +23,7 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     <h1><span>FORGER</span> <span><span class="silver">DIGITAL</span> <span class="accent">SOLUTIONS</span></span></h1>
     <p class="hero__line">Building software that learns, adapts, and creates.</p>
     <p class="hero__description">{siteConfig.description}</p>
-    <div class="hero__actions"><a href="/projects" class="btn btn-primary">Explore Projects</a>{siteConfig.githubUrl && <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on GitHub</a>}<a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer" class="hero__support">Support FDS <span aria-hidden="true">↗</span></a></div>
+    <div class="hero__actions"><a href="/projects" class="btn btn-primary">Explore Projects</a>{siteConfig.githubUrl && <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on GitHub</a>}<a href="/support" class="hero__support">Support FDS <span aria-hidden="true">→</span></a></div>
   </section>
 
   <section class="page-section" aria-labelledby="flagship-title">
@@ -90,7 +90,30 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
 
   <section class="page-section" aria-labelledby="technology-title"><SectionHeader eyebrow="Tools &amp; Environments" title="Technology snapshot" description="A practical technology landscape for research, experiments, and software systems." /><div class="technology-strip"><span>Python</span><span>.NET</span><span>TypeScript</span><span>Model Training</span><span>Evaluation Systems</span><span>CUDA</span><span>Local GPU</span></div><a href="/technology" class="text-link">Explore technology <span aria-hidden="true">→</span></a></section>
 
-  <section class="page-section support-section" aria-labelledby="support-title"><SectionHeader eyebrow="Independent Work" title="Support independent development" description="Support independent FDS software development, research, experimentation, and infrastructure." /><a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Support FDS on Ko-fi</a></section>
+  <section class="page-section support-section" aria-labelledby="support-title">
+    <SectionHeader eyebrow="Support FDS" title="Help forge what's next" description="FDS is built independently. Development hardware, retired technology, and future community projects each have their own path." />
+    <div class="support-grid">
+      <a class="support-card" href="/support">
+        <span>Development &amp; Hardware</span>
+        <h3>Support Development</h3>
+        <p>Cash App and Ko-fi contributions go toward workstations, GPUs, storage, testing equipment, and development infrastructure.</p>
+        <em>Visit Support <span aria-hidden="true">→</span></em>
+      </a>
+      <a class="support-card" href="/support/hardware">
+        <span>Second Life Tech</span>
+        <h3>Donate Technology</h3>
+        <p>Laptops, workstations, GPUs, servers, and storage that would otherwise sit unused can help development, testing, and future community initiatives.</p>
+        <em>Hardware donations <span aria-hidden="true">→</span></em>
+      </a>
+      <a class="support-card" href="/community-impact">
+        <span>Public Benefit</span>
+        <h3>Community Impact</h3>
+        <p>Affordable-community concepts, gardens, and technology reuse — future ideas explored openly, and always funded separately from FDS development.</p>
+        <em>Learn about community impact <span aria-hidden="true">→</span></em>
+      </a>
+    </div>
+    <p class="support-disclosure">Support provided directly to Forger Digital Solutions is used to help advance its development and operations. Contributions should not be assumed to be tax-deductible charitable donations.</p>
+  </section>
 </BaseLayout>
 <style>
   .hero { position: relative; overflow: hidden; min-height: 38rem; padding: clamp(5rem, 12vw, 9rem) 0 var(--space-7); }.hero::after { position: absolute; top: 1rem; right: -3rem; width: min(45vw, 35rem); height: min(45vw, 35rem); border: 1px solid rgba(95,168,255,.18); border-radius: 50%; box-shadow: 0 0 0 3rem rgba(95,168,255,.03), 0 0 0 7rem rgba(203,210,220,.02); content: ''; }.hero__identity { position: absolute; z-index: -1; top: 2rem; right: 3vw; width: min(40vw, 30rem); opacity: .15; filter: grayscale(1) contrast(1.3); }.hero__status { margin-bottom: 1.25rem; color: var(--color-accent-secondary); font: 700 .73rem/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }.hero h1 { max-width: 55rem; font-size: clamp(2.8rem, 8vw, 6.7rem); line-height: .92; letter-spacing: -.06em; }.hero h1 span { display: block; }.hero h1 > span:last-child { font-weight: 500; }.hero h1 span span { display: inline; }.hero h1 .accent { color: var(--color-accent); }.hero h1 .silver { color: var(--color-silver); }.hero__line { margin-top: 1.6rem; color: var(--color-accent); font-size: clamp(1.15rem, 2.4vw, 1.45rem); font-weight: 700; }.hero__description { max-width: 43rem; margin-top: 1rem; color: var(--color-text-muted); font-size: 1.08rem; }.hero__actions { display: flex; flex-wrap: wrap; gap: .85rem; align-items: center; margin-top: 2.2rem; }.hero__support { padding: .7rem; font: 700 .73rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }.hero__support span { color: var(--color-accent); }
@@ -103,8 +126,8 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
   .notes-head { display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between; }.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem; }
   .roadmap-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }.roadmap-item { padding: 1.1rem 1.2rem; border: 1px solid var(--color-border); border-top: 3px solid var(--project-accent); border-radius: var(--radius-md); background: var(--color-surface); }.roadmap-item a { color: var(--color-text); font-weight: 700; letter-spacing: -.02em; }.roadmap-item a:hover { color: var(--project-accent); opacity: 1; }.roadmap-item p { margin: .5rem 0 0; color: var(--color-text-muted); font-size: .9rem; line-height: 1.55; }
 
-  .capability-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border: 1px solid var(--color-border); background: var(--color-border); }.capability-grid article { min-height: 14rem; padding: 1.4rem; background: var(--color-bg); }.capability-grid span { color: var(--color-accent); font: 700 .72rem/1 var(--font-mono); }.capability-grid h3 { margin: 2rem 0 .7rem; font-size: 1.1rem; }.capability-grid p { color: var(--color-text-muted); font-size: .92rem; }.lab-section { text-align: center; }.lab-section :global(.section-header) { margin-right: auto; margin-left: auto; }.technology-strip { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }.technology-strip span { padding: .5rem .7rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text-muted); font: 700 .72rem/1 var(--font-mono); }.text-link { font: 700 .78rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }.support-section { padding-bottom: 7rem; }.support-section :global(.section-header) { margin-bottom: 1.5rem; }
-  @media (max-width: 860px) { .flagship { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .capability-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border: 1px solid var(--color-border); background: var(--color-border); }.capability-grid article { min-height: 14rem; padding: 1.4rem; background: var(--color-bg); }.capability-grid span { color: var(--color-accent); font: 700 .72rem/1 var(--font-mono); }.capability-grid h3 { margin: 2rem 0 .7rem; font-size: 1.1rem; }.capability-grid p { color: var(--color-text-muted); font-size: .92rem; }.lab-section { text-align: center; }.lab-section :global(.section-header) { margin-right: auto; margin-left: auto; }.technology-strip { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }.technology-strip span { padding: .5rem .7rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text-muted); font: 700 .72rem/1 var(--font-mono); }.text-link { font: 700 .78rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }.support-section { padding-bottom: 7rem; }.support-section :global(.section-header) { margin-bottom: 1.5rem; }.support-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }.support-card { display: flex; flex-direction: column; gap: .55rem; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); transition: border-color .2s ease, transform .2s ease; }.support-card:hover { border-color: var(--color-accent-secondary); transform: translateY(-2px); }.support-card > span { color: var(--color-accent); font: 700 .7rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }.support-card h3 { margin: 0; color: var(--color-text); font-size: 1.15rem; letter-spacing: -.02em; }.support-card p { margin: 0; flex: 1; color: var(--color-text-muted); font-size: .92rem; line-height: 1.62; }.support-card em { color: var(--color-accent-secondary); font: 700 .74rem/1 var(--font-mono); font-style: normal; letter-spacing: .06em; text-transform: uppercase; }.support-disclosure { max-width: 46rem; margin: 1.4rem 0 0; color: var(--color-text-subtle); font-size: .82rem; line-height: 1.65; }
+  @media (max-width: 860px) { .flagship { grid-template-columns: 1fr; gap: 1.5rem; }.support-grid { grid-template-columns: 1fr; } }
   @media (max-width: 760px) { .hero { min-height: 32rem; }.hero__identity { top: 4rem; right: -3rem; width: 18rem; }.projects-grid { grid-template-columns: 1fr; }.capability-grid { grid-template-columns: 1fr 1fr; }.hero__actions { align-items: stretch; }.hero__actions .btn { flex: 1 1 10rem; } }
   @media (max-width: 430px) { .capability-grid { grid-template-columns: 1fr; }.hero h1 { font-size: 2.65rem; }.hero__actions .btn { flex-basis: 100%; } }
 </style>

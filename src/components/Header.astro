@@ -1,6 +1,6 @@
 ---
 import { siteConfig } from '../config/site';
-const { githubUrl, youtubeUrl, discordUrl, linkedinUrl, supportUrl } = siteConfig;
+const { githubUrl, youtubeUrl, discordUrl, linkedinUrl, tiktokUrl } = siteConfig;
 ---
 <nav class="navbar" aria-label="Main navigation">
   <div class="nav-container">
@@ -16,8 +16,9 @@ const { githubUrl, youtubeUrl, discordUrl, linkedinUrl, supportUrl } = siteConfi
         {youtubeUrl && <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label="FDS on YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg></a>}
         {discordUrl && <a href={discordUrl} target="_blank" rel="noopener noreferrer" aria-label="FDS on Discord"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.32 4.37A19.79 19.79 0 0 0 15.45 3c-.21.38-.46.89-.63 1.29a18.27 18.27 0 0 0-5.64 0C9 3.89 8.76 3.38 8.55 3a19.74 19.74 0 0 0-4.88 1.37C.55 8.06-.32 12.64.09 17.15A19.9 19.9 0 0 0 6.11 20.2c.49-.67.93-1.38 1.3-2.12-.71-.27-1.4-.6-2.04-.99.17-.13.34-.26.5-.4a14.2 14.2 0 0 0 12.26 0c.16.14.33.27.5.4-.65.39-1.33.72-2.05.99.37.74.81 1.45 1.3 2.12a19.87 19.87 0 0 0 6.02-3.05c.48-5.23-.82-9.77-3.46-13.79zM8.02 14.33c-1.18 0-2.15-1.09-2.15-2.42s.95-2.42 2.15-2.42 2.17 1.09 2.15 2.42c0 1.33-.95 2.42-2.15 2.42zm7.96 0c-1.18 0-2.15-1.09-2.15-2.42s.95-2.42 2.15-2.42 2.17 1.09 2.15 2.42c0 1.33-.94 2.42-2.15 2.42z"/></svg></a>}
         {linkedinUrl && <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label="Edward Schmidt on LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg></a>}
+        {tiktokUrl && <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" aria-label="FDS on TikTok"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>}
       </li>
-      <li><a href={supportUrl} target="_blank" rel="noopener noreferrer" class="support-btn">Support FDS</a></li>
+      <li><a href="/support" class="support-btn">Support FDS</a></li>
     </ul>
   </div>
 </nav>

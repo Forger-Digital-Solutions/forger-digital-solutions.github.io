@@ -22,8 +22,10 @@ const faqs = [
   },
   {
     q: 'How can I support FDS?',
-    a: `FDS is independently developed. The most direct way to help is through Ko-fi, linked as
-        "Support FDS" throughout the site. Following along on YouTube and Discord helps too.`
+    a: `FDS is independently developed. The Support page covers development and
+        hardware support — Cash App ($ForgerDigital) and Ko-fi — plus hardware
+        donations and future community-impact initiatives, each kept clearly
+        separate. Following along on YouTube and Discord helps too.`
   },
   {
     q: 'How do I get in touch?',
@@ -64,7 +66,11 @@ const faqs = [
           <div class="faq-item__answer">
             <p>{item.a}</p>
             {item.q === 'How can I support FDS?' && (
-              <p><a href={siteConfig.supportUrl} target="_blank" rel="noopener noreferrer">Support FDS on Ko-fi &rarr;</a></p>
+              <p>
+                <a href="/support">Visit the Support page &rarr;</a>
+                {' · '}
+                {siteConfig.kofiUrl && <a href={siteConfig.kofiUrl} target="_blank" rel="noopener noreferrer">Support on Ko-fi</a>}
+              </p>
             )}
             {item.q === 'How do I get in touch?' && (
               <p>
