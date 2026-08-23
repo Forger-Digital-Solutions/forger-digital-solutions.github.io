@@ -144,18 +144,83 @@ When `projectSlug` matches a project, the note gets a project badge and appears 
 that project's **Latest Project Updates**. Notes are curated writing — do not paste raw
 commit messages, private phase reports, secrets, or internal architecture into them.
 
-## Updating support link
+## Support & social configuration
 
-The Ko-fi support URL is defined in `src/config/site.ts`:
+All support methods and social accounts are centralized in `src/config/site.ts`.
+The UI (header, footer, `/support`, the first-visit support dialog) reads from
+this one file — nothing is hardcoded in components.
+
+### Adding or changing a social account
+
+Edit `src/config/site.ts`:
 
 ```typescript
-export const siteConfig = {
-  // ...
-  supportUrl: "https://ko-fi.com/forgerdigitalsolutions"
-};
+githubUrl: "https://github.com/forger-digital-solutions",
+youtubeUrl: "https://www.youtube.com/@Forger_Digital_Solutions",
+discordUrl: "https://discord.gg/…",
+linkedinUrl: "https://www.linkedin.com/in/…",
+tiktokUrl: "",   // empty = TikTok stays hidden everywhere on the site
 ```
 
-Update the `supportUrl` value to change the support button destination.
+To enable TikTok, set `tiktokUrl` to the **real** profile URL, e.g.
+`"https://www.tiktok.com/@forgerdigitalsolutions"` — only once that handle is
+confirmed by the founder. While it is empty, every social slot (header icons,
+footer links) simply omits TikTok. Never invent a username. The content
+validator accepts an empty value but rejects a non-empty value that isn't a
+`tiktok.com` URL.
+
+### Updating Cash App
+
+```typescript
+cashAppHandle: "$ForgerDigital",
+cashAppUrl: "https://cash.app/$ForgerDigital",
+```
+
+Both fields must stay consistent (`https://cash.app/$Handle`). The handle is
+shown visibly on `/support` with a copy-to-clipboard button, and used by the
+first-visit support dialog.
+
+### Adding Ko-fi
+
+```typescript
+kofiUrl: "https://ko-fi.com/forgerdigitalsolutions",
+```
+
+`supportUrl` is kept as a legacy alias of the Ko-fi URL for existing
+components. If `kofiUrl` were ever emptied, Ko-fi CTAs disappear gracefully —
+the validator treats it as optional-but-validated.
+
+### Hardware donation email
+
+Hardware donations never publish a physical address. The CTA on
+`/support/hardware` builds a `mailto:` from the public support email plus the
+prefilled subject/body:
+
+```typescript
+supportEmail: "forgerdigisolsupport@gmail.com",
+hardwareDonationSubject: "FDS Hardware Donation",
+hardwareDonationBody: `…`,   // asks for device/model, specs, condition,
+                             // approximate location, shipping possibility
+```
+
+### Activating community funding later
+
+Community-project funding is **disabled** and must stay separate from FDS
+development/hardware support. Before exposing any community-funding CTA:
+
+1. A real mechanism must exist (dedicated account, fiscal sponsorship, etc.).
+2. Set `communityFundingUrl` to the live contribution destination.
+3. Only then flip `communityFundingActive` to `true`.
+4. Wallet transparency fields (`communityWalletAddress`, `-Network`,
+   `-Type`, `-Threshold`) must be either all populated or all empty — partial
+   configuration fails validation. Do not publish any wallet data until it is
+   real and intended to be public; do not select a multisig threshold until
+   the signer setup actually exists.
+5. `communityLedgerUrl` can be added whenever a public ledger exists.
+
+**Never commit** crypto private keys, seed phrases, payment secrets, API keys,
+or private/home addresses — not in config, not anywhere. The site needs no
+secrets to run any of these features.
 
 ## Project structure
 

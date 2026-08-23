@@ -46,6 +46,81 @@ for (const file of noteFiles) {
   }
 }
 
+// --- Support / social configuration (src/config/site.ts) ---
+// Parses flat "key: \"value\"" pairs without importing TypeScript.
+// Optional channels (Ko-fi, TikTok, community funding) are allowed to be
+// empty — empty simply means the UI hides them. Malformed non-empty values fail.
+const siteSrc = readFileSync(join(root, 'src/config/site.ts'), 'utf8');
+const cfgValue = (key) => {
+  const m = siteSrc.match(new RegExp(`^\\s*${key}:\\s*"([^"]*)"`, 'm'));
+  return m ? m[1] : null;
+};
+const cfgBool = (key) => {
+  const m = siteSrc.match(new RegExp(`^\\s*${key}:\\s*(true|false)`, 'm'));
+  return m ? m[1] === 'true' : null;
+};
+const isHttpUrl = (v) => /^https:\/\/[^\s"'<>]+$/.test(v);
+
+const urlKeys = ['siteUrl', 'githubUrl', 'youtubeUrl', 'discordUrl', 'linkedinUrl', 'tiktokUrl', 'supportUrl', 'kofiUrl', 'cashAppUrl'];
+const urlValues = {};
+for (const key of urlKeys) {
+  const v = cfgValue(key);
+  if (v === null) { err(`site.ts: missing required config key: ${key}`); continue; }
+  urlValues[key] = v;
+  if (v === '') continue;
+  if (!isHttpUrl(v)) err(`site.ts: ${key} is not a valid HTTPS URL: "${v}"`);
+}
+
+if (urlValues.tiktokUrl && !/tiktok\.com\//i.test(urlValues.tiktokUrl)) {
+  err(`site.ts: tiktokUrl must be a tiktok.com profile URL`);
+}
+if (urlValues.kofiUrl && !/ko-fi\.com\//i.test(urlValues.kofiUrl)) {
+  err(`site.ts: kofiUrl must be a ko-fi.com URL`);
+}
+if (!/^https:\/\/cash\.app\/\$[A-Za-z0-9._-]+$/.test(urlValues.cashAppUrl || '')) {
+  err(`site.ts: cashAppUrl must look like https://cash.app/$Handle`);
+}
+const cashHandle = cfgValue('cashAppHandle');
+if (cashHandle === null || !/^\$[A-Za-z0-9._-]+$/.test(cashHandle)) {
+  err(`site.ts: cashAppHandle must look like "$ForgerDigital"`);
+}
+const supportEmail = cfgValue('supportEmail');
+if (!supportEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(supportEmail)) {
+  err(`site.ts: supportEmail must be a valid email address`);
+}
+if (!cfgValue('hardwareDonationSubject')) {
+  err(`site.ts: hardwareDonationSubject must be set`);
+}
+
+// Support destinations that serve different purposes must not collide.
+{
+  const distinct = [urlValues.kofiUrl, urlValues.cashAppUrl, urlValues.tiktokUrl].filter(Boolean);
+  const seen = new Set();
+  for (const u of distinct) {
+    if (seen.has(u)) err(`site.ts: duplicate support/social destination URL: ${u}`);
+    seen.add(u);
+  }
+}
+
+// Community funding must stay coherent: either fully unconfigured (wallet
+// fields all empty) or fully populated. Partial wallet configuration fails.
+{
+  const walletKeys = ['communityWalletAddress', 'communityWalletNetwork', 'communityWalletType', 'communityWalletThreshold'];
+  const setCount = walletKeys.filter((k) => (cfgValue(k) ?? '') !== '').length;
+  if (setCount > 0 && setCount < walletKeys.length) {
+    err(`site.ts: community wallet fields are partially populated (${setCount}/${walletKeys.length}) — configure all or none`);
+  }
+  const active = cfgBool('communityFundingActive');
+  if (active === null) err(`site.ts: missing communityFundingActive (expected true or false)`);
+  const fundingUrl = cfgValue('communityFundingUrl') ?? '';
+  if (active && !fundingUrl) {
+    err(`site.ts: communityFundingActive is true but communityFundingUrl is empty — a live contribution destination is required first`);
+  }
+  if (active && setCount > 0 && setCount < walletKeys.length) {
+    // already covered above; kept explicit for readability
+  }
+}
+
 if (errors.length) {
   console.error(`\n✗ Content validation failed (${errors.length}):`);
   for (const e of errors) console.error(`  - ${e}`);
