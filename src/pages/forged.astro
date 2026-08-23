@@ -30,7 +30,7 @@ const hasFeatured = featuredProducts.length > 0;
 
     {hasProducts && (
       <div class="forged-grid">
-        {products.map((product) => (
+        {products.filter((p) => !p.featured).map((product) => (
           <ProductCard product={product} />
         ))}
       </div>
