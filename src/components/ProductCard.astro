@@ -1,0 +1,149 @@
+---
+import type { Product } from '../data/products';
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const statusLabel = {
+  'free': 'Free',
+  'paid': 'Paid',
+  'donation': 'Donation-supported',
+  'coming-soon': 'Coming Soon',
+  'private-beta': 'Private Beta',
+  'public-beta': 'Public Beta',
+  'released': 'Released',
+  'unavailable': 'Unavailable',
+}[product.status] ?? product.status;
+---
+
+<article class="product-card" style={`--product-accent: var(--color-accent)`}>
+  <div class="product-card__header">
+    <span class="product-card__category">{product.category}</span>
+    <span class="product-card__status product-card__status--{product.status}">{statusLabel}</span>
+  </div>
+  <h3 class="product-card__name">{product.name}</h3>
+  <p class="product-card__tagline">{product.tagline}</p>
+  <p class="product-card__description">{product.description}</p>
+  <div class="product-card__meta">
+    {product.platform.length > 0 && (
+      <span class="product-card__platform">{product.platform.join(' / ')}</span>
+    )}
+    {product.version && <span class="product-card__version">v{product.version}</span>}
+  </div>
+  <div class="product-card__actions">
+    {product.downloadUrl && <a href={product.downloadUrl} class="btn btn-primary">Get App</a>}
+    {product.purchaseUrl && <a href={product.purchaseUrl} class="btn btn-outline">Purchase</a>}
+    {product.docsUrl && <a href={product.docsUrl} class="text-link">Documentation <span aria-hidden="true">→</span></a>}
+    {product.releaseNotesUrl && <a href={product.releaseNotesUrl} class="text-link">Release Notes <span aria-hidden="true">→</span></a>}
+  </div>
+</article>
+
+<style>
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding: 1.4rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .product-card:hover {
+    border-color: var(--color-accent-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .product-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+  }
+  .product-card__category {
+    color: var(--color-accent);
+    font: 700 .68rem/1 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .product-card__status {
+    padding: .3rem .6rem;
+    border-radius: 999px;
+    font: 700 .65rem/1 var(--font-mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .product-card__status--released,
+  .product-card__status--public-beta {
+    color: #78ce9a;
+    border: 1px solid rgba(120,206,154,.25);
+    background: rgba(120,206,154,.08);
+  }
+  .product-card__status--coming-soon,
+  .product-card__status--private-beta {
+    color: var(--color-status-experimental);
+    border: 1px solid rgba(233,186,97,.25);
+    background: rgba(233,186,97,.08);
+  }
+  .product-card__status--free,
+  .product-card__status--donation {
+    color: var(--color-accent-secondary);
+    border: 1px solid rgba(95,168,255,.2);
+    background: rgba(95,168,255,.06);
+  }
+  .product-card__status--paid {
+    color: var(--color-text);
+    border: 1px solid var(--color-border-strong);
+  }
+  .product-card__status--unavailable {
+    color: var(--color-text-subtle);
+    border: 1px solid var(--color-border);
+  }
+  .product-card__name {
+    margin: 0;
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    color: var(--color-text);
+  }
+  .product-card__tagline {
+    margin: 0;
+    color: var(--color-accent-secondary);
+    font-size: .95rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .product-card__description {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .92rem;
+    line-height: 1.65;
+  }
+  .product-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+    margin-top: .2rem;
+  }
+  .product-card__platform {
+    color: var(--color-text-subtle);
+    font: 700 .65rem/1 var(--font-mono);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+  .product-card__version {
+    color: var(--color-text-muted);
+    font: 700 .65rem/1 var(--font-mono);
+  }
+  .product-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    align-items: center;
+    margin-top: .4rem;
+  }
+</style>

@@ -65,25 +65,27 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
   .sdialog__later { padding: .5rem; border: 0; background: transparent; color: var(--color-text-muted); font-size: .88rem; cursor: pointer; transition: color .2s ease; }.sdialog__later:hover { color: var(--color-text); }
 </style>
   <script>
-    // Always show the support dialog on every visit.
-    // Native <dialog> provides role=dialog semantics, aria-modal behavior,
-    // focus trapping, Escape handling, and focus restoration for free.
-    // All storage access is guarded so private mode / blocked storage never
-    // breaks the site (the dialog simply shows).
-    const OPEN_DELAY_MS = 900;
+    (function () {
+      const DIALOG_ID = 'fds-support-dialog';
+      const STORAGE_KEY = 'fds_support_dismissed_at';
+      const DEDUP_MS = 24 * 60 * 60 * 1000;
+      const OPEN_DELAY_MS = 900;
 
-    const dialog = document.getElementById('fds-support-dialog') as HTMLDialogElement | null;
-    if (dialog && typeof dialog.showModal === 'function') {
-      const storageWorks = (() => {
+      const dialog = document.getElementById(DIALOG_ID) as HTMLDialogElement | null;
+      if (!dialog || typeof dialog.showModal !== 'function') return;
+
+      const now = Date.now();
+      const dismissedAt = (() => {
         try {
-          const probe = '__fds_probe__';
-          window.localStorage.setItem(probe, probe);
-          window.localStorage.removeItem(probe);
-          return true;
+          const raw = window.localStorage.getItem(STORAGE_KEY);
+          return raw ? Number(raw) : NaN;
         } catch {
-          return false;
+          return NaN;
         }
       })();
+
+      if (!Number.isNaN(dismissedAt) && now - dismissedAt < DEDUP_MS) return;
+      if (dialog.open || document.hidden) return;
 
       window.setTimeout(() => {
         if (dialog.open || document.hidden) return;
@@ -93,9 +95,15 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
 
       dialog.addEventListener('close', () => {
         document.documentElement.classList.remove('has-open-dialog');
+        if (dialog.dataset.sdialogDismissed === 'true') {
+          try {
+            window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
+          } catch {
+            // private browsing / blocked storage — ignore
+          }
+        }
       });
 
-      // Click on the backdrop (the dialog element itself) closes it.
       dialog.addEventListener('click', (event) => {
         if (event.target === dialog && dialog.open) dialog.close();
       });
@@ -103,5 +111,11 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
       dialog.querySelector('[data-sdialog-close]')?.addEventListener('click', () => {
         if (dialog.open) dialog.close();
       });
-    }
+
+      const form = dialog.querySelector('.sdialog__form') as HTMLFormElement | null;
+      form?.addEventListener('submit', () => {
+        const val = (form as HTMLFormElement & { value?: string }).value;
+        dialog.dataset.sdialogDismissed = val === 'maybe-later' ? 'true' : 'true';
+      });
+    })();
   </script>

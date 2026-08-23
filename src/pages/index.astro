@@ -9,6 +9,7 @@ import ProjectStatus from '../components/ProjectStatus.astro';
 import ProcessVisualization from '../components/ProcessVisualization.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import NoteCard from '../components/NoteCard.astro';
+import SupportDialog from '../components/SupportDialog.astro';
 import { getPublishedNotes } from '../lib/notes';
 
 const sortedProjects = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
@@ -19,8 +20,9 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
 <BaseLayout>
   <section class="hero">
     <div class="hero__identity" aria-hidden="true"><img src="/images/brand/fds-logo.png" alt="" /></div>
-    <p class="hero__status">FDS // Research &amp; Development // Active</p>
-    <h1><span>FORGER</span> <span><span class="silver">DIGITAL</span> <span class="accent">SOLUTIONS</span></span></h1>
+    <div class="hero__wordmark" aria-label="Forger Digital Solutions"><span class="wordmark-f">F</span><span class="wordmark-d">D</span><span class="wordmark-s">S</span></div>
+    <p class="hero__status">Research &amp; Development // Active</p>
+    <h1><span class="accent">FORGER</span> <span><span class="silver">DIGITAL</span> <span class="accent">SOLUTIONS</span></span></h1>
     <p class="hero__line">Building software that learns, adapts, and creates.</p>
     <p class="hero__description">{siteConfig.description}</p>
     <div class="hero__actions"><a href="/projects" class="btn btn-primary">Explore Projects</a>{siteConfig.githubUrl && <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on GitHub</a>}<a href="/support" class="hero__support">Support FDS <span aria-hidden="true">→</span></a></div>
@@ -31,7 +33,7 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     <div class="flagship" style={`--project-accent: ${flagship.accentColor || 'var(--color-accent)'}`}>
       <div class="flagship__body">
         <ProjectStatus status={flagship.status} />
-        <p class="flagship__lead">Experimental intelligence engineering for training, evaluation, governed experimentation, and adaptable compute.</p>
+        <p class="flagship__lead">A disciplined approach to building intelligent systems: training specialized models, evaluating results, governing experimentation, and running across adaptable compute.</p>
         <p class="flagship__desc">{flagship.summary}</p>
         <a href={`/projects/${flagship.slug}`} class="btn btn-primary">Explore GEMS</a>
       </div>
@@ -59,7 +61,7 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     </ul>
   </section>
 
-  <section class="page-section" aria-labelledby="projects-title"><SectionHeader eyebrow="Project Showcase" title="What FDS is building" description="Five public initiatives. Each follows the same loop: build, test, measure, learn, evolve." /><div class="projects-grid">{sortedProjects.map((project) => <ProjectCard project={project} featured={project.flagship} />)}</div></section>
+  <section class="page-section" aria-labelledby="projects-title"><SectionHeader eyebrow="Project Showcase" title="What FDS is building" description="Five initiatives. Each follows the same loop: build, test, measure, learn, evolve." /><div class="projects-grid">{sortedProjects.map((project) => <ProjectCard project={project} featured={project.flagship} />)}</div></section>
 
   {latestNotes.length > 0 && (
     <section class="page-section page-section--surface" aria-labelledby="notes-title">
@@ -84,7 +86,7 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     </section>
   )}
 
-  <section class="page-section" aria-labelledby="build-title"><SectionHeader eyebrow="Capability" title="What we build" /><div class="capability-grid"><article><span>01</span><h3>Intelligent Systems</h3><p>Custom AI research, model experimentation, evaluation systems, and intelligent software.</p></article><article><span>02</span><h3>Developer Infrastructure</h3><p>Tools and systems that improve software development, experimentation, and execution.</p></article><article><span>03</span><h3>Creative Technology</h3><p>AI-assisted publishing, game-development tooling, and interactive software.</p></article><article><span>04</span><h3>Community Software</h3><p>Applications that connect people with useful local information and resources.</p></article></div></section>
+  <section class="page-section" aria-labelledby="build-title"><SectionHeader eyebrow="Capability" title="What we build" /><div class="capability-grid"><article><span>01</span><h3>Intelligent Systems</h3><p>AI research, model training, evaluation, and adaptive software — from experimental prototypes to evidence-driven architectures.</p></article><article><span>02</span><h3>Developer Infrastructure</h3><p>Tooling and systems that make software development, experimentation, and execution more disciplined and reproducible.</p></article><article><span>03</span><h3>Creative Technology</h3><p>AI-assisted publishing, game-development tooling, and interactive software that augments human creativity.</p></article><article><span>04</span><h3>Community Software</h3><p>Applications that connect people with useful local information, resources, and transparent public-facing systems.</p></article></div></section>
 
   <section class="page-section page-section--surface lab-section" aria-labelledby="lab-title"><SectionHeader eyebrow="FDS Lab" title="Experiment. Measure. Evolve." description="Systems are built, tested, measured, challenged, and refined before ideas become reusable architecture." /><a class="btn btn-outline" href="/lab">Explore the Lab</a></section>
 
@@ -113,10 +115,11 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
       </a>
     </div>
     <p class="support-disclosure">Support provided directly to Forger Digital Solutions is used to help advance its development and operations. Contributions should not be assumed to be tax-deductible charitable donations.</p>
-  </section>
-</BaseLayout>
+    </section>
+    <SupportDialog />
+  </BaseLayout>
 <style>
-  .hero { position: relative; overflow: hidden; min-height: 38rem; padding: clamp(5rem, 12vw, 9rem) 0 var(--space-7); }.hero::after { position: absolute; top: 1rem; right: -3rem; width: min(45vw, 35rem); height: min(45vw, 35rem); border: 1px solid rgba(95,168,255,.18); border-radius: 50%; box-shadow: 0 0 0 3rem rgba(95,168,255,.03), 0 0 0 7rem rgba(203,210,220,.02); content: ''; }.hero__identity { position: absolute; z-index: -1; top: 2rem; right: 3vw; width: min(40vw, 30rem); opacity: .15; filter: grayscale(1) contrast(1.3); }.hero__status { margin-bottom: 1.25rem; color: var(--color-accent-secondary); font: 700 .73rem/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }.hero h1 { max-width: 55rem; font-size: clamp(2.8rem, 8vw, 6.7rem); line-height: .92; letter-spacing: -.06em; }.hero h1 span { display: block; }.hero h1 > span:last-child { font-weight: 500; }.hero h1 span span { display: inline; }.hero h1 .accent { color: var(--color-accent); }.hero h1 .silver { color: var(--color-silver); }.hero__line { margin-top: 1.6rem; color: var(--color-accent); font-size: clamp(1.15rem, 2.4vw, 1.45rem); font-weight: 700; }.hero__description { max-width: 43rem; margin-top: 1rem; color: var(--color-text-muted); font-size: 1.08rem; }.hero__actions { display: flex; flex-wrap: wrap; gap: .85rem; align-items: center; margin-top: 2.2rem; }.hero__support { padding: .7rem; font: 700 .73rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }.hero__support span { color: var(--color-accent); }
+  .hero { position: relative; overflow: hidden; min-height: 38rem; padding: clamp(5rem, 12vw, 9rem) 0 var(--space-7); }.hero::after { position: absolute; top: 1rem; right: -3rem; width: min(45vw, 35rem); height: min(45vw, 35rem); border: 1px solid rgba(95,168,255,.18); border-radius: 50%; box-shadow: 0 0 0 3rem rgba(95,168,255,.03), 0 0 0 7rem rgba(203,210,220,.02); content: ''; }.hero__identity { position: absolute; z-index: -1; top: 2rem; right: 3vw; width: min(40vw, 30rem); opacity: .15; filter: grayscale(1) contrast(1.3); }.hero__wordmark { display: inline-flex; gap: .15rem; margin-bottom: 1.1rem; font: 800 clamp(1.6rem, 3.8vw, 2.6rem)/1 var(--font-mono); letter-spacing: .08em; }.hero__wordmark .wordmark-f { color: var(--color-accent); }.hero__wordmark .wordmark-d { color: var(--color-silver); }.hero__wordmark .wordmark-s { color: var(--color-accent); }.hero__status { margin-bottom: 1.25rem; color: var(--color-accent-secondary); font: 700 .73rem/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }.hero h1 { max-width: 55rem; font-size: clamp(2.8rem, 8vw, 6.7rem); line-height: .92; letter-spacing: -.06em; }.hero h1 span { display: block; }.hero h1 > span:last-child { font-weight: 500; }.hero h1 span span { display: inline; }.hero h1 .accent { color: var(--color-accent); }.hero h1 .silver { color: var(--color-silver); }.hero__line { margin-top: 1.6rem; color: var(--color-accent); font-size: clamp(1.15rem, 2.4vw, 1.45rem); font-weight: 700; }.hero__description { max-width: 43rem; margin-top: 1rem; color: var(--color-text-muted); font-size: 1.08rem; }.hero__actions { display: flex; flex-wrap: wrap; gap: .85rem; align-items: center; margin-top: 2.2rem; }.hero__support { padding: .7rem; font: 700 .73rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }.hero__support span { color: var(--color-accent); }
 
   .flagship { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 2.5rem; align-items: center; padding: 1.8rem; border: 1px solid color-mix(in srgb, var(--project-accent) 30%, var(--color-border)); border-left: 3px solid var(--project-accent); border-radius: var(--radius-lg); background: linear-gradient(120deg, color-mix(in srgb, var(--project-accent) 9%, var(--color-surface)), var(--color-surface) 60%); }.flagship__lead { margin: 1rem 0 .8rem; color: var(--color-text); font-size: clamp(1.15rem, 2.2vw, 1.5rem); font-weight: 700; line-height: 1.3; letter-spacing: -.02em; }.flagship__desc { margin-bottom: 1.6rem; color: var(--color-text-muted); }.flagship__visual { margin: 0; }.flagship__img { display: block; width: 100%; height: auto; border: 1px solid color-mix(in srgb, var(--project-accent) 30%, var(--color-border)); border-radius: var(--radius-md); }.flagship__visual figcaption { margin-top: .6rem; color: var(--color-text-subtle); font: .78rem/1.4 var(--font-mono); }
 

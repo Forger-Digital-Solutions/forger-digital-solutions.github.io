@@ -9,6 +9,7 @@ interface Props {
 
 const { project, featured = false } = Astro.props;
 ---
+
 <article class:list={['project-card', { 'project-card--featured': featured || project.flagship }]} id={project.id} style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
   <div class="project-card__art" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="project-header">
@@ -16,11 +17,18 @@ const { project, featured = false } = Astro.props;
     <ProjectStatus status={project.status} />
   </div>
   {project.flagship && <p class="project-flag">Flagship FDS Research</p>}
+  {project.stageLabel && !project.flagship && <p class="project-stage">{project.stageLabel}</p>}
   <h3 class="project-title"><a href={`/projects/${project.slug}`}>{project.name}</a></h3>
   <p class="project-description">{project.summary}</p>
 
+  {project.highlights && project.highlights.length > 0 && (
+    <ul class="project-highlights" aria-label={`${project.name} highlights`}>
+      {project.highlights.slice(0, 2).map((h) => <li>{h}</li>)}
+    </ul>
+  )}
+
   <div class="project-tags" role="list" aria-label={`${project.name} capabilities`}>
-    {project.tags.map((tag) => (
+    {project.tags.slice(0, 4).map((tag) => (
       <span class="tag" role="listitem">{tag}</span>
     ))}
   </div>
@@ -29,17 +37,19 @@ const { project, featured = false } = Astro.props;
 </article>
 
 <style>
-.project-card { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: 21rem; overflow: hidden; padding: 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: linear-gradient(140deg, color-mix(in srgb, var(--project-accent) 8%, var(--color-surface)) 0%, var(--color-surface) 47%); box-shadow: var(--shadow-sm); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
-.project-card::before { position: absolute; top: 0; right: 0; left: 0; height: 3px; background: var(--project-accent); content: ''; }
-.project-card:hover { border-color: color-mix(in srgb, var(--project-accent) 65%, var(--color-border)); box-shadow: var(--shadow-md); transform: translateY(-3px); }
-.project-card--featured { grid-column: span 2; min-height: 23rem; }
-.project-card__art { position: absolute; z-index: -1; top: 1rem; right: 1rem; width: 7rem; height: 7rem; opacity: .35; border: 1px solid var(--project-accent); border-radius: 48% 52% 38% 62%; transform: rotate(-14deg); }
-.project-card__art span { position: absolute; border: 1px solid var(--project-accent); border-radius: inherit; inset: .8rem; }.project-card__art span:nth-child(2) { inset: 1.6rem; }.project-card__art span:nth-child(3) { top: 50%; right: -.7rem; left: -.7rem; height: 1px; border: 0; border-radius: 0; background: var(--project-accent); }
-.project-header { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; }
-.project-category, .project-flag { color: var(--project-accent); font: 700 .68rem/1.35 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }.project-category { max-width: 18rem; }.project-flag { margin-top: 1.25rem; }
-.project-title { max-width: 24rem; margin: .8rem 0; color: var(--color-text); font-size: clamp(1.28rem, 2.2vw, 1.75rem); line-height: 1.15; letter-spacing: -.025em; }.project-title a { color: inherit; }.project-title a:hover { opacity: 1; color: var(--project-accent); }
-.project-description { flex-grow: 1; max-width: 38rem; margin-bottom: 1.25rem; color: var(--color-text-muted); line-height: 1.65; }
-.project-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.25rem; }.tag { margin: 0; }
-.project-link { display: inline-flex; gap: .45rem; align-items: center; width: fit-content; color: var(--color-text); font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }.project-link span { color: var(--project-accent); transition: transform .2s ease; }.project-link:hover { opacity: 1; }.project-link:hover span { transform: translateX(.3rem); }
-@media (max-width: 760px) { .project-card--featured { grid-column: auto; }.project-card { min-height: 0; }.project-status { font-size: .58rem; } }
+  .project-card { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: 21rem; overflow: hidden; padding: 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: linear-gradient(140deg, color-mix(in srgb, var(--project-accent) 8%, var(--color-surface)) 0%, var(--color-surface) 47%); box-shadow: var(--shadow-sm); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+  .project-card::before { position: absolute; top: 0; right: 0; left: 0; height: 3px; background: var(--project-accent); content: ''; }
+  .project-card:hover { border-color: color-mix(in srgb, var(--project-accent) 65%, var(--color-border)); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .project-card--featured { grid-column: span 2; min-height: 23rem; }
+  .project-card__art { position: absolute; z-index: -1; top: 1rem; right: 1rem; width: 7rem; height: 7rem; opacity: .35; border: 1px solid var(--project-accent); border-radius: 48% 52% 38% 62%; transform: rotate(-14deg); }
+  .project-card__art span { position: absolute; border: 1px solid var(--project-accent); border-radius: inherit; inset: .8rem; }.project-card__art span:nth-child(2) { inset: 1.6rem; }.project-card__art span:nth-child(3) { top: 50%; right: -.7rem; left: -.7rem; height: 1px; border: 0; border-radius: 0; background: var(--project-accent); }
+  .project-header { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; }
+  .project-category, .project-flag, .project-stage { color: var(--project-accent); font: 700 .68rem/1.35 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }.project-category { max-width: 18rem; }.project-flag { margin-top: 1.25rem; }.project-stage { margin-top: .6rem; }
+  .project-title { max-width: 24rem; margin: .8rem 0; color: var(--color-text); font-size: clamp(1.28rem, 2.2vw, 1.75rem); line-height: 1.15; letter-spacing: -.025em; }.project-title a { color: inherit; }.project-title a:hover { opacity: 1; color: var(--project-accent); }
+  .project-description { flex-grow: 1; max-width: 38rem; margin-bottom: 1rem; color: var(--color-text-muted); line-height: 1.65; }
+  .project-highlights { margin: 0 0 1rem; padding-left: 1.2rem; color: var(--color-text-muted); font-size: .88rem; line-height: 1.6; }.project-highlights li + li { margin-top: .35rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.25rem; }.tag { margin: 0; }
+  .project-link { display: inline-flex; gap: .45rem; align-items: center; width: fit-content; color: var(--color-text); font: 700 .76rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }.project-link span { color: var(--project-accent); transition: transform .2s ease; }.project-link:hover { opacity: 1; }.project-link:hover span { transform: translateX(.3rem); }
+  @media (max-width: 760px) { .project-card--featured { grid-column: auto; }.project-card { min-height: 0; }.project-status { font-size: .58rem; } }
 </style>
+

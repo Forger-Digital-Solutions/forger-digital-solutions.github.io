@@ -1,25 +1,80 @@
 ---
 import { siteConfig } from '../config/site';
-const key = siteConfig.visitorCounterKey;
+const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.visitorCounterKey}`;
 ---
-<span class="visitor-counter" id="fds-visitor-counter" aria-label="Visitor count">
+<span class="visitor-counter" id="fds-visitor-counter" data-counter-url={COUNTER_URL} aria-label="Visitor count">
   <span class="visitor-counter__dot" aria-hidden="true"></span>
   <span class="visitor-counter__label">Visitors</span>
   <span class="visitor-counter__value" id="fds-visitor-count">--</span>
 </span>
 <script>
-  (async () => {
+  (function () {
+    const STORAGE_KEY = 'fds_visitor_id';
+    const EXPIRY_KEY = 'fds_visitor_expiry';
+    const DEDUP_MS = 24 * 60 * 60 * 1000;
+    const url = document.getElementById('fds-visitor-counter')?.dataset.counterUrl;
+
     const valueEl = document.getElementById('fds-visitor-count');
-    if (!valueEl) return;
+    if (!valueEl || !url) return;
+
+    const generateId = () => {
+      const arr = new Uint8Array(16);
+      crypto.getRandomValues(arr);
+      return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    let visitorId: string | null = null;
+    let expiry: number | null = null;
     try {
-      const res = await fetch('https://countapi.mileshilliard.com/api/v1/hit/${key}');
-      if (!res.ok) throw new Error('Counter request failed');
-      const data = await res.json();
-      if (data.value != null) {
-        valueEl.textContent = Number(data.value).toLocaleString();
-      }
+      visitorId = window.localStorage.getItem(STORAGE_KEY);
+      expiry = Number(window.localStorage.getItem(EXPIRY_KEY));
+      if (Number.isNaN(expiry)) expiry = null;
     } catch {
-      valueEl.textContent = '0';
+      // blocked storage
+    }
+
+    const now = Date.now();
+    const isExpired = !expiry || now >= expiry;
+
+    if (!visitorId || isExpired) {
+      visitorId = generateId();
+      try {
+        window.localStorage.setItem(STORAGE_KEY, visitorId);
+        window.localStorage.setItem(EXPIRY_KEY, String(now + DEDUP_MS));
+      } catch {
+        // ignore storage failures
+      }
+    }
+
+    let counted = false;
+
+    const tryCount = async () => {
+      if (counted) return;
+      counted = true;
+      try {
+        const res = await fetch(url, { method: 'GET', keepalive: true });
+        if (!res.ok) throw new Error('Counter request failed');
+        const data = await res.json();
+        if (data.value != null) {
+          valueEl.textContent = Number(data.value).toLocaleString();
+        }
+      } catch {
+        valueEl.textContent = '0';
+      }
+    };
+
+    tryCount();
+
+    try {
+      const bc = new BroadcastChannel('fds_visitor_counter');
+      bc.addEventListener('message', (ev) => {
+        if (ev.data && ev.data.type === 'fds_counted') {
+          counted = true;
+          valueEl.textContent = String(ev.data.value ?? '0');
+        }
+      });
+    } catch {
+      // BroadcastChannel not supported — ignore
     }
   })();
 </script>

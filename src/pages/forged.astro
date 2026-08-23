@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { products, featuredProducts } from '../data/products';
+import ProductCard from '../components/ProductCard.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+
+const hasProducts = products.length > 0;
+const hasFeatured = featuredProducts.length > 0;
+---
+
+<BaseLayout
+  title="Forged"
+  description="Forged is the FDS storefront for publicly available software, applications, tools, and digital products."
+>
+  <section class="page-section" aria-labelledby="forged-title">
+    <SectionHeader
+      eyebrow="Forged"
+      title="Software built by Forger Digital Solutions"
+      description="Forged is where finished and publicly available FDS software, applications, tools, and digital products can be discovered. Research projects become published software here when they reach a releasable state."
+      align="center"
+    />
+
+    {hasFeatured && (
+      <div class="forged-featured">
+        {featuredProducts.map((product) => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+    )}
+
+    {hasProducts && (
+      <div class="forged-grid">
+        {products.map((product) => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+    )}
+
+    {!hasProducts && (
+      <div class="forged-empty">
+        <p class="forged-empty__title">No public products yet</p>
+        <p class="forged-empty__desc">
+          Products will appear here as FDS applications reach public release.
+          In the meantime, explore the projects in the Forge or read the latest engineering notes.
+        </p>
+        <div class="forged-empty__actions">
+          <a href="/projects" class="btn btn-primary">Explore Projects</a>
+          <a href="/notes" class="btn btn-outline">Read Notes</a>
+        </div>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .forged-featured {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .forged-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: 1rem;
+  }
+  .forged-empty {
+    max-width: 38rem;
+    margin: 2rem auto 0;
+    padding: 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    text-align: center;
+  }
+  .forged-empty__title {
+    margin: 0 0 .6rem;
+    color: var(--color-text);
+    font-size: 1.35rem;
+    letter-spacing: -.02em;
+  }
+  .forged-empty__desc {
+    margin: 0 0 1.6rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  .forged-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+    justify-content: center;
+  }
+  @media (max-width: 760px) {
+    .forged-featured,
+    .forged-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
