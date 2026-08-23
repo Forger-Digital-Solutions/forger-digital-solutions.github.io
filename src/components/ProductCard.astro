@@ -26,6 +26,19 @@ const statusLabel = {
   <h3 class="product-card__name">{product.name}</h3>
   <p class="product-card__tagline">{product.tagline}</p>
   <p class="product-card__description">{product.description}</p>
+
+  {product.videoUrl && (
+    <div class="product-card__video">
+      <iframe
+        src={product.videoUrl}
+        title={`${product.name} video`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+  )}
+
   <div class="product-card__meta">
     {product.platform.length > 0 && (
       <span class="product-card__platform">{product.platform.join(' / ')}</span>
@@ -145,5 +158,19 @@ const statusLabel = {
     gap: .6rem;
     align-items: center;
     margin-top: .4rem;
+  }
+  .product-card__video {
+    margin-top: .4rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #000;
+    box-shadow: var(--shadow-sm);
+  }
+  .product-card__video iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
   }
 </style>

@@ -21,6 +21,7 @@ export interface Product {
   releaseNotesUrl?: string;
   featured?: boolean;
   comingSoon?: boolean;
+  videoUrl?: string;
 }
 
 export const products: Product[] = [
@@ -36,6 +37,7 @@ export const products: Product[] = [
     pricingModel: "free",
     downloadUrl: "/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip",
     docsUrl: "https://github.com/forger-digital-solutions/ForgerEMS",
+    videoUrl: "https://www.youtube.com/embed/ILKWS2dNIrg",
     featured: true,
     comingSoon: false,
   },
