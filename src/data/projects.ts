@@ -17,6 +17,12 @@ export const projects: Project[] = [
     stageLabel: "Flagship research initiative",
     accentColor: "#2f6bff",
     visualStyle: "nodes",
+    heroImage: {
+      src: "/images/projects/gems/gems-framework.webp",
+      alt: "GEMS Framework diagram: four specialized models — Topaz (reasoning and insight), Sapphire (optimization and performance), Peridot (evaluation and validation), and Garnet (automation and execution) — arranged around a central GEMS adaptive intelligence engine, above a row of core principles.",
+      caption: "GEMS Framework — four specialized models, one adaptive intelligence engine."
+    },
+    ogImage: "/images/projects/gems/gems-framework-og.jpg",
     building: [
       "Model training systems and evaluation infrastructure",
       "Curriculum experimentation and governed experimentation",

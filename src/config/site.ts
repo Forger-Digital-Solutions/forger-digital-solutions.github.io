@@ -14,5 +14,5 @@ export const siteConfig = {
   // Path to the founder photo in /public (e.g. "/images/brand/edward-schmidt.png").
   // Leave empty to show a monogram avatar on the About page instead.
   authorImage: "/images/brand/edward-schmidt.png",
-  ogImage: "/images/og/fds-default.svg"
+  ogImage: "/images/og/fds-default.jpg"
 };
