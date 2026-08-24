@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+.pnpm-store/
+.wrangler/
 
 # Build output
 dist/

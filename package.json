@@ -11,8 +11,19 @@
     "preview": "astro preview",
     "check": "astro check",
     "validate:content": "node scripts/validate-content.mjs",
-    "validate": "node scripts/validate-content.mjs && astro check && astro build",
-    "astro": "astro"
+    "validate:knowledge": "node scripts/kayla-knowledge.mjs",
+    "validate": "node scripts/validate-content.mjs && node scripts/kayla-knowledge.mjs && astro check && astro build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "kayla:knowledge": "node scripts/kayla-knowledge.mjs",
+    "kayla:deploy:check": "node scripts/kayla-deploy-check.mjs",
+    "kayla:deploy": "npm run kayla:deploy:check && npm --prefix worker run deploy",
+    "kayla:verify:live": "node scripts/kayla-live-verify.mjs",
+    "kayla:secret-scan": "node scripts/kayla-secret-scan.mjs",
+    "worker:build": "npm --prefix worker run build",
+    "astro": "astro",
+    "worker:dev": "cd worker && npm run dev",
+    "worker:deploy": "cd worker && npm run deploy"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -21,6 +32,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
-    "typescript": "^5.6.0"
+    "@astrojs/node": "^11.1.4",
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.11"
   }
 }

@@ -1,0 +1,68 @@
+import type { KaylaPageContext, KaylaConversationMessage } from '../../data/kayla/types';
+import { getKaylaConfig, type KaylaConfig } from './config';
+
+export interface ValidatedChatRequest { message: string; history: KaylaConversationMessage[]; context?: KaylaPageContext; }
+export interface ValidationError { field: string; message: string; }
+const ROOT = new Set(['message', 'history', 'context']);
+const HISTORY = new Set(['role', 'content']);
+const CONTEXT = new Set(['route', 'pageType', 'entity']);
+const ROLES = new Set(['user', 'assistant']);
+const PRIVILEGED = new Set(['model', 'provider', 'apiKey', 'api_key', 'endpoint', 'systemPrompt', 'system_prompt', 'pricingMode', 'authorization']);
+
+function objectDepth(value: unknown, depth = 0): number {
+  if (value === null || typeof value !== 'object') return depth;
+  const children = Array.isArray(value) ? value : Object.values(value as Record<string, unknown>);
+  return children.reduce((max, child) => Math.max(max, objectDepth(child, depth + 1)), depth + 1);
+}
+function invalidUnicode(value: string): boolean { return /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(value); }
+
+export function validateChatRequest(body: unknown, config: KaylaConfig = getKaylaConfig()): { valid: true; data: ValidatedChatRequest } | { valid: false; errors: ValidationError[] } {
+  const errors: ValidationError[] = [];
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return { valid: false, errors: [{ field: 'body', message: 'Request body must be an object' }] };
+  if (objectDepth(body) > config.maxObjectDepth) return { valid: false, errors: [{ field: 'body', message: 'Request structure is too deeply nested' }] };
+  let payload: string;
+  try { payload = JSON.stringify(body); } catch { return { valid: false, errors: [{ field: 'body', message: 'Request body is not serializable' }] }; }
+  if (new TextEncoder().encode(payload).byteLength > config.maxPayloadBytes) return { valid: false, errors: [{ field: 'body', message: 'Payload too large' }] };
+
+  const req = body as Record<string, unknown>;
+  for (const field of Object.keys(req)) if (!ROOT.has(field)) errors.push({ field, message: PRIVILEGED.has(field) ? 'Privileged configuration is server-controlled' : 'Unknown field is not allowed' });
+  if (typeof req.message !== 'string') errors.push({ field: 'message', message: 'Message is required and must be a string' });
+  else if (!req.message.trim()) errors.push({ field: 'message', message: 'Message cannot be empty' });
+  else if (req.message.length > config.maxMessageLength) errors.push({ field: 'message', message: `Message exceeds maximum length of ${config.maxMessageLength} characters` });
+  else if (invalidUnicode(req.message)) errors.push({ field: 'message', message: 'Message contains invalid Unicode' });
+
+  let history: KaylaConversationMessage[] = [];
+  if (req.history !== undefined) {
+    if (!Array.isArray(req.history)) errors.push({ field: 'history', message: 'History must be an array' });
+    else if (req.history.length > config.maxHistoryMessages) errors.push({ field: 'history', message: `History exceeds maximum of ${config.maxHistoryMessages} messages` });
+    else {
+      req.history.forEach((raw, index) => {
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw)) { errors.push({ field: `history[${index}]`, message: 'Message must be an object' }); return; }
+        const msg = raw as Record<string, unknown>;
+        Object.keys(msg).filter(k => !HISTORY.has(k)).forEach(k => errors.push({ field: `history[${index}].${k}`, message: 'Unknown field is not allowed' }));
+        if (typeof msg.role !== 'string' || !ROLES.has(msg.role)) errors.push({ field: `history[${index}].role`, message: 'Message role must be "user" or "assistant"' });
+        if (typeof msg.content !== 'string') errors.push({ field: `history[${index}].content`, message: 'Message content must be a string' });
+        else if (msg.content.length > config.maxMessageLength || invalidUnicode(msg.content)) errors.push({ field: `history[${index}].content`, message: 'Message content is invalid or too long' });
+      });
+      if (!errors.some(e => e.field.startsWith('history'))) history = req.history as KaylaConversationMessage[];
+    }
+  }
+
+  let context: KaylaPageContext | undefined;
+  if (req.context !== undefined) {
+    if (!req.context || typeof req.context !== 'object' || Array.isArray(req.context)) errors.push({ field: 'context', message: 'Context must be an object' });
+    else {
+      const ctx = req.context as Record<string, unknown>;
+      Object.keys(ctx).filter(k => !CONTEXT.has(k)).forEach(k => errors.push({ field: `context.${k}`, message: 'Unknown field is not allowed' }));
+      if (typeof ctx.route !== 'string' || !ctx.route.startsWith('/') || ctx.route.length > 256) errors.push({ field: 'context.route', message: 'Context route must be a bounded site-relative path' });
+      else context = { route: ctx.route, pageType: (ctx.pageType as KaylaPageContext['pageType']) || 'home', entity: typeof ctx.entity === 'string' ? ctx.entity.slice(0, 128) : undefined };
+    }
+  }
+  if (errors.length) return { valid: false, errors };
+  return { valid: true, data: { message: (req.message as string).trim(), history, context } };
+}
+
+export function sanitizeInput(input: string): string { return input.replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, getKaylaConfig().maxMessageLength); }
+export function isPromptInjectionAttempt(input: string): boolean {
+  return [/ignore\s+(previous|all|above)\s+instructions/i, /system\s*prompt/i, /reveal\s+(your|the)\s+(api|secret|key|password|credential)/i, /read\s+\.env/i, /what\s+(are|is)\s+(your|the)\s+(secret|key|password|credential)/i, /pretend\s+(you\s+are|to\s+be)\s+(the\s+)?(developer|admin|root)/i, /bypass\s+(security|restrictions|rules)/i, /execute\s+(javascript|js|script)/i, /<script/i, /javascript\s*:/i, /data\s*:\s*text\/html/i, /vbscript\s*:/i, /invent\s+.*(unreleased|private|secret)/i].some(pattern => pattern.test(input));
+}

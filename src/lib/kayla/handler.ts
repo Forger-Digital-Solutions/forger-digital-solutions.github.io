@@ -1,0 +1,225 @@
+import type { KaylaChatResponse, KaylaKnowledgeResult, KaylaErrorType, KaylaConfig } from '../../data/kayla/types';
+import { createProvider, createAIProvider } from './provider';
+import type { KaylaProviderConfig } from './provider';
+import { createKaylaConfig, isAIEnabled } from './config';
+import { validateChatRequest, isPromptInjectionAttempt } from './validate';
+import { checkRateLimit } from './rateLimit';
+import { isSensitiveQuery } from './systemPrompt';
+
+export interface KaylaEndpointConfig {
+  providerConfig: KaylaProviderConfig;
+  kaylaConfig?: KaylaConfig;
+  getClientIp?: () => string;
+  consumeRequestAllowance?: () => Promise<boolean>;
+  consumeAIAllowance?: () => Promise<boolean>;
+}
+
+function getConfig(kaylaConfig?: KaylaConfig): KaylaConfig {
+  return kaylaConfig || createKaylaConfig();
+}
+
+export async function handleKaylaChat(
+  body: unknown,
+  config: KaylaEndpointConfig
+): Promise<{ status: number; response: KaylaChatResponse | { error: string; errorType?: KaylaErrorType } }> {
+  const kaylaConfig = getConfig(config.kaylaConfig);
+
+  const allowed = config.consumeRequestAllowance
+    ? await config.consumeRequestAllowance()
+    : checkRateLimit(config.getClientIp?.() || 'anonymous', kaylaConfig.rateLimitPerMinute).allowed;
+  if (!allowed) {
+    return {
+      status: 429,
+      response: {
+        error: 'Too many requests. Please try again later.',
+        errorType: 'RATE_LIMITED'
+      }
+    };
+  }
+
+  const validation = validateChatRequest(body, kaylaConfig);
+  if (!validation.valid) {
+    return {
+      status: 400,
+      response: {
+        error: validation.errors.map(e => e.message).join('; '),
+        errorType: 'VALIDATION_ERROR'
+      }
+    };
+  }
+
+  const { message, history, context } = validation.data;
+
+  if (isPromptInjectionAttempt(message) || isSensitiveQuery(message)) {
+    return {
+      status: 200,
+      response: {
+        answer: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions, our projects, and public resources. How can I help you learn about FDS?",
+        mode: 'local',
+        sources: []
+      }
+    };
+  }
+
+  const localProvider = createProvider();
+  let sources: KaylaKnowledgeResult[];
+  try {
+    sources = await localProvider.search(message, context);
+  } catch {
+    return {
+      status: 200,
+      response: {
+        answer: "I'm having trouble accessing the FDS knowledge base right now. Please try again in a moment.",
+        mode: 'local',
+        sources: []
+      }
+    };
+  }
+
+  if (!isAIEnabled(kaylaConfig)) {
+    const topResult = sources[0];
+    return {
+      status: 200,
+      response: {
+        answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+        actions: topResult?.action ? [topResult.action] : undefined,
+        mode: 'local',
+        sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
+      }
+    };
+  }
+
+  const aiProvider = createAIProvider(config.providerConfig);
+  if (!aiProvider) {
+    const topResult = sources[0];
+    return {
+      status: 200,
+      response: {
+        answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+        actions: topResult?.action ? [topResult.action] : undefined,
+        mode: 'local',
+        sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
+      }
+    };
+  }
+
+  if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
+    const topResult = sources[0];
+    return { status: 200, response: { answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: topResult?.action ? [topResult.action] : undefined, mode: 'local', sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : [] } };
+  }
+
+  try {
+    const aiResponse = await aiProvider.chat({
+      message,
+      history,
+      context,
+      sources
+    });
+
+    return {
+      status: 200,
+      response: {
+        answer: aiResponse.content,
+        actions: aiResponse.actions,
+        mode: 'ai',
+        sources: sources.slice(0, 3).map(s => ({
+          id: s.id || s.title,
+          title: s.title,
+          type: s.type,
+          route: s.route
+        }))
+      }
+    };
+  } catch {
+    const topResult = sources[0];
+    return {
+      status: 200,
+      response: {
+        answer: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
+        actions: topResult?.action ? [topResult.action] : undefined,
+        mode: 'local',
+        sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
+      }
+    };
+  }
+}
+
+export async function* streamKaylaChat(
+  body: unknown,
+  config: KaylaEndpointConfig
+): AsyncIterable<string> {
+  const kaylaConfig = getConfig(config.kaylaConfig);
+
+  const allowed = config.consumeRequestAllowance
+    ? await config.consumeRequestAllowance()
+    : checkRateLimit(config.getClientIp?.() || 'anonymous', kaylaConfig.rateLimitPerMinute).allowed;
+  if (!allowed) {
+    yield JSON.stringify({ error: 'Too many requests', errorType: 'RATE_LIMITED' });
+    return;
+  }
+
+  const validation = validateChatRequest(body, kaylaConfig);
+  if (!validation.valid) {
+    yield JSON.stringify({ error: 'Invalid request', errorType: 'VALIDATION_ERROR' });
+    return;
+  }
+
+  const { message, history, context } = validation.data;
+
+  if (isPromptInjectionAttempt(message) || isSensitiveQuery(message)) {
+    yield JSON.stringify({
+      content: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions.",
+      done: true
+    });
+    return;
+  }
+
+  const localProvider = createProvider();
+  const sources = await localProvider.search(message, context);
+
+  if (!isAIEnabled(kaylaConfig)) {
+    const topResult = sources[0];
+    yield JSON.stringify({
+      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+      mode: 'local',
+      done: true
+    });
+    return;
+  }
+
+  const aiProvider = createAIProvider(config.providerConfig);
+  if (!aiProvider || !aiProvider.stream) {
+    const topResult = sources[0];
+    yield JSON.stringify({
+      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+      mode: 'local',
+      done: true
+    });
+    return;
+  }
+
+  if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
+    const topResult = sources[0];
+    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", mode: 'local', done: true });
+    return;
+  }
+
+  try {
+    let providerFailed = false;
+    for await (const chunk of aiProvider.stream({ message, history, context, sources })) {
+      if (chunk.type === 'error') { providerFailed = true; break; }
+      yield JSON.stringify(chunk);
+    }
+    if (providerFailed) {
+      const topResult = sources[0];
+      yield JSON.stringify({ content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`, mode: 'local', done: true });
+    }
+  } catch {
+    const topResult = sources[0];
+    yield JSON.stringify({
+      content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
+      mode: 'local',
+      done: true
+    });
+  }
+}

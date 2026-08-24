@@ -1,0 +1,24 @@
+name = "kayla-api"
+main = "index.ts"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[vars]
+KAYLA_ENABLED = "false"
+KAYLA_PROVIDER = "openrouter"
+KAYLA_MODEL = "openrouter/free"
+KAYLA_ALLOWED_ORIGINS = "https://forger-digital-solutions.github.io"
+KAYLA_RATE_LIMIT_PER_MINUTE = "5"
+KAYLA_RATE_LIMIT_PER_HOUR = "20"
+KAYLA_AI_DAILY_REQUEST_LIMIT = "40"
+KAYLA_MAX_PAYLOAD_BYTES = "16384"
+KAYLA_PROVIDER_TIMEOUT_MS = "12000"
+
+[[durable_objects.bindings]]
+name = "ABUSE_GUARD"
+class_name = "KaylaAbuseGuard"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["KaylaAbuseGuard"]
