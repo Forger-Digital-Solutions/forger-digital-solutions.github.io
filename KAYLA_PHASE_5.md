@@ -13,7 +13,7 @@ zero-cost AI. The production launch was completed on August 23, 2026 EDT
 - Worker base URL: `https://kayla-api.forgerdigitalsolutions.workers.dev`
 - Health: `GET /api/kayla/health`
 - Chat: `POST /api/kayla/chat?stream=true`
-- Final certified Worker version: `c367588d-2b16-4fc5-bcd9-43f3e74357f5`
+- Final certified Worker version: `c8edd177-4ad0-4517-98d6-911d1f500860`
 
 The GitHub Actions repository variable `PUBLIC_KAYLA_API_URL` contains the
 Worker base URL. The frontend appends `/api/kayla/chat` and
@@ -91,6 +91,9 @@ The production policy is `ZERO_COST_ONLY`:
 - Paid, unknown, malformed, client-selected, or custom-endpoint models are
   rejected before provider invocation.
 - Provider retries are disabled.
+- The 12-second provider timeout remains active through response-body and
+  streaming consumption, so a provider cannot stall Kayla after sending only
+  HTTP headers.
 - No paid fallback or second AI provider exists.
 - At most 40 upstream AI calls are allowed per UTC day.
 - Provider failure or allowance exhaustion preserves grounded local Kayla.

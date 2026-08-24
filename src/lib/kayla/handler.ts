@@ -182,6 +182,7 @@ export async function* streamKaylaChat(
     const topResult = sources[0];
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+      actions: topResult?.action ? [topResult.action] : undefined,
       mode: 'local',
       done: true
     });
@@ -193,6 +194,7 @@ export async function* streamKaylaChat(
     const topResult = sources[0];
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+      actions: topResult?.action ? [topResult.action] : undefined,
       mode: 'local',
       done: true
     });
@@ -201,7 +203,7 @@ export async function* streamKaylaChat(
 
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     const topResult = sources[0];
-    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", mode: 'local', done: true });
+    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: topResult?.action ? [topResult.action] : undefined, mode: 'local', done: true });
     return;
   }
 
@@ -214,7 +216,8 @@ export async function* streamKaylaChat(
       if (chunk.type === 'content' && chunk.content) {
         providerContentReceived = true;
         if (!aiModeAnnounced) {
-          yield JSON.stringify({ mode: 'ai' });
+          const topResult = sources[0];
+          yield JSON.stringify({ mode: 'ai', actions: topResult?.action ? [topResult.action] : undefined });
           aiModeAnnounced = true;
         }
       }
@@ -226,12 +229,13 @@ export async function* streamKaylaChat(
     }
     if (providerFailed) {
       const topResult = sources[0];
-      yield JSON.stringify({ content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`, mode: 'local', done: true });
+      yield JSON.stringify({ content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`, actions: topResult?.action ? [topResult.action] : undefined, mode: 'local', done: true });
     }
   } catch {
     const topResult = sources[0];
     yield JSON.stringify({
       content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
+      actions: topResult?.action ? [topResult.action] : undefined,
       mode: 'local',
       done: true
     });

@@ -104,11 +104,13 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       }),
       signal: controller.signal
     }); } catch (error) {
+      clearTimeout(timeout);
       if (controller.signal.aborted) throw new Error('TIMEOUT');
       throw new Error('NETWORK_FAILURE');
-    } finally { clearTimeout(timeout); }
+    }
 
     if (!response.ok) {
+      clearTimeout(timeout);
       if (response.status === 401 || response.status === 403) {
         throw new Error('AUTH_FAILURE');
       }
@@ -121,7 +123,15 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       throw new Error('PROVIDER_FAILURE');
     }
 
-    const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+    let data: { choices?: { message?: { content?: string } }[] };
+    try {
+      data = await response.json() as { choices?: { message?: { content?: string } }[] };
+    } catch {
+      if (controller.signal.aborted) throw new Error('TIMEOUT');
+      throw new Error('MALFORMED_RESPONSE');
+    } finally {
+      clearTimeout(timeout);
+    }
     const content = data.choices?.[0]?.message?.content;
 
     if (!content) {
@@ -162,11 +172,13 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       }),
       signal: controller.signal
     }); } catch {
+      clearTimeout(timeout);
       yield { type: 'error', error: controller.signal.aborted ? 'TIMEOUT' : 'NETWORK_FAILURE' };
       return;
-    } finally { clearTimeout(timeout); }
+    }
 
     if (!response.ok) {
+      clearTimeout(timeout);
       if (response.status === 401 || response.status === 403) {
         yield { type: 'error', error: 'AUTH_FAILURE' };
       } else if (response.status === 429) {
@@ -181,6 +193,7 @@ class OpenRouterAIProvider implements KaylaAIProvider {
 
     const reader = response.body?.getReader();
     if (!reader) {
+      clearTimeout(timeout);
       yield { type: 'error', error: 'MALFORMED_RESPONSE' };
       return;
     }
@@ -188,32 +201,39 @@ class OpenRouterAIProvider implements KaylaAIProvider {
     const decoder = new TextDecoder();
     let buffer = '';
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
 
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || !trimmed.startsWith('data: ')) continue;
-        const data = trimmed.slice(6);
-        if (data === '[DONE]') {
-          yield { type: 'done' };
-          return;
-        }
-        try {
-          const parsed = JSON.parse(data) as { choices?: { delta?: { content?: string } }[] };
-          const content = parsed.choices?.[0]?.delta?.content;
-          if (content) {
-            yield { type: 'content', content };
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith('data: ')) continue;
+          const data = trimmed.slice(6);
+          if (data === '[DONE]') {
+            yield { type: 'done' };
+            return;
           }
-        } catch {
-          continue;
+          try {
+            const parsed = JSON.parse(data) as { choices?: { delta?: { content?: string } }[] };
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              yield { type: 'content', content };
+            }
+          } catch {
+            continue;
+          }
         }
       }
+    } catch {
+      yield { type: 'error', error: controller.signal.aborted ? 'TIMEOUT' : 'NETWORK_FAILURE' };
+      return;
+    } finally {
+      clearTimeout(timeout);
     }
 
     yield { type: 'done' };
