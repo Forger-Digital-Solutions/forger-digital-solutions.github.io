@@ -3,15 +3,16 @@ interface Props { eyebrow?: string; title: string; description?: string; align?:
 const { eyebrow, title, description, align = 'left' } = Astro.props;
 ---
 <header class:list={['section-header', `section-header--${align}`]}>
-  {eyebrow && <p class="section-header__eyebrow">{eyebrow}</p>}
+  {eyebrow && <p class="section-header__eyebrow"><span aria-hidden="true"></span>FDS // {eyebrow}</p>}
   <h2 class="section-header__title">{title}</h2>
   {description && <p class="section-header__description">{description}</p>}
 </header>
 
 <style>
-  .section-header { max-width: 46rem; margin-bottom: 2rem; }
+  .section-header { position: relative; max-width: 49rem; margin-bottom: 2.25rem; }
   .section-header--center { margin-right: auto; margin-left: auto; text-align: center; }
-  .section-header__eyebrow { margin-bottom: .65rem; color: var(--color-accent); font: 700 .72rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
-  .section-header__title { color: var(--color-text); font-size: clamp(1.8rem, 3.6vw, 2.8rem); line-height: 1.1; letter-spacing: -.035em; }
+  .section-header__eyebrow { display: flex; align-items: center; gap: .6rem; margin-bottom: .75rem; color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }.section-header__eyebrow span { width: 1.7rem; height: 1px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-bright)); box-shadow: 0 0 8px rgba(63,132,255,.55); }
+  .section-header--center .section-header__eyebrow { justify-content: center; }
+  .section-header__title { color: var(--color-text); font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.05; letter-spacing: -.045em; text-wrap: balance; }
   .section-header__description { margin-top: 1rem; color: var(--color-text-muted); font-size: 1.04rem; line-height: 1.7; }
 </style>

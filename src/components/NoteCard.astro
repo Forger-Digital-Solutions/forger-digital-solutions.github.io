@@ -34,7 +34,7 @@ const relatedProject = projectSlug ? projects.find((p) => p.slug === projectSlug
 </a>
 
 <style>
-  .note-card { display: flex; flex-direction: column; height: 100%; padding: 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+  .note-card { position: relative; display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: linear-gradient(145deg, rgba(13,20,32,.95), rgba(7,12,20,.95)); box-shadow: var(--shadow-sm), inset 0 1px rgba(255,255,255,.03); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }.note-card::before { position: absolute; top: 0; right: 0; left: 0; height: 1px; background: linear-gradient(90deg, var(--color-accent), transparent 75%); content: ''; }
   .note-card:hover { border-color: var(--color-accent-secondary); transform: translateY(-3px); box-shadow: var(--shadow-md); opacity: 1; }
   .note-card__meta { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
   .note-card__date { color: var(--color-text-subtle); font: 700 .68rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
