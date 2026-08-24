@@ -169,6 +169,7 @@ export async function* streamKaylaChat(
   if (isPromptInjectionAttempt(message) || isSensitiveQuery(message)) {
     yield JSON.stringify({
       content: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions.",
+      mode: 'local',
       done: true
     });
     return;
@@ -206,8 +207,21 @@ export async function* streamKaylaChat(
 
   try {
     let providerFailed = false;
+    let providerContentReceived = false;
+    let aiModeAnnounced = false;
     for await (const chunk of aiProvider.stream({ message, history, context, sources })) {
       if (chunk.type === 'error') { providerFailed = true; break; }
+      if (chunk.type === 'content' && chunk.content) {
+        providerContentReceived = true;
+        if (!aiModeAnnounced) {
+          yield JSON.stringify({ mode: 'ai' });
+          aiModeAnnounced = true;
+        }
+      }
+      if (chunk.type === 'done' && !providerContentReceived) {
+        providerFailed = true;
+        break;
+      }
       yield JSON.stringify(chunk);
     }
     if (providerFailed) {

@@ -4,6 +4,7 @@ import { buildKaylaApiEndpoints } from '../src/components/KaylaCopilot';
 
 const component = readFileSync(new URL('../src/components/KaylaCopilot.astro', import.meta.url), 'utf8');
 const controller = readFileSync(new URL('../src/components/KaylaCopilot.ts', import.meta.url), 'utf8');
+const supportPage = readFileSync(new URL('../src/pages/support.astro', import.meta.url), 'utf8');
 
 describe('Kayla browser UI contract', () => {
   it('normalizes an empty API setting to the local Astro endpoints', () => {
@@ -48,5 +49,10 @@ describe('Kayla browser UI contract', () => {
     expect(component.match(/class="kayla-starter"/g)?.length).toBeGreaterThanOrEqual(6);
     expect(component).toContain('@media (max-width: 480px)');
     expect(component).toContain('@media (prefers-reduced-motion: reduce)');
+  });
+
+  it('uses the modern clipboard API without a deprecated execCommand fallback', () => {
+    expect(supportPage).toContain('navigator.clipboard?.writeText');
+    expect(supportPage).not.toContain('document.execCommand');
   });
 });

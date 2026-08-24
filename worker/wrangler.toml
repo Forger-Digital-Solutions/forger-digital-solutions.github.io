@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
 [vars]
-KAYLA_ENABLED = "false"
+KAYLA_ENABLED = "true"
 KAYLA_PROVIDER = "openrouter"
 KAYLA_MODEL = "openrouter/free"
 KAYLA_ALLOWED_ORIGINS = "https://forger-digital-solutions.github.io"

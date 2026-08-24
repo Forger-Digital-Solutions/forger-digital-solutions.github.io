@@ -117,20 +117,9 @@ const hardwareMailtoHref =`mailto:${siteConfig.supportEmail}?subject=${encodeURI
 </style>
 <script>
   const copyText = async (text: string): Promise<boolean> => {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-    const ta = Object.assign(document.createElement('textarea'), { value: text });
-    ta.setAttribute('readonly', '');
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    let ok = false;
-    try { ok = document.execCommand('copy'); } catch { ok = false; }
-    ta.remove();
-    return ok;
+    if (!navigator.clipboard?.writeText) return false;
+    await navigator.clipboard.writeText(text);
+    return true;
   };
 
   document.querySelectorAll<HTMLButtonElement>('[data-copy-handle]').forEach((btn) => {
@@ -138,7 +127,11 @@ const hardwareMailtoHref =`mailto:${siteConfig.supportEmail}?subject=${encodeURI
       const text = btn.getAttribute('data-copy-handle') ?? '';
       const label = btn.querySelector<HTMLElement>('.copy-handle__label');
       try {
-        await copyText(text);
+        const copied = await copyText(text);
+        if (!copied) {
+          if (label) label.textContent = text;
+          return;
+        }
         btn.classList.add('copied');
         if (label) label.textContent = 'Copied';
         window.setTimeout(() => {
