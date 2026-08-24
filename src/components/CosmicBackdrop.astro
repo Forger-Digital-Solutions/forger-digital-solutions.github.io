@@ -1,0 +1,37 @@
+<div class="cosmic-backdrop" aria-hidden="true">
+  <div class="cosmic-backdrop__stars cosmic-backdrop__stars--near"></div>
+  <div class="cosmic-backdrop__stars cosmic-backdrop__stars--far"></div>
+  <div class="constellation constellation--one constellation--featured">
+    <i class="constellation__node n1"></i><i class="constellation__node n2"></i><i class="constellation__node n3 constellation__node--beacon"></i><i class="constellation__node n4"></i><i class="constellation__node n5 constellation__node--beacon"></i>
+    <b class="constellation__line l1"></b><b class="constellation__line l2"></b><b class="constellation__line l3"></b><b class="constellation__line l4"></b>
+  </div>
+  <div class="constellation constellation--two constellation--featured">
+    <i class="constellation__node n1 constellation__node--beacon"></i><i class="constellation__node n2"></i><i class="constellation__node n3"></i><i class="constellation__node n4 constellation__node--beacon"></i><i class="constellation__node n5"></i>
+    <b class="constellation__line l1"></b><b class="constellation__line l2"></b><b class="constellation__line l3"></b><b class="constellation__line l4"></b>
+  </div>
+  <div class="constellation constellation--three">
+    <i class="constellation__node n1"></i><i class="constellation__node n2 constellation__node--beacon"></i><i class="constellation__node n3"></i><i class="constellation__node n4"></i>
+    <b class="constellation__line l1"></b><b class="constellation__line l2"></b><b class="constellation__line l3"></b>
+  </div>
+</div>
+
+<style>
+  .cosmic-backdrop { position: absolute; z-index: 0; top: 0; left: 0; width: 100%; height: min(76rem, 145vh); overflow: hidden; pointer-events: none; mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgba(0,0,0,.62) 69%, transparent 100%); }
+  .cosmic-backdrop::before { position: absolute; inset: 0; opacity: .3; background-image: radial-gradient(circle, rgba(181,209,255,.78) 0 .75px, transparent 1px), radial-gradient(circle, rgba(87,131,223,.7) 0 .65px, transparent .95px), radial-gradient(circle, rgba(234,242,255,.62) 0 .55px, transparent .85px); background-position: 7px 17px, 49px 73px, 91px 29px; background-size: 83px 97px, 127px 113px, 159px 137px; content: ''; }
+  .cosmic-backdrop::after { position: absolute; inset: 0; background: radial-gradient(ellipse at 73% 25%, rgba(23,62,148,.13), transparent 42%), linear-gradient(180deg, rgba(3,7,14,.05), rgba(4,7,12,.4) 76%, var(--color-bg)); content: ''; }
+  .cosmic-backdrop__stars { position: absolute; inset: 0; background-repeat: repeat; }
+  .cosmic-backdrop__stars--far { opacity: .42; background-image: radial-gradient(circle, rgba(203,220,252,.72) 0 1px, transparent 1.2px), radial-gradient(circle, rgba(87,127,218,.62) 0 1px, transparent 1.25px); background-position: 17px 23px, 81px 99px; background-size: 117px 131px, 173px 157px; }
+  .cosmic-backdrop__stars--near { opacity: .58; background-image: radial-gradient(circle, rgba(215,228,255,.86) 0 1px, transparent 1.5px), radial-gradient(circle, rgba(72,117,220,.82) 0 1.4px, transparent 1.8px), radial-gradient(circle, rgba(255,255,255,.68) 0 .7px, transparent 1px); background-position: 33px 41px, 117px 31px, 65px 109px; background-size: 241px 219px, 307px 283px, 149px 167px; }
+  .constellation { position: absolute; width: 18rem; height: 12rem; opacity: .28; }
+  .constellation--featured { opacity: .42; }.constellation--one { top: 8rem; left: 5%; transform: rotate(-8deg); }.constellation--two { top: 17rem; right: 5%; transform: rotate(14deg) scale(.86); opacity: .36; }.constellation--three { top: 36rem; left: 43%; transform: rotate(-12deg) scale(.7); opacity: .21; }
+  .constellation__node, .constellation__line { position: absolute; display: block; }
+  .constellation__node { z-index: 2; width: 4px; height: 4px; border: 1px solid rgba(143,177,243,.8); border-radius: 50%; background: #a9c2f4; box-shadow: 0 0 .65rem rgba(78,126,226,.62); animation: constellation-pulse 7s ease-in-out infinite; }
+  .constellation__line { z-index: 1; height: 1px; background: linear-gradient(90deg, rgba(75,117,204,.08), rgba(121,157,225,.46), rgba(75,117,204,.08)); transform-origin: left center; }
+  .constellation--featured .constellation__line { background: linear-gradient(90deg, rgba(69,116,212,.1), rgba(145,181,245,.68), rgba(69,116,212,.1)); box-shadow: 0 0 .2rem rgba(70,123,232,.28); }.constellation__node--beacon { width: 6px; height: 6px; margin: -1px; border-color: rgba(224,238,255,.98); background: #e1edff; box-shadow: 0 0 .35rem #cfe2ff, 0 0 1rem rgba(64,125,255,.94); animation-name: constellation-beacon; animation-duration: 8.5s; }
+  .constellation .n1 { top: 18%; left: 8%; }.constellation .n2 { top: 37%; left: 34%; animation-delay: -1.5s; }.constellation .n3 { top: 14%; left: 62%; animation-delay: -3.2s; }.constellation .n4 { top: 56%; left: 78%; animation-delay: -4.7s; }.constellation .n5 { top: 78%; left: 47%; animation-delay: -2.4s; }
+  .constellation .l1 { top: 20%; left: 9%; width: 30%; transform: rotate(26deg); }.constellation .l2 { top: 38%; left: 35%; width: 34%; transform: rotate(-28deg); }.constellation .l3 { top: 16%; left: 63%; width: 26%; transform: rotate(55deg); }.constellation .l4 { top: 58%; left: 79%; width: 38%; transform: rotate(144deg); }
+  @keyframes constellation-pulse { 50% { opacity: .45; transform: scale(.7); box-shadow: 0 0 .25rem rgba(78,126,226,.4); } }
+  @keyframes constellation-beacon { 0%, 28%, 100% { opacity: .62; transform: scale(.78); } 45%, 58% { opacity: 1; transform: scale(1.12); box-shadow: 0 0 .45rem #e6f0ff, 0 0 1.25rem rgba(64,125,255,.92); } }
+  @media (max-width: 760px) { .cosmic-backdrop { height: 72rem; }.cosmic-backdrop__stars--far { opacity: .25; }.cosmic-backdrop__stars--near { opacity: .4; background-size: 281px 259px, 347px 323px, 189px 207px; }.constellation--one { left: -7rem; opacity: .16; }.constellation--two { top: 28rem; right: -9rem; opacity: .15; }.constellation--three { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .constellation__node { animation: none; } }
+</style>

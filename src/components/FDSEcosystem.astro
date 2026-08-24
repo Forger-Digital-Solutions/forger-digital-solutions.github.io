@@ -1,0 +1,167 @@
+---
+import { ecosystemPlanets } from '../data/ecosystem';
+
+const labelTransform = (side: 'left' | 'right', size: number) => side === 'right'
+  ? `translate(${size / 2 + 12} -23)`
+  : `translate(${-size / 2 - 132} -23)`;
+---
+
+<div class="fds-ecosystem" role="group" aria-labelledby="fds-ecosystem-title">
+  <h2 id="fds-ecosystem-title" class="sr-only">Interactive Forger Digital Solutions ecosystem</h2>
+
+  <svg class="fds-ecosystem__scene" viewBox="0 0 680 680" role="group" aria-labelledby="fds-ecosystem-svg-title fds-ecosystem-svg-desc">
+    <title id="fds-ecosystem-svg-title">FDS digital solar system</title>
+    <desc id="fds-ecosystem-svg-desc">Eight project and technology nodes travel on independent fixed elliptical paths around the shared FDS Core.</desc>
+    <defs>
+      <radialGradient id="core-sphere" cx="38%" cy="32%" r="68%">
+        <stop offset="0" stop-color="#d6e7ff" /><stop offset=".12" stop-color="#6db0ff" /><stop offset=".43" stop-color="#155be0" /><stop offset=".74" stop-color="#09266e" /><stop offset="1" stop-color="#030a1d" />
+      </radialGradient>
+      <linearGradient id="forge-metal" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f4f8ff" /><stop offset=".34" stop-color="#93baff" /><stop offset=".68" stop-color="#3577ed" /><stop offset="1" stop-color="#102e79" />
+      </linearGradient>
+      <radialGradient id="forge-heart" cx="50%" cy="45%" r="60%">
+        <stop offset="0" stop-color="#fff" /><stop offset=".16" stop-color="#b9dcff" /><stop offset=".5" stop-color="#2877ff" /><stop offset="1" stop-color="#071a4e" />
+      </radialGradient>
+      <radialGradient id="planet-sphere" cx="34%" cy="27%" r="72%">
+        <stop offset="0" stop-color="#fff" stop-opacity=".82" /><stop offset=".17" stop-color="currentColor" stop-opacity=".88" /><stop offset=".62" stop-color="currentColor" stop-opacity=".34" /><stop offset="1" stop-color="#020612" stop-opacity=".96" />
+      </radialGradient>
+      <filter id="core-glow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="7" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+      <filter id="planet-glow" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="3.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+      <clipPath id="core-clip"><circle cx="340" cy="340" r="118" /></clipPath>
+    </defs>
+
+    <g class="ecosystem-grid" aria-hidden="true">
+      <circle cx="340" cy="340" r="302" /><circle cx="340" cy="340" r="264" /><circle cx="340" cy="340" r="218" />
+      <path d="M 38 340 H 642 M 340 38 V 642" /><path d="M 126 126 L 554 554 M 554 126 L 126 554" />
+    </g>
+
+    <g class="orbit-layer" aria-hidden="true">
+      {ecosystemPlanets.map((planet, index) => (
+        <g class={`orbit-visual orbit-visual--${planet.id}`} style={`--planet-color:${planet.color};--orbit-opacity:${planet.orbit.opacity};--pulse-duration:${10 + index * 1.7}s;--pulse-delay:${index * -1.4}s`}>
+          <path id={`orbit-${planet.id}`} class="orbit-path" d={planet.orbit.path} pathLength="1000" />
+          <path class="orbit-segment" d={planet.orbit.path} pathLength="1000" />
+          {index % 2 === 0 && <path class="orbit-pulse" d={planet.orbit.path} pathLength="1000" />}
+        </g>
+      ))}
+    </g>
+
+    <g class="planet-layer">
+      {ecosystemPlanets.map((planet) => (
+        <a class={`planet-link planet-link--${planet.id}`} href={planet.href} aria-label={`Explore ${planet.name}: ${planet.subtitle}`}>
+          <g
+            class="planet-motion"
+            data-planet={planet.id}
+            data-orbit={`orbit-${planet.id}`}
+            data-duration={planet.orbit.duration}
+            data-direction={planet.orbit.direction}
+            data-start={planet.orbit.start}
+            style={`--orbit-path:path("${planet.orbit.path}");--orbit-duration:${planet.orbit.duration}s;--orbit-direction:${planet.orbit.direction};--orbit-delay:${-(planet.orbit.duration * planet.orbit.start / 100)}s;--orbit-start:${planet.orbit.start}%;--planet-color:${planet.color};--planet-glow:${planet.glow}`}
+          >
+            <g class="planet" style={`--planet-size:${planet.size}px`}>
+              <circle class="planet__focus-ring" r={planet.size / 2 + 8} />
+              <ellipse class="planet__local-orbit" rx={planet.size * .78} ry={planet.size * .27} />
+              <circle class="planet__atmosphere" r={planet.size / 2 + 5} />
+              <circle class="planet__sphere" r={planet.size / 2} />
+              <circle class="planet__surface" r={planet.size / 2 - 5} />
+              <g class="planet__icon" aria-hidden="true">
+                {planet.icon === 'brain' && <><path d="M-3-9c-5-2-9 2-8 7-4 2-4 8 0 10 1 5 6 6 9 3V-8c0-1 0-1-1-1Zm6 0c5-2 9 2 8 7 4 2 4 8 0 10-1 5-6 6-9 3V-8c0-1 0-1 1-1Z" /><path d="M-8-3h5m-6 7h6m6-7h5M3 4h6" /></>}
+                {planet.icon === 'forge' && <><path d="M-9-8H9L6-2H2v7h5v5H-7V5h5v-7H-6Z" /><path d="M-12 11H12" /></>}
+                {planet.icon === 'kayla' && <><path d="M-7-11V11M-6 1 7-10M-5 1 8 11" /></>}
+                {planet.icon === 'apps' && <><rect x="-9" y="-9" width="7" height="7" rx="1" /><rect x="3" y="-9" width="7" height="7" rx="1" /><rect x="-9" y="3" width="7" height="7" rx="1" /><rect x="3" y="3" width="7" height="7" rx="1" /></>}
+                {planet.icon === 'kyra' && <><path d="M0-11 10-4 7 8 0 12-7 8-10-4Z" /><path d="M-10-4 0 3 10-4M0 3V12" /></>}
+                {planet.icon === 'farm' && <><path d="M-9 8C-7-3 0-10 10-10 10 0 3 8-9 8Z" /><path d="M-10 11C-4 4 1 0 8-5" /></>}
+                {planet.icon === 'civic' && <><circle cx="0" cy="-6" r="4" /><circle cx="-9" cy="-3" r="3" /><circle cx="9" cy="-3" r="3" /><path d="M-7 10V6c0-5 14-5 14 0v4M-15 9V6c0-3 5-4 8-2m22 5V6c0-3-5-4-8-2" /></>}
+                {planet.icon === 'systems' && <><circle cx="0" cy="0" r="4" /><circle cx="0" cy="-11" r="2" /><circle cx="10" cy="6" r="2" /><circle cx="-10" cy="6" r="2" /><path d="M0-4V-9M4 2 8 5M-4 2-8 5" /></>}
+              </g>
+              <text class="planet__tag" y={planet.size / 2 + 15} text-anchor="middle">{planet.name}</text>
+              <g class="planet__label" transform={labelTransform(planet.labelSide, planet.size)}>
+                <line class="planet__leader" x1={planet.labelSide === 'right' ? -12 : 120} y1="23" x2={planet.labelSide === 'right' ? 0 : 112} y2="23" />
+                <path class="planet__label-frame" d="M6 0H112L120 8V46H8L0 38V8Z" />
+                <text class="planet__name" x="12" y="19">{planet.name}</text>
+                <text class="planet__subtitle" x="12" y="35">{planet.subtitle}</text>
+              </g>
+            </g>
+          </g>
+        </a>
+      ))}
+    </g>
+
+    <g class="core" aria-hidden="true">
+      <circle class="core__aura" cx="340" cy="340" r="116" />
+      <g class="core__ring core__ring--outer"><circle cx="340" cy="340" r="107" /><circle cx="340" cy="340" r="101" /></g>
+      <g class="core__ring core__ring--mid"><circle cx="340" cy="340" r="89" /><path d="M340 246V262M340 418V434M246 340H262M418 340H434" /></g>
+      <g class="core__ring core__ring--inner"><circle cx="340" cy="340" r="72" /><circle cx="340" cy="340" r="66" /></g>
+      <g class="core__illumination" filter="url(#core-glow)">
+        <circle class="core__sphere" cx="340" cy="340" r="59" />
+        <circle class="core__chamber" cx="340" cy="340" r="48" />
+        <path class="core__aperture" d="M340 294 380 317 380 363 340 386 300 363 300 317Z" />
+        <circle class="core__energy" cx="340" cy="340" r="19" />
+      </g>
+      <g class="core__network" clip-path="url(#core-clip)">
+        <path d="M300 317 340 340 380 317M300 363 340 340 380 363M340 294V320M340 360V386" />
+        <circle cx="300" cy="317" r="2.5" /><circle cx="340" cy="294" r="2.5" /><circle cx="380" cy="317" r="2.5" /><circle cx="380" cy="363" r="2.5" /><circle cx="340" cy="386" r="2.5" /><circle cx="300" cy="363" r="2.5" />
+      </g>
+      <g class="core__forge-mark">
+        <path class="core__code-bracket" d="M322 321 305 340 322 359M358 321 375 340 358 359" />
+        <path class="core__anvil" d="M327 322H353L359 328 351 336H346V346H352L359 356H321L328 346H334V336H329L321 328Z" />
+        <path class="core__anvil-edge" d="M329 328H351M328 346H352M325 356H355" />
+        <circle class="core__forge-point" cx="340" cy="340" r="4" />
+      </g>
+      <g class="core__sparks"><path d="M340 305V299M365 315 370 310M375 340H382M315 365 310 370" /></g>
+      <g class="core__particles"><circle cx="340" cy="270" r="2" /><circle cx="401" cy="318" r="1.5" /><circle cx="288" cy="381" r="1.5" /><circle cx="376" cy="396" r="2" /></g>
+      <text class="core__title" x="340" y="438" text-anchor="middle">FDS CORE</text>
+      <text class="core__subtitle" x="340" y="455" text-anchor="middle">SYSTEMS LINKED</text>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
+  .fds-ecosystem { position: relative; isolation: isolate; width: min(100%, 34rem); aspect-ratio: 1; margin: 0 auto; container-type: inline-size; }
+  .fds-ecosystem::before { position: absolute; inset: 9%; border-radius: 50%; background: radial-gradient(circle, rgba(29,86,219,.2), rgba(10,31,78,.08) 42%, transparent 72%); box-shadow: 0 0 8rem rgba(24,73,190,.18); content: ''; }
+  .fds-ecosystem__scene { position: relative; z-index: 1; display: block; width: 100%; height: 100%; overflow: visible; }
+  .ecosystem-grid { fill: none; stroke: rgba(91,137,224,.1); stroke-width: 1; }.ecosystem-grid circle:nth-child(2) { stroke-dasharray: 2 12; }.ecosystem-grid circle:nth-child(3) { stroke-dasharray: 1 8; }.ecosystem-grid path { stroke: rgba(82,124,207,.07); }
+  .orbit-path, .orbit-segment, .orbit-pulse { fill: none; vector-effect: non-scaling-stroke; }
+  .orbit-path { stroke: var(--planet-color); stroke-width: 1.05; opacity: var(--orbit-opacity); filter: drop-shadow(0 0 1.8px color-mix(in srgb, var(--planet-color) 55%, transparent)); transition: opacity .2s ease, stroke-width .2s ease, filter .2s ease; }
+  .orbit-segment { stroke: var(--planet-color); stroke-width: 1.25; stroke-dasharray: 115 885; stroke-dashoffset: -120; opacity: calc(var(--orbit-opacity) + .12); filter: drop-shadow(0 0 2px color-mix(in srgb, var(--planet-color) 65%, transparent)); }
+  .orbit-pulse { stroke: var(--planet-color); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 3 997; opacity: .65; filter: drop-shadow(0 0 4px var(--planet-color)); animation: orbit-energy var(--pulse-duration) var(--pulse-delay) linear infinite; }
+  .planet-motion { offset-path: var(--orbit-path); offset-rotate: 0deg; offset-anchor: 0 0; animation: orbit-locked var(--orbit-duration) var(--orbit-delay) linear infinite; animation-direction: var(--orbit-direction); transform-box: view-box; will-change: offset-distance; }
+  .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: filter .2s ease; }.planet-link:hover .planet, .planet-link:focus-visible .planet { filter: brightness(1.24); }
+  .planet__focus-ring { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 3 4; opacity: 0; }.planet-link:focus-visible .planet__focus-ring { opacity: .9; }
+  .planet__local-orbit { fill: none; stroke: currentColor; stroke-width: 1.15; opacity: .62; transform: rotate(-13deg); filter: drop-shadow(0 0 2px var(--planet-glow)); }
+  .planet__atmosphere { fill: currentColor; opacity: .08; stroke: currentColor; stroke-width: 1.2; filter: url(#planet-glow); }
+  .planet__sphere { fill: url(#planet-sphere); stroke: currentColor; stroke-width: 1.25; filter: drop-shadow(0 0 7px var(--planet-glow)); }
+  .planet__surface { fill: none; stroke: currentColor; stroke-width: .65; stroke-dasharray: 2 5; opacity: .48; }
+  .planet__icon { fill: none; stroke: #eef5ff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px var(--planet-glow)); }
+  .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:hover .planet__label, .planet-link:focus-visible .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
+  .planet__name, .planet__subtitle, .planet__tag { fill: currentColor; font-family: var(--font-mono); }.planet__name { font-size: 13px; font-weight: 800; letter-spacing: 1.8px; }.planet__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 1.1px; opacity: .72; }.planet__tag { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1px; paint-order: stroke; stroke: rgba(3,8,18,.96); stroke-width: 4px; }
+  .orbit-layer:has(+ .planet-layer .planet-link--intelligence:hover) .orbit-visual--intelligence .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--intelligence:focus-visible) .orbit-visual--intelligence .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--forged:hover) .orbit-visual--forged .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--forged:focus-visible) .orbit-visual--forged .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--kayla:hover) .orbit-visual--kayla .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--kayla:focus-visible) .orbit-visual--kayla .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--applications:hover) .orbit-visual--applications .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--applications:focus-visible) .orbit-visual--applications .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--kyra:hover) .orbit-visual--kyra .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--kyra:focus-visible) .orbit-visual--kyra .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--farm:hover) .orbit-visual--farm .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--farm:focus-visible) .orbit-visual--farm .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--civic:hover) .orbit-visual--civic .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--civic:focus-visible) .orbit-visual--civic .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--systems:hover) .orbit-visual--systems .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--systems:focus-visible) .orbit-visual--systems .orbit-path { stroke: var(--planet-color); stroke-width: 1.8; opacity: .85; }
+  .core { transform-origin: 340px 340px; }.core__aura { fill: rgba(21,72,190,.14); stroke: rgba(84,139,255,.24); filter: drop-shadow(0 0 28px rgba(29,91,237,.58)); }
+  .core__ring { fill: none; stroke: rgba(94,154,255,.5); stroke-width: 1; transform-origin: 340px 340px; }.core__ring--outer { stroke-dasharray: 3 8 16 5; animation: core-ring-spin 48s linear infinite; }.core__ring--mid { stroke: rgba(132,176,250,.4); stroke-dasharray: 1 5 20 7; animation: core-ring-spin 34s linear infinite reverse; }.core__ring--inner { stroke: rgba(92,151,255,.62); stroke-dasharray: 2 4; animation: core-ring-spin 26s linear infinite; }
+  .core__sphere { fill: url(#core-sphere); stroke: #5e9fff; stroke-width: 1.4; }.core__chamber { fill: rgba(2,9,28,.42); stroke: rgba(145,190,255,.78); stroke-width: 1; stroke-dasharray: 2 5; }.core__aperture { fill: rgba(20,76,184,.18); stroke: rgba(132,187,255,.58); stroke-width: 1; stroke-dasharray: 4 3; transform-origin: 340px 340px; animation: core-ring-spin 38s linear infinite reverse; }.core__energy { fill: url(#forge-heart); stroke: #d6e9ff; stroke-width: 1; opacity: .88; }
+  .core__illumination { transform-origin: 340px 340px; animation: core-breathe 9s cubic-bezier(.45,0,.35,1) infinite; }
+  .core__network { fill: rgba(80,148,255,.08); stroke: rgba(170,211,255,.78); stroke-width: 1; }.core__network circle { fill: #8fc5ff; stroke: none; filter: drop-shadow(0 0 4px #4a97ff); }
+  .core__forge-mark { filter: drop-shadow(0 0 5px rgba(73,139,255,.9)); }.core__code-bracket { fill: none; stroke: #b9d8ff; stroke-width: 3.2; stroke-linecap: square; stroke-linejoin: bevel; }.core__anvil { fill: url(#forge-metal); stroke: #edf5ff; stroke-width: 1.25; stroke-linejoin: bevel; }.core__anvil-edge { fill: none; stroke: rgba(5,28,78,.82); stroke-width: 1.1; }.core__forge-point { fill: #fff; stroke: #78adff; stroke-width: 1.5; filter: drop-shadow(0 0 5px #fff); }.core__sparks { fill: none; stroke: #cfe5ff; stroke-width: 1.4; stroke-linecap: round; opacity: .68; filter: drop-shadow(0 0 4px #438cff); animation: forge-sparks 9s ease-in-out infinite; }
+  .core__particles { fill: #9ecbff; filter: drop-shadow(0 0 5px #4c91f2); transform-origin: 340px 340px; animation: core-ring-spin 22s linear infinite reverse; }
+  .core__title, .core__subtitle { fill: #e8f1ff; font-family: var(--font-mono); }.core__title { font-size: 14px; font-weight: 850; letter-spacing: 3px; }.core__subtitle { font-size: 8px; font-weight: 650; letter-spacing: 2px; opacity: .62; }
+  @keyframes orbit-locked { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+  @keyframes orbit-energy { to { stroke-dashoffset: -1000; } }
+  @keyframes core-ring-spin { to { transform: rotate(360deg); } }
+  @keyframes core-breathe { 0%, 100% { opacity: .68; transform: scale(.985); } 44%, 58% { opacity: 1; transform: scale(1.025); } }
+  @keyframes forge-sparks { 0%, 24%, 68%, 100% { opacity: .28; } 45%, 54% { opacity: .92; } }
+  @container (max-width: 28rem) { .planet__label { display: none; }.orbit-segment { opacity: .25; }.ecosystem-grid circle:first-child { display: none; } }
+  @media (max-width: 960px) { .fds-ecosystem { width: min(100%, 32rem); } }
+  @media (max-width: 560px) { .fds-ecosystem { width: min(100%, 23rem); }.ecosystem-grid { opacity: .65; }.planet__tag { font-size: 8px; }.core__title { font-size: 13px; }.core__subtitle { font-size: 7px; } }
+  @media (prefers-reduced-motion: reduce) { .planet-motion { animation: none; offset-distance: var(--orbit-start); will-change: auto; }.orbit-pulse, .core__ring, .core__aperture, .core__particles, .core__sparks { animation: none; }.core__illumination { animation: none; opacity: .88; transform: none; } }
+</style>

@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import KaylaCopilot from '../components/KaylaCopilot.astro';
 import SystemBackground from '../components/SystemBackground.astro';
+import CosmicBackdrop from '../components/CosmicBackdrop.astro';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { buildPageContext } from '../lib/kayla/context';
@@ -22,6 +23,7 @@ const pageDesc =
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
 const ogImageUrl = new URL(ogImage || siteConfig.ogImage, siteConfig.siteUrl).href;
 const kaylaPageContext = buildPageContext(Astro.url.pathname);
+const isHomepage = Astro.url.pathname === '/';
 ---
 <!doctype html>
 <html lang="en">
@@ -65,6 +67,7 @@ const kaylaPageContext = buildPageContext(Astro.url.pathname);
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <SystemBackground />
+    {isHomepage && <CosmicBackdrop />}
     <Header />
     <main id="main-content" class="site-main">
       <slot />
