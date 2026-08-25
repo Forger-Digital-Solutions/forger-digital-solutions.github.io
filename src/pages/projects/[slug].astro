@@ -7,7 +7,11 @@ import ProjectVisual from '../../components/ProjectVisual.astro';
 import NoteCard from '../../components/NoteCard.astro';
 import { statusMeta } from '../../data/status';
 import { getPublishedNotes } from '../../lib/notes';
-export function getStaticPaths() { return projects.map((project) => ({ params: { slug: project.slug }, props: { project } })); }
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
 const { project } = Astro.props;
 const relatedProjects = projects.filter((item) => item.slug !== project.slug).sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99)).slice(0, 3);
 const isGems = project.slug === 'gems-training-grounds';
@@ -16,33 +20,714 @@ const projectNotes = (await getPublishedNotes())
   .filter((note) => note.data.projectSlug === project.slug)
   .slice(0, 3);
 const ogImage = project.ogImage ?? project.heroImage?.src;
+
+// Map ecosystem to styles
+const ecosystemStyles: Record<string, { color: string; bg: string }> = {
+  'Intelligence': { color: '#4f8fff', bg: 'rgba(79,143,255,.12)' },
+  'Gaming': { color: '#b487ff', bg: 'rgba(180,135,255,.12)' },
+  'Publishing': { color: '#d9813f', bg: 'rgba(217,129,63,.12)' },
+  'Civic': { color: '#8792a8', bg: 'rgba(135,146,168,.12)' },
+  'Foraging': { color: '#76b77d', bg: 'rgba(118,183,125,.12)' }
+};
+const ecosystemStyle = project.ecosystem ? ecosystemStyles[project.ecosystem] : null;
+const ecoColor = ecosystemStyle?.color || project.accentColor;
 ---
+
 <BaseLayout title={project.name} description={project.summary} ogImage={ogImage}>
-  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects">Projects</a><span aria-hidden="true">/</span><span aria-current="page">{project.name}</span></nav>
-  <article class="project-page" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
-    <header class:list={['project-hero', { 'project-hero--flagship': isGems }]}><p class="project-hero__category">{project.category}</p><div class="project-hero__title-row"><h1>{project.name}</h1><ProjectStatus status={project.status} /></div>{project.stageLabel && <p class="project-hero__stage">{project.stageLabel}</p>}<p class="project-hero__summary">{project.summary}</p><div class="project-hero__tags" aria-label={`${project.name} focus tags`}>{project.tags.map((tag) => <span class="tag">{tag}</span>)}</div></header>
-    <figure class="project-visual-wrap">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/projects">Projects</a><span aria-hidden="true">/</span>
+    <span aria-current="page">{project.shortName || project.name}</span>
+  </nav>
+  
+  <article class="project-page" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'};--eco-color: ${ecoColor}`}>
+    <!-- Hero Section -->
+    <header class="project-hero" class:list={[isGems ? 'project-hero--flagship' : '']}>
+      <div class="project-hero__badge-row">
+        {project.ecosystem && ecosystemStyle && (
+          <a href="/projects" class="project-hero__ecosystem">
+            <span class="eco-dot"></span>
+            {project.ecosystem.toUpperCase()}
+          </a>
+        )}
+        <ProjectStatus status={project.status} />
+      </div>
+      
+      <h1 class="project-hero__title">{project.name}</h1>
+      
+      {project.stageLabel && !project.flagship && (
+        <p class="project-hero__stage">{project.stageLabel}</p>
+      )}
+      
+      <p class="project-hero__summary">{project.summary}</p>
+      
+      <div class="project-hero__tags">
+        {project.tags.slice(0, 5).map((tag) => <span class="tag">{tag}</span>)}
+      </div>
+    </header>
+
+    <!-- Visual -->
+    <figure class="project-visual">
       {project.heroImage
-        ? <img class="project-visual-img" src={project.heroImage.src} alt={project.heroImage.alt} loading="lazy" decoding="async" />
+        ? <img class="project-visual__img" src={project.heroImage.src} alt={project.heroImage.alt} loading="lazy" decoding="async" />
         : <ProjectVisual project={project} variant="hero" />}
-      {project.heroImage?.caption && <figcaption>{project.heroImage.caption}</figcaption>}
+      {project.heroImage?.caption && (
+        <figcaption class="project-visual__caption">{project.heroImage.caption}</figcaption>
+      )}
     </figure>
-    <div class="project-layout"><div class="project-content"><section aria-labelledby="overview"><h2 id="overview">Overview</h2><p>{project.description}</p></section>{project.building && <section aria-labelledby="building"><h2 id="building">What We're Building</h2><ul class="building-list">{project.building.map((item) => <li>{item}</li>)}</ul></section>}<section aria-labelledby="focus"><h2 id="focus">Focus Areas</h2><ul class="focus-grid">{(project.focusAreas || project.tags).map((area, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{area}</li>)}</ul></section>{project.highlights && <section aria-labelledby="highlights"><h2 id="highlights">Research &amp; Development Notes</h2><ul class="highlights">{project.highlights.map((item) => <li>{item}</li>)}</ul></section>}{project.privacyNotice && <aside class="privacy-note"><span aria-hidden="true">◇</span><p>{project.privacyNotice}</p></aside>}</div><aside class="project-fact"><p>Development Status</p><ProjectStatus status={project.status} /><p class="project-fact__copy">{status.description}</p>{(project.githubUrl || project.websiteUrl || project.documentationUrl) && <div class="project-links"><p>Relevant Links</p>{project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">View Repository</a>}{project.websiteUrl && <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Open Project</a>}{project.documentationUrl && <a href={project.documentationUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Documentation</a>}</div>}</aside></div>
-    {isGems && <section class="gems-systems" aria-labelledby="gems-systems"><p class="project-hero__category">Conceptual Research Flow</p><h2 id="gems-systems">A system designed to learn from evidence</h2><div class="concept-grid"><div class="concept-flow" aria-label="Curriculum, training, evaluation, evidence, certification"><span>Curriculum</span><i>↓</i><span>Training</span><i>↓</i><span>Evaluation</span><i>↓</i><span>Evidence</span><i>↓</i><span>Certification</span></div><div class="concept-flow" aria-label="Available compute, hardware awareness, execution planning, training and evaluation"><span>Available Compute</span><i>↓</i><span>Hardware Awareness</span><i>↓</i><span>Execution Planning</span><i>↓</i><span>Training / Evaluation</span></div></div><p class="concept-note">These diagrams describe FDS research concepts, not an exposed product architecture or performance claim.</p></section>}
-    {project.gallery && project.gallery.length > 0 && (
-      <section class="project-gallery" aria-labelledby="gallery"><h2 id="gallery">Project Media</h2><div class="gallery-grid">{project.gallery.map((item) => (<figure><img src={item.src} alt={item.alt} loading="lazy" decoding="async" />{item.caption && <figcaption>{item.caption}</figcaption>}</figure>))}</div></section>
+
+    <!-- Main Content -->
+    <div class="project-layout">
+      <div class="project-content">
+        <!-- Overview -->
+        <section class="project-section" aria-labelledby="overview">
+          <h2 id="overview" class="section-title">Overview</h2>
+          <p class="section-text">{project.description}</p>
+        </section>
+
+        <!-- Problem -->
+        {project.problem && (
+          <section class="project-section" aria-labelledby="problem">
+            <h2 id="problem" class="section-title">The Problem</h2>
+            <p class="section-text">{project.problem}</p>
+          </section>
+        )}
+
+        <!-- Differentiation -->
+        {project.differentiation && (
+          <section class="project-section" aria-labelledby="differentiation">
+            <h2 id="differentiation" class="section-title">What Makes It Different</h2>
+            <p class="section-text">{project.differentiation}</p>
+          </section>
+        )}
+
+        <!-- What We're Building -->
+        {project.building && project.building.length > 0 && (
+          <section class="project-section" aria-labelledby="building">
+            <h2 id="building" class="section-title">What We're Building</h2>
+            <ul class="building-grid">
+              {project.building.map((item) => (
+                <li class="building-item">
+                  <span class="building-icon" aria-hidden="true">+</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <!-- Focus Areas / Capabilities -->
+        <section class="project-section" aria-labelledby="focus">
+          <h2 id="focus" class="section-title">Core Capabilities</h2>
+          <ul class="capabilities-grid">
+            {(project.focusAreas || project.tags).slice(0, 6).map((area, index) => (
+              <li class="capability-item">
+                <span class="capability-num">{String(index + 1).padStart(2, '0')}</span>
+                <span class="capability-label">{area}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- R&D Notes -->
+        {project.highlights && project.highlights.length > 0 && (
+          <section class="project-section" aria-labelledby="highlights">
+            <h2 id="highlights" class="section-title">Development Notes</h2>
+            <ul class="notes-list">
+              {project.highlights.map((item) => (
+                <li class="notes-item">
+                  <span class="notes-marker" aria-hidden="true">→</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <!-- Privacy Notice -->
+        {project.privacyNotice && (
+          <aside class="privacy-block">
+            <span class="privacy-icon" aria-hidden="true">◇</span>
+            <p class="privacy-text">{project.privacyNotice}</p>
+          </aside>
+        )}
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="project-sidebar">
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Development Status</h3>
+          <ProjectStatus status={project.status} />
+          <p class="sidebar-desc">{status.description}</p>
+        </div>
+
+        {project.audience && (
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Built For</h3>
+            <p class="sidebar-desc sidebar-desc--audience">{project.audience}</p>
+          </div>
+        )}
+
+        {(project.githubUrl || project.websiteUrl || project.documentationUrl) && (
+          <div class="sidebar-card sidebar-links">
+            <h3 class="sidebar-title">Links</h3>
+            <div class="sidebar-buttons">
+              {project.githubUrl && (
+                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                  Repository
+                </a>
+              )}
+              {project.websiteUrl && (
+                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                  Live Project
+                </a>
+              )}
+              {project.documentationUrl && (
+                <a href={project.documentationUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                  Documentation
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+      </aside>
+    </div>
+
+    <!-- GEMS Special Section -->
+    {isGems && (
+      <section class="gems-section" aria-labelledby="gems-systems">
+        <p class="gems-kicker">Conceptual Research Flow</p>
+        <h2 id="gems-systems" class="gems-title">A system designed to learn from evidence</h2>
+        <div class="gems-grid">
+          <div class="gems-flow">
+            <span class="gems-step">Curriculum</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Training</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Evaluation</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Evidence</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Certification</span>
+          </div>
+          <div class="gems-flow">
+            <span class="gems-step">Available Compute</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Hardware Awareness</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Execution Planning</span>
+            <span class="gems-arrow">↓</span>
+            <span class="gems-step">Training / Evaluation</span>
+          </div>
+        </div>
+        <p class="gems-note">
+          These diagrams describe FDS research concepts, not an exposed product architecture or performance claim.
+        </p>
+      </section>
     )}
+
+    <!-- Gallery -->
+    {project.gallery && project.gallery.length > 0 && (
+      <section class="project-gallery" aria-labelledby="gallery">
+        <h2 id="gallery" class="section-title">Project Media</h2>
+        <div class="gallery-grid">
+          {project.gallery.map((item) => (
+            <figure class="gallery-item">
+              <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
+              {item.caption && <figcaption>{item.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Project Updates -->
     {projectNotes.length > 0 && (
-      <section class="project-updates" aria-labelledby="updates"><div class="project-updates__head"><h2 id="updates">Latest Project Updates</h2><a class="text-link" href="/notes">All notes <span aria-hidden="true">→</span></a></div><div class="updates-grid">{projectNotes.map((note) => <NoteCard note={note} showProject={false} />)}</div></section>
+      <section class="project-updates" aria-labelledby="updates">
+        <div class="updates-header">
+          <h2 id="updates" class="section-title">Latest Updates</h2>
+          <a class="updates-link" href="/notes">All notes →</a>
+        </div>
+        <div class="updates-grid">
+          {projectNotes.map((note) => <NoteCard note={note} showProject={false} />)}
+        </div>
+      </section>
     )}
   </article>
-  <section class="related" aria-labelledby="related"><h2 id="related">Explore More FDS Projects</h2><div class="related-grid">{relatedProjects.map((item) => <ProjectCard project={item} />)}</div></section>
+
+  <!-- Related Projects -->
+  <section class="related-projects" aria-labelledby="related">
+    <h2 id="related" class="related-title">Explore More FDS Projects</h2>
+    <div class="related-grid">
+      {relatedProjects.map((item) => <ProjectCard project={item} />)}
+    </div>
+  </section>
 </BaseLayout>
+
 <style>
-  .breadcrumbs { display: flex; flex-wrap: wrap; gap: .5rem; padding: 1.6rem 0 0; color: var(--color-text-subtle); font: .72rem/1.3 var(--font-mono); }.breadcrumbs a { color: var(--color-text-muted); }.project-page { --project-accent: var(--color-accent); }.project-hero { position: relative; padding: clamp(3rem, 8vw, 6rem) 0 3rem; border-bottom: 1px solid var(--color-border); }.project-hero--flagship { padding-right: min(14vw, 10rem); }.project-hero--flagship::after { position: absolute; top: 2rem; right: 0; width: min(16vw, 9rem); aspect-ratio: 1; border: 1px solid var(--project-accent); border-radius: 50%; box-shadow: 0 0 0 1.6rem color-mix(in srgb, var(--project-accent) 8%, transparent), 0 0 0 4rem color-mix(in srgb, var(--project-accent) 3%, transparent); content: ''; }.project-hero__category, .project-hero__stage { color: var(--project-accent); font: 700 .72rem/1.3 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }.project-hero__title-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; margin-top: 1rem; }.project-hero h1 { max-width: 50rem; font-size: clamp(2.45rem, 6vw, 5rem); line-height: .98; letter-spacing: -.055em; }.project-hero__stage { margin-top: 1rem; }.project-hero__summary { max-width: 50rem; margin-top: 1.2rem; color: var(--color-text-muted); font-size: 1.12rem; line-height: 1.7; }.project-hero__tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }.project-layout { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 5rem; padding: 4rem 0; }.project-content section + section { margin-top: 3rem; }.project-content h2, .gems-systems h2, .related h2 { font-size: clamp(1.55rem, 3vw, 2.25rem); letter-spacing: -.035em; }.project-content p { max-width: 46rem; margin-top: 1rem; color: var(--color-text-muted); font-size: 1.04rem; }.focus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: 1.2rem 0 0; padding: 0; list-style: none; }.focus-grid li { display: flex; gap: .65rem; align-items: center; padding: .75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text-muted); }.focus-grid span { color: var(--project-accent); font: 700 .68rem/1 var(--font-mono); }.highlights { display: grid; gap: .65rem; margin: 1rem 0 0; padding: 0; list-style: none; }.highlights li { padding-left: 1.2rem; color: var(--color-text-muted); }.highlights li::before { position: absolute; margin-left: -1.2rem; color: var(--project-accent); content: '→'; }.project-fact { height: fit-content; padding: 1.2rem; border: 1px solid var(--color-border); border-top: 3px solid var(--project-accent); border-radius: var(--radius-md); background: var(--color-surface); }.project-fact > p:first-child, .project-links > p { margin-bottom: .75rem; color: var(--color-text-subtle); font: 700 .68rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }.project-fact__copy { margin-top: 1rem; color: var(--color-text-muted); font-size: .88rem; }.project-links { display: grid; gap: .6rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--color-border); }.project-links .btn { justify-content: flex-start; font-size: .8rem; }.privacy-note { display: flex; gap: .8rem; align-items: flex-start; margin-top: 2.5rem; padding: 1rem; border-left: 3px solid var(--project-accent); background: color-mix(in srgb, var(--project-accent) 7%, transparent); }.privacy-note span { color: var(--project-accent); }.privacy-note p { margin: 0; }.gems-systems { width: 100vw; margin-left: calc(50% - 50vw); padding: var(--space-7) max(1.25rem, calc((100vw - var(--content-width)) / 2)); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); background: linear-gradient(110deg, color-mix(in srgb, var(--project-accent) 11%, var(--color-bg-secondary)), var(--color-bg-secondary)); }.gems-systems h2 { margin: .8rem 0 2rem; }.concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }.concept-flow { display: grid; gap: .45rem; padding: 1.4rem; border: 1px solid color-mix(in srgb, var(--project-accent) 40%, var(--color-border)); border-radius: var(--radius-md); background: rgba(0,0,0,.13); }.concept-flow span { padding: .5rem .7rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); font: 700 .73rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }.concept-flow i { color: var(--project-accent); font-style: normal; text-align: center; }.concept-note { max-width: 48rem; margin-top: 1.3rem; color: var(--color-text-muted); font-size: .82rem; }.related { padding: var(--space-7) 0; }.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
-  .project-visual-wrap { margin: 2.5rem 0 0; }.project-visual-wrap figcaption { margin-top: .6rem; color: var(--color-text-subtle); font: .78rem/1.4 var(--font-mono); }.project-visual-img { display: block; width: 100%; border: 1px solid var(--color-border); border-radius: var(--radius-md); }
-  .building-list { display: grid; gap: .6rem; margin: 1.2rem 0 0; padding: 0; list-style: none; }.building-list li { position: relative; padding: .85rem 1rem .85rem 2.2rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text-muted); }.building-list li::before { position: absolute; left: 1rem; color: var(--project-accent); font-weight: 700; content: '+'; }
-  .project-updates, .project-gallery { padding: var(--space-6) 0 0; }.project-updates__head { display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between; }.project-updates .text-link, .gems-systems + * .text-link { font: 700 .74rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }.updates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1rem; margin-top: 1.5rem; }.gallery-grid img { display: block; width: 100%; border: 1px solid var(--color-border); border-radius: var(--radius-md); }.gallery-grid figcaption { margin-top: .5rem; color: var(--color-text-subtle); font: .78rem/1.4 var(--font-mono); }
-  @media (max-width: 850px) { .project-layout { grid-template-columns: 1fr; gap: 2rem; }.project-fact { max-width: 38rem; }.related-grid { grid-template-columns: 1fr 1fr; }.project-hero--flagship { padding-right: 0; }.project-hero--flagship::after { opacity: .45; } }@media (max-width: 600px) { .concept-grid, .focus-grid, .related-grid { grid-template-columns: 1fr; }.project-hero__title-row { align-items: flex-start; }.gems-systems { padding-top: var(--space-6); padding-bottom: var(--space-6); } }
+  /* Breadcrumbs */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 1.5rem 0 0;
+    color: var(--color-text-subtle);
+    font: .72rem/1.3 var(--font-mono);
+  }
+  .breadcrumbs a { color: var(--color-text-muted); }
+
+  /* Hero */
+  .project-hero {
+    position: relative;
+    padding: clamp(2.5rem, 6vw, 4rem) 0 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .project-hero__badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    align-items: center;
+    margin-bottom: .8rem;
+  }
+  
+  .project-hero__ecosystem {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .6rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--eco-color) 12%, transparent);
+    color: var(--eco-color);
+    font: 700 .65rem/1 var(--font-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity .2s ease;
+  }
+  
+  .project-hero__ecosystem:hover {
+    opacity: .85;
+  }
+  
+  .eco-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 4px currentColor;
+  }
+  
+  .project-hero__title {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -.04em;
+    color: var(--color-text);
+  }
+  
+  .project-hero__stage {
+    margin: .6rem 0 0;
+    color: var(--eco-color);
+    font: 700 .72rem/1.3 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  
+  .project-hero__summary {
+    max-width: 48rem;
+    margin: .9rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  
+  .project-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-top: 1.25rem;
+  }
+
+  /* Visual */
+  .project-visual {
+    margin: 2rem 0 0;
+  }
+  
+  .project-visual__img {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+  
+  .project-visual__caption {
+    margin: .5rem 0 0;
+    color: var(--color-text-subtle);
+    font: .75rem/1.4 var(--font-mono);
+  }
+
+  /* Layout */
+  .project-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    gap: 4rem;
+    padding: 3rem 0;
+  }
+
+  /* Sections */
+  .project-section + .project-section {
+    margin-top: 2.5rem;
+  }
+  
+  .section-title {
+    margin: 0 0 .8rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+    font-weight: 750;
+    letter-spacing: -.025em;
+    color: var(--color-text);
+  }
+  
+  .section-text {
+    max-width: 44rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  /* Building Grid */
+  .building-grid {
+    display: grid;
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .building-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .75rem .9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  
+  .building-icon {
+    color: var(--eco-color);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Capabilities Grid */
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .capability-item {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .65rem .75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: .82rem;
+  }
+  
+  .capability-num {
+    color: var(--eco-color);
+    font: 700 .65rem/1 var(--font-mono);
+  }
+
+  /* Notes List */
+  .notes-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .notes-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    padding: .6rem 0;
+    color: var(--color-text-muted);
+    font-size: .9rem;
+    line-height: 1.6;
+  }
+  
+  .notes-marker {
+    flex-shrink: 0;
+    color: var(--eco-color);
+    font-size: .85rem;
+  }
+
+  /* Privacy Block */
+  .privacy-block {
+    display: flex;
+    gap: .7rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+    padding: .9rem 1rem;
+    border-left: 3px solid var(--eco-color);
+    background: color-mix(in srgb, var(--eco-color) 8%, transparent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  
+  .privacy-icon {
+    color: var(--eco-color);
+    font-size: 1rem;
+  }
+  
+  .privacy-text {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .88rem;
+    line-height: 1.6;
+  }
+
+  /* Sidebar */
+  .project-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .sidebar-card {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--eco-color);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  
+  .sidebar-title {
+    margin: 0 0 .6rem;
+    color: var(--color-text-subtle);
+    font: 700 .65rem/1 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  
+  .sidebar-desc {
+    margin: .6rem 0 0;
+    color: var(--color-text-muted);
+    font-size: .85rem;
+    line-height: 1.55;
+  }
+  
+  .sidebar-desc--audience {
+    font-size: .82rem;
+    line-height: 1.5;
+  }
+  
+  .sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    margin-top: .6rem;
+  }
+  
+  .sidebar-buttons .btn {
+    justify-content: flex-start;
+    font-size: .78rem;
+    padding: .65rem .85rem;
+  }
+
+  /* GEMS Section */
+  .gems-section {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: var(--space-6) max(1.25rem, calc((100vw - var(--content-width)) / 2));
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(110deg, color-mix(in srgb, var(--eco-color, #4f8fff) 10%, var(--color-bg-secondary)), var(--color-bg-secondary));
+  }
+  
+  .gems-kicker {
+    margin: 0 0 .3rem;
+    color: var(--color-text-subtle);
+    font: 700 .7rem/1.3 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  
+  .gems-title {
+    margin: 0 0 1.5rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+    font-weight: 750;
+    letter-spacing: -.025em;
+  }
+  
+  .gems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  
+  .gems-flow {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    padding: 1rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color, #4f8fff) 35%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: rgba(0,0,0,.12);
+  }
+  
+  .gems-step {
+    padding: .45rem .6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font: 700 .7rem/1 var(--font-mono);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  
+  .gems-arrow {
+    color: var(--eco-color, #4f8fff);
+    font-size: .8rem;
+    text-align: center;
+  }
+  
+  .gems-note {
+    max-width: 48rem;
+    margin: 1rem 0 0;
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    font-style: italic;
+  }
+
+  /* Gallery */
+  .project-gallery {
+    padding: var(--space-5) 0;
+  }
+  
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  
+  .gallery-item figcaption {
+    margin: .4rem 0 0;
+    color: var(--color-text-subtle);
+    font: .72rem/1.3 var(--font-mono);
+  }
+
+  /* Updates */
+  .project-updates {
+    padding: var(--space-5) 0 0;
+  }
+  
+  .updates-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  
+  .updates-link {
+    color: var(--color-accent-secondary);
+    font: 700 .72rem/1 var(--font-mono);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  
+  .updates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  /* Related Projects */
+  .related-projects {
+    padding: var(--space-6) 0;
+  }
+  
+  .related-title {
+    margin: 0 0 1rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.5rem);
+    font-weight: 750;
+    letter-spacing: -.025em;
+  }
+  
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .project-layout {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .project-sidebar {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .sidebar-card {
+      flex: 1 1 calc(50% - .5rem);
+      min-width: 200px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .project-sidebar {
+      flex-direction: column;
+    }
+    .sidebar-card {
+      flex: none;
+      width: 100%;
+    }
+    .capabilities-grid {
+      grid-template-columns: 1fr;
+    }
+    .gems-grid {
+      grid-template-columns: 1fr;
+    }
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Scroll margin for sections when using anchor links - accounts for sticky header (~60px) */
+  .project-section,
+  .gems-section {
+    scroll-margin-top: 4.5rem;
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>

@@ -11,7 +11,7 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
 
   <svg class="fds-ecosystem__scene" viewBox="0 0 680 680" role="group" aria-labelledby="fds-ecosystem-svg-title fds-ecosystem-svg-desc">
     <title id="fds-ecosystem-svg-title">FDS digital solar system</title>
-    <desc id="fds-ecosystem-svg-desc">Eight project and technology nodes travel on independent fixed elliptical paths around the shared FDS Core.</desc>
+    <desc id="fds-ecosystem-svg-desc">Eight project and technology nodes travel on independent fixed elliptical paths around the shared CodeForge Core.</desc>
     <defs>
       <radialGradient id="core-sphere" cx="38%" cy="32%" r="68%">
         <stop offset="0" stop-color="#d6e7ff" /><stop offset=".12" stop-color="#6db0ff" /><stop offset=".43" stop-color="#155be0" /><stop offset=".74" stop-color="#09266e" /><stop offset="1" stop-color="#030a1d" />
@@ -70,10 +70,10 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
               <g class="planet__icon" aria-hidden="true">
                 {planet.icon === 'brain' && <><path d="M-3-9c-5-2-9 2-8 7-4 2-4 8 0 10 1 5 6 6 9 3V-8c0-1 0-1-1-1Zm6 0c5-2 9 2 8 7 4 2 4 8 0 10-1 5-6 6-9 3V-8c0-1 0-1 1-1Z" /><path d="M-8-3h5m-6 7h6m6-7h5M3 4h6" /></>}
                 {planet.icon === 'forge' && <><path d="M-9-8H9L6-2H2v7h5v5H-7V5h5v-7H-6Z" /><path d="M-12 11H12" /></>}
-                {planet.icon === 'kayla' && <><path d="M-7-11V11M-6 1 7-10M-5 1 8 11" /></>}
+                {planet.icon === 'publishing' && <><!-- Open book with digital spark --><path d="M-10 8V-6c4-3 8-3 10 0 2-3 6-3 10 0V8c-4-2-8-2-10 1-2-3-6-3-10-1Z" /><path d="M0-6V9" /><path d="M-6-2c2 0 4 1 6 3M6-2c-2 0-4 1-6 3" /><circle cx="0" cy="-10" r="2" opacity=".7" /></>}
                 {planet.icon === 'apps' && <><rect x="-9" y="-9" width="7" height="7" rx="1" /><rect x="3" y="-9" width="7" height="7" rx="1" /><rect x="-9" y="3" width="7" height="7" rx="1" /><rect x="3" y="3" width="7" height="7" rx="1" /></>}
-                {planet.icon === 'kyra' && <><path d="M0-11 10-4 7 8 0 12-7 8-10-4Z" /><path d="M-10-4 0 3 10-4M0 3V12" /></>}
-                {planet.icon === 'farm' && <><path d="M-9 8C-7-3 0-10 10-10 10 0 3 8-9 8Z" /><path d="M-10 11C-4 4 1 0 8-5" /></>}
+                {planet.icon === 'gaming' && <><!-- Game controller with D-pad and buttons --><path d="M-11-2c-2 0-3 2-3 4 0 3 2 5 4 5H0c2 0 4-2 4-5 0-2-1-4-3-4l-2 2H-9Z" /><circle cx="-7" cy="2" r="1.5" /><circle cx="7" cy="0" r="1.5" /><circle cx="9" cy="-2" r="1" /><path d="M1-1h4M3-3v4" /><path d="M-10-6l2-4M-6-6l-2-4" opacity=".5" /></>}
+                {planet.icon === 'foraging' && <><!-- Leaf + location pin / compass --><path d="M-2-11c-6 2-10 8-8 14 3-1 6-3 8-6V-11Z" /><path d="M2-11c6 2 10 8 8 14-3-1-6-3-8-6V-11Z" /><path d="M0-8V11" /><path d="M-6 3c3 4 9 4 12 0" /><circle cx="0" cy="8" r="3" /></>}
                 {planet.icon === 'civic' && <><circle cx="0" cy="-6" r="4" /><circle cx="-9" cy="-3" r="3" /><circle cx="9" cy="-3" r="3" /><path d="M-7 10V6c0-5 14-5 14 0v4M-15 9V6c0-3 5-4 8-2m22 5V6c0-3-5-4-8-2" /></>}
                 {planet.icon === 'systems' && <><circle cx="0" cy="0" r="4" /><circle cx="0" cy="-11" r="2" /><circle cx="10" cy="6" r="2" /><circle cx="-10" cy="6" r="2" /><path d="M0-4V-9M4 2 8 5M-4 2-8 5" /></>}
               </g>
@@ -90,31 +90,49 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
       ))}
     </g>
 
+    <!-- CodeForge Core: The technological heart of the FDS ecosystem -->
     <g class="core" aria-hidden="true">
+      <!-- Outer aura/glow field -->
       <circle class="core__aura" cx="340" cy="340" r="116" />
+      
+      <!-- Rotating tech rings -->
       <g class="core__ring core__ring--outer"><circle cx="340" cy="340" r="107" /><circle cx="340" cy="340" r="101" /></g>
       <g class="core__ring core__ring--mid"><circle cx="340" cy="340" r="89" /><path d="M340 246V262M340 418V434M246 340H262M418 340H434" /></g>
       <g class="core__ring core__ring--inner"><circle cx="340" cy="340" r="72" /><circle cx="340" cy="340" r="66" /></g>
+      
+      <!-- Illuminated core chamber (breathing effect) -->
       <g class="core__illumination" filter="url(#core-glow)">
         <circle class="core__sphere" cx="340" cy="340" r="59" />
         <circle class="core__chamber" cx="340" cy="340" r="48" />
         <path class="core__aperture" d="M340 294 380 317 380 363 340 386 300 363 300 317Z" />
         <circle class="core__energy" cx="340" cy="340" r="19" />
       </g>
+      
+      <!-- Network visualization inside core -->
       <g class="core__network" clip-path="url(#core-clip)">
         <path d="M300 317 340 340 380 317M300 363 340 340 380 363M340 294V320M340 360V386" />
         <circle cx="300" cy="317" r="2.5" /><circle cx="340" cy="294" r="2.5" /><circle cx="380" cy="317" r="2.5" /><circle cx="380" cy="363" r="2.5" /><circle cx="340" cy="386" r="2.5" /><circle cx="300" cy="363" r="2.5" />
       </g>
+      
+      <!-- CodeForge Mark: Code brackets + Anvil (forge symbol) -->
       <g class="core__forge-mark">
+        <!-- Code brackets: opening < and closing > -->
         <path class="core__code-bracket" d="M322 321 305 340 322 359M358 321 375 340 358 359" />
+        <!-- Anvil shape: represents the forge -->
         <path class="core__anvil" d="M327 322H353L359 328 351 336H346V346H352L359 356H321L328 346H334V336H329L321 328Z" />
+        <!-- Anvil edge details -->
         <path class="core__anvil-edge" d="M329 328H351M328 346H352M325 356H355" />
+        <!-- Central energy point -->
         <circle class="core__forge-point" cx="340" cy="340" r="4" />
       </g>
+      
+      <!-- Energy effects: sparks and particles -->
       <g class="core__sparks"><path d="M340 305V299M365 315 370 310M375 340H382M315 365 310 370" /></g>
       <g class="core__particles"><circle cx="340" cy="270" r="2" /><circle cx="401" cy="318" r="1.5" /><circle cx="288" cy="381" r="1.5" /><circle cx="376" cy="396" r="2" /></g>
-      <text class="core__title" x="340" y="438" text-anchor="middle">FDS CORE</text>
-      <text class="core__subtitle" x="340" y="455" text-anchor="middle">SYSTEMS LINKED</text>
+      
+      <!-- Core labeling -->
+      <text class="core__title" x="340" y="438" text-anchor="middle">CODEFORGE</text>
+      <text class="core__subtitle" x="340" y="455" text-anchor="middle">FDS TECHNOLOGY CORE</text>
     </g>
   </svg>
 </div>
@@ -139,12 +157,13 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
   .planet__icon { fill: none; stroke: #eef5ff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px var(--planet-glow)); }
   .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:hover .planet__label, .planet-link:focus-visible .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
   .planet__name, .planet__subtitle, .planet__tag { fill: currentColor; font-family: var(--font-mono); }.planet__name { font-size: 13px; font-weight: 800; letter-spacing: 1.8px; }.planet__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 1.1px; opacity: .72; }.planet__tag { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1px; paint-order: stroke; stroke: rgba(3,8,18,.96); stroke-width: 4px; }
+  /* Hover/focus orbit highlights for all planets - updated IDs */
   .orbit-layer:has(+ .planet-layer .planet-link--intelligence:hover) .orbit-visual--intelligence .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--intelligence:focus-visible) .orbit-visual--intelligence .orbit-path,
   .orbit-layer:has(+ .planet-layer .planet-link--forged:hover) .orbit-visual--forged .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--forged:focus-visible) .orbit-visual--forged .orbit-path,
-  .orbit-layer:has(+ .planet-layer .planet-link--kayla:hover) .orbit-visual--kayla .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--kayla:focus-visible) .orbit-visual--kayla .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--publishing:hover) .orbit-visual--publishing .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--publishing:focus-visible) .orbit-visual--publishing .orbit-path,
   .orbit-layer:has(+ .planet-layer .planet-link--applications:hover) .orbit-visual--applications .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--applications:focus-visible) .orbit-visual--applications .orbit-path,
-  .orbit-layer:has(+ .planet-layer .planet-link--kyra:hover) .orbit-visual--kyra .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--kyra:focus-visible) .orbit-visual--kyra .orbit-path,
-  .orbit-layer:has(+ .planet-layer .planet-link--farm:hover) .orbit-visual--farm .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--farm:focus-visible) .orbit-visual--farm .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--gaming:hover) .orbit-visual--gaming .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--gaming:focus-visible) .orbit-visual--gaming .orbit-path,
+  .orbit-layer:has(+ .planet-layer .planet-link--foraging:hover) .orbit-visual--foraging .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--foraging:focus-visible) .orbit-visual--foraging .orbit-path,
   .orbit-layer:has(+ .planet-layer .planet-link--civic:hover) .orbit-visual--civic .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--civic:focus-visible) .orbit-visual--civic .orbit-path,
   .orbit-layer:has(+ .planet-layer .planet-link--systems:hover) .orbit-visual--systems .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--systems:focus-visible) .orbit-visual--systems .orbit-path { stroke: var(--planet-color); stroke-width: 1.8; opacity: .85; }
   .core { transform-origin: 340px 340px; }.core__aura { fill: rgba(21,72,190,.14); stroke: rgba(84,139,255,.24); filter: drop-shadow(0 0 28px rgba(29,91,237,.58)); }
@@ -154,7 +173,7 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
   .core__network { fill: rgba(80,148,255,.08); stroke: rgba(170,211,255,.78); stroke-width: 1; }.core__network circle { fill: #8fc5ff; stroke: none; filter: drop-shadow(0 0 4px #4a97ff); }
   .core__forge-mark { filter: drop-shadow(0 0 5px rgba(73,139,255,.9)); }.core__code-bracket { fill: none; stroke: #b9d8ff; stroke-width: 3.2; stroke-linecap: square; stroke-linejoin: bevel; }.core__anvil { fill: url(#forge-metal); stroke: #edf5ff; stroke-width: 1.25; stroke-linejoin: bevel; }.core__anvil-edge { fill: none; stroke: rgba(5,28,78,.82); stroke-width: 1.1; }.core__forge-point { fill: #fff; stroke: #78adff; stroke-width: 1.5; filter: drop-shadow(0 0 5px #fff); }.core__sparks { fill: none; stroke: #cfe5ff; stroke-width: 1.4; stroke-linecap: round; opacity: .68; filter: drop-shadow(0 0 4px #438cff); animation: forge-sparks 9s ease-in-out infinite; }
   .core__particles { fill: #9ecbff; filter: drop-shadow(0 0 5px #4c91f2); transform-origin: 340px 340px; animation: core-ring-spin 22s linear infinite reverse; }
-  .core__title, .core__subtitle { fill: #e8f1ff; font-family: var(--font-mono); }.core__title { font-size: 14px; font-weight: 850; letter-spacing: 3px; }.core__subtitle { font-size: 8px; font-weight: 650; letter-spacing: 2px; opacity: .62; }
+  .core__title, .core__subtitle { fill: #e8f1ff; font-family: var(--font-mono); }.core__title { font-size: 13px; font-weight: 850; letter-spacing: 2.5px; }.core__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 2px; opacity: .62; }
   @keyframes orbit-locked { from { offset-distance: 0%; } to { offset-distance: 100%; } }
   @keyframes orbit-energy { to { stroke-dashoffset: -1000; } }
   @keyframes core-ring-spin { to { transform: rotate(360deg); } }
@@ -162,6 +181,6 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
   @keyframes forge-sparks { 0%, 24%, 68%, 100% { opacity: .28; } 45%, 54% { opacity: .92; } }
   @container (max-width: 28rem) { .planet__label { display: none; }.orbit-segment { opacity: .25; }.ecosystem-grid circle:first-child { display: none; } }
   @media (max-width: 960px) { .fds-ecosystem { width: min(100%, 32rem); } }
-  @media (max-width: 560px) { .fds-ecosystem { width: min(100%, 23rem); }.ecosystem-grid { opacity: .65; }.planet__tag { font-size: 8px; }.core__title { font-size: 13px; }.core__subtitle { font-size: 7px; } }
+  @media (max-width: 560px) { .fds-ecosystem { width: min(100%, 23rem); }.ecosystem-grid { opacity: .65; }.planet__tag { font-size: 8px; }.core__title { font-size: 12px; letter-spacing: 2px; }.core__subtitle { font-size: 7px; } }
   @media (prefers-reduced-motion: reduce) { .planet-motion { animation: none; offset-distance: var(--orbit-start); will-change: auto; }.orbit-pulse, .core__ring, .core__aperture, .core__particles, .core__sparks { animation: none; }.core__illumination { animation: none; opacity: .88; transform: none; } }
 </style>

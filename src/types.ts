@@ -12,12 +12,28 @@ export interface ProjectImage {
   caption?: string;
 }
 
+/** Maps projects to their corresponding ecosystem in the FDS solar system. */
+export type EcosystemCategory = 
+  | "Intelligence" 
+  | "Gaming" 
+  | "Publishing" 
+  | "Civic" 
+  | "Foraging";
+
 export interface Project {
   id: string;
   slug: string;
   name: string;
   shortName?: string;
   category: string;
+  /** The FDS ecosystem this project belongs to. */
+  ecosystem?: EcosystemCategory;
+  /** Who this project is built for. */
+  audience?: string;
+  /** The problem this project addresses. */
+  problem?: string;
+  /** What makes this project different from alternatives. */
+  differentiation?: string;
   summary: string;
   description: string;
   status: ProjectStatusValue;

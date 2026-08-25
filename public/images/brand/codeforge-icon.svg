@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="forge-core-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f4f8ff"/>
+      <stop offset="34%" stop-color="#93baff"/>
+      <stop offset="68%" stop-color="#3577ed"/>
+      <stop offset="100%" stop-color="#102e79"/>
+    </linearGradient>
+    <radialGradient id="forge-heart-gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="16%" stop-color="#b9dcff"/>
+      <stop offset="50%" stop-color="#2877ff"/>
+      <stop offset="100%" stop-color="#071a4e"/>
+    </radialGradient>
+    <filter id="forge-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Outer glow aura -->
+  <circle cx="50" cy="50" r="45" fill="rgba(21,72,190,0.14)" stroke="rgba(84,139,255,0.24)" stroke-width="2" filter="url(#forge-glow)"/>
+  <!-- Core sphere background -->
+  <circle cx="50" cy="50" r="38" fill="url(#forge-heart-gradient)" stroke="#5e9fff" stroke-width="1.5"/>
+  <!-- Code brackets -->
+  <g fill="none" stroke="#b9d8ff" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="bevel">
+    <polyline points="35,32 24,50 35,68"/>
+    <polyline points="65,32 76,50 65,68"/>
+  </g>
+  <!-- Anvil shape (forge symbol) -->
+  <path 
+    d="M38 38 H62 L67 43 L59 51 H53 V57 H61 L67 67 H33 L39 57 H47 V51 H41 L33 43 Z" 
+    fill="url(#forge-core-gradient)" 
+    stroke="#edf5ff" 
+    stroke-width="1.25" 
+    stroke-linejoin="bevel"
+    filter="url(#forge-glow)"
+  />
+  <!-- Anvil edge highlights -->
+  <path 
+    d="M39 43 H61 M39 57 H61 M36 67 H64" 
+    fill="none" 
+    stroke="rgba(5,28,78,0.82)" 
+    stroke-width="1.2"
+  />
+  <!-- Center energy point -->
+  <circle cx="50" cy="50" r="4" fill="#ffffff" stroke="#78adff" stroke-width="1.5" filter="url(#forge-glow)"/>
+</svg>

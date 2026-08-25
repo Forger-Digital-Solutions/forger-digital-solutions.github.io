@@ -7,19 +7,100 @@ interface Props {
 
 const { status } = Astro.props;
 const statusClass = status.toLowerCase().replaceAll(' ', '-');
+
+// Status styling configuration
+const statusConfig: Record<string, { semantic: 'active' | 'research' | 'private' | 'planned' }> = {
+  'ACTIVE RESEARCH': { semantic: 'research' },
+  'ACTIVE DEVELOPMENT': { semantic: 'active' },
+  'PRIVATE DEVELOPMENT': { semantic: 'private' },
+  'RELEASED': { semantic: 'active' },
+  'EXPERIMENTAL': { semantic: 'research' },
+  'PLANNED': { semantic: 'planned' }
+};
+
+const config = statusConfig[status] || { semantic: 'active' };
 ---
-<span class={`project-status project-status--${statusClass}`}>
+
+<span class:list={['project-status', `project-status--${statusClass}`, `project-status--${config.semantic}`]}>
   <span class="project-status__dot" aria-hidden="true"></span>
-  {status}
+  <span class="project-status__text">{status}</span>
 </span>
 
 <style>
-  .project-status { display: inline-flex; align-items: center; gap: .45rem; width: fit-content; padding: .35rem .6rem; border: 1px solid var(--color-border-strong); border-radius: 999px; color: var(--color-text-muted); background: rgba(255,255,255,.025); font: 700 .67rem/1 var(--font-mono); letter-spacing: .08em; white-space: nowrap; }
-  .project-status__dot { width: .42rem; height: .42rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 .18rem color-mix(in srgb, currentColor 12%, transparent); }
-  .project-status--active-research { color: var(--color-status-active); }
-  .project-status--active-development, .project-status--released { color: #78ce9a; }
-  .project-status--private-development { color: var(--color-status-private); }
-  .project-status--experimental { color: var(--color-status-experimental); }
-  .project-status--planned { color: var(--color-text-subtle); }
-  @media (prefers-reduced-motion: no-preference) { .project-status--active-research .project-status__dot, .project-status--active-development .project-status__dot { animation: status-pulse 2.4s ease-in-out infinite; } @keyframes status-pulse { 50% { box-shadow: 0 0 0 .35rem color-mix(in srgb, currentColor 0%, transparent); } } }
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    width: fit-content;
+    padding: .32rem .55rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    background: rgba(255,255,255,.025);
+    font: 700 .62rem/1 var(--font-mono);
+    letter-spacing: .07em;
+    white-space: nowrap;
+  }
+
+  .project-status__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 15%, transparent);
+    transition: box-shadow .2s ease;
+  }
+
+  /* Research status - bright blue, intellectual feel */
+  .project-status--research {
+    --status-color: #5d8af0;
+    color: var(--status-color);
+    border-color: color-mix(in srgb, var(--status-color) 40%, var(--color-border));
+    background: color-mix(in srgb, var(--status-color) 8%, transparent);
+  }
+
+  /* Active status - green-tinted, forward movement */
+  .project-status--active {
+    --status-color: #78ce9a;
+    color: var(--status-color);
+    border-color: color-mix(in srgb, var(--status-color) 40%, var(--color-border));
+    background: color-mix(in srgb, var(--status-color) 8%, transparent);
+  }
+
+  /* Private status - muted, understated */
+  .project-status--private {
+    --status-color: #aeb5c0;
+    color: var(--status-color);
+    border-color: color-mix(in srgb, var(--status-color) 35%, var(--color-border));
+    background: color-mix(in srgb, var(--status-color) 6%, transparent);
+  }
+
+  /* Planned status - neutral */
+  .project-status--planned {
+    --status-color: var(--color-text-subtle);
+  }
+
+  /* Pulse animation for active statuses */
+  @media (prefers-reduced-motion: no-preference) {
+    .project-status--research .project-status__dot,
+    .project-status--active .project-status__dot {
+      animation: status-pulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+      0%, 100% { 
+        box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 15%, transparent); 
+      }
+      50% { 
+        box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 5%, transparent); 
+      }
+    }
+  }
+
+  /* Ensure reduced motion is respected */
+  @media (prefers-reduced-motion: reduce) {
+    .project-status__dot {
+      animation: none !important;
+    }
+  }
 </style>

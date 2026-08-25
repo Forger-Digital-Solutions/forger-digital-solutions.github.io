@@ -1,4 +1,4 @@
-export type EcosystemIcon = 'brain' | 'forge' | 'kayla' | 'apps' | 'kyra' | 'farm' | 'civic' | 'systems';
+export type EcosystemIcon = 'brain' | 'forge' | 'publishing' | 'apps' | 'gaming' | 'foraging' | 'civic' | 'systems';
 export type LabelSide = 'left' | 'right';
 
 export interface EcosystemOrbit {
@@ -64,13 +64,124 @@ const orbit = (
   opacity: number
 ): EcosystemOrbit => ({ rx, ry, rotation, duration, direction, start, opacity, path: buildEllipsePath(rx, ry, rotation) });
 
+/**
+ * FDS Ecosystem Planets
+ * 
+ * Orbits are intentionally designed with varied geometries:
+ * - Different rx/ry ratios create varied eccentricities
+ * - Different rotations create diagonal, horizontal, and vertical paths
+ * - Varied durations create natural orbital speed differences
+ * - Inner orbits move faster, outer orbits move slower
+ * - No paths spend significant portions overlapping near the center
+ */
 export const ecosystemPlanets: EcosystemPlanet[] = [
-  { id: 'intelligence', name: 'INTELLIGENCE', subtitle: 'AI-DRIVEN INSIGHT', href: '/projects/gems-training-grounds', icon: 'brain', color: '#4f8fff', glow: '#1f63ff', size: 44, labelSide: 'left', orbit: orbit(268, 116, -16, 41, 'normal', 58, .5) },
-  { id: 'forged', name: 'FORGED', subtitle: 'BUILT TO LAST', href: '/forged', icon: 'forge', color: '#c2d5f4', glow: '#77a8e9', size: 40, labelSide: 'left', orbit: orbit(232, 174, 24, 47, 'reverse', 69, .32) },
-  { id: 'kayla', name: 'KAYLA', subtitle: 'AI CO-PILOT', href: '/projects/kayla-ai-publisher', icon: 'kayla', color: '#b473ff', glow: '#7b3df0', size: 46, labelSide: 'right', orbit: orbit(202, 248, 48, 53, 'normal', 79, .42) },
-  { id: 'applications', name: 'APPLICATIONS', subtitle: 'REAL-WORLD IMPACT', href: '/projects', icon: 'apps', color: '#61d7a1', glow: '#24a971', size: 45, labelSide: 'right', orbit: orbit(276, 148, 13, 59, 'normal', 1, .42) },
-  { id: 'kyra', name: 'KYRA', subtitle: 'AI ARCHITECT', href: '/projects/kyrablox', icon: 'kyra', color: '#48c9f2', glow: '#1594c6', size: 42, labelSide: 'left', orbit: orbit(270, 216, -34, 64, 'reverse', 40, .3) },
-  { id: 'farm', name: 'FARM', subtitle: 'NOURISHING FUTURES', href: '/projects/farmstand-finder', icon: 'farm', color: '#a8df64', glow: '#62a833', size: 45, labelSide: 'right', orbit: orbit(236, 270, 68, 69, 'normal', 19, .28) },
-  { id: 'civic', name: 'CIVIC', subtitle: 'COMMUNITY FIRST', href: '/projects/we-the-people', icon: 'civic', color: '#f0a052', glow: '#d06b24', size: 43, labelSide: 'right', orbit: orbit(294, 236, 31, 73, 'reverse', 23, .24) },
-  { id: 'systems', name: 'SYSTEMS', subtitle: 'FOUNDATION LAYER', href: '/technology', icon: 'systems', color: '#8faee5', glow: '#5178bd', size: 40, labelSide: 'right', orbit: orbit(304, 278, -7, 79, 'normal', 12, .2) }
+  // INNER ORBIT BELT - Faster, tighter paths around the core
+  { 
+    id: 'intelligence', 
+    name: 'INTELLIGENCE', 
+    subtitle: 'AI-DRIVEN INSIGHT', 
+    href: '/projects/gems-training-grounds', 
+    icon: 'brain', 
+    color: '#4f8fff', 
+    glow: '#1f63ff', 
+    size: 42, 
+    labelSide: 'left', 
+    // Long horizontal ellipse (most stretched), fastest inner orbit
+    orbit: orbit(295, 98, -18, 38, 'normal', 52, .48) 
+  },
+  { 
+    id: 'forged', 
+    name: 'FORGED', 
+    subtitle: 'BUILT TO LAST', 
+    href: '/forged', 
+    icon: 'forge', 
+    color: '#c2d5f4', 
+    glow: '#77a8e9', 
+    size: 40, 
+    labelSide: 'left', 
+    // Short vertical ellipse, tilted counter-clockwise
+    orbit: orbit(128, 198, -72, 44, 'reverse', 78, .36) 
+  },
+  
+  // MIDDLE ORBIT BELT - Medium eccentricity, varied orientations
+  { 
+    id: 'publishing', 
+    name: 'PUBLISHING', 
+    subtitle: 'CREATIVE MEDIA', 
+    href: '/projects/kayla-ai-publisher', 
+    icon: 'publishing', 
+    color: '#b473ff', 
+    glow: '#7b3df0', 
+    size: 44, 
+    labelSide: 'right', 
+    // Tall diagonal ellipse, medium-fast
+    orbit: orbit(168, 262, 55, 56, 'normal', 12, .42) 
+  },
+  { 
+    id: 'applications', 
+    name: 'APPLICATIONS', 
+    subtitle: 'REAL-WORLD IMPACT', 
+    href: '/projects', 
+    icon: 'apps', 
+    color: '#61d7a1', 
+    glow: '#24a971', 
+    size: 45, 
+    labelSide: 'right', 
+    // Wide horizontal path, different tilt from intelligence
+    orbit: orbit(285, 135, 8, 62, 'normal', 88, .40) 
+  },
+  
+  // OUTER ORBIT BELT - Longer, slower, more eccentric paths
+  { 
+    id: 'gaming', 
+    name: 'GAMING', 
+    subtitle: 'GAME ENGINES', 
+    href: '/projects/kyrablox', 
+    icon: 'gaming', 
+    color: '#48c9f2', 
+    glow: '#1594c6', 
+    size: 43, 
+    labelSide: 'left', 
+    // Extreme diagonal ellipse reaching far corners
+    orbit: orbit(262, 188, -48, 68, 'reverse', 35, .32) 
+  },
+  { 
+    id: 'foraging', 
+    name: 'FORAGING', 
+    subtitle: 'LOCAL DISCOVERY', 
+    href: '/projects/farmstand-finder', 
+    icon: 'foraging', 
+    color: '#a8df64', 
+    glow: '#62a833', 
+    size: 45, 
+    labelSide: 'right', 
+    // Very tall vertical ellipse, reaches high and low
+    orbit: orbit(142, 285, 72, 74, 'normal', 25, .30) 
+  },
+  { 
+    id: 'civic', 
+    name: 'CIVIC', 
+    subtitle: 'COMMUNITY FIRST', 
+    href: '/projects/we-the-people', 
+    icon: 'civic', 
+    color: '#f0a052', 
+    glow: '#d06b24', 
+    size: 43, 
+    labelSide: 'right', 
+    // Large wide ellipse, slower outer orbit
+    orbit: orbit(305, 198, 22, 82, 'reverse', 68, .26) 
+  },
+  { 
+    id: 'systems', 
+    name: 'SYSTEMS', 
+    subtitle: 'FOUNDATION LAYER', 
+    href: '/technology', 
+    icon: 'systems', 
+    color: '#8faee5', 
+    glow: '#5178bd', 
+    size: 40, 
+    labelSide: 'right', 
+    // Largest outermost orbit, slowest movement
+    orbit: orbit(308, 252, -12, 92, 'normal', 8, .22) 
+  }
 ];

@@ -3,51 +3,264 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { projects } from '../data/projects';
 import ProjectCard from '../components/ProjectCard.astro';
 
-const ordered = [...projects].sort((a, b) => Number(b.featured) - Number(a.featured));
+// Sort by sortOrder to maintain deliberate ecosystem narrative
+const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
 ---
 <BaseLayout
   title="Projects"
-  description="FDS projects spanning AI research, game development tooling, publishing software, civic technology, and community discovery platforms."
+  description="Explore the systems we're building across intelligence, gaming, publishing, civic technology, and local discovery — part of the FDS ecosystem."
 >
-  <div class="page-head">
-    <h1 class="page-title">Projects</h1>
-    <p class="page-description">
-      FDS develops experimental software across artificial intelligence, game development,
-      publishing, civic technology, and community discovery. Each project follows the same
-      loop: build, test, measure, learn, evolve.
+  <div class="projects-hero">
+    <div class="projects-hero__backdrop" aria-hidden="true">
+      <svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+        <!-- Subtle orbital curves -->
+        <ellipse cx="400" cy="200" rx="320" ry="120" fill="none" stroke="rgba(79,143,255,.08)" stroke-width="1" opacity=".6" />
+        <ellipse cx="400" cy="200" rx="240" ry="80" fill="none" stroke="rgba(47,107,255,.06)" stroke-width="1" opacity=".5" />
+        <ellipse cx="400" cy="200" rx="160" ry="50" fill="none" stroke="rgba(79,143,255,.04)" stroke-width="1" opacity=".4" />
+        <!-- Decorative constellation points -->
+        <circle cx="120" cy="80" r="1.5" fill="rgba(79,143,255,.35)" />
+        <circle cx="680" cy="60" r="1" fill="rgba(180,135,255,.3)" />
+        <circle cx="750" cy="180" r="1.2" fill="rgba(118,183,125,.25)" />
+        <circle cx="60" cy="320" r="1" fill="rgba(135,146,168,.28)" />
+        <circle cx="600" cy="350" r="1.5" fill="rgba(217,129,63,.32)" />
+      </svg>
+    </div>
+    <p class="projects-hero__kicker">FDS // SYSTEM DIRECTORY</p>
+    <h1 class="projects-hero__title">Projects</h1>
+    <p class="projects-hero__description">
+      Explore the systems we're building across <strong>intelligence</strong>, <strong>gaming</strong>, 
+      <strong>publishing</strong>, <strong>civic technology</strong>, and <strong>local discovery</strong> — 
+      each part of a connected technology ecosystem.
     </p>
   </div>
 
-  <div class="projects-full-grid">
-    {ordered.map((project) => (
-      <ProjectCard project={project} featured={project.featured} />
-    ))}
-  </div>
+  <section class="ecosystem-overview" aria-labelledby="ecosystem-heading">
+    <h2 id="ecosystem-heading" class="sr-only">FDS Technology Ecosystems</h2>
+    <div class="ecosystem-overview__content">
+      <p class="ecosystem-intro">
+        Five ecosystems, one technology core. Each project addresses a distinct domain while sharing 
+        principles: practical systems, intelligent assistance, and building useful technology.
+      </p>
+      <div class="ecosystem-grid">
+        <a href="#gems-training-grounds" class="ecosystem-item" data-ecosystem="intelligence">
+          <span class="ecosystem-dot" aria-hidden="true"></span>
+          <div class="ecosystem-text">
+            <h3>Intelligence</h3>
+            <p>AI research, training systems</p>
+          </div>
+        </a>
+        <a href="#kyrablox" class="ecosystem-item" data-ecosystem="gaming">
+          <span class="ecosystem-dot" aria-hidden="true"></span>
+          <div class="ecosystem-text">
+            <h3>Gaming</h3>
+            <p>Game development tooling</p>
+          </div>
+        </a>
+        <a href="#kayla-ai-publisher" class="ecosystem-item" data-ecosystem="publishing">
+          <span class="ecosystem-dot" aria-hidden="true"></span>
+          <div class="ecosystem-text">
+            <h3>Publishing</h3>
+            <p>Creative media workflows</p>
+          </div>
+        </a>
+        <a href="#we-the-people" class="ecosystem-item" data-ecosystem="civic">
+          <span class="ecosystem-dot" aria-hidden="true"></span>
+          <div class="ecosystem-text">
+            <h3>Civic</h3>
+            <p>Public information access</p>
+          </div>
+        </a>
+        <a href="#farmstand-finder" class="ecosystem-item" data-ecosystem="foraging">
+          <span class="ecosystem-dot" aria-hidden="true"></span>
+          <div class="ecosystem-text">
+            <h3>Foraging</h3>
+            <p>Local food discovery</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects-section" aria-labelledby="projects-list">
+    <h2 id="projects-list" class="sr-only">Project List</h2>
+    <div class="projects-grid">
+      {ordered.map((project) => (
+        <ProjectCard project={project} featured={project.featured} />
+      ))}
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .page-head {
-    padding: 3rem 0 2rem;
-    max-width: 720px;
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
+  
+  .projects-hero {
+    position: relative;
+    max-width: 56rem;
+    padding: clamp(3rem, 8vw, 5rem) 0 2rem;
   }
-
-  .page-title {
-    font-size: clamp(2rem, 5vw, 2.75rem);
-    margin-bottom: 1rem;
+  
+  .projects-hero__backdrop {
+    position: absolute;
+    inset: -2rem -4rem;
+    z-index: -1;
+    opacity: .7;
+    pointer-events: none;
+  }
+  
+  .projects-hero__backdrop svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .projects-hero__kicker {
+    margin-bottom: .75rem;
+    color: var(--color-accent-bright);
+    font: 700 .68rem/1 var(--font-mono);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+  
+  .projects-hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    line-height: .98;
+    letter-spacing: -.04em;
     color: var(--color-text);
   }
-
-  .page-description {
+  
+  .projects-hero__description {
+    max-width: 42rem;
+    margin: 0;
     color: var(--color-text-muted);
-    font-size: 1.05rem;
+    font-size: clamp(1rem, 2vw, 1.1rem);
     line-height: 1.7;
-    margin-bottom: 3rem;
+  }
+  
+  .projects-hero__description strong {
+    color: var(--color-text);
+    font-weight: 650;
   }
 
-  .projects-full-grid {
+  .ecosystem-overview {
+    position: relative;
+    padding: 1.5rem;
+    margin: 2rem 0 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, rgba(47,107,255,.04) 0%, rgba(9,14,23,.95) 50%);
+    overflow: hidden;
+  }
+  
+  .ecosystem-overview::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79,143,255,.3), transparent);
+    content: '';
+  }
+
+  .ecosystem-intro {
+    max-width: 48rem;
+    margin: 0 0 1.25rem;
+    color: var(--color-text-muted);
+    font-size: .92rem;
+    line-height: 1.6;
+  }
+
+  .ecosystem-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .ecosystem-item {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .6rem .85rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: rgba(255,255,255,.02);
+    text-decoration: none;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  
+  .ecosystem-item:hover {
+    background: rgba(255,255,255,.04);
+    border-color: var(--color-border);
+  }
+  
+  .ecosystem-item:focus-visible {
+    outline: 2px solid var(--color-accent-bright);
+    outline-offset: 2px;
+  }
+
+  .ecosystem-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  
+  .ecosystem-item[data-ecosystem="intelligence"] { color: #4f8fff; }
+  .ecosystem-item[data-ecosystem="intelligence"] .ecosystem-dot { background: #4f8fff; }
+  .ecosystem-item[data-ecosystem="gaming"] { color: #b487ff; }
+  .ecosystem-item[data-ecosystem="gaming"] .ecosystem-dot { background: #b487ff; }
+  .ecosystem-item[data-ecosystem="publishing"] { color: #d9813f; }
+  .ecosystem-item[data-ecosystem="publishing"] .ecosystem-dot { background: #d9813f; }
+  .ecosystem-item[data-ecosystem="civic"] { color: #8792a8; }
+  .ecosystem-item[data-ecosystem="civic"] .ecosystem-dot { background: #8792a8; }
+  .ecosystem-item[data-ecosystem="foraging"] { color: #76b77d; }
+  .ecosystem-item[data-ecosystem="foraging"] .ecosystem-dot { background: #76b77d; }
+
+  .ecosystem-text h3 {
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  
+  .ecosystem-text p {
+    margin: .15rem 0 0;
+    color: var(--color-text-muted);
+    font-size: .7rem;
+    line-height: 1.3;
+  }
+
+  .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
     padding-bottom: 4rem;
+  }
+
+  @media (max-width: 700px) {
+    .ecosystem-grid {
+      gap: .4rem;
+    }
+    .ecosystem-item {
+      flex: 1 1 calc(50% - .25rem);
+      min-width: 0;
+      justify-content: flex-start;
+      padding: .5rem .65rem;
+    }
+    .ecosystem-text p {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .projects-hero {
+      padding: 2rem 0 1.5rem;
+    }
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
   }
 </style>
