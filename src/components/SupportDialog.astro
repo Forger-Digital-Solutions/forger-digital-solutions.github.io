@@ -44,7 +44,8 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
   </div>
 </dialog>
 <style>
-  .sdialog { width: min(92vw, 33rem); max-height: min(88dvh, 44rem); padding: 0; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); overflow: auto; background: var(--color-bg-secondary); color: var(--color-text); box-shadow: var(--shadow-md); }.sdialog::backdrop { background: rgba(4, 5, 7, .74); backdrop-filter: blur(3px); }.sdialog[open] { animation: sdialog-in .26s ease; }
+  .sdialog { width: min(92vw, 33rem); max-height: min(88dvh, 44rem); padding: 0; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); overflow: auto; background: var(--color-bg-secondary); color: var(--color-text); box-shadow: var(--shadow-md); }.sdialog::backdrop { background: rgba(4, 5, 7, .74); backdrop-filter: blur(3px); }  .sdialog[open] { animation: sdialog-in .26s ease; }
+  @media (prefers-reduced-motion: reduce) { .sdialog[open] { animation: none; } }
   @keyframes sdialog-in { from { opacity: 0; transform: translateY(.75rem) scale(.985); } to { opacity: 1; transform: none; } }
   :global(html.has-open-dialog) { overflow: hidden; }
 
@@ -65,57 +66,77 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
   .sdialog__later { padding: .5rem; border: 0; background: transparent; color: var(--color-text-muted); font-size: .88rem; cursor: pointer; transition: color .2s ease; }.sdialog__later:hover { color: var(--color-text); }
 </style>
   <script>
-    (function () {
-      const DIALOG_ID = 'fds-support-dialog';
-      const STORAGE_KEY = 'fds_support_dismissed_at';
-      const DEDUP_MS = 24 * 60 * 60 * 1000;
-      const OPEN_DELAY_MS = 900;
+  (function () {
+    const DIALOG_ID = 'fds-support-dialog';
+    const STORAGE_KEY = 'fds_support_dismissed_at';
+    const DEDUP_MS = 24 * 60 * 60 * 1000;
+    const TRIGGER = 0.6; // open around ~60% of the homepage journey
 
-      const dialog = document.getElementById(DIALOG_ID) as HTMLDialogElement | null;
-      if (!dialog || typeof dialog.showModal !== 'function') return;
+    const dialog = document.getElementById(DIALOG_ID) as HTMLDialogElement | null;
+    if (!dialog || typeof dialog.showModal !== 'function') return;
+    // Homepage-only: the dialog is rendered solely on the homepage, but guard regardless.
+    if (location.pathname !== '/') return;
 
-      const now = Date.now();
-      const dismissedAt = (() => {
-        try {
-          const raw = window.localStorage.getItem(STORAGE_KEY);
-          return raw ? Number(raw) : NaN;
-        } catch {
-          return NaN;
-        }
-      })();
-
-      if (!Number.isNaN(dismissedAt) && now - dismissedAt < DEDUP_MS) return;
-      if (dialog.open || document.hidden) return;
-
-      window.setTimeout(() => {
-        if (dialog.open || document.hidden) return;
-        document.documentElement.classList.add('has-open-dialog');
-        dialog.showModal();
-      }, OPEN_DELAY_MS);
-
-      dialog.addEventListener('close', () => {
-        document.documentElement.classList.remove('has-open-dialog');
-        if (dialog.dataset.sdialogDismissed === 'true') {
-          try {
-            window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
-          } catch {
-            // private browsing / blocked storage — ignore
-          }
-        }
-      });
-
-      dialog.addEventListener('click', (event) => {
-        if (event.target === dialog && dialog.open) dialog.close();
-      });
-
-      dialog.querySelector('[data-sdialog-close]')?.addEventListener('click', () => {
-        if (dialog.open) dialog.close();
-      });
-
-      const form = dialog.querySelector('.sdialog__form') as HTMLFormElement | null;
-      form?.addEventListener('submit', () => {
-        const val = (form as HTMLFormElement & { value?: string }).value;
-        dialog.dataset.sdialogDismissed = val === 'maybe-later' ? 'true' : 'true';
-      });
+    const now = Date.now();
+    const dismissedAt = (() => {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        return raw ? Number(raw) : NaN;
+      } catch {
+        return NaN;
+      }
     })();
+    if (!Number.isNaN(dismissedAt) && now - dismissedAt < DEDUP_MS) return;
+
+    let opened = false;
+    let ticking = false;
+
+    const progress = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    };
+
+    const open = () => {
+      if (opened || dialog.open) return;
+      opened = true;
+      document.documentElement.classList.add('has-open-dialog');
+      dialog.showModal();
+    };
+
+    const evaluate = () => {
+      ticking = false;
+      if (opened || dialog.open) return;
+      // Require genuine scroll progress so a fresh top-of-page load never pops the dialog.
+      if (progress() >= TRIGGER && window.scrollY > 0) open();
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(evaluate);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    // Also evaluate once on load (e.g. a mid-page refresh already past the trigger).
+    evaluate();
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('has-open-dialog');
+      // Any dismissal (button, backdrop, ESC, X) is remembered so the visitor isn't nagged.
+      try {
+        window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
+      } catch {
+        // private browsing / blocked storage — ignore
+      }
+    });
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog && dialog.open) dialog.close();
+    });
+
+    dialog.querySelector('[data-sdialog-close]')?.addEventListener('click', () => {
+      if (dialog.open) dialog.close();
+    });
+  })();
   </script>

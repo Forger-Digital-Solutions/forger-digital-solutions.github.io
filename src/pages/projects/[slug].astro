@@ -5,6 +5,7 @@ import ProjectCard from '../../components/ProjectCard.astro';
 import ProjectStatus from '../../components/ProjectStatus.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
 import NoteCard from '../../components/NoteCard.astro';
+import GemsDeep from '../../components/GemsDeep.astro';
 import { statusMeta } from '../../data/status';
 import { getPublishedNotes } from '../../lib/notes';
 
@@ -193,7 +194,7 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
       </aside>
     </div>
 
-    <!-- GEMS Special Section -->
+     <!-- GEMS Special Section -->
     {isGems && (
       <section class="gems-section" aria-labelledby="gems-systems">
         <p class="gems-kicker">Conceptual Research Flow</p>
@@ -223,6 +224,8 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
         <p class="gems-note">
           These diagrams describe FDS research concepts, not an exposed product architecture or performance claim.
         </p>
+
+        <GemsDeep />
       </section>
     )}
 

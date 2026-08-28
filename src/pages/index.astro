@@ -8,10 +8,11 @@ import ProjectVisual from '../components/ProjectVisual.astro';
 import ProjectStatus from '../components/ProjectStatus.astro';
 import ProcessVisualization from '../components/ProcessVisualization.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import GemsStory from '../components/GemsStory.astro';
 import NoteCard from '../components/NoteCard.astro';
 import SupportDialog from '../components/SupportDialog.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
-import EcosystemMap from '../components/EcosystemMap.astro';
+import OneFDSEcosystem from '../components/OneFDSEcosystem.astro';
 import FDSEcosystem from '../components/FDSEcosystem.astro';
 import { getPublishedNotes } from '../lib/notes';
 
@@ -52,6 +53,8 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     </div>
   </section>
 
+  <GemsStory />
+
   <section class="page-section page-section--surface" aria-labelledby="forge-title">
     <SectionHeader eyebrow="Active Work" title="Currently in the Forge" description={`${sortedProjects.length} initiatives spanning intelligent systems, creative tooling, and useful community software.`} />
     <ul class="forge-list">
@@ -78,9 +81,8 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
 
   <section class="page-section" aria-labelledby="process-title"><SectionHeader eyebrow="How FDS Builds" title="Build with evidence" description="Ideas become reusable architecture through disciplined iteration." align="center" /><ProcessVisualization /></section>
 
-  <section class="page-section page-section--surface ecosystem-section" aria-labelledby="ecosystem-title">
-    <SectionHeader eyebrow="Connected Technology" title="One FDS ecosystem" description="Research, applications, infrastructure, and community software are developed as connected parts of a growing technology system." />
-    <EcosystemMap />
+  <section class="page-section page-section--surface ecosystem-section">
+    <OneFDSEcosystem />
   </section>
 
   {roadmap.length > 0 && (
@@ -142,7 +144,7 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
   .roadmap-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }.roadmap-item { padding: 1.1rem 1.2rem; border: 1px solid var(--color-border); border-top: 3px solid var(--project-accent); border-radius: var(--radius-md); background: var(--color-surface); }.roadmap-item a { color: var(--color-text); font-weight: 700; letter-spacing: -.02em; }.roadmap-item a:hover { color: var(--project-accent); opacity: 1; }.roadmap-item p { margin: .5rem 0 0; color: var(--color-text-muted); font-size: .9rem; line-height: 1.55; }
 
   .capability-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-border); box-shadow: var(--shadow-sm); }.capability-grid article { position: relative; min-height: 14rem; padding: 1.4rem; background: linear-gradient(150deg, rgba(13,20,32,.96), rgba(6,11,19,.96)); }.capability-grid article::after { position: absolute; right: 1rem; bottom: 1rem; width: 1.2rem; height: 1.2rem; border-right: 1px solid var(--color-border-blue); border-bottom: 1px solid var(--color-border-blue); content: ''; }.capability-grid span { color: var(--color-accent-bright); font: 700 .72rem/1 var(--font-mono); }.capability-grid h3 { margin: 2rem 0 .7rem; font-size: 1.1rem; }.capability-grid p { color: var(--color-text-muted); font-size: .92rem; }.lab-section { text-align: center; }.lab-section :global(.section-header) { margin-right: auto; margin-left: auto; }.technology-strip { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }.technology-strip span { padding: .52rem .72rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: rgba(13,20,32,.8); color: var(--color-text-muted); font: 700 .7rem/1 var(--font-mono); box-shadow: inset 0 1px rgba(255,255,255,.025); }.text-link { font: 700 .76rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }.support-section { padding-bottom: 7rem; }.support-section :global(.section-header) { margin-bottom: 1.5rem; }.support-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }.support-card { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: .55rem; overflow: hidden; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: linear-gradient(145deg, rgba(13,20,32,.95), rgba(7,12,20,.95)); box-shadow: var(--shadow-sm), inset 0 1px rgba(255,255,255,.03); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }.support-card::before { position: absolute; z-index: -1; inset: 0; background: radial-gradient(16rem circle at var(--card-x, 80%) var(--card-y, 15%), rgba(45,111,247,.15), transparent 58%); content: ''; opacity: .4; }.support-card:hover { border-color: var(--color-accent-secondary); box-shadow: var(--shadow-md); transform: translateY(-3px); }.support-card > span { color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }.support-card h3 { margin: 0; color: var(--color-text); font-size: 1.15rem; letter-spacing: -.02em; }.support-card p { margin: 0; flex: 1; color: var(--color-text-muted); font-size: .92rem; line-height: 1.62; }.support-card em { color: var(--color-accent-secondary); font: 700 .72rem/1 var(--font-mono); font-style: normal; letter-spacing: .06em; text-transform: uppercase; }.support-disclosure { max-width: 46rem; margin: 1.4rem 0 0; color: var(--color-text-subtle); font-size: .82rem; line-height: 1.65; }
-  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; gap: 1rem; min-height: auto; padding-top: 5rem; }.hero__copy { max-width: 47rem; }.hero :global(.fds-ecosystem) { margin-top: 1rem; }.hero__rail { position: relative; grid-column: 1; margin-top: 2rem; }.flagship { grid-template-columns: 1fr; gap: 1.5rem; }.support-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; gap: 1rem; min-height: auto; padding-top: 5rem; }.hero__copy { max-width: 47rem; }.hero :global(.fds-ecosystem) { margin-top: 1rem; }.hero__rail { position: relative; grid-column: 1; margin-top: 2rem; }.flagship { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }.support-grid { grid-template-columns: 1fr; } }
   @media (max-width: 760px) { .hero { padding-top: 4rem; }.hero :global(.fds-ecosystem) { margin-top: .5rem; }.hero__rail { flex-wrap: wrap; gap: .8rem 1.2rem; margin-top: 1rem; }.projects-grid { grid-template-columns: 1fr; }.capability-grid { grid-template-columns: 1fr 1fr; }.hero__actions { align-items: stretch; }.hero__actions .btn { flex: 1 1 10rem; } }
   @media (max-width: 430px) { .capability-grid { grid-template-columns: 1fr; }.hero h1 { font-size: 2.65rem; }.hero__actions .btn { flex-basis: 100%; } }
   @media (prefers-reduced-motion: reduce) { .hero__status span { animation: none; } }

@@ -1,0 +1,249 @@
+---
+/**
+ * ONE FDS ECOSYSTEM
+ * Explains how CodeForge (build foundation), GEMS (intelligence research), and the
+ * specialized FDS domains fit together — a system-architecture view, not a solar system.
+ */
+const domains = [
+  {
+    key: 'gaming',
+    name: 'Gaming',
+    product: 'KyraBlox',
+    verb: 'BUILD WORLDS',
+    color: '#b487ff',
+    micro: 'DOMAIN // GAMING',
+    role: 'Intelligent tools for game creation, development workflows, scripting, systems, iteration, and the environments where interactive experiences are built.',
+    apply: 'Applies FDS technology to gaming.'
+  },
+  {
+    key: 'publishing',
+    name: 'Publishing',
+    product: 'Kayla AI Publisher',
+    verb: 'CREATE',
+    color: '#d9813f',
+    micro: 'DOMAIN // PUBLISHING',
+    role: 'Creative technology for writing, illustration, storytelling, editing, publishing workflows, and helping ideas become finished works.',
+    apply: 'Applies FDS technology to creative production and publishing.'
+  },
+  {
+    key: 'civic',
+    name: 'Civic',
+    product: 'We The People',
+    verb: 'UNDERSTAND',
+    color: '#8792a8',
+    micro: 'DOMAIN // CIVIC',
+    role: 'Civic technology focused on making public information, services, institutions, and community resources easier for ordinary people to understand and navigate.',
+    apply: 'Applies FDS technology to civic information and accessibility.'
+  },
+  {
+    key: 'foraging',
+    name: 'Foraging',
+    product: 'FarmStand Finder',
+    verb: 'DISCOVER',
+    color: '#76b77d',
+    micro: 'DOMAIN // FORAGING',
+    role: 'Technology connecting people with nearby food, growers, farm stands, gardens, producers, and community resources that are often difficult to discover through traditional platforms.',
+    apply: 'Applies FDS technology to local discovery and community resources.'
+  }
+];
+
+const foundation = [
+  { title: 'Practical Intelligence', body: 'AI should help accomplish real work, not exist simply to add an AI label to a product.' },
+  { title: 'Human Direction', body: 'Intelligent systems should increase what people can create and accomplish while keeping meaningful control with the person using them.' },
+  { title: 'Reusable Foundations', body: 'Research, tools, infrastructure, and lessons should be reusable where appropriate instead of rebuilding the same underlying work for every application.' },
+  { title: 'Governed Execution', body: 'Increasingly capable software should remain observable, deliberate, testable, and accountable rather than operating as an unexplained black box.' },
+  { title: 'Real-World Utility', body: 'Every FDS domain begins with an actual problem — building software, creating games, publishing work, understanding civic systems, or finding local resources.' }
+];
+---
+
+<section class="one-eco" aria-labelledby="one-eco-title">
+  <header class="one-eco__head">
+    <p class="one-eco__eyebrow"><span aria-hidden="true"></span>ONE FDS ECOSYSTEM</p>
+    <h2 id="one-eco-title" class="one-eco__title">Different systems. One connected direction.</h2>
+    <p class="one-eco__lead">Forger Digital Solutions is not a collection of unrelated apps. FDS is one growing technology ecosystem built across specialized domains — intelligence, gaming, publishing, civic technology, and local discovery. Each system solves a different problem, while the larger FDS foundation connects the way we research, build, test, automate, and evolve them.</p>
+    <p class="one-eco__lead">The goal is not to force every idea into one massive application. It is to build focused tools for different people and problems while allowing the technology, research, and lessons behind them to strengthen the broader FDS ecosystem.</p>
+  </header>
+
+  <p class="one-eco__principle">
+    <span class="one-eco__principle-mark" aria-hidden="true">//</span>
+    One foundation does not mean one interface. Different problems deserve different tools. FDS develops specialized experiences for each domain while building shared intelligence, infrastructure, and engineering capabilities underneath them.
+  </p>
+
+  <div class="one-eco__diagram" role="group" aria-label="Architecture of the FDS ecosystem: CodeForge as the build foundation, GEMS / Training Grounds as the intelligence research layer, and four specialized domains — gaming, publishing, civic, and foraging.">
+    <p class="one-eco__micro one-eco__micro--top">FDS // CONNECTED SYSTEMS</p>
+
+    <!-- FOUNDATION -->
+    <div class="eco-tier eco-tier--core">
+      <article class="eco-node eco-node--foundation" tabindex="0" aria-label="CodeForge, build and execution layer">
+        <p class="eco-node__micro">CORE // DEVELOPMENT</p>
+        <h3 class="eco-node__name">CodeForge</h3>
+        <p class="eco-node__verb">BUILD SYSTEMS</p>
+        <p class="eco-node__role">CodeForge is the development environment being built to help FDS create, inspect, test, and evolve increasingly complex software systems with intelligent agent assistance. It represents the engineering side of the ecosystem — where code, tools, models, workflows, verification, and human direction come together.</p>
+        <p class="eco-node__note">It is not another FDS consumer application. It is part of the machinery used to build them.</p>
+      </article>
+    </div>
+
+    <div class="eco-line" aria-hidden="true"><span class="eco-pulse"></span></div>
+
+    <!-- INTELLIGENCE -->
+    <div class="eco-tier">
+      <article class="eco-node eco-node--intelligence" tabindex="0" aria-label="GEMS / Training Grounds, intelligence and research layer">
+        <p class="eco-node__micro">DOMAIN // INTELLIGENCE</p>
+        <h3 class="eco-node__name">GEMS / Training Grounds</h3>
+        <p class="eco-node__verb">LEARN</p>
+        <p class="eco-node__role">GEMS / Training Grounds represents the intelligence research side of FDS — exploring how AI systems can be taught, evaluated, challenged, improved, and governed through structured experimentation.</p>
+        <p class="eco-node__note">The work performed here is intended to expand what future FDS systems can understand and accomplish without reducing every product to the same generic AI experience.</p>
+      </article>
+    </div>
+
+    <div class="eco-line" aria-hidden="true"><span class="eco-pulse"></span></div>
+
+    <!-- SPECIALIZED DOMAINS -->
+    <div class="eco-rail">
+      <p class="eco-rail__label">SPECIALIZED DOMAINS</p>
+      <div class="eco-rail__inner">
+        <div class="eco-rail__spine" aria-hidden="true"></div>
+        {domains.map((domain) => (
+          <article
+            class={`eco-domain eco-domain--${domain.key}`}
+            style={`--domain-color:${domain.color}`}
+            tabindex="0"
+            aria-label={`${domain.name} domain — ${domain.product}. ${domain.verb}.`}
+          >
+            <p class="eco-node__micro">{domain.micro}</p>
+            <h3 class="eco-domain__name">{domain.name}</h3>
+            <p class="eco-domain__product">{domain.product}</p>
+            <p class="eco-node__verb">{domain.verb}</p>
+            <p class="eco-node__role">{domain.role}</p>
+            <p class="eco-domain__apply">{domain.apply}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <p class="one-eco__state">SYSTEM STATE // EVOLVING</p>
+
+  <!-- SHARED FOUNDATION -->
+  <section class="one-eco__foundation" aria-labelledby="foundation-title">
+    <h3 id="foundation-title" class="one-eco__subtitle">Shared Foundation</h3>
+    <p class="one-eco__sublead">What makes all of this FDS — the ideas shared underneath every domain, not a list of company values.</p>
+    <ul class="foundation-grid">
+      {foundation.map((item) => (
+        <li class="foundation-item">
+          <h4 class="foundation-item__title">{item.title}</h4>
+          <p class="foundation-item__body">{item.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- CLOSING -->
+  <div class="one-eco__close">
+    <h3 class="one-eco__closetitle">One foundation. Specialized systems. A growing ecosystem.</h3>
+    <p class="one-eco__closebody">Intelligence strengthens development. Development enables products. Products expose new problems worth solving. What is learned in one part of FDS can inform what we build next — without erasing the purpose that makes each system different.</p>
+    <a class="btn btn-primary" href="/projects">Explore the Projects <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<style>
+  .one-eco { position: relative; }
+  .one-eco__head { max-width: 52rem; margin-bottom: 1.5rem; }
+  .one-eco__eyebrow { display: flex; align-items: center; gap: .6rem; margin: 0 0 .9rem; color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .one-eco__eyebrow span { width: 1.7rem; height: 1px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-bright)); box-shadow: 0 0 8px rgba(63,132,255,.55); }
+  .one-eco__title { color: var(--color-text); font-size: clamp(2rem, 4.4vw, 3.1rem); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; margin: 0; }
+  .one-eco__lead { margin: 1.1rem 0 0; color: var(--color-text-muted); font-size: 1.04rem; line-height: 1.74; }
+  .one-eco__lead + .one-eco__lead { margin-top: .9rem; }
+
+  .one-eco__principle { max-width: 54rem; margin: 1.1rem 0 0; padding: 0.95rem 1.1rem; border: 1px solid var(--color-border-blue); border-left: 3px solid var(--color-accent); border-radius: var(--radius-md); background: linear-gradient(120deg, rgba(24,71,199,.1), rgba(9,14,23,.6) 70%); color: var(--color-text); font-size: 1.05rem; line-height: 1.65; box-shadow: inset 0 1px rgba(255,255,255,.03); }
+  .one-eco__principle-mark { color: var(--color-accent-bright); font: 800 .9rem/1 var(--font-mono); margin-right: .5rem; }
+
+  /* ---- Diagram ---- */
+  .one-eco__diagram { position: relative; max-width: 66rem; margin: 2.2rem auto 0; padding: 1.2rem 1.1rem 1.2rem; border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: radial-gradient(circle at 50% 0%, rgba(25,79,204,.14), transparent 30%), linear-gradient(160deg, rgba(12,20,36,.9), rgba(5,9,16,.96)); box-shadow: var(--shadow-panel), inset 0 1px rgba(255,255,255,.04); overflow: hidden; }
+  .one-eco__diagram::before { position: absolute; inset: 0; background-image: linear-gradient(rgba(93,142,240,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(93,142,240,.05) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(circle at 50% 30%, #000, transparent 82%); content: ''; pointer-events: none; }
+  .one-eco__micro { color: var(--color-accent-bright); font: 700 .62rem/1 var(--font-mono); letter-spacing: .16em; text-transform: uppercase; }
+  .one-eco__micro--top { position: relative; z-index: 1; text-align: center; margin: 0 0 1.1rem; }
+
+  .eco-tier { position: relative; z-index: 1; display: flex; justify-content: center; }
+  .eco-tier--core { margin-bottom: .25rem; }
+
+  .eco-node { position: relative; width: min(100%, 44rem); padding: 1.05rem 1.2rem; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); background: linear-gradient(150deg, rgba(13,20,32,.96), rgba(6,11,19,.96)); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 16px 40px rgba(0,0,0,.28); outline: none; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+  .eco-node--foundation { border-color: rgba(91,131,232,.5); box-shadow: 0 0 46px rgba(27,91,230,.22), inset 0 0 26px rgba(117,174,255,.08), inset 0 1px rgba(255,255,255,.05); }
+  .eco-node--intelligence { border-color: rgba(79,143,255,.4); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 16px 40px rgba(0,0,0,.28); }
+  .eco-node__micro { margin: 0 0 .55rem; color: var(--color-accent-bright); font: 700 .6rem/1 var(--font-mono); letter-spacing: .14em; }
+  .eco-node--intelligence .eco-node__micro { color: #6fa3ff; }
+  .eco-node__name { margin: 0; color: var(--color-text); font-size: clamp(1.3rem, 2.6vw, 1.7rem); letter-spacing: -.02em; }
+  .eco-node__verb { margin: .35rem 0 0; color: var(--color-silver); font: 800 .78rem/1 var(--font-mono); letter-spacing: .18em; }
+  .eco-node__role { margin: .7rem 0 0; color: var(--color-text-muted); font-size: .95rem; line-height: 1.65; }
+  .eco-node__note { margin: .5rem 0 0; color: var(--color-text-subtle); font: italic 400 .86rem/1.55 var(--font-sans); }
+  .eco-node:focus-visible { outline: 2px solid var(--color-accent-bright); outline-offset: 3px; }
+  .eco-node--foundation:hover, .eco-node--foundation:focus-visible { border-color: rgba(127,176,255,.85); box-shadow: 0 0 60px rgba(34,108,241,.32), inset 0 0 30px rgba(117,174,255,.12); }
+  .eco-node--intelligence:hover, .eco-node--intelligence:focus-visible { border-color: rgba(111,163,255,.8); }
+
+  .eco-line { position: relative; z-index: 1; width: 2px; height: 1.9rem; margin: 0 auto; background: linear-gradient(180deg, rgba(79,143,255,.06), rgba(91,159,255,.55), rgba(79,143,255,.06)); }
+  .eco-pulse { position: absolute; left: 50%; top: -3px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #8fb6ff; box-shadow: 0 0 12px #4a8cff; animation: eco-signal 3.4s linear infinite; }
+  @keyframes eco-signal { 0% { top: -3px; opacity: 0; } 12% { opacity: 1; } 86% { opacity: 1; } 100% { top: calc(100% + 3px); opacity: 0; } }
+
+  /* ---- Rail (specialized domains) ---- */
+  .eco-rail { position: relative; z-index: 1; margin-top: .25rem; }
+  .eco-rail__label { text-align: center; margin: 0 0 .8rem; color: var(--color-text-subtle); font: 700 .66rem/1 var(--font-mono); letter-spacing: .22em; }
+  .eco-rail__inner { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .eco-rail__spine { position: absolute; top: -.55rem; left: 12.5%; right: 12.5%; height: 1px; background: linear-gradient(90deg, transparent, rgba(91,159,255,.5) 12%, rgba(91,159,255,.5) 88%, transparent); }
+
+  .eco-domain { position: relative; padding: .95rem .9rem 1rem; border: 1px solid color-mix(in srgb, var(--domain-color) 34%, var(--color-border)); border-radius: var(--radius-md); background: rgba(8,14,25,.82); box-shadow: inset 0 1px rgba(255,255,255,.03); outline: none; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease, opacity .25s ease; }
+  .eco-domain::before { content: ''; position: absolute; top: -.55rem; left: 50%; width: 1px; height: .55rem; background: linear-gradient(180deg, rgba(91,159,255,.5), color-mix(in srgb, var(--domain-color) 60%, transparent)); transform: translateX(-50%); }
+  .eco-domain__name { margin: 0; color: var(--color-text); font-size: 1.12rem; letter-spacing: -.01em; }
+  .eco-domain__product { margin: .2rem 0 0; color: var(--domain-color); font: 700 .78rem/1.3 var(--font-mono); letter-spacing: .02em; }
+  .eco-node__verb { margin-top: .55rem; color: var(--domain-color); }
+  .eco-node__role { margin-top: .7rem; font-size: .85rem; line-height: 1.55; }
+  .eco-domain__apply { margin: .6rem 0 0; color: var(--color-text-subtle); font: 600 .74rem/1.45 var(--font-sans); }
+  .eco-node__micro { color: color-mix(in srgb, var(--domain-color) 82%, #fff 6%); }
+
+  .eco-domain:hover, .eco-domain:focus-visible { border-color: color-mix(in srgb, var(--domain-color) 78%, transparent); box-shadow: 0 0 30px color-mix(in srgb, var(--domain-color) 26%, transparent), inset 0 1px rgba(255,255,255,.05); transform: translateY(-3px); }
+  .eco-domain:focus-visible { outline: 2px solid var(--domain-color); outline-offset: 2px; }
+
+  /* Interconnected dimming: focusing/hovering one domain quiets the others */
+  .eco-rail__inner:has(.eco-domain:hover) .eco-domain:not(:hover),
+  .eco-rail__inner:has(.eco-domain:focus-visible) .eco-domain:not(:focus-visible),
+  .eco-rail__inner:has(.eco-domain:focus-within) .eco-domain:not(:focus-within) { opacity: .42; }
+  .eco-rail__inner:has(.eco-domain:hover) .eco-rail__spine,
+  .eco-rail__inner:has(.eco-domain:focus-within) .eco-rail__spine { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--domain-color) 70%, transparent) 12%, color-mix(in srgb, var(--domain-color) 70%, transparent) 88%, transparent); }
+
+  .one-eco__state { text-align: center; margin: 1.1rem 0 0; color: var(--color-text-subtle); font: 700 .6rem/1 var(--font-mono); letter-spacing: .2em; }
+
+  /* ---- Shared Foundation ---- */
+  .one-eco__foundation { max-width: 66rem; margin: 3rem auto 0; }
+  .one-eco__subtitle { margin: 0; color: var(--color-text); font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.02em; }
+  .one-eco__sublead { margin: .6rem 0 1.1rem; max-width: 46rem; color: var(--color-text-muted); font-size: 1rem; line-height: 1.65; }
+  .foundation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-border); box-shadow: var(--shadow-sm); }
+  .foundation-item { padding: 1rem 1.1rem; background: linear-gradient(150deg, rgba(13,20,32,.96), rgba(6,11,19,.96)); }
+  .foundation-item__title { margin: 0; color: var(--color-text); font-size: 1.02rem; letter-spacing: -.01em; }
+  .foundation-item__title::before { content: ''; display: inline-block; width: .5rem; height: .5rem; margin-right: .55rem; border-radius: 50%; background: var(--color-accent-bright); box-shadow: 0 0 8px rgba(63,132,255,.6); vertical-align: middle; }
+  .foundation-item__body { margin: .55rem 0 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.6; }
+
+  /* ---- Closing ---- */
+  .one-eco__close { max-width: 52rem; margin: 2.2rem auto 0; padding: 1.3rem 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: linear-gradient(150deg, rgba(24,71,199,.08), rgba(6,11,19,.9)); text-align: center; }
+  .one-eco__closetitle { margin: 0; color: var(--color-text); font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -.02em; text-wrap: balance; }
+  .one-eco__closebody { margin: .9rem auto 1.3rem; max-width: 42rem; color: var(--color-text-muted); font-size: 1.02rem; line-height: 1.7; }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 860px) {
+    .eco-rail__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .eco-rail__spine { left: 25%; right: 25%; }
+  }
+  @media (max-width: 560px) {
+    .one-eco__diagram { padding: 1.2rem .9rem 1.2rem; }
+    .eco-rail__inner { grid-template-columns: 1fr; gap: 1.1rem; }
+    .eco-rail__spine { top: 0; bottom: 0; left: 1.1rem; right: auto; width: 1px; height: auto; background: linear-gradient(180deg, transparent, rgba(91,159,255,.5) 6%, rgba(91,159,255,.5) 94%, transparent); }
+    .eco-domain { padding-left: 2.2rem; }
+    .eco-domain::before { top: 50%; left: 1.1rem; width: 1.1rem; height: 1px; transform: translateY(-50%); }
+    .eco-line { height: 1.4rem; }
+    .foundation-grid { grid-template-columns: 1fr 1fr; }
+    .foundation-item { padding: .85rem .9rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eco-pulse { animation: none; opacity: .8; }
+    .eco-domain, .eco-node { transition: none; }
+    .eco-domain:hover, .eco-domain:focus-visible { transform: none; }
+  }
+</style>

@@ -1,4 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="45" fill="#0a0a0a" stroke="#2f6bff" stroke-width="4"/>
-  <text x="50" y="58" font-family="monospace" font-size="34" font-weight="bold" fill="#2f6bff" text-anchor="middle">FDS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="FDS">
+  <defs>
+    <linearGradient id="fds-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b53d6" />
+      <stop offset="1" stop-color="#123e9e" />
+    </linearGradient>
+    <linearGradient id="fds-fg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f8ff" />
+      <stop offset="1" stop-color="#cbd2dc" />
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#fds-bg)" />
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="#7fb0ff" stroke-width="2" opacity="0.5" />
+  <text x="32" y="43" fill="url(#fds-fg)" font-family="'SF Mono', 'Consolas', 'Liberation Mono', monospace" font-size="27" font-weight="800" letter-spacing="1" text-anchor="middle">FDS</text>
 </svg>
