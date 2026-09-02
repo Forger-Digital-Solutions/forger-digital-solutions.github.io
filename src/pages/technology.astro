@@ -1,111 +1,50 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { technologyCategories } from '../data/technology';
+import { projectTechnologies, technologyCategories } from '../data/technology';
 ---
-<BaseLayout
-  title="Technology"
-  description="Technologies, languages, and compute environments FDS works with across AI research, development tooling, and experimental computing."
->
-  <div class="page-head">
-    <h1 class="page-title">Technology</h1>
-    <p class="page-description">
-      FDS works across a diverse technology stack, favoring tools that enable rapid
-      experimentation and adaptive systems.
-    </p>
-  </div>
+<BaseLayout title="Technology" description="How languages, runtimes, engines, model tooling, and compute environments map to current Forger Digital Solutions projects.">
+  <header class="page-head">
+    <p class="eyebrow">FDS // TECHNICAL FOUNDATIONS</p>
+    <h1 class="page-title">Technology in context</h1>
+    <p class="page-description">A stack matters because of what it enables. This map connects the major FDS systems to the languages, runtimes, engines, and technical areas actually used in their current repositories.</p>
+  </header>
 
-  <div class="tech-grid">
-    {technologyCategories.map((category) => (
-      <section class="tech-category" aria-labelledby={`tech-${category.name.replaceAll(/[^a-z0-9]/gi, '-').toLowerCase()}`}>
-        <h2 class="tech-category-title" id={`tech-${category.name.replaceAll(/[^a-z0-9]/gi, '-').toLowerCase()}`}>{category.name}</h2>
-        {category.description && (
-          <p class="tech-category-note">{category.description}</p>
-        )}
-        <ul class="tech-list">
-          {category.items.map((item) => (
-            <li class="tech-item">{item}</li>
+  <section class="project-tech" aria-labelledby="project-tech-title">
+    <h2 id="project-tech-title">Where the technology is used</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>System</th><th>Technologies / areas</th><th>Why they are there</th></tr></thead>
+        <tbody>
+          {projectTechnologies.map((item) => (
+            <tr>
+              <th scope="row">{item.href ? <a href={item.href}>{item.system}</a> : item.system}</th>
+              <td>{item.areas}</td><td>{item.purpose}</td>
+            </tr>
           ))}
-        </ul>
-      </section>
-    ))}
-  </div>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-  <p class="tech-disclaimer">
-    Product and platform names belong to their respective owners. Their appearance here indicates technology usage or experimentation, not endorsement, sponsorship, certification, or partnership.
-  </p>
+  <section class="broader" aria-labelledby="broader-title">
+    <h2 id="broader-title">Broader technical landscape</h2>
+    <div class="tech-grid">
+      {technologyCategories.map((category) => (
+        <article class="tech-category">
+          <h3>{category.name}</h3>
+          {category.description && <p>{category.description}</p>}
+          <ul>{category.items.map((item) => <li>{item}</li>)}</ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <p class="tech-disclaimer">Product and platform names belong to their respective owners. A name here indicates use or investigation—not endorsement, sponsorship, certification, or partnership. Planned integrations are not treated as current support.</p>
 </BaseLayout>
 
 <style>
-  .page-head {
-    padding: 3rem 0 2rem;
-    max-width: 720px;
-  }
-
-  .page-title {
-    font-size: clamp(2rem, 5vw, 2.75rem);
-    margin-bottom: 1rem;
-    color: var(--color-text);
-  }
-
-  .page-description {
-    color: var(--color-text-muted);
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 3rem;
-  }
-
-  .tech-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .tech-category {
-    background: linear-gradient(145deg, rgba(13,20,32,.96), rgba(7,12,20,.96));
-    border-radius: var(--radius-md);
-    padding: 1.75rem;
-    box-shadow: var(--shadow-sm), inset 0 1px rgba(255,255,255,.03);
-    border-top: 3px solid var(--color-accent);
-  }
-
-  .tech-category-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--color-text);
-  }
-
-  .tech-category-note {
-    color: var(--color-text-muted);
-    font-size: 0.8rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
-  }
-
-  .tech-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .tech-item {
-    padding: 0.55rem 0;
-    color: var(--color-text);
-    font-size: 0.95rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .tech-item:last-child {
-    border-bottom: none;
-  }
-
-  .tech-disclaimer {
-    max-width: 640px;
-    margin: 2.5rem auto 4rem;
-    text-align: center;
-    color: var(--color-text-muted);
-    font-size: 0.8rem;
-    line-height: 1.6;
-    opacity: 0.8;
-  }
+  .page-head { max-width: 52rem; padding: 3.5rem 0 2.5rem; }.eyebrow { margin: 0 0 .75rem; color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .15em; }.page-title { margin: 0; font-size: clamp(2.4rem, 6vw, 4.2rem); letter-spacing: -.05em; }.page-description { margin: 1rem 0 0; color: var(--color-text-muted); font-size: 1.08rem; line-height: 1.75; }
+  .project-tech, .broader { margin-bottom: 3.5rem; }.project-tech h2, .broader h2 { margin: 0 0 1rem; font-size: clamp(1.5rem, 3vw, 2rem); }.table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: rgba(7,12,20,.92); }table { width: 100%; min-width: 48rem; border-collapse: collapse; }th, td { padding: 1rem; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; line-height: 1.55; }thead th { color: var(--color-accent-bright); font: 700 .68rem/1.3 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; }tbody th { width: 15%; color: var(--color-text); }tbody td { color: var(--color-text-muted); font-size: .9rem; }tbody tr:last-child > * { border-bottom: 0; }
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(15rem,1fr)); gap: 1rem; }.tech-category { padding: 1.35rem; border: 1px solid var(--color-border); border-top: 3px solid var(--color-accent); border-radius: var(--radius-md); background: linear-gradient(145deg,rgba(13,20,32,.96),rgba(7,12,20,.96)); }.tech-category h3 { margin: 0; font-size: 1.1rem; }.tech-category p { color: var(--color-text-muted); font-size: .84rem; line-height: 1.55; }.tech-category ul { margin: 1rem 0 0; padding: 0; list-style: none; }.tech-category li { padding: .45rem 0; border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: .86rem; }.tech-disclaimer { max-width: 54rem; margin: 0 0 5rem; color: var(--color-text-subtle); font-size: .8rem; line-height: 1.65; }
+  @media(max-width:520px){ .page-head{padding-top:2.5rem}.table-wrap{margin-inline:-.25rem}.tech-grid{grid-template-columns:1fr} }
 </style>

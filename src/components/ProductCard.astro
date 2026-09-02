@@ -6,13 +6,14 @@ interface Props {
 }
 
 const { product } = Astro.props;
+const displayVersion = product.version;
 const statusLabel = {
   'free': 'Free',
   'paid': 'Paid',
   'donation': 'Donation-supported',
   'coming-soon': 'Coming Soon',
   'private-beta': 'Private Beta',
-  'public-beta': 'Public Beta',
+  'public-beta': 'Public Preview / Beta',
   'released': 'Released',
   'unavailable': 'Unavailable',
 }[product.status] ?? product.status;
@@ -43,7 +44,7 @@ const statusLabel = {
     {product.platform.length > 0 && (
       <span class="product-card__platform">{product.platform.join(' / ')}</span>
     )}
-    {product.version && <span class="product-card__version">v{product.version}</span>}
+    {displayVersion && <span class="product-card__version">{displayVersion}</span>}
   </div>
   <div class="product-card__actions">
     {product.downloadUrl && <a href={product.downloadUrl} class="btn btn-primary">Get App</a>}

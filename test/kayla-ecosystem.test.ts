@@ -54,7 +54,7 @@ describe('Kayla Ecosystem - Founder', () => {
   });
 });
 
-describe('Kayla Ecosystem - Five Primary Apps', () => {
+describe('Kayla Ecosystem - Primary Projects', () => {
   const provider = createProvider();
 
   it('knows GEMS / Training Grounds', async () => {
@@ -101,7 +101,7 @@ describe('Kayla Ecosystem - ForgerEMS', () => {
     const results = await provider.search('Where can I download ForgerEMS?');
     expect(results.length).toBeGreaterThan(0);
     const combined = results.map(r => r.snippet.toLowerCase()).join(' ');
-    expect(combined).toContain('v1.2.4-preview.5');
+    expect(combined).toContain('v1.2.3-preview.1');
   });
 
   it('knows ForgerEMS version', async () => {
@@ -109,7 +109,7 @@ describe('Kayla Ecosystem - ForgerEMS', () => {
     const results = await provider.search('What version is ForgerEMS?');
     expect(results.length).toBeGreaterThan(0);
     const combined = results.map(r => r.snippet.toLowerCase()).join(' ');
-    expect(combined).toContain('v1.2.4-preview.5');
+    expect(combined).toContain('v1.2.3-preview.1');
   });
 });
 

@@ -5,13 +5,19 @@ const forgeremsProduct = products.find((product) => product.slug === 'forgerems'
 
 export const releases: KaylaRelease[] = [
   {
+    appId: 'codeforge', version: 'v0.2.0', status: 'stable', date: '2026-08-29',
+    notes: 'Released Windows build of the free-first autonomous software-engineering platform.',
+    downloads: ['https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest'],
+    changelog: 'Installer and portable builds with published SHA-256 checksums.'
+  },
+  {
     appId: 'forgerems',
-    version: forgeremsProduct?.version || '',
+    version: forgeremsProduct?.version || 'Public Preview',
     status: 'preview',
-    date: '2025-01-01',
-    notes: 'Current public preview release of ForgerEMS. Windows-only Ventoy-based toolkit manager and downloader.',
+    date: '2026-07-02',
+    notes: 'ForgerEMS public preview: Windows technician diagnostics, USB systems, drive validation, system information, driver guidance, and local-first assistance.',
     downloads: forgeremsProduct?.downloadUrl ? [forgeremsProduct.downloadUrl] : [],
-    changelog: 'Preview release for testing and feedback. ZIP archive distribution.'
+    changelog: 'Canonical version and assets are maintained on GitHub Releases.'
   }
 ];
 

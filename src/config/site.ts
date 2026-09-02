@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "Forger Digital Solutions",
   shortName: "FDS",
-  description: "Independent software research and development focused on intelligent systems, developer infrastructure, creative technology, and experimental computing.",
+  description: "Independent software and AI engineering studio building tools for software engineering, AI research, game creation, publishing, civic information, local discovery, and technical diagnostics.",
   siteUrl: "https://forger-digital-solutions.github.io",
 
   // --- Social profiles ---

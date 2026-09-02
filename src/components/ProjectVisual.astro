@@ -41,6 +41,21 @@ const accent = project.accentColor || 'var(--color-accent)';
       </g>
     )}
 
+    {style === 'gem' && (
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g class="pv-gem-links">
+          <path d="M240 135 L125 72 M240 135 L355 72 M240 135 L125 198 M240 135 L355 198" />
+          <ellipse cx="240" cy="135" rx="92" ry="48" />
+          <ellipse cx="240" cy="135" rx="142" ry="82" />
+        </g>
+        <g class="pv-gem pv-gem--topaz" transform="translate(125 72)"><path d="M0 -28 L24 -8 L17 22 L0 33 L-17 22 L-24 -8 Z" /><path d="M0 -28 L0 33 M-24 -8 L24 -8 M-17 22 L17 22" /></g>
+        <g class="pv-gem pv-gem--sapphire" transform="translate(355 72)"><path d="M0 -28 L24 -8 L17 22 L0 33 L-17 22 L-24 -8 Z" /><path d="M0 -28 L0 33 M-24 -8 L24 -8 M-17 22 L17 22" /></g>
+        <g class="pv-gem pv-gem--peridot" transform="translate(125 198)"><path d="M0 -28 L24 -8 L17 22 L0 33 L-17 22 L-24 -8 Z" /><path d="M0 -28 L0 33 M-24 -8 L24 -8 M-17 22 L17 22" /></g>
+        <g class="pv-gem pv-gem--garnet" transform="translate(355 198)"><path d="M0 -28 L24 -8 L17 22 L0 33 L-17 22 L-24 -8 Z" /><path d="M0 -28 L0 33 M-24 -8 L24 -8 M-17 22 L17 22" /></g>
+        <g class="pv-gem-core"><path d="M240 87 L281 111 L273 159 L240 184 L207 159 L199 111 Z" /><path d="M240 87 L240 184 M199 111 L281 111 M207 159 L273 159" /></g>
+      </g>
+    )}
+
     {style === 'blocks' && (
       <g class="pv-stroke" fill="none">
         <rect x="70" y="150" width="60" height="60" rx="6" />
@@ -116,6 +131,15 @@ const accent = project.accentColor || 'var(--color-accent)';
   .pv-fill circle { fill: var(--pv-accent); stroke: none; }
   .pv-block-fill { fill: color-mix(in srgb, var(--pv-accent) 12%, transparent); }
   .pv-lines line { stroke: color-mix(in srgb, var(--pv-accent) 65%, var(--color-text-subtle)); stroke-width: 3; }
+  .pv-gem-links { stroke: color-mix(in srgb, var(--pv-accent) 45%, transparent); stroke-width: 1.5; }
+  .pv-gem-links ellipse { stroke-dasharray: 4 10; }
+  .pv-gem { stroke-width: 2; }
+  .pv-gem path:first-child { fill: color-mix(in srgb, currentColor 14%, transparent); }
+  .pv-gem--topaz { color: #f0ad3d; stroke: currentColor; }
+  .pv-gem--sapphire { color: #4f8fff; stroke: currentColor; }
+  .pv-gem--peridot { color: #8fca4c; stroke: currentColor; }
+  .pv-gem--garnet { color: #e45869; stroke: currentColor; }
+  .pv-gem-core { stroke: var(--color-silver); stroke-width: 2.2; fill: color-mix(in srgb, var(--pv-accent) 13%, transparent); }
   @media (prefers-reduced-motion: no-preference) {
     .pv-fill circle { animation: pv-pulse 4s ease-in-out infinite; }
     .pv-fill circle:nth-child(even) { animation-delay: 1.2s; }

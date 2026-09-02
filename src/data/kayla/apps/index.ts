@@ -67,11 +67,14 @@ function mapProduct(prod: typeof products[number]): KaylaApp {
 
 export const apps: KaylaApp[] = [
   ...projects.map(mapProject),
-  ...products.map(mapProduct)
+  ...products.filter((product) => !product.projectSlug || !projects.some((project) => project.slug === product.projectSlug)).map(mapProduct)
 ];
 
 export const appAliases: Record<string, string> = {
   'gems': 'gems-training-grounds',
+  'codeforge': 'codeforge',
+  'code forge': 'codeforge',
+  'software engineering': 'codeforge',
   'training grounds': 'gems-training-grounds',
   'gems training': 'gems-training-grounds',
   'kyrablox': 'kyrablox',
@@ -89,6 +92,8 @@ export const appAliases: Record<string, string> = {
   'forgerems': 'forgerems',
   'ems': 'forgerems',
   'forger ems': 'forgerems',
+  'technician': 'forgerems',
+  'diagnostics': 'forgerems',
   'toolkit': 'forgerems',
   'ventoy': 'forgerems'
 };

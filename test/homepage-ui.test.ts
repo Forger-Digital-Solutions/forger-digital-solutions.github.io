@@ -23,7 +23,7 @@ describe('homepage ecosystem UI contract', () => {
   it('renders the ecosystem without reusing the center logo image', () => {
     expect(homepage).toContain('<FDSEcosystem />');
     expect(ecosystem).toContain('CODEFORGE');
-    expect(ecosystem).toContain('FDS TECHNOLOGY CORE');
+    expect(ecosystem).toContain('PUBLIC PRODUCT + FDS CORE');
     expect(ecosystem).not.toContain('fds-logo.png');
     expect(ecosystem).toContain('ecosystemPlanets.map');
     expect(ecosystem).toContain('class="planet-motion"');

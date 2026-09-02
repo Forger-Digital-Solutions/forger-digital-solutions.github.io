@@ -9,78 +9,85 @@ const domains = [
     key: 'gaming',
     name: 'Gaming',
     product: 'KyraBlox',
+    href: '/projects/kyrablox',
     verb: 'BUILD WORLDS',
     color: '#b487ff',
     micro: 'DOMAIN // GAMING',
-    role: 'Intelligent tools for game creation, development workflows, scripting, systems, iteration, and the environments where interactive experiences are built.',
-    apply: 'Applies FDS technology to gaming.'
+    role: 'Project-aware help for scripts, gameplay systems, debugging, validation, and game creation.',
+    apply: 'Understands the game project, not only the prompt.'
   },
   {
     key: 'publishing',
     name: 'Publishing',
     product: 'Kayla AI Publisher',
+    href: '/projects/kayla-ai-publisher',
     verb: 'CREATE',
     color: '#d9813f',
     micro: 'DOMAIN // PUBLISHING',
-    role: 'Creative technology for writing, illustration, storytelling, editing, publishing workflows, and helping ideas become finished works.',
-    apply: 'Applies FDS technology to creative production and publishing.'
+    role: 'A continuous workspace for manuscripts, chapters, characters, revision, visual storytelling, and publication preparation.',
+    apply: 'Keeps the complete creative work connected.'
   },
   {
     key: 'civic',
     name: 'Civic',
     product: 'We The People',
+    href: '/projects/we-the-people',
     verb: 'UNDERSTAND',
     color: '#8792a8',
     micro: 'DOMAIN // CIVIC',
-    role: 'Civic technology focused on making public information, services, institutions, and community resources easier for ordinary people to understand and navigate.',
-    apply: 'Applies FDS technology to civic information and accessibility.'
+    role: 'Makes official information, public services, and community resources easier to understand and navigate.',
+    apply: 'Turns civic complexity into clearer next steps.'
   },
   {
     key: 'foraging',
     name: 'Foraging',
     product: 'FarmStand Finder',
+    href: '/projects/farmstand-finder',
     verb: 'DISCOVER',
     color: '#76b77d',
     micro: 'DOMAIN // FORAGING',
-    role: 'Technology connecting people with nearby food, growers, farm stands, gardens, producers, and community resources that are often difficult to discover through traditional platforms.',
-    apply: 'Applies FDS technology to local discovery and community resources.'
+    role: 'Helps people find nearby farms, growers, markets, roadside stands, CSAs, gardens, and seasonal food information.',
+    apply: 'Answers what is nearby, open, and worth the trip.'
+  },
+  {
+    key: 'maintenance',
+    name: 'Maintenance',
+    product: 'ForgerEMS',
+    href: '/forged',
+    verb: 'DIAGNOSE',
+    color: '#61d7a1',
+    micro: 'DOMAIN // TECHNICIAN',
+    role: 'A Windows technician workbench for system information, drive validation, USB intelligence, repair guidance, and maintenance tooling.',
+    apply: 'Brings FDS engineering to the repair bench.'
   }
 ];
 
-const foundation = [
-  { title: 'Practical Intelligence', body: 'AI should help accomplish real work, not exist simply to add an AI label to a product.' },
-  { title: 'Human Direction', body: 'Intelligent systems should increase what people can create and accomplish while keeping meaningful control with the person using them.' },
-  { title: 'Reusable Foundations', body: 'Research, tools, infrastructure, and lessons should be reusable where appropriate instead of rebuilding the same underlying work for every application.' },
-  { title: 'Governed Execution', body: 'Increasingly capable software should remain observable, deliberate, testable, and accountable rather than operating as an unexplained black box.' },
-  { title: 'Real-World Utility', body: 'Every FDS domain begins with an actual problem — building software, creating games, publishing work, understanding civic systems, or finding local resources.' }
-];
 ---
 
 <section class="one-eco" aria-labelledby="one-eco-title">
   <header class="one-eco__head">
     <p class="one-eco__eyebrow"><span aria-hidden="true"></span>ONE FDS ECOSYSTEM</p>
     <h2 id="one-eco-title" class="one-eco__title">Different systems. One connected direction.</h2>
-    <p class="one-eco__lead">Forger Digital Solutions is not a collection of unrelated apps. FDS is one growing technology ecosystem built across specialized domains — intelligence, gaming, publishing, civic technology, and local discovery. Each system solves a different problem, while the larger FDS foundation connects the way we research, build, test, automate, and evolve them.</p>
-    <p class="one-eco__lead">The goal is not to force every idea into one massive application. It is to build focused tools for different people and problems while allowing the technology, research, and lessons behind them to strengthen the broader FDS ecosystem.</p>
+    <p class="one-eco__lead">FDS connects autonomous software engineering, AI model research, game creation, publishing, civic information, local discovery, and technician software. Each product keeps its own purpose while sharing engineering lessons, research methods, and reusable foundations.</p>
   </header>
 
   <p class="one-eco__principle">
     <span class="one-eco__principle-mark" aria-hidden="true">//</span>
-    One foundation does not mean one interface. Different problems deserve different tools. FDS develops specialized experiences for each domain while building shared intelligence, infrastructure, and engineering capabilities underneath them.
+    Shared foundations do not mean one interface—or that every product must become a GEMS wrapper. Different problems deserve different tools and independent technical choices.
   </p>
 
-  <div class="one-eco__diagram" role="group" aria-label="Architecture of the FDS ecosystem: CodeForge as the build foundation, GEMS / Training Grounds as the intelligence research layer, and four specialized domains — gaming, publishing, civic, and foraging.">
+  <div class="one-eco__diagram" role="group" aria-label="Relationships across CodeForge, GEMS and Training Grounds, KyraBlox, Kayla AI Publisher, We The People, FarmStand Finder, and ForgerEMS.">
     <p class="one-eco__micro one-eco__micro--top">FDS // CONNECTED SYSTEMS</p>
 
     <!-- FOUNDATION -->
     <div class="eco-tier eco-tier--core">
-      <article class="eco-node eco-node--foundation" tabindex="0" aria-label="CodeForge, build and execution layer">
+      <a class="eco-node eco-node--foundation" href="/projects/codeforge" aria-label="Explore CodeForge, public engineering product and FDS engineering foundation">
         <p class="eco-node__micro">CORE // DEVELOPMENT</p>
         <h3 class="eco-node__name">CodeForge</h3>
         <p class="eco-node__verb">BUILD SYSTEMS</p>
-        <p class="eco-node__role">CodeForge is the development environment being built to help FDS create, inspect, test, and evolve increasingly complex software systems with intelligent agent assistance. It represents the engineering side of the ecosystem — where code, tools, models, workflows, verification, and human direction come together.</p>
-        <p class="eco-node__note">It is not another FDS consumer application. It is part of the machinery used to build them.</p>
-      </article>
+        <p class="eco-node__role">CodeForge is a released autonomous engineering platform that plans repository work, uses tools, runs verification, and coordinates specialized agents. FDS also uses its engineering foundations across product development.</p>
+        <p class="eco-node__note">Public product + shared engineering foundation.</p>
+      </a>
     </div>
 
     <div class="eco-line" aria-hidden="true"><span class="eco-pulse"></span></div>
@@ -91,8 +98,8 @@ const foundation = [
         <p class="eco-node__micro">DOMAIN // INTELLIGENCE</p>
         <h3 class="eco-node__name">GEMS / Training Grounds</h3>
         <p class="eco-node__verb">LEARN</p>
-        <p class="eco-node__role">GEMS / Training Grounds represents the intelligence research side of FDS — exploring how AI systems can be taught, evaluated, challenged, improved, and governed through structured experimentation.</p>
-        <p class="eco-node__note">The work performed here is intended to expand what future FDS systems can understand and accomplish without reducing every product to the same generic AI experience.</p>
+        <p class="eco-node__role">GEMS develops and specializes model intelligence. Training Grounds supplies curriculum, trials, evaluation, and advancement checkpoints.</p>
+        <p class="eco-node__note">Its research can inform other products without defining their entire architecture.</p>
       </article>
     </div>
 
@@ -104,8 +111,9 @@ const foundation = [
       <div class="eco-rail__inner">
         <div class="eco-rail__spine" aria-hidden="true"></div>
         {domains.map((domain) => (
-          <article
+          <a
             class={`eco-domain eco-domain--${domain.key}`}
+            href={domain.href}
             style={`--domain-color:${domain.color}`}
             tabindex="0"
             aria-label={`${domain.name} domain — ${domain.product}. ${domain.verb}.`}
@@ -116,27 +124,13 @@ const foundation = [
             <p class="eco-node__verb">{domain.verb}</p>
             <p class="eco-node__role">{domain.role}</p>
             <p class="eco-domain__apply">{domain.apply}</p>
-          </article>
+          </a>
         ))}
       </div>
     </div>
   </div>
 
-  <p class="one-eco__state">SYSTEM STATE // EVOLVING</p>
-
-  <!-- SHARED FOUNDATION -->
-  <section class="one-eco__foundation" aria-labelledby="foundation-title">
-    <h3 id="foundation-title" class="one-eco__subtitle">Shared Foundation</h3>
-    <p class="one-eco__sublead">What makes all of this FDS — the ideas shared underneath every domain, not a list of company values.</p>
-    <ul class="foundation-grid">
-      {foundation.map((item) => (
-        <li class="foundation-item">
-          <h4 class="foundation-item__title">{item.title}</h4>
-          <p class="foundation-item__body">{item.body}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
+  <p class="one-eco__state">SYSTEM STATE // ACTIVE</p>
 
   <!-- CLOSING -->
   <div class="one-eco__close">
@@ -187,7 +181,7 @@ const foundation = [
   /* ---- Rail (specialized domains) ---- */
   .eco-rail { position: relative; z-index: 1; margin-top: .25rem; }
   .eco-rail__label { text-align: center; margin: 0 0 .8rem; color: var(--color-text-subtle); font: 700 .66rem/1 var(--font-mono); letter-spacing: .22em; }
-  .eco-rail__inner { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .eco-rail__inner { position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 1rem; }
   .eco-rail__spine { position: absolute; top: -.55rem; left: 12.5%; right: 12.5%; height: 1px; background: linear-gradient(90deg, transparent, rgba(91,159,255,.5) 12%, rgba(91,159,255,.5) 88%, transparent); }
 
   .eco-domain { position: relative; padding: .95rem .9rem 1rem; border: 1px solid color-mix(in srgb, var(--domain-color) 34%, var(--color-border)); border-radius: var(--radius-md); background: rgba(8,14,25,.82); box-shadow: inset 0 1px rgba(255,255,255,.03); outline: none; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease, opacity .25s ease; }
@@ -210,16 +204,6 @@ const foundation = [
   .eco-rail__inner:has(.eco-domain:focus-within) .eco-rail__spine { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--domain-color) 70%, transparent) 12%, color-mix(in srgb, var(--domain-color) 70%, transparent) 88%, transparent); }
 
   .one-eco__state { text-align: center; margin: 1.1rem 0 0; color: var(--color-text-subtle); font: 700 .6rem/1 var(--font-mono); letter-spacing: .2em; }
-
-  /* ---- Shared Foundation ---- */
-  .one-eco__foundation { max-width: 66rem; margin: 3rem auto 0; }
-  .one-eco__subtitle { margin: 0; color: var(--color-text); font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.02em; }
-  .one-eco__sublead { margin: .6rem 0 1.1rem; max-width: 46rem; color: var(--color-text-muted); font-size: 1rem; line-height: 1.65; }
-  .foundation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-border); box-shadow: var(--shadow-sm); }
-  .foundation-item { padding: 1rem 1.1rem; background: linear-gradient(150deg, rgba(13,20,32,.96), rgba(6,11,19,.96)); }
-  .foundation-item__title { margin: 0; color: var(--color-text); font-size: 1.02rem; letter-spacing: -.01em; }
-  .foundation-item__title::before { content: ''; display: inline-block; width: .5rem; height: .5rem; margin-right: .55rem; border-radius: 50%; background: var(--color-accent-bright); box-shadow: 0 0 8px rgba(63,132,255,.6); vertical-align: middle; }
-  .foundation-item__body { margin: .55rem 0 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.6; }
 
   /* ---- Closing ---- */
   .one-eco__close { max-width: 52rem; margin: 2.2rem auto 0; padding: 1.3rem 1.4rem; border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: linear-gradient(150deg, rgba(24,71,199,.08), rgba(6,11,19,.9)); text-align: center; }

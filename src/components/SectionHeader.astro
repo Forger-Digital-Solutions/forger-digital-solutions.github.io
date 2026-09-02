@@ -1,10 +1,11 @@
 ---
-interface Props { eyebrow?: string; title: string; description?: string; align?: 'left' | 'center'; }
-const { eyebrow, title, description, align = 'left' } = Astro.props;
+interface Props { eyebrow?: string; title: string; description?: string; align?: 'left' | 'center'; headingLevel?: 'h1' | 'h2'; }
+const { eyebrow, title, description, align = 'left', headingLevel = 'h2' } = Astro.props;
+const HeadingTag = headingLevel;
 ---
 <header class:list={['section-header', `section-header--${align}`]}>
   {eyebrow && <p class="section-header__eyebrow"><span aria-hidden="true"></span>FDS // {eyebrow}</p>}
-  <h2 class="section-header__title">{title}</h2>
+  <HeadingTag class="section-header__title">{title}</HeadingTag>
   {description && <p class="section-header__description">{description}</p>}
 </header>
 

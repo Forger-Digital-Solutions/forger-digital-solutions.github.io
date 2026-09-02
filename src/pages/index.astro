@@ -4,12 +4,12 @@ import { siteConfig } from '../config/site';
 import { projects } from '../data/projects';
 import { statusMeta } from '../data/status';
 import ProjectCard from '../components/ProjectCard.astro';
-import ProjectVisual from '../components/ProjectVisual.astro';
 import ProjectStatus from '../components/ProjectStatus.astro';
-import ProcessVisualization from '../components/ProcessVisualization.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import GemsStory from '../components/GemsStory.astro';
 import NoteCard from '../components/NoteCard.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { products } from '../data/products';
 import SupportDialog from '../components/SupportDialog.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
 import OneFDSEcosystem from '../components/OneFDSEcosystem.astro';
@@ -17,9 +17,9 @@ import FDSEcosystem from '../components/FDSEcosystem.astro';
 import { getPublishedNotes } from '../lib/notes';
 
 const sortedProjects = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
-const flagship = projects.find((p) => p.flagship) ?? sortedProjects[0];
+const codeForge = projects.find((p) => p.slug === 'codeforge');
+const activeProjects = sortedProjects.filter((p) => !['codeforge', 'gems-training-grounds'].includes(p.slug));
 const latestNotes = (await getPublishedNotes()).slice(0, 3);
-const roadmap = sortedProjects.filter((p) => p.roadmap);
 ---
 <BaseLayout>
   <VisitorCounter />
@@ -27,38 +27,29 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     <div class="hero__copy">
       <p class="hero__status"><span></span> FDS SYSTEMS // ONLINE</p>
       <h1><span class="accent">FORGER</span> <span><span class="silver">DIGITAL</span> <span class="accent">SOLUTIONS</span></span></h1>
-      <p class="hero__line">Building software that learns, adapts, and creates.</p>
+      <p class="hero__line">Independent software and AI engineering.</p>
       <p class="hero__description">{siteConfig.description}</p>
       <div class="hero__actions"><a href="/projects" class="btn btn-primary">Explore Projects <span aria-hidden="true">→</span></a>{siteConfig.githubUrl && <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on GitHub</a>}<a href="/support" class="hero__support">Support FDS <span aria-hidden="true">→</span></a></div>
     </div>
     <FDSEcosystem />
-    <div class="hero__rail" aria-label="FDS focus areas"><span>AI + RESEARCH</span><span>APPLICATIONS</span><span>INFRASTRUCTURE</span></div>
+    <div class="hero__rail" aria-label="FDS focus areas"><span>SOFTWARE ENGINEERING</span><span>AI RESEARCH</span><span>PRACTICAL APPLICATIONS</span></div>
   </section>
 
-  <section class="page-section" aria-labelledby="flagship-title">
-    <SectionHeader eyebrow="Flagship Research" title="GEMS / Training Grounds" />
-    <div class="flagship" style={`--project-accent: ${flagship.accentColor || 'var(--color-accent)'}`}>
-      <div class="flagship__body">
-        <ProjectStatus status={flagship.status} />
-        <p class="flagship__lead">A disciplined approach to building intelligent systems: training specialized models, evaluating results, governing experimentation, and running across adaptable compute.</p>
-        <p class="flagship__desc">{flagship.summary}</p>
-        <a href={`/projects/${flagship.slug}`} class="btn btn-primary">Explore GEMS</a>
-      </div>
-      <figure class="flagship__visual">
-        {flagship.heroImage
-          ? <img class="flagship__img" src={flagship.heroImage.src} alt={flagship.heroImage.alt} width="1536" height="1024" loading="lazy" decoding="async" />
-          : <ProjectVisual project={flagship} variant="hero" />}
-        {flagship.heroImage?.caption && <figcaption>{flagship.heroImage.caption}</figcaption>}
-      </figure>
-    </div>
+  <section class="page-section page-section--surface ecosystem-section">
+    <OneFDSEcosystem />
+  </section>
+
+  <section class="page-section" aria-labelledby="codeforge-title">
+    <SectionHeader eyebrow="Featured System" title="CodeForge engineers software" description="A released free-first autonomous engineering platform—and an important part of how FDS develops increasingly complex products." />
+    {codeForge && <ProjectCard project={codeForge} featured={true} />}
   </section>
 
   <GemsStory />
 
   <section class="page-section page-section--surface" aria-labelledby="forge-title">
-    <SectionHeader eyebrow="Active Work" title="Currently in the Forge" description={`${sortedProjects.length} initiatives spanning intelligent systems, creative tooling, and useful community software.`} />
+    <SectionHeader eyebrow="Current Work" title="Specialized products in development" description="Each project has a concrete job; status labels separate research, private work, prerelease software, and released products." />
     <ul class="forge-list">
-      {sortedProjects.map((project) => (
+      {activeProjects.map((project) => (
         <li class="forge-item" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
           <a href={`/projects/${project.slug}`} class="forge-item__link">
             <span class="forge-item__name">{project.name}</span>
@@ -70,48 +61,26 @@ const roadmap = sortedProjects.filter((p) => p.roadmap);
     </ul>
   </section>
 
-  <section class="page-section" aria-labelledby="projects-title"><SectionHeader eyebrow="Project Showcase" title="What FDS is building" description="Five initiatives. Each follows the same loop: build, test, measure, learn, evolve." /><div class="projects-grid">{sortedProjects.map((project) => <ProjectCard project={project} featured={project.flagship} />)}</div></section>
+  <section class="page-section" aria-labelledby="forged-title">
+    <SectionHeader eyebrow="Forged" title="Software you can use now" description="Released and public-preview applications with canonical download paths." />
+    <div class="projects-grid">{products.map((product) => <ProductCard product={product} />)}</div>
+    <p><a class="text-link" href="/forged">Explore Forged <span aria-hidden="true">→</span></a></p>
+  </section>
 
   {latestNotes.length > 0 && (
     <section class="page-section page-section--surface" aria-labelledby="notes-title">
-      <div class="notes-head"><SectionHeader eyebrow="Engineering Log" title="Latest from FDS" description="Build logs and research notes from the workshop." /><a class="text-link" href="/notes">All notes <span aria-hidden="true">→</span></a></div>
+      <div class="notes-head"><SectionHeader eyebrow="Notes" title="Recent changes and findings" description="Public field notes from active engineering, product work, and model research." /><a class="text-link" href="/notes">All notes <span aria-hidden="true">→</span></a></div>
       <div class="notes-grid">{latestNotes.map((note) => <NoteCard note={note} />)}</div>
     </section>
   )}
 
-  <section class="page-section" aria-labelledby="process-title"><SectionHeader eyebrow="How FDS Builds" title="Build with evidence" description="Ideas become reusable architecture through disciplined iteration." align="center" /><ProcessVisualization /></section>
-
-  <section class="page-section page-section--surface ecosystem-section">
-    <OneFDSEcosystem />
-  </section>
-
-  {roadmap.length > 0 && (
-    <section class="page-section page-section--surface" aria-labelledby="roadmap-title">
-      <SectionHeader eyebrow="What's Ahead" title="Where the work is heading" description="Deliberately high-level. No deadlines, no promises — just direction." />
-      <ul class="roadmap-list">
-        {roadmap.map((project) => (
-          <li class="roadmap-item" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
-            <a href={`/projects/${project.slug}`}>{project.name}</a>
-            <p>{project.roadmap}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  <section class="page-section" aria-labelledby="build-title"><SectionHeader eyebrow="Capability" title="What we build" /><div class="capability-grid"><article><span>01</span><h3>Intelligent Systems</h3><p>AI research, model training, evaluation, and adaptive software — from experimental prototypes to evidence-driven architectures.</p></article><article><span>02</span><h3>Developer Infrastructure</h3><p>Tooling and systems that make software development, experimentation, and execution more disciplined and reproducible.</p></article><article><span>03</span><h3>Creative Technology</h3><p>AI-assisted publishing, game-development tooling, and interactive software that augments human creativity.</p></article><article><span>04</span><h3>Community Software</h3><p>Applications that connect people with useful local information, resources, and transparent public-facing systems.</p></article></div></section>
-
-  <section class="page-section page-section--surface lab-section" aria-labelledby="lab-title"><SectionHeader eyebrow="FDS Lab" title="Experiment. Measure. Evolve." description="Systems are built, tested, measured, challenged, and refined before ideas become reusable architecture." /><a class="btn btn-outline" href="/lab">Explore the Lab</a></section>
-
-  <section class="page-section" aria-labelledby="technology-title"><SectionHeader eyebrow="Tools &amp; Environments" title="Technology snapshot" description="A practical technology landscape for research, experiments, and software systems." /><div class="technology-strip"><span>Python</span><span>.NET</span><span>TypeScript</span><span>Model Training</span><span>Evaluation Systems</span><span>CUDA</span><span>Local GPU</span></div><a href="/technology" class="text-link">Explore technology <span aria-hidden="true">→</span></a></section>
-
   <section class="page-section support-section" aria-labelledby="support-title">
-    <SectionHeader eyebrow="Support FDS" title="Help forge what's next" description="FDS is built independently. Development hardware, retired technology, and future community projects each have their own path." />
+    <SectionHeader eyebrow="Support FDS" title="Help independent work continue" description="Contributions can support compute, development hardware, testing devices, hosting, and software work. Community initiatives remain a separate track." />
     <div class="support-grid">
       <a class="support-card" href="/support">
         <span>Development &amp; Hardware</span>
         <h3>Support Development</h3>
-        <p>Cash App and Ko-fi contributions go toward workstations, GPUs, storage, testing equipment, and development infrastructure.</p>
+        <p>Cash App and Ko-fi contributions go toward workstations, GPUs, storage, testing equipment, and development services.</p>
         <em>Visit Support <span aria-hidden="true">→</span></em>
       </a>
       <a class="support-card" href="/support/hardware">

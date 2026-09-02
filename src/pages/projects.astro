@@ -8,7 +8,7 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
 ---
 <BaseLayout
   title="Projects"
-  description="Explore the systems we're building across intelligence, gaming, publishing, civic technology, and local discovery — part of the FDS ecosystem."
+  description="Browse FDS projects across autonomous engineering, AI research, game creation, publishing, civic information, and local discovery."
 >
   <div class="projects-hero">
     <div class="projects-hero__backdrop" aria-hidden="true">
@@ -28,9 +28,8 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
     <p class="projects-hero__kicker">FDS // SYSTEM DIRECTORY</p>
     <h1 class="projects-hero__title">Projects</h1>
     <p class="projects-hero__description">
-      Explore the systems we're building across <strong>intelligence</strong>, <strong>gaming</strong>, 
-      <strong>publishing</strong>, <strong>civic technology</strong>, and <strong>local discovery</strong> — 
-      each part of a connected technology ecosystem.
+      Browse the software and research FDS is actively developing—from autonomous engineering and model learning
+      to game creation, publishing, civic information, and nearby food discovery.
     </p>
   </div>
 
@@ -38,10 +37,12 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
     <h2 id="ecosystem-heading" class="sr-only">FDS Technology Ecosystems</h2>
     <div class="ecosystem-overview__content">
       <p class="ecosystem-intro">
-        Five ecosystems, one technology core. Each project addresses a distinct domain while sharing 
-        principles: practical systems, intelligent assistance, and building useful technology.
+        Projects are what FDS is building. Some are research programs, some are private products, and some are already released through Forged.
       </p>
       <div class="ecosystem-grid">
+        <a href="#codeforge" class="ecosystem-item" data-ecosystem="engineering">
+          <span class="ecosystem-dot" aria-hidden="true"></span><div class="ecosystem-text"><h3>Engineering</h3><p>Autonomous repository work</p></div>
+        </a>
         <a href="#gems-training-grounds" class="ecosystem-item" data-ecosystem="intelligence">
           <span class="ecosystem-dot" aria-hidden="true"></span>
           <div class="ecosystem-text">
@@ -207,6 +208,8 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
   }
   
   .ecosystem-item[data-ecosystem="intelligence"] { color: #4f8fff; }
+  .ecosystem-item[data-ecosystem="engineering"] { color: #5a82e8; }
+  .ecosystem-item[data-ecosystem="engineering"] .ecosystem-dot { background: #5a82e8; }
   .ecosystem-item[data-ecosystem="intelligence"] .ecosystem-dot { background: #4f8fff; }
   .ecosystem-item[data-ecosystem="gaming"] { color: #b487ff; }
   .ecosystem-item[data-ecosystem="gaming"] .ecosystem-dot { background: #b487ff; }

@@ -4,9 +4,9 @@ import { siteConfig } from '../../../config/site';
 export const founder: KaylaFounder = {
   name: siteConfig.author,
   role: 'Founder & Developer',
-  publicBio: siteConfig.author + ' is building Forger Digital Solutions as an independent software research and development effort. The work spans AI research and training infrastructure, game-development tooling, publishing software, civic technology, community discovery platforms, and technology reuse initiatives. The approach emphasizes evidence-driven development, adaptive compute, and building through repeated experimentation.',
-  foundingStory: 'Forger Digital Solutions was founded by ' + siteConfig.author + ' as an independent software research and development studio. Projects often begin as experiments and evolve through repeated implementation, measurement, testing, and refinement. The name reflects the philosophy of building durable, practical systems through disciplined iteration rather than relying on unproven assumptions.',
-  motivation: 'Building software that learns, adapts, and creates — while keeping development grounded in evidence, practical constraints, and real-world usefulness. The work is driven by curiosity about how intelligent systems can be developed responsibly, how creative tools can support rather than replace human direction, and how technology can serve community needs.',
+  publicBio: siteConfig.author + ' is building Forger Digital Solutions as an independent software and AI engineering studio. The work spans autonomous engineering, model research, game creation, publishing, civic information, local discovery, technician tools, and technology reuse.',
+  foundingStory: 'Forger Digital Solutions was founded by ' + siteConfig.author + ' to pursue ambitious software across disciplines without forcing every useful problem into one corporate product category. The name reflects hands-on engineering: shaping tools through direct implementation, investigation, and real use.',
+  motivation: 'The work starts with concrete problems: safely changing a repository, evaluating whether a model improved, understanding a game project, keeping a manuscript coherent, navigating an official service, finding local food, or diagnosing a Windows system. The common thread is making capable software useful without taking meaningful direction away from the person using it.',
   technicalInterests: [
     'AI research and model training',
     'Evaluation systems and curriculum systems',
@@ -18,9 +18,10 @@ export const founder: KaylaFounder = {
     'Technology reuse and hardware lifecycle extension',
     'Evidence-driven development and governed experimentation'
   ],
-  fdsVision: 'Building Forger Digital Solutions as an independent software development and research effort focused on intelligent systems, creative tools, and practical software — where research findings become reusable architecture only after surviving meaningful real-world use.',
-  developmentPhilosophy: 'Evidence over assumptions. Adaptive computation. Governed intelligence. Build through experimentation. Results should provide evidence that the intended objective was achieved. Training, evaluation, experimentation, and deployment should leave understandable evidence.',
+  fdsVision: 'Building an independent technology studio where autonomous engineering, model learning, creative work, civic access, nearby discovery, and technician software can strengthen one another while remaining distinct products.',
+  developmentPhilosophy: 'Define what success would look like before a run, test against that signal, keep the result inspectable, and change direction when the result does not support the hypothesis. The full engineering method is documented in FDS Lab.',
   publicProjects: [
+    'CodeForge',
     'GEMS / Training Grounds',
     'KyraBlox',
     'Kayla AI Publisher',

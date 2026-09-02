@@ -10,12 +10,12 @@ const statusClass = status.toLowerCase().replaceAll(' ', '-');
 
 // Status styling configuration
 const statusConfig: Record<string, { semantic: 'active' | 'research' | 'private' | 'planned' }> = {
-  'ACTIVE RESEARCH': { semantic: 'research' },
+  'RESEARCH': { semantic: 'research' },
   'ACTIVE DEVELOPMENT': { semantic: 'active' },
   'PRIVATE DEVELOPMENT': { semantic: 'private' },
   'RELEASED': { semantic: 'active' },
-  'EXPERIMENTAL': { semantic: 'research' },
-  'PLANNED': { semantic: 'planned' }
+  'PREVIEW / BETA': { semantic: 'research' },
+  'CONCEPT': { semantic: 'planned' }
 };
 
 const config = statusConfig[status] || { semantic: 'active' };

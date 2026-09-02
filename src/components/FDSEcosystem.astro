@@ -11,7 +11,7 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
 
   <svg class="fds-ecosystem__scene" viewBox="0 0 680 680" role="group" aria-labelledby="fds-ecosystem-svg-title fds-ecosystem-svg-desc">
     <title id="fds-ecosystem-svg-title">FDS digital solar system</title>
-    <desc id="fds-ecosystem-svg-desc">Eight project and technology nodes travel on independent fixed elliptical paths around the shared CodeForge Core.</desc>
+    <desc id="fds-ecosystem-svg-desc">Eight project and technology nodes travel on fixed elliptical paths around CodeForge, a public product and shared FDS engineering foundation.</desc>
     <defs>
       <radialGradient id="core-sphere" cx="38%" cy="32%" r="68%">
         <stop offset="0" stop-color="#d6e7ff" /><stop offset=".12" stop-color="#6db0ff" /><stop offset=".43" stop-color="#155be0" /><stop offset=".74" stop-color="#09266e" /><stop offset="1" stop-color="#030a1d" />
@@ -91,7 +91,8 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
     </g>
 
     <!-- CodeForge Core: The technological heart of the FDS ecosystem -->
-    <g class="core" aria-hidden="true">
+    <a class="core-link" href="/projects/codeforge" aria-label="Explore CodeForge, public engineering product and FDS engineering foundation">
+    <g class="core">
       <!-- Outer aura/glow field -->
       <circle class="core__aura" cx="340" cy="340" r="116" />
       
@@ -132,8 +133,9 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
       
       <!-- Core labeling -->
       <text class="core__title" x="340" y="438" text-anchor="middle">CODEFORGE</text>
-      <text class="core__subtitle" x="340" y="455" text-anchor="middle">FDS TECHNOLOGY CORE</text>
+      <text class="core__subtitle" x="340" y="455" text-anchor="middle">PUBLIC PRODUCT + FDS CORE</text>
     </g>
+    </a>
   </svg>
 </div>
 
@@ -167,6 +169,7 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
   .orbit-layer:has(+ .planet-layer .planet-link--civic:hover) .orbit-visual--civic .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--civic:focus-visible) .orbit-visual--civic .orbit-path,
   .orbit-layer:has(+ .planet-layer .planet-link--systems:hover) .orbit-visual--systems .orbit-path, .orbit-layer:has(+ .planet-layer .planet-link--systems:focus-visible) .orbit-visual--systems .orbit-path { stroke: var(--planet-color); stroke-width: 1.8; opacity: .85; }
   .core { transform-origin: 340px 340px; }.core__aura { fill: rgba(21,72,190,.14); stroke: rgba(84,139,255,.24); filter: drop-shadow(0 0 28px rgba(29,91,237,.58)); }
+  .core-link { outline: none; }.core-link:hover .core, .core-link:focus-visible .core { filter: brightness(1.18); }.core-link:focus-visible .core__aura { stroke: #d6e9ff; stroke-width: 3; }
   .core__ring { fill: none; stroke: rgba(94,154,255,.5); stroke-width: 1; transform-origin: 340px 340px; }.core__ring--outer { stroke-dasharray: 3 8 16 5; animation: core-ring-spin 48s linear infinite; }.core__ring--mid { stroke: rgba(132,176,250,.4); stroke-dasharray: 1 5 20 7; animation: core-ring-spin 34s linear infinite reverse; }.core__ring--inner { stroke: rgba(92,151,255,.62); stroke-dasharray: 2 4; animation: core-ring-spin 26s linear infinite; }
   .core__sphere { fill: url(#core-sphere); stroke: #5e9fff; stroke-width: 1.4; }.core__chamber { fill: rgba(2,9,28,.42); stroke: rgba(145,190,255,.78); stroke-width: 1; stroke-dasharray: 2 5; }.core__aperture { fill: rgba(20,76,184,.18); stroke: rgba(132,187,255,.58); stroke-width: 1; stroke-dasharray: 4 3; transform-origin: 340px 340px; animation: core-ring-spin 38s linear infinite reverse; }.core__energy { fill: url(#forge-heart); stroke: #d6e9ff; stroke-width: 1; opacity: .88; }
   .core__illumination { transform-origin: 340px 340px; animation: core-breathe 9s cubic-bezier(.45,0,.35,1) infinite; }

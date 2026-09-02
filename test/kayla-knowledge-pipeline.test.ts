@@ -17,7 +17,7 @@ import { kaylaKnowledge } from '../src/data/kayla/index';
 import { products } from '../src/data/products';
 
 describe('Kayla Knowledge Pipeline - Apps', () => {
-  it('has all five primary apps plus ForgerEMS', () => {
+  it('has every current project plus the ForgerEMS product', () => {
     const requiredIds = ['gems-training-grounds', 'kyrablox', 'kayla-ai-publisher', 'we-the-people', 'farmstand-finder', 'forgerems'];
     for (const id of requiredIds) {
       const app = apps.find(a => a.id === id);
@@ -71,14 +71,14 @@ describe('Kayla Knowledge Pipeline - ForgerEMS', () => {
     expect(forgerems.id).toBe('forgerems');
     expect(forgerems.name).toBe('ForgerEMS');
     expect(forgerems.status).toBe('public-beta');
-    expect(forgerems.category).toBe('Toolkit');
+    expect(forgerems.category).toBe('Technician Workbench');
     expect(forgerems.platforms).toEqual(['Windows']);
-    expect(forgerems.documentation).toBe('https://github.com/forger-digital-solutions/ForgerEMS');
+    expect(forgerems.documentation).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS');
   });
 
   it('has download info', () => {
-    expect(forgerems.download).toBe('/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip');
-    expect(forgerems.downloads).toContain('/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip');
+    expect(forgerems.download).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
+    expect(forgerems.downloads).toContain('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
   });
 
   it('has changelog/FAQ data', () => {
@@ -102,13 +102,13 @@ describe('Kayla Knowledge Pipeline - Releases', () => {
   it('getLatestRelease returns correct release', () => {
     const latest = getLatestRelease('forgerems');
     expect(latest).toBeDefined();
-    expect(latest?.version).toBe('v1.2.4-preview.5');
+    expect(latest?.version).toBe('v1.2.3-preview.1');
   });
 
   it('getReleaseForApp returns correct release', () => {
     const release = getReleaseForApp('forgerems');
     expect(release).toBeDefined();
-    expect(release?.version).toBe('v1.2.4-preview.5');
+    expect(release?.version).toBe('v1.2.3-preview.1');
   });
 });
 
@@ -259,7 +259,7 @@ describe('Kayla Knowledge Pipeline - Source Authority', () => {
     const product = products.find(p => p.slug === 'forgerems');
     const release = releases.find(r => r.appId === 'forgerems');
     const download = downloads.find(d => d.appId === 'forgerems');
-    expect(product?.version).toBe('v1.2.4-preview.5');
+    expect(product?.version).toBe('v1.2.3-preview.1');
     expect(release?.version).toBe(product?.version);
     expect(download?.version).toBe(product?.version);
     expect(release?.downloads?.[0]).toBe(product?.downloadUrl);

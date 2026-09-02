@@ -19,7 +19,7 @@ const { title, description, ogImage } = Astro.props;
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
 const pageDesc =
   description ||
-  'Independent software research and development focused on intelligent systems, developer infrastructure, creative technology, and experimental computing.';
+  'Independent software and AI engineering across developer tools, model research, game creation, publishing, civic information, local discovery, and technical diagnostics.';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
 const ogImageUrl = new URL(ogImage || siteConfig.ogImage, siteConfig.siteUrl).href;
 const kaylaPageContext = buildPageContext(Astro.url.pathname);

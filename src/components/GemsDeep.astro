@@ -13,8 +13,8 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
 <section class="gems-deep" aria-labelledby="gems-family-title">
   <h2 id="gems-family-title" class="gems-deep__h2">The GEMS family</h2>
   <p class="gems-deep__intro">
-    GEMS is not one model wearing different hats. It is a family of specialized intelligences, each with a developing role. Topaz is the general
-    foundation; Sapphire pursues efficiency; Peridot evaluates what was actually learned; Garnet turns intelligence into controlled action.
+    GEMS is not one model wearing different hats. It is a family of independent research lineages: Topaz is the broad generalist and orchestrator,
+    Sapphire focuses on software engineering, Peridot on mathematics and technical reasoning, and Garnet on multimodal and publishing intelligence.
   </p>
 
   <div class="gems-deep__family">
@@ -26,14 +26,16 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
         <p class="gdeep-card__state">STATE // {gem.state}</p>
         <dl class="gdeep-card__meta">
           <div><dt>Learning direction</dt><dd>{gem.direction}</dd></div>
+          <div><dt>Current foundation strategy</dt><dd>{gem.foundationStrategy}</dd></div>
           <div><dt>May eventually help with</dt><dd>{gem.future}</dd></div>
           <div><dt>Where it fits</dt><dd>{gem.fit}</dd></div>
+          <div><dt>Not claimed yet</dt><dd>{gem.notClaimed}</dd></div>
         </dl>
       </article>
     ))}
   </div>
 
-  <h2 id="gems-journey-title" class="gems-deep__h2">How a GEM learns</h2>
+  <h2 id="gems-journey-title" class="gems-deep__h2">How a GEM advances</h2>
   <p class="gems-deep__intro">
     Development is treated as a loop, not a launch. Each rung is proven with evidence before the next is attempted.
   </p>

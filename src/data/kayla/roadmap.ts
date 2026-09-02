@@ -5,11 +5,11 @@ export const roadmap: KaylaRoadmapItem[] = projects
   .filter((p): p is typeof projects[number] & { roadmap: string } => Boolean(p.roadmap))
   .map((p) => {
     let status: KaylaRoadmapItem['status'] = 'active';
-    if (p.status === 'ACTIVE RESEARCH') status = 'research';
+    if (p.status === 'RESEARCH') status = 'research';
     else if (p.status === 'ACTIVE DEVELOPMENT') status = 'active';
     else if (p.status === 'PRIVATE DEVELOPMENT') status = 'active';
-    else if (p.status === 'EXPERIMENTAL') status = 'experimental';
-    else if (p.status === 'PLANNED') status = 'planned';
+    else if (p.status === 'PREVIEW / BETA') status = 'preview';
+    else if (p.status === 'CONCEPT') status = 'planned';
     else if (p.status === 'RELEASED') status = 'released';
 
     return {

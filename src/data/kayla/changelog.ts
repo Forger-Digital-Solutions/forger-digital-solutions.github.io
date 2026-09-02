@@ -1,11 +1,11 @@
 export const forgeremsChangelog = [
   {
-    version: 'v1.2.4-preview.5',
-    date: '2025-01-01',
+    version: 'v1.2.3-preview.1',
+    date: '2026-07-02',
     status: 'preview',
     changes: [
-      'Current preview release for testing and feedback.',
-      'ZIP archive distribution for Windows.'
+      'Technician diagnostics, system information, drive validation, and USB intelligence.',
+      'Canonical packages and version history are maintained on GitHub Releases.'
     ]
   }
 ];
@@ -15,5 +15,5 @@ export function getForgerEMSChangelog(): { version: string; date: string; status
 }
 
 export function getLatestForgerEMSVersion(): string {
-  return forgeremsChangelog[0]?.version || 'v1.2.4-preview.5';
+  return forgeremsChangelog[0]?.version || 'Public Preview';
 }

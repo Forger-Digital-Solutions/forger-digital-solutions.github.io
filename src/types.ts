@@ -1,10 +1,17 @@
 export type ProjectStatusValue =
-  | "ACTIVE RESEARCH"
+  | "RESEARCH"
   | "ACTIVE DEVELOPMENT"
-  | "EXPERIMENTAL"
   | "PRIVATE DEVELOPMENT"
-  | "PLANNED"
+  | "PREVIEW / BETA"
+  | "CONCEPT"
   | "RELEASED";
+
+export interface ProjectSection {
+  title: string;
+  body?: string;
+  items?: string[];
+  note?: string;
+}
 
 export interface ProjectImage {
   src: string;
@@ -14,6 +21,7 @@ export interface ProjectImage {
 
 /** Maps projects to their corresponding ecosystem in the FDS solar system. */
 export type EcosystemCategory = 
+  | "Engineering"
   | "Intelligence" 
   | "Gaming" 
   | "Publishing" 
@@ -37,6 +45,8 @@ export interface Project {
   summary: string;
   description: string;
   status: ProjectStatusValue;
+  /** Optional second status when released software remains under active development. */
+  secondaryStatus?: ProjectStatusValue;
   featured: boolean;
   tags: string[];
   githubUrl?: string;
@@ -48,12 +58,14 @@ export interface Project {
   highlights?: string[];
   building?: string[];
   roadmap?: string;
+  /** Deliberately project-specific deep-page sections. */
+  sections?: ProjectSection[];
   privacyNotice?: string;
   stageLabel?: string;
   flagship?: boolean;
   sortOrder?: number;
   /** Selects the abstract FDS visual identity motif for this project. */
-  visualStyle?: "nodes" | "blocks" | "manuscript" | "civic" | "map";
+  visualStyle?: "nodes" | "gem" | "blocks" | "manuscript" | "civic" | "map";
   /** Optional real hero screenshot/photo; falls back to the abstract visual when absent. */
   heroImage?: ProjectImage;
   /** Optional real media gallery; the section is omitted entirely when empty. */

@@ -83,7 +83,7 @@ export interface KaylaCompany {
 export interface KaylaRoadmapItem {
   id: string;
   name: string;
-  status: 'released' | 'active' | 'experimental' | 'planned' | 'research' | 'aspirational';
+  status: 'released' | 'active' | 'preview' | 'experimental' | 'planned' | 'research' | 'aspirational';
   summary: string;
   category?: string;
 }

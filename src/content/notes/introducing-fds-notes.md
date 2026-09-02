@@ -16,6 +16,6 @@ Most of what happens at FDS lives in code, experiments, and long feedback loops.
 - **Research notes** — ideas we're testing, and what the evidence actually says.
 - **Process** — how we think about tooling, evaluation, and shipping.
 
-Nothing here is a product announcement or a promise of a shipping date. It's a record of work in progress — written in the same spirit as the [Lab](/lab): build, test, measure, learn, evolve.
+Nothing here is a product announcement or a promise of a shipping date. It is a dated record of work in progress, including decisions, constraints, and what changed.
 
 More soon.

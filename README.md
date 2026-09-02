@@ -61,7 +61,7 @@ Preview your production build locally.
   category: "Category Name",
   summary: "Short public summary...",
   description: "Project description...",
-  status: "ACTIVE DEVELOPMENT", // or "ACTIVE RESEARCH", "PRIVATE DEVELOPMENT", etc.
+  status: "ACTIVE DEVELOPMENT", // or "RESEARCH", "PRIVATE DEVELOPMENT", "PREVIEW / BETA", etc.
   featured: false,
   tags: ["tag1", "tag2"],
   focusAreas: ["Area one", "Area two"],   // optional

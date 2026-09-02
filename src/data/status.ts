@@ -10,7 +10,7 @@ export interface StatusMeta {
 // Centralized, plain-language explanations of what each project status means.
 // Used by project pages and the homepage so the copy stays consistent everywhere.
 export const statusMeta: Record<ProjectStatusValue, StatusMeta> = {
-  'ACTIVE RESEARCH': {
+  RESEARCH: {
     short: 'Ongoing experimentation and evaluation.',
     description:
       'Ongoing experimentation, evaluation, and technical development. Architecture and findings may continue to change as evidence is gathered.'
@@ -25,15 +25,15 @@ export const statusMeta: Record<ProjectStatusValue, StatusMeta> = {
     description:
       'Active development is underway, but portions of the project remain intentionally private while the work is being shaped.'
   },
-  EXPERIMENTAL: {
-    short: 'Early exploratory work.',
+  'PREVIEW / BETA': {
+    short: 'Publicly usable prerelease software.',
     description:
-      'Early exploratory work. Direction and scope are still being tested and may shift substantially.'
+      'Publicly usable prerelease software. Features, packaging, and implementation may change between builds.'
   },
-  PLANNED: {
-    short: 'Scoped, not yet in active build.',
+  CONCEPT: {
+    short: 'Defined direction, not an active product build.',
     description:
-      'Scoped and under consideration, but not yet in active development.'
+      'A defined direction or long-term idea that is not yet in active product development.'
   },
   RELEASED: {
     short: 'Available and in use.',

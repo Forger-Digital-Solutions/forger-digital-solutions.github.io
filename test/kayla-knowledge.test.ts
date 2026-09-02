@@ -10,7 +10,7 @@ import { founder } from '../src/data/kayla/company/founder';
 import { faqs } from '../src/data/kayla/support';
 
 describe('Kayla Knowledge - Apps', () => {
-  it('discovers all five current apps plus ForgerEMS', () => {
+  it('discovers the current projects and products', () => {
     expect(apps.length).toBeGreaterThanOrEqual(6);
   });
 
@@ -22,8 +22,8 @@ describe('Kayla Knowledge - Apps', () => {
 
   it('ForgerEMS installer resolves correctly', () => {
     const dl = getForgerEMSDownload();
-    expect(dl.href).toBe('/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip');
-    expect(dl.version).toBe('v1.2.4-preview.5');
+    expect(dl.href).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
+    expect(dl.version).toBe('v1.2.3-preview.1');
     expect(dl.platform).toBe('Windows');
     expect(dl.kind).toBe('archive');
   });
@@ -44,9 +44,9 @@ describe('Kayla Knowledge - ForgerEMS', () => {
   it('has correct metadata', () => {
     expect(forgerems.id).toBe('forgerems');
     expect(forgerems.status).toBe('public-beta');
-    expect(forgerems.category).toBe('Toolkit');
+    expect(forgerems.category).toBe('Technician Workbench');
     expect(forgerems.platforms).toEqual(['Windows']);
-    expect(forgerems.documentation).toBe('https://github.com/forger-digital-solutions/ForgerEMS');
+    expect(forgerems.documentation).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS');
   });
 });
 
@@ -56,7 +56,7 @@ describe('Kayla Knowledge - Roadmap', () => {
   });
 
   it('roadmap states are valid', () => {
-    const validStates = new Set(['released', 'active', 'experimental', 'planned', 'research', 'aspirational']);
+    const validStates = new Set(['released', 'active', 'preview', 'experimental', 'planned', 'research', 'aspirational']);
     for (const item of roadmap) {
       expect(validStates.has(item.status)).toBe(true);
     }
@@ -90,14 +90,15 @@ describe('Kayla Knowledge - Downloads', () => {
   it('download registry includes ForgerEMS', () => {
     const emsDl = downloads.find(d => d.appId === 'forgerems');
     expect(emsDl).toBeDefined();
-    expect(emsDl?.href).toBe('/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip');
+    expect(emsDl?.href).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
   });
 });
 
 describe('Kayla Knowledge - Forged', () => {
   it('forged products load', () => {
     expect(forged.length).toBeGreaterThanOrEqual(1);
-    expect(forged[0].name).toBe('ForgerEMS');
+    expect(forged.map((item) => item.name)).toContain('ForgerEMS');
+    expect(forged.map((item) => item.name)).toContain('CodeForge');
   });
 });
 

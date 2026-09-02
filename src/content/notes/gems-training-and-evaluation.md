@@ -17,4 +17,4 @@ The second thread is compute awareness. Available hardware differs from environm
 
 ## What this note is not
 
-This is a note on research *direction*. It isn't a product announcement, a benchmark claim, or a description of a finished, autonomous pipeline. It's a record of how FDS is thinking about the problem — in the same spirit as the rest of the [Lab](/lab): build, test, measure, learn, evolve.
+This is a note on research *direction*. It is not a product announcement, a benchmark claim, or a description of a finished autonomous pipeline. The point is to document the current hypothesis without presenting it as a completed result.

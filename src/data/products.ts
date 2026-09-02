@@ -1,4 +1,4 @@
-export type ProductPricingModel = 'free' | 'paid' | 'donation' | 'coming-soon' | 'private-beta' | 'public-beta' | 'unavailable';
+export type ProductPricingModel = 'released' | 'free' | 'paid' | 'donation' | 'coming-soon' | 'private-beta' | 'public-beta' | 'unavailable';
 
 export interface Product {
   name: string;
@@ -26,17 +26,34 @@ export interface Product {
 
 export const products: Product[] = [
   {
+    name: "CodeForge",
+    slug: "codeforge",
+    tagline: "Free-first autonomous software engineering for Windows.",
+    description: "CodeForge inspects repositories, plans engineering work, edits code through controlled tools, runs checks, and reviews the result. ForgeZero enforces verified zero-cost cloud routing with no silent paid or local-model fallback.",
+    category: "Developer Tool",
+    platform: ["Windows", "CLI", "VS Code"],
+    status: "released",
+    version: "v0.2.0",
+    pricingModel: "free",
+    projectSlug: "codeforge",
+    downloadUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest",
+    docsUrl: "https://github.com/Forger-Digital-Solutions/CodeForge",
+    releaseNotesUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0",
+    featured: true,
+    comingSoon: false,
+  },
+  {
     name: "ForgerEMS",
     slug: "forgerems",
-    tagline: "Ventoy-based toolkit manager and downloader.",
-    description: "ForgerEMS is a Ventoy-based toolkit manager and downloader for organizing, managing, and deploying bootable toolkits and utilities from a single portable environment.",
-    category: "Toolkit",
+    tagline: "Windows technician workbench for diagnostics, repair, USB systems, and maintenance.",
+    description: "Forger Engineering Maintenance Suite brings USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance into one technician application.",
+    category: "Technician Workbench",
     platform: ["Windows"],
     status: "public-beta",
-    version: "v1.2.4-preview.5",
+    version: "v1.2.3-preview.1",
     pricingModel: "free",
-    downloadUrl: "/downloads/forger-ems/ForgerEMS-v1.2.4-preview.5.zip",
-    docsUrl: "https://github.com/forger-digital-solutions/ForgerEMS",
+    downloadUrl: "https://github.com/Forger-Digital-Solutions/ForgerEMS/releases",
+    docsUrl: "https://github.com/Forger-Digital-Solutions/ForgerEMS",
     videoUrl: "https://www.youtube.com/embed/ILKWS2dNIrg",
     featured: true,
     comingSoon: false,

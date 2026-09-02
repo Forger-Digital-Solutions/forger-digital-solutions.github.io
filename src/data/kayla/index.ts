@@ -29,7 +29,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
 
   if (q.includes('what is forgerems') || q === 'forgerems') {
     return {
-      text: forgerems.description + ' It is currently in public-beta and available for free on Windows.',
+      text: 'ForgerEMS is ' + forgerems.description.replace(/^Forger Engineering Maintenance Suite\s*/i, 'the Forger Engineering Maintenance Suite ').replace(/^ForgerEMS\s*/i, '') + ' It is currently in public preview and available for free on Windows.',
       actions: [
         { type: 'OPEN_DOWNLOAD', label: 'Download ForgerEMS', href: forgerems.download! },
         { type: 'OPEN_GITHUB', label: 'View on GitHub', href: 'https://github.com/forger-digital-solutions/ForgerEMS' }
@@ -38,10 +38,27 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     };
   }
 
+  if ((q.includes('kayla copilot') && q.includes('publisher')) || q.includes('difference between kayla')) {
+    return {
+      text: 'Kayla Copilot is the guide embedded on the FDS website; it answers questions about FDS pages, projects, releases, and support. Kayla AI Publisher is a separate creative product being developed around manuscripts, chapters, revision, visual storytelling, and publishing preparation.',
+      actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
+      sources: ['app-kayla-ai-publisher', 'fds-company']
+    };
+  }
+
+  if (q.includes('what is codeforge') || q === 'codeforge') {
+    const app = apps.find(a => a.id === 'codeforge');
+    return {
+      text: `${app?.name || 'CodeForge'} is a released free-first autonomous software-engineering platform for Windows, CLI, and editor work. It inspects repositories, plans changes, uses controlled tools, runs verification, and refuses silent paid or local-model fallback through ForgeZero.`,
+      actions: [{ type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }],
+      sources: ['app-codeforge', 'release-codeforge']
+    };
+  }
+
   if (q.includes('where can i download forgerems') || q.includes('download forgerems')) {
     const dl = getForgerEMSDownload();
     return {
-      text: `ForgerEMS download: You can download ForgerEMS v${dl.version} for ${dl.platform} here: ${dl.href}`,
+      text: `ForgerEMS is in ${dl.version}. Canonical ${dl.platform} packages and version history are on GitHub Releases: ${dl.href}`,
       actions: [{ type: 'OPEN_DOWNLOAD', label: 'Download ForgerEMS', href: dl.href }],
       sources: ['forgerems-download']
     };
@@ -49,7 +66,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
 
   if (q.includes('how do i install forgerems') || q.includes('install forgerems')) {
     return {
-      text: 'ForgerEMS is distributed as a ZIP archive. Download it, extract the contents, and run the executable on a Windows PC. For detailed instructions, see the GitHub repository.',
+      text: 'ForgerEMS offers portable and installer paths through GitHub Releases. Follow the release instructions, verify the published checksums, and review the preview notices before running it on Windows.',
       actions: [{ type: 'OPEN_GITHUB', label: 'View Docs on GitHub', href: 'https://github.com/forger-digital-solutions/ForgerEMS' }],
       sources: ['forgerems-download']
     };
@@ -74,7 +91,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
   if (q.includes('show me all apps') || q.includes('list all apps') || q.includes('what apps') || q.includes('all apps')) {
     const appList = apps.map(a => `• ${a.name} (${a.status})`).join('\n');
     return {
-      text: `FDS currently works on these initiatives:\n\n${appList}\n\nForgerEMS is also available as a published product on the Forged page.`,
+      text: `FDS currently works on these initiatives:\n\n${appList}\n\nForged lists the software available now, including CodeForge and the ForgerEMS public preview.`,
       actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
       sources: apps.map(a => `app-${a.id}`)
     };
@@ -124,7 +141,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     };
   }
 
-  if (q.includes('which app should i use') || q.includes('which project') || q.includes('recommend')) {
+  if ((q.includes('which') && q.includes('app')) || q.includes('which project') || q.includes('recommend')) {
     return recommendApp(query);
   }
 
@@ -139,13 +156,14 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
   if (q.includes('how do the apps fit together') || q.includes('ecosystem')) {
     return {
       text: `FDS builds a coherent ecosystem of practical software:\n\n` +
-        `• GEMS / Training Grounds is the research foundation — it explores how intelligent systems can be trained, evaluated, and governed.\n` +
-        `• KyraBlox applies AI-assisted development to game creation tooling.\n` +
-        `• Kayla AI Publisher explores intelligent publishing workflows and is also the public face of FDS AI capability.\n` +
-        `• FarmStand Finder connects communities with local food sources.\n` +
-        `• We The People explores civic technology infrastructure.\n` +
-        `• ForgerEMS provides practical toolkit management and is published through Forged.\n\n` +
-        `Research projects become published software through Forged when they reach a releasable state.`,
+        `• CodeForge engineers repositories and also contributes shared engineering foundations across FDS.\n` +
+        `• GEMS develops specialized model intelligence; Training Grounds teaches and evaluates it.\n` +
+        `• KyraBlox understands game projects, scripts, engines, approvals, and validation.\n` +
+        `• Kayla AI Publisher keeps a complete creative project connected from manuscript toward publication.\n` +
+        `• FarmStand Finder helps people find nearby farms, stands, markets, growers, and seasonal food.\n` +
+        `• We The People makes public information and services easier to understand and navigate.\n` +
+        `• ForgerEMS gives technicians diagnostics, USB, drive, driver, and maintenance tools.\n\n` +
+        `Forged is the public shelf for software that can be downloaded, tested, or used now.`,
       actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
       sources: ['fds-ecosystem', 'fds-forged']
     };
@@ -180,7 +198,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
   }
 
   if (q.includes('what version is this') || q.includes('current version') || q.includes('latest version') || q.includes('what version')) {
-    const appId = context?.entity;
+    const appId = q.includes('forgerems') ? 'forgerems' : q.includes('codeforge') ? 'codeforge' : context?.entity;
     const release = appId ? releases.find(r => r.appId === appId) : releases[0];
     if (release) {
       return {
@@ -200,7 +218,7 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   if (q.includes('game') || q.includes('development tool') || q.includes('engine') || q.includes('roblox') || q.includes('unreal') || q.includes('unity')) {
     const app = apps.find(a => a.id === 'kyrablox');
     return {
-      text: `For game development and AI-assisted tooling, ${app?.name || 'KyraBlox'} is the FDS project exploring specialized developer workflows across modern game engines.`,
+      text: `For project-aware game development, ${app?.name || 'KyraBlox'} inspects the game project, plans against its state, and governs proposed changes, validation, and recovery. Roblox has the deepest current integration; other engines have clearly labeled limits.`,
       actions: [{ type: 'OPEN_APP', label: 'View KyraBlox', href: '/projects/kyrablox' }],
       sources: ['app-kyrablox']
     };
@@ -209,7 +227,7 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   if (q.includes('publish') || q.includes('writing') || q.includes('editing') || q.includes('multilingual') || q.includes('content')) {
     const app = apps.find(a => a.id === 'kayla-ai-publisher');
     return {
-      text: `For publishing workflows and AI-assisted writing, ${app?.name || 'Kayla AI Publisher'} explores intelligent content tooling from draft through production.`,
+      text: `For manuscripts and publishing, ${app?.name || 'Kayla AI Publisher'} is the continuous creative workspace for chapters, characters, revision, visual storytelling, and publication preparation.`,
       actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
       sources: ['app-kayla-ai-publisher']
     };
@@ -218,7 +236,7 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   if (q.includes('research') || q.includes('training') || q.includes('evaluation') || q.includes('ai model') || q.includes('adaptive compute')) {
     const app = apps.find(a => a.id === 'gems-training-grounds');
     return {
-      text: `For AI research and training infrastructure, ${app?.name || 'GEMS / Training Grounds'} is FDS's flagship research initiative.`,
+      text: `For model learning and evaluation, ${app?.name || 'GEMS / Training Grounds'} develops specialized intelligences through open foundations, post-training, curriculum, trials, and checkpoints.`,
       actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
       sources: ['app-gems-training-grounds']
     };
@@ -236,14 +254,14 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   if (q.includes('toolkit') || q.includes('utility') || q.includes('bootable') || q.includes('download') || q.includes('windows')) {
     const dl = getForgerEMSDownload();
     return {
-      text: `For Windows toolkit management, ForgerEMS organizes and deploys bootable toolkits. You can download it here: ${dl.href}`,
+      text: `For Windows technician work, ForgerEMS covers system information, drive validation, USB intelligence, toolkit creation, driver guidance, and local-first assistance. Releases: ${dl.href}`,
       actions: [{ type: 'OPEN_DOWNLOAD', label: 'Download ForgerEMS', href: dl.href }],
       sources: ['forgerems-product']
     };
   }
 
   return {
-    text: 'It depends on your needs. For AI research and training, see GEMS / Training Grounds. For game development tooling, see KyraBlox. For publishing workflows, see Kayla AI Publisher. For local food discovery, see FarmStand Finder. For general utilities, check ForgerEMS on the Forged page.',
+    text: 'It depends on the job. Choose CodeForge for repository engineering, GEMS / Training Grounds for model research, KyraBlox for game projects, Kayla AI Publisher for long-form creative work, FarmStand Finder for nearby food, We The People for civic information, or ForgerEMS for technician diagnostics and maintenance.',
     actions: [{ type: 'OPEN_PAGE', label: 'View Projects', href: '/projects' }],
     sources: apps.map(a => `app-${a.id}`)
   };
@@ -255,16 +273,16 @@ function compareApps(query: string): { text: string; title?: string; actions?: K
   if (q.includes('gems') && q.includes('kayla')) {
     return {
       text: `GEMS / Training Grounds vs Kayla AI Publisher:\n\n` +
-        `• GEMS is AI research and training infrastructure — it explores how models are trained, evaluated, and governed.\n` +
-        `• Kayla AI Publisher is a publishing platform — it explores AI-assisted writing, editing, and content workflows.\n` +
-        `They are complementary: GEMS produces the research, Kayla applies AI assistance to creative and publishing tasks.`,
+        `• GEMS is a model family and learning program built around specialization, curriculum, trials, and evaluation.\n` +
+        `• Kayla AI Publisher is a standalone creative-project workspace for manuscripts, revision, visual storytelling, and publishing preparation.\n` +
+        `GEMS research may inform future model capability, but Kayla remains its own product.`,
       sources: ['app-gems-training-grounds', 'app-kayla-ai-publisher']
     };
   }
 
   if (q.includes('kyrablox') && q.includes('game')) {
     return {
-      text: `KyraBlox is an AI-assisted game development platform exploring tooling for multiple engines (Roblox, Unreal, Unity, Godot). Unlike game engines themselves, KyraBlox focuses on developer tooling and workflows — helping builders while keeping creative direction in human hands.`,
+      text: `KyraBlox is a local-first, project-aware game-development platform. Roblox has an integrated guarded transaction path; Unreal has a fixture-validated bridge; Unity and Godot are currently planning or file-workflow paths. It does not claim equal live integration across every engine.`,
       sources: ['app-kyrablox']
     };
   }
@@ -273,7 +291,7 @@ function compareApps(query: string): { text: string; title?: string; actions?: K
     return {
       text: `FarmStand Finder and We The People are both community-focused but serve different purposes:\n\n` +
         `• FarmStand Finder is a local discovery app for finding farm stands, growers, and markets.\n` +
-        `• We The People is a broader civic technology platform for accessible digital tools and infrastructure.\n` +
+        `• We The People focuses on understandable public information, services, and civic navigation.\n` +
         `FarmStand Finder is in active development; We The People remains in private development.`,
       sources: ['app-farmstand-finder', 'app-we-the-people']
     };
@@ -282,31 +300,31 @@ function compareApps(query: string): { text: string; title?: string; actions?: K
   if (q.includes('forgerems') && q.includes('forged')) {
     return {
       text: `ForgerEMS is a specific product available through Forged:\n\n` +
-        `• ForgerEMS is the Ventoy-based toolkit manager and downloader.\n` +
-        `• Forged is the FDS storefront that publishes and distributes ForgerEMS and future products.\n` +
-        `Think of Forged as the app store and ForgerEMS as one of the apps available there.`,
+        `• ForgerEMS is a Windows technician workbench for diagnostics, USB systems, drive validation, driver guidance, and maintenance.\n` +
+        `• Forged is the public shelf for FDS software that can be downloaded, tested, or used now.\n` +
+        `ForgerEMS is one product listed there; CodeForge is another.`,
       sources: ['forgerems-product', 'forged-page']
     };
   }
 
   return {
-    text: 'FDS apps serve different purposes. GEMS is research infrastructure. KyraBlox is game development tooling. Kayla AI Publisher is publishing software. FarmStand Finder is local discovery. ForgerEMS is a Windows toolkit manager. We The People is private civic technology. Which area interests you?',
+    text: 'FDS products serve different jobs. CodeForge engineers repositories. GEMS learns through Training Grounds. KyraBlox understands game projects. Kayla AI Publisher carries creative works toward publication. FarmStand Finder handles nearby food discovery. ForgerEMS is a technician workbench. We The People focuses on civic information.',
     sources: apps.slice(0, 3).map(a => `app-${a.id}`)
   };
 }
 
 function synthesizeEcosystem(): { text: string; title?: string; actions?: KaylaSafeAction[]; sources: string[] } {
   return {
-    text: `Forger Digital Solutions (FDS) is an independent software research and development studio focused on intelligent systems, developer infrastructure, creative technology, and experimental computing.\n\n` +
+    text: `Forger Digital Solutions (FDS) is an independent software and AI engineering studio.\n\n` +
       `Current products:\n` +
-      `• GEMS / Training Grounds — Flagship AI research initiative exploring adaptable model training, evaluation, and evidence-driven development.\n` +
-      `• KyraBlox — AI-assisted game development tooling across multiple engines.\n` +
-      `• Kayla AI Publisher — AI-assisted publishing and content workflows.\n` +
+      `• CodeForge — released free-first autonomous software engineering for Windows.\n` +
+      `• GEMS / Training Grounds — model specialization, curriculum, and evaluation research.\n` +
+      `• KyraBlox — project-aware game development with honestly labeled engine maturity.\n` +
+      `• Kayla AI Publisher — one connected workspace for long-form creative projects.\n` +
       `• FarmStand Finder — Community-focused local food discovery.\n` +
       `• We The People — Private civic technology platform.\n` +
-      `• ForgerEMS — Published toolkit manager available on Forged.\n\n` +
-      `Research direction: GEMS explores adaptive compute, evaluation systems, and governed intelligence.\n\n` +
-      `Forged is the FDS app storefront where releasable software is published.\n\n` +
+      `• ForgerEMS — public-preview Windows technician workbench available through Forged.\n\n` +
+      `Forged is the public shelf for software people can use now. Lab owns the investigation and validation method. Notes records recent changes and findings.\n\n` +
       `Community plans include affordable-community concepts, technology reuse, hardware donations, and community gardens — all currently in the concept/exploration phase.\n\n` +
       `The ecosystem is designed so research findings become reusable architecture after surviving real-world use, and projects become published software through Forged when ready.`,
     actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],

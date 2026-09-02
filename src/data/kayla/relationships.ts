@@ -5,31 +5,31 @@ export const productRelationships: KaylaProductRelationship[] = [
     from: 'gems-training-grounds',
     to: 'kyrablox',
     relation: 'relatedTo',
-    description: 'Both explore AI-assisted development, but GEMS focuses on training/evaluation while KyraBlox focuses on game creation tooling.'
+    description: 'GEMS develops model intelligence; KyraBlox applies project awareness, governed planning, and engine-specific capability to game creation.'
   },
   {
     from: 'gems-training-grounds',
     to: 'kayla-ai-publisher',
     relation: 'relatedTo',
-    description: 'GEMS research on intelligent systems informs the AI-assisted workflows explored in Kayla AI Publisher.'
+    description: 'GEMS research may inform future model capability, while Kayla AI Publisher remains a distinct creative-project product.'
   },
   {
     from: 'kayla-ai-publisher',
     to: 'kayla-ai-publisher',
-    relation: 'partOf',
-    description: 'Kayla AI Publisher is part of the broader FDS ecosystem and also powers the Kayla Copilot interface.'
+    relation: 'companionTo',
+    description: 'Kayla AI Publisher is the standalone creative workspace. Kayla Copilot is the guide embedded on the FDS website; they share a name, not a product surface.'
   },
   {
     from: 'forgerems',
     to: 'forged',
     relation: 'publishedThrough',
-    description: 'ForgerEMS is published and distributed through the Forged storefront.'
+    description: 'ForgerEMS is listed through Forged, with packages and version history sourced from GitHub Releases.'
   },
   {
     from: 'we-the-people',
     to: 'farmstand-finder',
     relation: 'supports',
-    description: 'Both are community-focused platforms, with We The People providing civic infrastructure and FarmStand Finder providing local discovery.'
+    description: 'Both serve community needs: We The People focuses on public information and services, while FarmStand Finder focuses on nearby food and producers.'
   },
   {
     from: 'gems-training-grounds',

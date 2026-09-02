@@ -92,7 +92,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
   { 
     id: 'forged', 
     name: 'FORGED', 
-    subtitle: 'BUILT TO LAST', 
+    subtitle: 'PUBLIC SOFTWARE',
     href: '/forged', 
     icon: 'forge', 
     color: '#c2d5f4', 

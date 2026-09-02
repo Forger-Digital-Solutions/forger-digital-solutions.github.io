@@ -24,6 +24,7 @@ const ogImage = project.ogImage ?? project.heroImage?.src;
 
 // Map ecosystem to styles
 const ecosystemStyles: Record<string, { color: string; bg: string }> = {
+  'Engineering': { color: '#5a82e8', bg: 'rgba(90,130,232,.12)' },
   'Intelligence': { color: '#4f8fff', bg: 'rgba(79,143,255,.12)' },
   'Gaming': { color: '#b487ff', bg: 'rgba(180,135,255,.12)' },
   'Publishing': { color: '#d9813f', bg: 'rgba(217,129,63,.12)' },
@@ -52,6 +53,7 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
           </a>
         )}
         <ProjectStatus status={project.status} />
+        {project.secondaryStatus && <ProjectStatus status={project.secondaryStatus} />}
       </div>
       
       <h1 class="project-hero__title">{project.name}</h1>
@@ -80,6 +82,23 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     <!-- Main Content -->
     <div class="project-layout">
       <div class="project-content">
+        {project.sections && project.sections.map((section, index) => (
+          <section class="project-section" aria-labelledby={`project-section-${index}`}>
+            <h2 id={`project-section-${index}`} class="section-title">{section.title}</h2>
+            {section.body && <p class="section-text">{section.body}</p>}
+            {section.items && section.items.length > 0 && (
+              <ul class="building-grid section-items">
+                {section.items.map((item) => (
+                  <li class="building-item"><span class="building-icon" aria-hidden="true">+</span><span>{item}</span></li>
+                ))}
+              </ul>
+            )}
+            {section.note && <p class="section-note"><strong>Status note:</strong> {section.note}</p>}
+          </section>
+        ))}
+
+        {!project.sections && (
+          <>
         <!-- Overview -->
         <section class="project-section" aria-labelledby="overview">
           <h2 id="overview" class="section-title">Overview</h2>
@@ -144,6 +163,8 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
             </ul>
           </section>
         )}
+          </>
+        )}
 
         <!-- Privacy Notice -->
         {project.privacyNotice && (
@@ -157,8 +178,9 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
       <!-- Sidebar -->
       <aside class="project-sidebar">
         <div class="sidebar-card">
-          <h3 class="sidebar-title">Development Status</h3>
+          <h3 class="sidebar-title">Public Status</h3>
           <ProjectStatus status={project.status} />
+          {project.secondaryStatus && <div class="sidebar-secondary"><ProjectStatus status={project.secondaryStatus} /></div>}
           <p class="sidebar-desc">{status.description}</p>
         </div>
 
@@ -197,34 +219,8 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
      <!-- GEMS Special Section -->
     {isGems && (
       <section class="gems-section" aria-labelledby="gems-systems">
-        <p class="gems-kicker">Conceptual Research Flow</p>
-        <h2 id="gems-systems" class="gems-title">A system designed to learn from evidence</h2>
-        <div class="gems-grid">
-          <div class="gems-flow">
-            <span class="gems-step">Curriculum</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Training</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Evaluation</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Evidence</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Certification</span>
-          </div>
-          <div class="gems-flow">
-            <span class="gems-step">Available Compute</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Hardware Awareness</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Execution Planning</span>
-            <span class="gems-arrow">↓</span>
-            <span class="gems-step">Training / Evaluation</span>
-          </div>
-        </div>
-        <p class="gems-note">
-          These diagrams describe FDS research concepts, not an exposed product architecture or performance claim.
-        </p>
-
+        <p class="gems-kicker">The Model Family</p>
+        <h2 id="gems-systems" class="gems-title">Meet the GEMS and Training Grounds</h2>
         <GemsDeep />
       </section>
     )}
@@ -398,6 +394,9 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     font-size: 1rem;
     line-height: 1.75;
   }
+  .section-items { margin-top: 1rem; }
+  .section-note { max-width: 44rem; margin: .85rem 0 0; padding: .75rem .9rem; border-left: 3px solid var(--eco-color); background: color-mix(in srgb, var(--eco-color) 7%, transparent); color: var(--color-text-muted); font-size: .86rem; line-height: 1.6; }
+  .sidebar-secondary { margin-top: .5rem; }
 
   /* Building Grid */
   .building-grid {

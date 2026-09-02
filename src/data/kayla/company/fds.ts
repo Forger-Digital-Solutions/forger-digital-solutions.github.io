@@ -5,14 +5,14 @@ export const fds: KaylaCompany = {
   name: siteConfig.name,
   shortName: siteConfig.shortName,
   description: siteConfig.description,
-  mission: 'Independent software research and development focused on intelligent systems, developer tooling, creative technology, training infrastructure, and experimental computing.',
+  mission: 'Independent software and AI engineering across autonomous development, model research, game creation, publishing, civic information, local discovery, and technician tools.',
   vision: {
-    current: 'Building software that learns, adapts, and creates — with a disciplined approach to intelligent systems, creative tools, and practical software.',
-    activeDevelopment: 'Active development spans AI-assisted publishing (Kayla AI Publisher), game-development tooling (KyraBlox), local discovery (FarmStand Finder), and private civic technology (We The People). ForgerEMS is published as a usable toolkit product.',
-    research: 'Flagship research is GEMS / Training Grounds — an experimental intelligence engineering ecosystem exploring adaptable model training, evaluation, governance, and evidence-driven development across flexible compute environments.',
-    planned: 'Continued expansion of AI-assisted development workflows, multilingual publishing support, civic technology infrastructure, and local discovery features. Community-impact programs remain in concept phase.',
+    current: 'Shipping and testing focused products: autonomous repository engineering, model specialization research, project-aware game development, long-form publishing, civic information, local-food discovery, and Windows technician workflows.',
+    activeDevelopment: 'Active work spans CodeForge, GEMS / Training Grounds, KyraBlox, Kayla AI Publisher, FarmStand Finder, private civic technology, and the ForgerEMS public preview.',
+    research: 'GEMS / Training Grounds studies how strong open models can be specialized through post-training, curriculum design, evaluation, tool use, governance, and compute-aware execution.',
+    planned: 'Near-term product work covers CodeForge verification and routing, KyraBlox project integrations, multilingual publishing workflows, official-source civic navigation, and better local-food discovery. Community programs remain concepts.',
     aspirational: 'Exploring affordable-community concepts, community gardens, technology reuse programs, and open planning tools that help people understand and manage shared infrastructure.',
-    longTerm: 'Building a coherent ecosystem of practical, evidence-driven software where research, development, and community needs inform each other — from intelligent training systems to accessible civic tools and community-focused discovery platforms.'
+    longTerm: 'Let lessons from shipped engineering tools, model experiments, creative products, and community-facing software improve one another while each product keeps its own purpose and technical boundaries.'
   },
   philosophy: [
     'Evidence over assumptions — results should provide evidence that the intended objective was achieved.',
@@ -21,15 +21,17 @@ export const fds: KaylaCompany = {
     'Build through experimentation — research findings should become reusable architecture only after surviving meaningful real-world use.'
   ],
   productEcosystem: [
-    'GEMS / Training Grounds — experimental intelligence engineering ecosystem',
-    'KyraBlox — AI-assisted game development platform',
-    'Kayla AI Publisher — AI-assisted publishing platform',
+    'CodeForge — free-first autonomous software-engineering platform',
+    'GEMS / Training Grounds — specialized model research and learning environment',
+    'KyraBlox — project-aware game-development platform',
+    'Kayla AI Publisher — continuous creative-project and publishing workspace',
     'We The People — private-development civic technology platform',
     'FarmStand Finder — community-focused local discovery application',
-    'ForgerEMS — Ventoy-based toolkit manager and downloader'
+    'ForgerEMS — Windows technician workbench and engineering maintenance suite'
   ],
   currentProjects: [
-    'GEMS / Training Grounds (ACTIVE RESEARCH)',
+    'CodeForge (RELEASED + ACTIVE DEVELOPMENT)',
+    'GEMS / Training Grounds (RESEARCH)',
     'KyraBlox (ACTIVE DEVELOPMENT)',
     'Kayla AI Publisher (ACTIVE DEVELOPMENT)',
     'We The People (PRIVATE DEVELOPMENT)',
@@ -37,7 +39,7 @@ export const fds: KaylaCompany = {
   ],
   futurePlans: [
     'Continued GEMS research, evaluation, and adaptive-compute experimentation.',
-    'Expanded AI-assisted development workflows and tooling for KyraBlox.',
+    'Deeper project-aware game-development workflows and editor integrations for KyraBlox.',
     'Publishing and multilingual workflow development for Kayla AI Publisher.',
     'Continued private platform development for We The People.',
     'Local discovery features and application development for FarmStand Finder.'
@@ -60,8 +62,8 @@ export const fds: KaylaCompany = {
   affordableTechnology: 'FDS is exploring ways technology and transparent systems could support more affordable, sustainable communities — from shared-resource planning to open tools.',
   affordableCommunityConcepts: 'Exploring ways technology and transparent systems could support more affordable, sustainable communities — from shared-resource planning to open tools that help people understand and manage shared infrastructure.',
   communityGardens: 'Community growing spaces, local food access, and shared infrastructure are on the long-term concept list. Ideas like sensor-driven growing data and open planning tools may connect FDS work with local food resilience.',
-  forged: 'Forged is the FDS storefront for publicly available software, applications, tools, and digital products. Research projects become published software here when they reach a releasable state.',
-  downloads: 'Public downloads include ForgerEMS, a Ventoy-based toolkit manager and downloader for organizing, managing, and deploying bootable toolkits and utilities.',
+  forged: 'Forged is the public shelf for FDS software that can be downloaded, tested, or used now. CodeForge and ForgerEMS both remain under active development while public builds are available.',
+  downloads: 'Public release paths include CodeForge for autonomous software engineering and ForgerEMS for technician diagnostics, USB work, repair guidance, and maintenance.',
   supportContact: `Email is the primary contact method: ${siteConfig.supportEmail}. Community channels include GitHub, YouTube, Discord, and LinkedIn.`,
   githubUrl: siteConfig.githubUrl,
   youtubeUrl: siteConfig.youtubeUrl,
