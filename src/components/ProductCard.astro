@@ -1,5 +1,6 @@
 ---
 import type { Product } from '../data/products';
+import VisualEvidence from './VisualEvidence.astro';
 
 interface Props {
   product: Product;
@@ -28,16 +29,28 @@ const statusLabel = {
   <p class="product-card__tagline">{product.tagline}</p>
   <p class="product-card__description">{product.description}</p>
 
+  {product.visual && (
+    <VisualEvidence
+      src={product.visual.src}
+      alt={product.visual.alt}
+      caption={product.visual.caption ?? ''}
+      state={product.visual.state}
+    />
+  )}
+
   {product.videoUrl && (
-    <div class="product-card__video">
-      <iframe
-        src={product.videoUrl}
-        title={`${product.name} video`}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        loading="lazy"
-      ></iframe>
-    </div>
+    <>
+      <div class="product-card__video">
+        <iframe
+          src={product.videoUrl}
+          title={`${product.name} public preview video`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+      <p class="product-card__visual-note">Public preview video; this is the current product evidence for the prerelease build.</p>
+    </>
   )}
 
   <div class="product-card__meta">
@@ -179,5 +192,10 @@ const statusLabel = {
     width: 100%;
     aspect-ratio: 16 / 9;
     border: 0;
+  }
+  .product-card__visual-note {
+    margin: -.2rem 0 0;
+    color: var(--color-text-subtle);
+    font: .68rem/1.45 var(--font-mono);
   }
 </style>

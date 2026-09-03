@@ -8,6 +8,7 @@ import NoteCard from '../../components/NoteCard.astro';
 import GemsDeep from '../../components/GemsDeep.astro';
 import { statusMeta } from '../../data/status';
 import { getPublishedNotes } from '../../lib/notes';
+import VisualEvidence from '../../components/VisualEvidence.astro';
 
 export function getStaticPaths() {
   return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
@@ -16,6 +17,11 @@ export function getStaticPaths() {
 const { project } = Astro.props;
 const relatedProjects = projects.filter((item) => item.slug !== project.slug).sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99)).slice(0, 3);
 const isGems = project.slug === 'gems-training-grounds';
+const heroEvidenceState = project.slug === 'codeforge'
+  ? 'release'
+  : project.heroImage?.src.endsWith('.svg')
+    ? 'research'
+    : 'development';
 const status = statusMeta[project.status];
 const projectNotes = (await getPublishedNotes())
   .filter((note) => note.data.projectSlug === project.slug)
@@ -70,14 +76,19 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     </header>
 
     <!-- Visual -->
-    <figure class="project-visual">
-      {project.heroImage
-        ? <img class="project-visual__img" src={project.heroImage.src} alt={project.heroImage.alt} loading="lazy" decoding="async" />
-        : <ProjectVisual project={project} variant="hero" />}
-      {project.heroImage?.caption && (
-        <figcaption class="project-visual__caption">{project.heroImage.caption}</figcaption>
-      )}
-    </figure>
+    {project.heroImage ? (
+      <VisualEvidence
+        src={project.heroImage.src}
+        alt={project.heroImage.alt}
+        caption={project.heroImage.caption ?? ''}
+        state={heroEvidenceState}
+        eager
+      />
+    ) : (
+      <figure class="project-visual">
+        <ProjectVisual project={project} variant="hero" />
+      </figure>
+    )}
 
     <!-- Main Content -->
     <div class="project-layout">
@@ -231,10 +242,12 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
         <h2 id="gallery" class="section-title">Project Media</h2>
         <div class="gallery-grid">
           {project.gallery.map((item) => (
-            <figure class="gallery-item">
-              <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
-              {item.caption && <figcaption>{item.caption}</figcaption>}
-            </figure>
+            <VisualEvidence
+              src={item.src}
+              alt={item.alt}
+              caption={item.caption ?? ''}
+              state={item.src.endsWith('.svg') ? 'conceptual' : 'development'}
+            />
           ))}
         </div>
       </section>

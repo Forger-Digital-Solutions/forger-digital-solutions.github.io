@@ -1,4 +1,5 @@
 import type { Project } from '../types';
+import { visualAssets } from './visuals';
 
 /** Canonical public project records. Summaries feed cards/metadata; sections feed detail pages. */
 export const projects: Project[] = [
@@ -33,7 +34,8 @@ export const projects: Project[] = [
     websiteUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest',
     documentationUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge#readme',
     roadmap: 'Broader repository intelligence, editor integration, verified provider coverage, and autonomous engineering depth.',
-    accentColor: '#5a82e8', visualStyle: 'nodes', sortOrder: 1
+    accentColor: '#5a82e8', visualStyle: 'nodes', sortOrder: 1,
+    heroImage: visualAssets.codeforgeWorkspace
   },
   {
     id: 'gems-training-grounds', slug: 'gems-training-grounds', name: 'GEMS / Training Grounds', shortName: 'GEMS',
@@ -58,7 +60,9 @@ export const projects: Project[] = [
       { title: 'Long-Term Direction', body: 'As datasets, compute, funding, and research capacity expand, GEMS may move toward deeper FDS-developed foundations and eventually full foundation-model work. Those are research directions—not shipped capability claims.' }
     ],
     roadmap: 'Post-training, specialization, controlled capability advancement, and increasingly FDS-developed foundations over time.',
-    accentColor: '#2f6bff', visualStyle: 'gem', sortOrder: 2
+    accentColor: '#2f6bff', visualStyle: 'gem', sortOrder: 2,
+    heroImage: visualAssets.gemsFamily,
+    gallery: [visualAssets.trainingGrounds]
   },
   {
     id: 'kyrablox', slug: 'kyrablox', name: 'KyraBlox',
@@ -85,7 +89,8 @@ export const projects: Project[] = [
       { title: 'Multi-Engine Direction', body: 'Unreal currently has a fixture-validated bridge and plugin without certified live editor mutation. Unity, Godot, desktop/web/2D, and custom-engine paths support planning or file-oriented work at different maturity levels. Broader live integration remains in development.' }
     ],
     roadmap: 'Deeper live engine validation, provider certification, focused-agent product packaging, and broader project-aware development coverage.',
-    accentColor: '#b487ff', visualStyle: 'blocks', sortOrder: 3
+    accentColor: '#b487ff', visualStyle: 'blocks', sortOrder: 3,
+    heroImage: visualAssets.kyrabloxCommandCenter,
   },
   {
     id: 'kayla-ai-publisher', slug: 'kayla-ai-publisher', name: 'Kayla AI Publisher', shortName: 'Kayla Publisher',

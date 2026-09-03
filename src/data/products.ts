@@ -1,4 +1,9 @@
+import type { ProjectImage } from '../types';
+import { visualAssets } from './visuals';
+
 export type ProductPricingModel = 'released' | 'free' | 'paid' | 'donation' | 'coming-soon' | 'private-beta' | 'public-beta' | 'unavailable';
+
+export type ProductVisual = ProjectImage & { state: 'release' | 'development' | 'research' | 'conceptual' };
 
 export interface Product {
   name: string;
@@ -14,6 +19,7 @@ export interface Product {
   icon?: string;
   image?: string;
   gallery?: string[];
+  visual?: ProductVisual;
   projectSlug?: string;
   downloadUrl?: string;
   purchaseUrl?: string;
@@ -39,6 +45,7 @@ export const products: Product[] = [
     downloadUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest",
     docsUrl: "https://github.com/Forger-Digital-Solutions/CodeForge",
     releaseNotesUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0",
+    visual: visualAssets.codeforgeWorkspace,
     featured: true,
     comingSoon: false,
   },

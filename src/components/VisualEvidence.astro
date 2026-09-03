@@ -1,0 +1,92 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption: string;
+  state?: 'release' | 'development' | 'research' | 'conceptual';
+  eager?: boolean;
+}
+
+const { src, alt, caption, state = 'development', eager = false } = Astro.props;
+const stateLabels = {
+  release: 'Release capture',
+  development: 'Current development build',
+  research: 'Research artifact',
+  conceptual: 'Conceptual diagram',
+};
+---
+
+<figure class="visual-evidence" data-state={state}>
+  <div class="visual-evidence__frame">
+    <img
+      src={src}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </div>
+  <figcaption class="visual-evidence__caption">
+    <span class="visual-evidence__state">{stateLabels[state]}</span>
+    <span class="visual-evidence__text">{caption}</span>
+  </figcaption>
+</figure>
+
+<style>
+  .visual-evidence {
+    margin: 0;
+  }
+
+  .visual-evidence__frame {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: #070b12;
+    box-shadow: var(--shadow-md), inset 0 1px rgba(255,255,255,.045);
+  }
+
+  .visual-evidence__frame::before {
+    position: absolute;
+    z-index: 1;
+    top: .7rem;
+    left: .7rem;
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: var(--visual-state-color, var(--color-accent-bright));
+    box-shadow: 0 0 10px var(--visual-state-color, var(--color-accent-bright));
+    content: '';
+  }
+
+  .visual-evidence img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .visual-evidence__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem .8rem;
+    align-items: baseline;
+    margin-top: .6rem;
+    color: var(--color-text-subtle);
+    font: .72rem/1.5 var(--font-mono);
+  }
+
+  .visual-evidence__state {
+    color: var(--visual-state-color, var(--color-accent-bright));
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  .visual-evidence[data-state='release'] { --visual-state-color: #78ce9a; }
+  .visual-evidence[data-state='development'] { --visual-state-color: #6fa3ff; }
+  .visual-evidence[data-state='research'] { --visual-state-color: #c18cff; }
+  .visual-evidence[data-state='conceptual'] { --visual-state-color: #e9ba61; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .visual-evidence__frame { box-shadow: var(--shadow-sm); }
+  }
+</style>

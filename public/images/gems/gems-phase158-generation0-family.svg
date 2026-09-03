@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">GEMS Phase 158 Generation 0 family strategy</title>
+  <desc id="desc">Selected open foundations flow through GEMS specialization and Training Grounds evaluation into four developing lineages.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1424"/><stop offset="1" stop-color="#050910"/></linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#4f8fff" stop-opacity=".2"/><stop offset=".5" stop-color="#8fbcff"/><stop offset="1" stop-color="#4f8fff" stop-opacity=".2"/></linearGradient>
+  </defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <g fill="none" stroke="#9fb9e8" stroke-opacity=".18"><path d="M42 84H1158M42 596H1158"/><path d="M96 42V638M1104 42V638"/></g>
+  <text x="64" y="70" fill="#89aef9" font-family="monospace" font-size="18" letter-spacing="3">GEMS // PHASE 158 // GENERATION 0</text>
+  <text x="64" y="112" fill="#eaf1ff" font-family="Inter,Arial,sans-serif" font-size="29" font-weight="700">Foundation strategy → specialized intelligence</text>
+  <g font-family="monospace" font-size="15">
+    <rect x="64" y="182" width="250" height="118" rx="16" fill="#101c30" stroke="#527bc4"/>
+    <text x="88" y="218" fill="#8fb5ff" font-weight="700">SELECTED OPEN</text><text x="88" y="242" fill="#8fb5ff" font-weight="700">FOUNDATIONS</text>
+    <text x="88" y="270" fill="#b7c7e4">Distinct upstream candidates</text><text x="88" y="291" fill="#7789a7">acquisition / training pending</text>
+    <path d="M314 241H390" stroke="url(#line)" stroke-width="3"/><path d="m380 232 12 9-12 9" fill="none" stroke="#8fbcff" stroke-width="3"/>
+    <rect x="392" y="182" width="220" height="118" rx="16" fill="#12233a" stroke="#4f8fff"/>
+    <text x="418" y="225" fill="#9cc1ff" font-weight="700">GEMS</text><text x="418" y="250" fill="#eaf1ff" font-size="20" font-weight="700">SPECIALIZATION</text><text x="418" y="280" fill="#8ea2c1">lineage-specific post-training</text>
+    <path d="M612 241H688" stroke="url(#line)" stroke-width="3"/><path d="m678 232 12 9-12 9" fill="none" stroke="#8fbcff" stroke-width="3"/>
+    <rect x="690" y="182" width="250" height="118" rx="16" fill="#18233b" stroke="#6a8fd9"/>
+    <text x="716" y="225" fill="#a8c5ff" font-weight="700">TRAINING GROUNDS</text><text x="716" y="252" fill="#eaf1ff" font-size="18" font-weight="700">EVALUATION + ADVANCEMENT</text><text x="716" y="280" fill="#8ea2c1">checkpoints, held-out evidence, gates</text>
+  </g>
+  <path d="M815 302V352M815 352H184M815 352H1016M184 352V390M462 352V390M740 352V390M1016 352V390" fill="none" stroke="#698fdc" stroke-opacity=".7" stroke-width="2"/>
+  <g font-family="Inter,Arial,sans-serif">
+    <g><rect x="64" y="392" width="240" height="148" rx="16" fill="#151e32" stroke="#e0b84f"/><text x="88" y="430" fill="#f2ca60" font-size="26" font-weight="700">TOPAZ</text><text x="88" y="461" fill="#e8efff" font-size="17">General intelligence</text><text x="88" y="488" fill="#9eacc4" font-size="15">orchestration + planning</text><text x="88" y="516" fill="#7f91ad" font-family="monospace" font-size="13">developing lineage</text></g>
+    <g><rect x="342" y="392" width="240" height="148" rx="16" fill="#151e32" stroke="#5b8fff"/><text x="366" y="430" fill="#79a8ff" font-size="26" font-weight="700">SAPPHIRE</text><text x="366" y="461" fill="#e8efff" font-size="17">Software engineering</text><text x="366" y="488" fill="#9eacc4" font-size="15">coding + repair</text><text x="366" y="516" fill="#7f91ad" font-family="monospace" font-size="13">developing lineage</text></g>
+    <g><rect x="620" y="392" width="240" height="148" rx="16" fill="#151e32" stroke="#68c9ad"/><text x="644" y="430" fill="#79d8bc" font-size="26" font-weight="700">PERIDOT</text><text x="644" y="461" fill="#e8efff" font-size="17">Math + science</text><text x="644" y="488" fill="#9eacc4" font-size="15">technical reasoning</text><text x="644" y="516" fill="#7f91ad" font-family="monospace" font-size="13">developing lineage</text></g>
+    <g><rect x="898" y="392" width="240" height="148" rx="16" fill="#151e32" stroke="#c18cff"/><text x="922" y="430" fill="#d2a8ff" font-size="26" font-weight="700">GARNET</text><text x="922" y="461" fill="#e8efff" font-size="17">Multimodal + publishing</text><text x="922" y="488" fill="#9eacc4" font-size="15">documents + visual context</text><text x="922" y="516" fill="#7f91ad" font-family="monospace" font-size="13">developing lineage</text></g>
+  </g>
+  <text x="64" y="614" fill="#9aabc5" font-family="monospace" font-size="14">STATUS NOTE: foundation candidates are not deployed GEMS models; governed acquisition, training, and evaluation still remain.</text>
+</svg>

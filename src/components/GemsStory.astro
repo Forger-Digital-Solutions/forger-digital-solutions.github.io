@@ -1,6 +1,8 @@
 ---
 import { gems, learningStages, affordability } from '../data/gems';
 import SectionHeader from './SectionHeader.astro';
+import VisualEvidence from './VisualEvidence.astro';
+import { visualAssets } from '../data/visuals';
 ---
 
 <section class="gems-story page-section" aria-labelledby="gems-story-title">
@@ -14,6 +16,10 @@ import SectionHeader from './SectionHeader.astro';
     Current work can start from strong open foundations and produce increasingly FDS-specific intelligence through post-training,
     specialization, agentic tool-use work, and held-out evaluation. Full foundation-model development remains a longer-term direction.
   </p>
+
+  <div class="gems-story__evidence">
+    <VisualEvidence {...visualAssets.gemsFamily} />
+  </div>
 
   <div class="gem-family" role="list">
     {gems.map((gem) => (

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" role="img" aria-labelledby="title desc">
+  <title id="title">Training Grounds capability advancement flow</title>
+  <desc id="desc">A conceptual workflow from foundation and curriculum through training, checkpoints, evaluation, failure analysis, replication, capability gates, and advance or revise.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1424"/><stop offset="1" stop-color="#050910"/></linearGradient></defs>
+  <rect width="1200" height="460" rx="28" fill="url(#bg)"/>
+  <text x="56" y="64" fill="#c18cff" font-family="monospace" font-size="17" letter-spacing="3">TRAINING GROUNDS // CAPABILITY ADVANCEMENT</text>
+  <text x="56" y="103" fill="#edf3ff" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="700">Activity becomes progress only after evidence</text>
+  <g font-family="monospace" font-size="15" text-anchor="middle">
+    <g fill="#13233a" stroke="#5e8fe8"><rect x="54" y="170" width="128" height="78" rx="12"/><text x="118" y="205" fill="#a6c5ff">FOUNDATION</text><text x="118" y="228" fill="#7186a7">candidate</text></g>
+    <g fill="#15283d" stroke="#5e8fe8"><rect x="202" y="170" width="128" height="78" rx="12"/><text x="266" y="205" fill="#a6c5ff">CURRICULUM</text><text x="266" y="228" fill="#7186a7">design</text></g>
+    <g fill="#162d3c" stroke="#5fc3a7"><rect x="350" y="170" width="128" height="78" rx="12"/><text x="414" y="205" fill="#8ce5c8">TRAINING</text><text x="414" y="228" fill="#7186a7">specialize</text></g>
+    <g fill="#1b2d3b" stroke="#5fc3a7"><rect x="498" y="170" width="128" height="78" rx="12"/><text x="562" y="205" fill="#8ce5c8">CHECKPOINT</text><text x="562" y="228" fill="#7186a7">record</text></g>
+    <g fill="#28263a" stroke="#c18cff"><rect x="646" y="170" width="128" height="78" rx="12"/><text x="710" y="205" fill="#d2a8ff">EVALUATION</text><text x="710" y="228" fill="#8e7da8">held-out</text></g>
+    <g fill="#30283a" stroke="#e9ba61"><rect x="794" y="170" width="128" height="78" rx="12"/><text x="858" y="205" fill="#f0c86e">FAILURE</text><text x="858" y="228" fill="#a08c72">analysis</text></g>
+    <g fill="#26323a" stroke="#7db7a9"><rect x="942" y="170" width="128" height="78" rx="12"/><text x="1006" y="205" fill="#9fe1d0">REPLICATION</text><text x="1006" y="228" fill="#718b83">consistency</text></g>
+  </g>
+  <g stroke="#769ce5" stroke-width="2" fill="none"><path d="M182 209h20m128 0h20m128 0h20m128 0h20m128 0h20m128 0h20"/><path d="m194 203 8 6-8 6m148 0 8-6-8-6m148 0 8 6-8 6m148 0 8-6-8-6m148 0 8 6-8 6m148 0 8-6-8-6"/></g>
+  <path d="M1070 248v82H118V248" fill="none" stroke="#c18cff" stroke-opacity=".7" stroke-width="2"/>
+  <g font-family="monospace"><rect x="388" y="332" width="424" height="64" rx="12" fill="#171e31" stroke="#c18cff"/><text x="600" y="359" text-anchor="middle" fill="#d2a8ff" font-size="16" font-weight="700">CAPABILITY GATE</text><text x="600" y="381" text-anchor="middle" fill="#9da8c1" font-size="13">advance / revise from demonstrated evidence</text></g>
+  <text x="56" y="430" fill="#8e9db7" font-family="monospace" font-size="13">CONCEPTUAL DIAGRAM — describes the research process, not a screenshot of a shipped application.</text>
+</svg>
