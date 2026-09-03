@@ -6,7 +6,7 @@
   "repository": {
     "startHead": "1c54b2aa5faf2d6e85b8c65f31d50fc6d4f2c13a",
     "branch": "main",
-    "endHead": "PENDING_COMMIT"
+    "endHead": "b1fb1127763cf0141833a04afd4404a54316ff7e"
   },
   "worker": {
     "name": "kayla-api",
