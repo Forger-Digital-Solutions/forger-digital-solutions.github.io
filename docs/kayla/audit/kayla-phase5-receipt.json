@@ -5,11 +5,12 @@
   "startingHead": "be9e9f5929aca295863a435ac7b5476a26106eb7",
   "endingHead": "98a974712e803f379c766194ce257c0a7bf0d63c",
   "commitsCreatedThisPhase": 1,
-  "pushed": false,
+  "pushed": true,
   "deployment": {
-    "deployedThisPhase": false,
-    "currentProductionWorkerVersion": "9440aa8d-5e41-4f28-9c98-ad5e73d19694",
-    "note": "Production still runs the pre-Phase-5 build. The canonical-authority verifier and context-injection hardening in this phase are not live until deployed."
+    "deployedThisPhase": true,
+    "previousProductionWorkerVersion": "9440aa8d-5e41-4f28-9c98-ad5e73d19694",
+    "newProductionWorkerVersion": "2bf63092-a5d1-44db-861f-da555a5d6a35",
+    "note": "Deployed and verified live: forged context.entity SYSTEM-injection payload now rejected with HTTP 400 VALIDATION_ERROR before reaching the model; normal requests with real page context continue to succeed (200)."
   },
   "environment": {
     "node": "v24.19.0",
@@ -373,8 +374,8 @@
   ],
   "remainingRecommendations": [
     {
-      "priority": "BLOCKING",
-      "item": "Deploy this phase's changes. Production currently runs the build with the canonical-authority bypass and the context-injection vulnerability."
+      "priority": "RESOLVED",
+      "item": "Deploy this phase's changes. Production currently runs the build with the canonical-authority bypass and the context-injection vulnerability. -- DEPLOYED 2026-09-03, verified live."
     },
     {
       "priority": "NON_BLOCKING",
