@@ -3,7 +3,7 @@
   "verdictReason": "Phase 5 canonical-authority, link-firewall, and buffer-then-validate invariants re-verified unchanged from a clean checkout before any change. Added observable routeMode across all response branches (JSON and streaming), structured source metadata wired into streaming and the visitor UI (previously absent from the streaming path entirely), two new multi-turn false-premise corrections (founder pronoun follow-up, fabricated-pricing carryover), and a golden corpus expansion from 113 to 150. One real accessibility defect (Tab focus-trap escape) was found via live interactive browser testing and fixed. One self-inflicted regression (a price-rejection answer colliding with the verifier's own strict price detector) was caught by the existing false-positive suite and fixed on the answer side, not by weakening the verifier. Deployed to production and live-verified with 15/15 HTTP 200 across canonical, conversational, comparison, GEMS-synthesis, page-context, unknown-fact, injection, fabricated-pricing, fabricated-founder, and external-link-attack categories. Live PROVIDER_ACCEPTED execution was not observed this phase (see knownLimitations) and is reported as such rather than inferred from passing mocks.",
   "branch": "main",
   "startingHead": "2f1ae49ccd9d5aa674a70d68dfd929179e949d54",
-  "endingHead": "PLACEHOLDER_FILLED_AFTER_COMMIT",
+  "endingHead": "c51686f26bb690ec8615dec03414f2e59bcfa6a7",
   "worktreeAtStart": "clean, matched Phase 5 baseline exactly (re-verified, see baselineReVerification)",
   "baselineReVerification": {
     "method": "re-ran every Phase 5 claimed command from the clean checkout before making any change",
