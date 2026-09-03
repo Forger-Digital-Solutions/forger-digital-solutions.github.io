@@ -123,7 +123,8 @@ const RULES: IntentRule[] = [
       /\b(how much (does|is|would)|what does .{0,25}cost|what.{0,6}s the (price|cost)|price of)\b/,
       /\bis (it|this|that|[a-z]+) (free|paid|open source|a subscription)\b/,
       /\b(pricing|subscription|licen[cs]e fee|paywall|monthly fee)\b/,
-      /\bdo i (have to |need to )?pay\b/
+      /\bdo i (have to |need to )?pay\b/,
+      /\b(what will .{0,25}cost|does .{0,25}cost|why does .{0,25}cost|paid (tier|plan|subscription)|tier cost|pricing tier)\b/
     ]
   },
   {
@@ -194,7 +195,9 @@ const RULES: IntentRule[] = [
     patterns: [
       /\bwho (founded|created|started|built|makes|made|runs|owns|is behind)\b/,
       /\b(the )?founder\b/,
-      /\bwho.{0,6}s behind\b/
+      /\bwho.{0,6}s behind\b/,
+      /\b(when|did|why|how)\b.{0,25}\b(?:founder|founded)\b/,
+      /\b(elon\s+musk|musk)\b/
     ]
   },
   {

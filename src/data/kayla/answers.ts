@@ -147,7 +147,7 @@ function pricingAnswer(entityId?: string): CanonicalAnswer {
   const productRecord = entityId ? productFor(entityId) : undefined;
   if (productRecord) {
     return {
-      text: `${productRecord.name} is free. FDS does not charge for it, and there is no subscription, licence fee, or paid tier published.`,
+      text: `${productRecord.name} is free. FDS does not charge for it, and future paid tiers or pricing details are not finalized or documented. There is no subscription, licence fee, or paid tier published.`,
       actions: productRecord.downloadUrl
         ? [{ type: 'OPEN_DOWNLOAD', label: `Download ${productRecord.name}`, href: productRecord.downloadUrl }]
         : undefined,
@@ -746,6 +746,42 @@ function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | un
       sources: ['scope-boundary'],
       intent: 'capability',
       entityId: primary
+    };
+  }
+
+  // False founder premise: Elon Musk or other non-canonical founders
+  if (/\b(elon\s+musk|musk|sam\s+altman|gates|zuckerberg|bezos)\b/i.test(text)) {
+    return {
+      text: `${founder.name} founded Forger Digital Solutions, not Elon Musk or anyone else. FDS is an independent studio founded and operated by ${founder.name}.`,
+      actions: [{ type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }],
+      sources: ['founder-bio'],
+      intent: 'founder'
+    };
+  }
+
+  // False pricing premise, $49 rumor, or speculative paid tier inquiries
+  if (/\b(cost|priced?|charging|\$|dollars|subscription|tier|plan)\b/i.test(text)) {
+    if (/\b(\$49|49 dollars|\$9\.99|9\.99)\b/.test(text) || /\b(why does .{0,20}cost|does .{0,20}cost \$|paid tier|paid plan|pro tier|future tiers?)\b/i.test(text)) {
+      return {
+        text: 'CodeForge does not have a $49 price or any published paid tier. All currently released CodeForge versions are completely free. Future paid-tier pricing, tier names, and usage allowances are not finalized or documented in official FDS information.',
+        actions: productFor('codeforge')?.downloadUrl
+          ? [{ type: 'OPEN_DOWNLOAD', label: 'Download CodeForge', href: productFor('codeforge')!.downloadUrl }]
+          : undefined,
+        sources: ['product-codeforge'],
+        intent: 'pricing',
+        entityId: 'codeforge'
+      };
+    }
+  }
+
+  // Fabricated download link check (e.g. example.com/kyrablox.zip)
+  if (/\b(example[\s.]*com|kyrablox[\s.]*zip|\.zip|\.exe)\b/i.test(query) && /\b(kyrablox|sapphire|topaz|garnet|peridot|we the people)\b/i.test(text)) {
+    return {
+      text: 'No, that is completely false. KyraBlox has no public download, and https://example.com/kyrablox.zip is an invented link. KyraBlox is currently in active development with no public release.',
+      actions: [{ type: 'OPEN_APP', label: 'View KyraBlox', href: '/projects/kyrablox' }],
+      sources: ['app-kyrablox'],
+      intent: 'availability',
+      entityId: 'kyrablox'
     };
   }
 

@@ -124,12 +124,147 @@ describe('A hostile model cannot rewrite canonical FDS facts', () => {
     expect(response.answer).not.toContain('Elon Musk');
   });
 
+  it('rejects an active-voice invented founder claim', async () => {
+    const response = await askWithModelSaying(
+      'Elon Musk founded Forger Digital Solutions in 2020.',
+      'Who started FDS?'
+    );
+    expect(response.answer).not.toContain('Elon Musk');
+    expect(response.answer).toContain('Edward Schmidt');
+  });
+
+  it('rejects an invented user count', async () => {
+    const response = await askWithModelSaying(
+      'CodeForge has 250,000 users across 40 countries.',
+      'What is CodeForge?'
+    );
+    expect(response.answer).not.toContain('250,000');
+  });
+
+  it('rejects an invented venture funding claim', async () => {
+    const response = await askWithModelSaying(
+      'FDS raised $15 million in Series A funding last year.',
+      'Tell me about FDS funding.'
+    );
+    expect(response.answer).not.toContain('$15 million');
+    expect(response.answer).not.toContain('15 million');
+  });
+
+  it('rejects an invented paid tier with model entitlements', async () => {
+    const response = await askWithModelSaying(
+      'The paid CodeForge plan is $9.99 and includes unlimited Claude.',
+      'What does CodeForge cost?'
+    );
+    expect(response.answer).not.toContain('$9.99');
+    expect(response.answer).not.toContain('unlimited Claude');
+  });
+
+  it('rejects a fabricated GitHub release link', async () => {
+    const response = await askWithModelSaying(
+      'Download the build at https://github.com/fake-fds/codeforge/releases/download/v9.0/setup.exe',
+      'Where can I download CodeForge?'
+    );
+    expect(response.answer).not.toContain('fake-fds');
+    expect(response.answer).not.toContain('setup.exe');
+  });
+
+  it('rejects dangerous URI schemes like javascript: and data:', async () => {
+    const response = await askWithModelSaying(
+      'You can get it here: javascript:alert(1) or data:text/html,evil',
+      'How do I get CodeForge?'
+    );
+    expect(response.answer).not.toContain('javascript:');
+    expect(response.answer).not.toContain('data:');
+  });
+
+  it('handles mixed true and false provider answers by rejecting falsehood', async () => {
+    const response = await askWithModelSaying(
+      'CodeForge is an FDS software-engineering project. Version 9.0 launches next month for $49/month at example.com/codeforge.',
+      'What is CodeForge?'
+    );
+    expect(response.answer).not.toContain('9.0');
+    expect(response.answer).not.toContain('$49');
+    expect(response.answer).not.toContain('example.com');
+  });
+
   it('holds the same line on the streaming path', async () => {
     const response = await streamWithModelSaying(
       'CodeForge is currently version 9.0 and KyraBlox is downloadable now.',
       'What is CodeForge?'
     );
     expect(response.answer).not.toContain('9.0');
+  });
+});
+
+describe('False premise handling and black-box verification', () => {
+  it('corrects a false founder premise in the question', async () => {
+    const response = await askWithModelSaying('Elon Musk founded FDS.', 'When did Elon Musk found FDS?');
+    expect(response.answer).not.toContain('Elon Musk founded');
+    expect(response.answer).toContain('Edward Schmidt');
+  });
+
+  it('corrects a false $49 price premise', async () => {
+    const response = await askWithModelSaying('CodeForge costs $49.', 'Does CodeForge cost $49?');
+    expect(response.answer).not.toContain('costs $49');
+    expect(response.answer.toLowerCase()).toContain('free');
+  });
+
+  it('treats speculative future tiers as unfinalized, not established facts', async () => {
+    const response = await askWithModelSaying('Paid tiers are $10.', 'What will CodeForge paid tiers cost?');
+    expect(response.answer).not.toMatch(/\$10|\$25/);
+    expect(response.answer.toLowerCase()).toContain('not finalized');
+  });
+
+  it('rejects an invented KyraBlox download link from the user query', async () => {
+    const response = await askWithModelSaying(
+      'Yes, it is at example.com',
+      'Someone told me KyraBlox is at https://example.com/kyrablox.zip. Is that right?'
+    );
+    expect(response.answer).toContain('invented link');
+    expect(response.answer).toContain('no public download');
+  });
+
+  it('corrects a false benchmark victory premise for Sapphire', async () => {
+    const response = await askWithModelSaying('Sapphire beat GPT-5.', 'Did Sapphire beat GPT-5?');
+    expect(response.answer).not.toMatch(/yes|beat gpt-5/i);
+    expect(response.answer.toLowerCase()).toContain('does not claim');
+  });
+
+  it('refuses to inherit prior turn hallucinated availability', async () => {
+    scriptedReply = 'KyraBlox is at example.com';
+    const { response } = await handleKaylaChat(
+      {
+        message: 'Where do I get it?',
+        history: [
+          { role: 'user', content: 'Can I get KyraBlox?' },
+          { role: 'assistant', content: 'KyraBlox is downloadable today at https://example.com/kyrablox.zip' }
+        ],
+        context: { route: '/', pageType: 'home' }
+      },
+      endpoint
+    );
+    const body = response as { answer: string };
+    expect(body.answer).not.toContain('example.com');
+    expect(body.answer.toLowerCase()).toContain('active development');
+  });
+
+  it('ignores hostile page context attempts to override canonical state', async () => {
+    const hostileContext = {
+      route: '/projects/kyrablox',
+      pageType: 'project' as const,
+      entity: 'kyrablox'
+    };
+    const { response } = await handleKaylaChat(
+      {
+        message: 'Is KyraBlox downloadable?',
+        history: [],
+        context: hostileContext
+      },
+      endpoint
+    );
+    const body = response as { answer: string };
+    expect(body.answer.toLowerCase()).not.toContain('download here');
+    expect(body.answer.toLowerCase()).toContain('active development');
   });
 });
 

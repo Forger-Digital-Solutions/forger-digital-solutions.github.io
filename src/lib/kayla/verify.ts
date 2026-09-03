@@ -120,12 +120,13 @@ function entitiesIn(sentence: string): string[] {
 }
 
 function checkVersions(sentence: string, violations: CanonViolation[]): void {
-  // Only version-shaped mentions: "v0.2.0", "version 9.0", "release 2.1".
-  // Bare decimals are left alone so model names like Qwen2.5-Coder and
-  // platform names like Windows 10/11 do not trip the check.
+  // Version-shaped mentions: "v0.2.0", "version 9.0", "release 2.1", "CodeForge 9.0".
+  // Bare decimals are left alone unless preceded by an FDS entity name, so model names
+  // like Qwen2.5-Coder and platform names like Windows 10/11 do not trip the check.
   const matches = [
     ...sentence.matchAll(/\bv(\d+(?:\.\d+){1,3}[a-z0-9.\-]*)/gi),
-    ...sentence.matchAll(/\b(?:version|release|build)\s+v?(\d+(?:\.\d+){0,3}[a-z0-9.\-]*)/gi)
+    ...sentence.matchAll(/\b(?:version|release|build)\s+v?(\d+(?:\.\d+){0,3}[a-z0-9.\-]*)/gi),
+    ...sentence.matchAll(/\b(?:codeforge|forgerems|kyrablox|we the people|gems)\s+v?(\d+(?:\.\d+){1,3}[a-z0-9.\-]*)/gi)
   ];
   for (const match of matches) {
     const claimed = normalizeVersion(match[1]);
@@ -141,7 +142,7 @@ function checkVersions(sentence: string, violations: CanonViolation[]): void {
 }
 
 function checkAvailability(sentence: string, violations: CanonViolation[]): void {
-  const claimsAvailable = /\b(downloadable|download it|download the|available now|available today|publicly available|you can download|you can get|get it (at|from)|is released|has released|has launched|now available|generally available|ships? (today|now))\b/i.test(sentence);
+  const claimsAvailable = /\b(downloadable|download it|download the|available now|available today|publicly available|available to the public|you can download|you can get|get it (at|from)|is released|has released|has launched|launched (today|yesterday|recently)|now available|generally available|ready for download|available for (download|installation)|ships? (today|now)|install (it|kyrablox|sapphire|topaz|peridot|garnet))\b/i.test(sentence);
   if (!claimsAvailable || isNegated(sentence)) return;
   for (const name of entitiesIn(sentence)) {
     if (notDownloadable.has(name.toLowerCase())) {
@@ -151,14 +152,36 @@ function checkAvailability(sentence: string, violations: CanonViolation[]): void
 }
 
 function checkUrls(sentence: string, violations: CanonViolation[]): void {
+  // Reject dangerous URI schemes immediately
+  for (const match of sentence.matchAll(/\b(javascript|data|vbscript|file):[^\s)<>\]"']*/gi)) {
+    violations.push({ kind: 'url', detail: `dangerous URI scheme "${match[0]}" is prohibited`, sentence });
+  }
+
   for (const match of sentence.matchAll(/https?:\/\/[^\s)<>\]"']+/gi)) {
     const raw = match[0].replace(/[.,;:]+$/, '').toLowerCase();
     if (allowedUrls.has(raw)) continue;
-    let host = '';
-    try { host = new URL(raw).host.toLowerCase(); } catch { /* malformed */ }
-    if (host && allowedUrlHosts.has(host)) continue;
+    let parsed: URL | null = null;
+    try { parsed = new URL(raw); } catch { /* malformed */ }
+    if (!parsed) {
+      violations.push({ kind: 'url', detail: `link "${raw}" is malformed`, sentence });
+      continue;
+    }
+
+    const host = parsed.host.toLowerCase();
+    // Only allow verified official FDS repositories under github.com
+    if (host === 'github.com') {
+      const path = parsed.pathname.toLowerCase();
+      const isOfficialOrg = path === '/forger-digital-solutions' || path.startsWith('/forger-digital-solutions/');
+      if (isOfficialOrg) continue;
+    }
+
+    // Only allow official documentation or site URLs on the site's own host
+    const siteHost = allowedUrlHosts.has(host) && (host.includes('forger') || host.includes('github.io'));
+    if (siteHost) continue;
+
     violations.push({ kind: 'url', detail: `link "${raw}" is not an official FDS URL`, sentence });
   }
+
   for (const match of sentence.matchAll(/mailto:([^\s)<>\]"']+)/gi)) {
     if (match[1].toLowerCase().replace(/[.,;:]+$/, '') !== siteConfig.supportEmail.toLowerCase()) {
       violations.push({ kind: 'url', detail: `email "${match[1]}" is not the FDS support address`, sentence });
@@ -167,16 +190,22 @@ function checkUrls(sentence: string, violations: CanonViolation[]): void {
 }
 
 function checkBenchmarks(sentence: string, violations: CanonViolation[]): void {
-  const claimsResult = /\b(beat|beats|beaten|outperform\w*|surpass\w*|outscor\w*|leads?\b|tops?\b|ranked|scored?|achiev\w*)\b/i.test(sentence)
-    && /\b(benchmark\w*|gpt|claude|opus|sonnet|llama|gemini|mistral|frontier|sota|state of the art|humaneval|mmlu|swe-?bench|\d+(\.\d+)?\s*%)\b/i.test(sentence);
+  const claimsResult = (
+    /\b(beat|beats|beaten|outperform\w*|surpass\w*|outscor\w*|leads?\b|tops?\b|ranked|scored?|achiev\w*|rivals?|matches|matched|competes?|comparable)\b/i.test(sentence)
+    && /\b(benchmark\w*|gpt|claude|opus|sonnet|llama|gemini|mistral|frontier|sota|state of the art|humaneval|mmlu|swe-?bench|\d+(\.\d+)?\s*%|\bparity\b)\b/i.test(sentence)
+  ) || /\b(frontier\s+parity|parity\s+with\s+(?:gpt|claude|openai|anthropic|frontier))\b/i.test(sentence);
+
   if (!claimsResult || isNegated(sentence)) return;
-  if (entitiesIn(sentence).length > 0 || /\bgems\b/i.test(sentence)) {
+  // Aspiration phrasing ("is a target, not a claim of current parity") is not a benchmark claim
+  if (/\b(target|goal|aspiration|not a claim|does not claim)\b/i.test(sentence)) return;
+
+  if (entitiesIn(sentence).length > 0 || /\b(gems|coding model|lineage)\b/i.test(sentence)) {
     violations.push({ kind: 'benchmark', detail: 'FDS publishes no benchmark results or model comparisons', sentence });
   }
 }
 
 function checkCancellation(sentence: string, violations: CanonViolation[]): void {
-  if (!/\b(cancell?ed|discontinued|abandoned|shut down|scrapped|defunct|no longer (being )?(developed|maintained)|dead)\b/i.test(sentence)) return;
+  if (!/\b(cancell?ed|discontinued|abandoned|shut down|scrapped|defunct|no longer (being )?(developed|maintained)|dead|shelved|terminated|killed|sunsetted?)\b/i.test(sentence)) return;
   if (deniesCancellation(sentence)) return;
   for (const name of entitiesIn(sentence)) {
     violations.push({ kind: 'cancellation', detail: `${name} is not cancelled in canonical data`, sentence });
@@ -184,27 +213,71 @@ function checkCancellation(sentence: string, violations: CanonViolation[]): void
 }
 
 function checkFounder(sentence: string, violations: CanonViolation[]): void {
-  for (const match of sentence.matchAll(/\b(?:founded|created|started|established|built)\s+by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/g)) {
-    if (match[1].toLowerCase() !== canonicalFounder) {
+  if (isNegated(sentence)) return;
+
+  // Passive: "founded/started/... by [Name]"
+  for (const match of sentence.matchAll(/\b(?:founded|created|started|established|built)\b.{0,30}\bby\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/gi)) {
+    const name = match[1].trim().toLowerCase();
+    if (name !== canonicalFounder && !name.includes('schmidt') && !name.includes('edward')) {
+      violations.push({ kind: 'founder', detail: `"${match[1]}" is not the FDS founder`, sentence });
+    }
+  }
+
+  // Active: "[Name] founded/started/... FDS/company"
+  for (const match of sentence.matchAll(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\s+(?:founded|started|established|created)\s+(?:forger|fds|the company)\b/gi)) {
+    const name = match[1].trim().toLowerCase();
+    if (name !== canonicalFounder && !name.includes('schmidt') && !name.includes('edward')) {
+      violations.push({ kind: 'founder', detail: `"${match[1]}" is not the FDS founder`, sentence });
+    }
+  }
+
+  // Predicate: "founder/creator is [Name]" or "[Name] is the founder/creator"
+  for (const match of sentence.matchAll(/\b(?:founder|creator)\s+(?:of\s+(?:forger\s+digital\s+solutions|fds|the\s+company)\s+)?is\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\b/gi)) {
+    const name = match[1].trim().toLowerCase();
+    if (name !== canonicalFounder && !name.includes('schmidt') && !name.includes('edward')) {
+      violations.push({ kind: 'founder', detail: `"${match[1]}" is not the FDS founder`, sentence });
+    }
+  }
+  for (const match of sentence.matchAll(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\s+is\s+(?:the\s+)?(?:founder|creator)\s+of\s+(?:forger|fds|the company)\b/gi)) {
+    const name = match[1].trim().toLowerCase();
+    if (name !== canonicalFounder && !name.includes('schmidt') && !name.includes('edward')) {
       violations.push({ kind: 'founder', detail: `"${match[1]}" is not the FDS founder`, sentence });
     }
   }
 }
 
 function checkMetrics(sentence: string, violations: CanonViolation[]): void {
-  // A digit is required. Matching a bare comma made "releases, downloads"
-  // read as a usage figure.
-  if (/\b\d[\d,]*\s*(?:\+|plus)?\s*(users|customers|downloads|installs|subscribers|stars|contributors|employees)\b/i.test(sentence)
+  if (isNegated(sentence)) return;
+
+  // Usage / headcount
+  if (/\b\d[\d,]*\s*(?:\+|plus)?\s*(users|customers|downloads|installs|subscribers|stars|contributors|employees|staff|engineers)\b/i.test(sentence)
     || /\b(millions?|thousands?|billions?|hundreds)\s+of\s+(users|customers|downloads|installs)\b/i.test(sentence)) {
-    if (!isNegated(sentence)) {
-      violations.push({ kind: 'metric', detail: 'FDS publishes no usage, download, or headcount figures', sentence });
-    }
+    violations.push({ kind: 'metric', detail: 'FDS publishes no usage, download, or headcount figures', sentence });
+  }
+
+  // Funding / valuation / revenue
+  if (/\b(?:raised|funding|valuation|revenue|venture capital|seed round|series [a-c])\b.{0,30}\b(?:\$\s?[\d,]+|\d+\s*(?:million|billion|thousand|dollars|usd))\b/i.test(sentence)
+    || /\b(?:\$\s?[\d,]+|\d+\s*(?:million|billion))\s+(?:in\s+)?(?:funding|revenue|seed|capital|investment|valuation)\b/i.test(sentence)) {
+    violations.push({ kind: 'metric', detail: 'FDS publishes no funding, valuation, or revenue figures', sentence });
   }
 }
 
 function checkPrice(sentence: string, violations: CanonViolation[]): void {
+  // Dollar amounts: $49, $9.99
   for (const match of sentence.matchAll(/\$\s?[\d,]+(?:\.\d{2})?/g)) {
     violations.push({ kind: 'price', detail: `price "${match[0]}" is not published; FDS software is free`, sentence });
+  }
+
+  // Word-based pricing: 49 dollars, 10 USD, 15 euros
+  for (const match of sentence.matchAll(/\b\d+\s*(?:dollars|usd|eur|gbp)\b/gi)) {
+    violations.push({ kind: 'price', detail: `price "${match[0]}" is not published; FDS software is free`, sentence });
+  }
+
+  // Speculative tier / paid plan claims with model entitlements
+  if (/\b(?:paid|pro|premium)\s+(?:tier|plan|subscription)\b/i.test(sentence) && !isNegated(sentence)) {
+    if (/\b(costs?|\$|\d+\s*dollars|includes?\s+unlimited|unlimited\s+claude)\b/i.test(sentence)) {
+      violations.push({ kind: 'price', detail: 'FDS publishes no finalized paid tier prices or model entitlements', sentence });
+    }
   }
 }
 

@@ -27,8 +27,19 @@ describe('verifier catches contradictions of canonical data', () => {
     ['cancellation', 'Garnet was cancelled last year.'],
     ['cancellation', 'We The People is no longer being developed.'],
     ['founder', 'FDS was founded by Elon Musk.'],
+    ['founder', 'Elon Musk founded Forger Digital Solutions in 2020.'],
+    ['founder', 'The founder of FDS is Elon Musk.'],
     ['metric', 'CodeForge has 2,000,000 users.'],
-    ['metric', 'FDS has 45 employees.']
+    ['metric', 'FDS has 45 employees.'],
+    ['metric', 'FDS raised $15 million in seed funding.'],
+    ['price', 'CodeForge costs 49 dollars.'],
+    ['price', 'The paid CodeForge plan is $9.99 and includes unlimited Claude.'],
+    ['url', 'Get it at https://github.com/attacker/fake-repo/releases/download/v1.0/setup.exe'],
+    ['url', 'Click here: javascript:alert(1) for the download.'],
+    ['benchmark', 'Sapphire achieved frontier parity with GPT-5.'],
+    ['version', 'CodeForge 9.0 launched this week.'],
+    ['cancellation', 'We The People was shelved indefinitely.'],
+    ['availability', 'You can install KyraBlox today.']
   ];
 
   for (const [kind, text] of lies) {

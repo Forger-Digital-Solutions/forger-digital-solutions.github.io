@@ -66,15 +66,6 @@ function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
   return { accepted: false, kinds };
 }
 
-/** Split off the part of a buffer that ends on a sentence boundary. */
-function completedPrefix(buffer: string): { ready: string; rest: string } {
-  let cut = -1;
-  for (const marker of ['. ', '.\n', '! ', '? ', '!\n', '?\n', '\n']) {
-    cut = Math.max(cut, buffer.lastIndexOf(marker) + (marker.length - 1));
-  }
-  if (cut <= 0) return { ready: '', rest: buffer };
-  return { ready: buffer.slice(0, cut + 1), rest: buffer.slice(cut + 1) };
-}
 
 function localResponse(topResult?: KaylaKnowledgeResult) {
   return {
@@ -286,76 +277,64 @@ export async function* streamKaylaChat(
   try {
     let providerFailed = false;
     let providerContentReceived = false;
-    let aiModeAnnounced = false;
-    // Text is released a sentence at a time and only after it agrees with
-    // canonical data, so a wrong claim never reaches the screen even
-    // momentarily. A violation replaces the whole message with the canonical
-    // answer that was already computed.
-    let pending = '';
-    let rejected = false;
+    let bufferedText = '';
     const topResult = sources[0];
 
-    const replaceWithCanonical = () => JSON.stringify({
-      replace: true,
-      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-      actions: localActions(topResult),
-      mode: 'local',
-      done: true
-    });
-
     for await (const chunk of aiProvider.stream({ message, history, context, sources })) {
-      if (chunk.type === 'error') { providerFailed = true; break; }
+      if (chunk.type === 'error') {
+        providerFailed = true;
+        break;
+      }
 
       if (chunk.type === 'content' && chunk.content) {
         providerContentReceived = true;
-        pending += chunk.content;
-        const { ready, rest } = completedPrefix(pending);
-        if (!ready) continue;
-        if (!acceptGenerated(ready).accepted) { rejected = true; break; }
-        pending = rest;
-        if (!aiModeAnnounced) {
-          yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
-          aiModeAnnounced = true;
-        }
-        yield JSON.stringify({ type: 'content', content: ready });
-        continue;
+        bufferedText += chunk.content;
       }
 
       if (chunk.type === 'done') {
-        if (!providerContentReceived) { providerFailed = true; break; }
-        if (pending.trim()) {
-          if (!acceptGenerated(pending).accepted) { rejected = true; break; }
-          if (!aiModeAnnounced) {
-            yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
-            aiModeAnnounced = true;
-          }
-          yield JSON.stringify({ type: 'content', content: pending });
-          pending = '';
+        if (!providerContentReceived) {
+          providerFailed = true;
         }
-        yield JSON.stringify({ type: 'done' });
+        break;
       }
     }
 
-    if (rejected) {
-      yield replaceWithCanonical();
-    } else if (providerFailed) {
-      // If text was already on screen when the provider died, replace it.
-      // Appending left a half-finished sentence followed by an apology.
+    if (providerFailed || !providerContentReceived) {
       const fallback = {
         content: `Kayla's conversational AI is temporarily unavailable, but I can still answer from the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
         actions: localActions(topResult),
         mode: 'local',
-        done: true
+        done: true,
+        replace: true
       };
-      yield JSON.stringify(providerContentReceived ? { ...fallback, replace: true } : fallback);
+      yield JSON.stringify(fallback);
+      return;
     }
+
+    // Full buffer canonical verification: never stream unverified tokens to the visitor
+    if (!acceptGenerated(bufferedText).accepted) {
+      yield JSON.stringify({
+        replace: true,
+        content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+        actions: localActions(topResult),
+        mode: 'local',
+        done: true
+      });
+      return;
+    }
+
+    // Verified output: safe to emit
+    yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
+    yield JSON.stringify({ type: 'content', content: bufferedText });
+    yield JSON.stringify({ type: 'done', done: true });
   } catch {
     const topResult = sources[0];
     yield JSON.stringify({
       content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
       actions: localActions(topResult),
       mode: 'local',
-      done: true
+      done: true,
+      replace: true
     });
   }
 }

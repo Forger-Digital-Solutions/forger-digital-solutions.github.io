@@ -19,7 +19,7 @@ export function isActionAllowed(action: unknown): action is KaylaSafeAction {
   if (!ALLOWED_ACTIONS.has(a.type)) return false;
   if (a.type === 'OPEN_PAGE' || a.type === 'OPEN_APP' || a.type === 'OPEN_DOWNLOAD' || a.type === 'OPEN_GITHUB' || a.type === 'OPEN_FORGED' || a.type === 'OPEN_CONTACT' || a.type === 'OPEN_DONATE') {
     if (typeof a.href !== 'string') return false;
-    if (a.href.includes('javascript:') || a.href.includes('data:')) return false;
+    if (/\b(javascript|data|vbscript|file):/i.test(a.href)) return false;
   }
   return true;
 }

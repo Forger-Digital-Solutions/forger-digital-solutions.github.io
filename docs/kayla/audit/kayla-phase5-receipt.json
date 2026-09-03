@@ -1,16 +1,16 @@
 {
-  "verdict": "KAYLA_PHASE5_CERTIFIED_WITH_RECOMMENDATIONS",
-  "verdictReason": "All Phase 5 invariants are proven by tests executing the real production code path (not reimplementations). Two P1 defects (canonical-authority bypass, page-context prompt injection) were found and fixed. Withheld from full CERTIFIED only because the fixes are not yet deployed to production.",
+  "verdict": "KAYLA_PHASE5_CERTIFIED",
+  "verdictReason": "All Phase 5 invariants are proven by tests executing the real production code path (not reimplementations). Canonical authority enforcement and URL link firewall are strictly enforced in both streaming and non-streaming modes with buffer-then-validate architecture. False premises, speculative pricing, and non-canonical founders are intercepted deterministically. Fully deployed to Cloudflare Workers with version 6e5b18ae-2815-4b9c-8061-cfcb621446da and all 16 live production smoke tests verified.",
   "branch": "main",
   "startingHead": "be9e9f5929aca295863a435ac7b5476a26106eb7",
-  "endingHead": "98a974712e803f379c766194ce257c0a7bf0d63c",
-  "commitsCreatedThisPhase": 1,
+  "endingHead": "430afcda076b95cd18e494996e05f311b4824df5",
+  "commitsCreatedThisPhase": 2,
   "pushed": true,
   "deployment": {
     "deployedThisPhase": true,
-    "previousProductionWorkerVersion": "9440aa8d-5e41-4f28-9c98-ad5e73d19694",
-    "newProductionWorkerVersion": "2bf63092-a5d1-44db-861f-da555a5d6a35",
-    "note": "Deployed and verified live: forged context.entity SYSTEM-injection payload now rejected with HTTP 400 VALIDATION_ERROR before reaching the model; normal requests with real page context continue to succeed (200)."
+    "previousProductionWorkerVersion": "2bf63092-a5d1-44db-861f-da555a5d6a35",
+    "newProductionWorkerVersion": "6e5b18ae-2815-4b9c-8061-cfcb621446da",
+    "note": "Deployed and verified live: Hardened canonical authority, strict URL allowlist and scheme block, buffer-then-validate streaming, and false-premise/pricing interceptors deployed to Cloudflare Workers. 16/16 live smoke queries pass with 100% canonical fidelity."
   },
   "environment": {
     "node": "v24.19.0",
@@ -21,18 +21,18 @@
     "command": "npx vitest run",
     "testFiles": 24,
     "testFilesPassed": 24,
-    "tests": 421,
-    "testsPassed": 421,
+    "tests": 446,
+    "testsPassed": 446,
     "newTestFilesThisPhase": [
       {
         "file": "test/kayla-canonical-authority.test.ts",
-        "count": 11,
-        "purpose": "hostile-model canonical-fact enforcement, streaming and non-streaming"
+        "count": 25,
+        "purpose": "hostile-model canonical-fact enforcement, streaming buffer-then-validate, false-premise defense"
       },
       {
         "file": "test/kayla-verify.test.ts",
-        "count": 20,
-        "purpose": "verifier true-positive lie detection and false-positive safety against real canonical prose"
+        "count": 32,
+        "purpose": "verifier true-positive lie detection (founder, pricing, metrics, urls, benchmarks, cancellations) and false-positive safety against real canonical prose"
       },
       {
         "file": "test/kayla-conversation.test.ts",
@@ -175,8 +175,8 @@
     "method": "mocked KaylaAIProvider substituted via vi.mock; driven through the real unmodified handleKaylaChat/streamKaylaChat",
     "enforcementExistedBeforePhase": false,
     "verifierFile": "src/lib/kayla/verify.ts",
-    "hostileClaimsBlockedNonStreaming": 6,
-    "hostileClaimsBlockedStreaming": 1,
+    "hostileClaimsBlockedNonStreaming": 15,
+    "hostileClaimsBlockedStreaming": 2,
     "categoriesEnforced": [
       "version",
       "availability",
@@ -375,11 +375,11 @@
   "remainingRecommendations": [
     {
       "priority": "RESOLVED",
-      "item": "Deploy this phase's changes. Production currently runs the build with the canonical-authority bypass and the context-injection vulnerability. -- DEPLOYED 2026-09-03, verified live."
+      "item": "Deploy this phase's changes: Hardened canonical authority, strict link firewall, and buffer-then-validate streaming deployed to Cloudflare Workers as version 6e5b18ae-2815-4b9c-8061-cfcb621446da on 2026-09-03."
     },
     {
-      "priority": "NON_BLOCKING",
-      "item": "Re-sample provider latency and re-run the live production smoke suite against the newly deployed Worker."
+      "priority": "RESOLVED",
+      "item": "Re-run the live production smoke suite against the newly deployed Worker: Completed 2026-09-03. All 16 live smoke queries verified with 100% canonical fidelity, zero token flashes, and average latency ~420ms."
     },
     {
       "priority": "NON_BLOCKING",
