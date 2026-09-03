@@ -10,8 +10,9 @@
   },
   "worker": {
     "name": "kayla-api",
-    "deployed": false,
-    "note": "Worker changes require wrangler deploy; production ran the pre-audit build at audit time."
+    "deployed": true,
+    "versionId": "9440aa8d-5e41-4f28-9c98-ad5e73d19694",
+    "url": "https://kayla-api.forgerdigitalsolutions.workers.dev"
   },
   "fallback": {
     "mode": "provider disabled (outage simulation)",
@@ -88,8 +89,25 @@
       "p95": 28.165,
       "max": 35.982
     },
-    "provider": null,
-    "providerNote": "Not sampled: the production per-IP hourly allowance was exhausted before the audit began."
+    "provider": {
+      "n": 3,
+      "median": 3191,
+      "min": 2330,
+      "max": 7449,
+      "note": "Live samples against the deployed Worker after repair."
+    },
+    "providerTimeoutFallback": {
+      "n": 1,
+      "ms": 12169,
+      "note": "One sample hit the 12s provider timeout and degraded to the canonical answer. Correct behaviour, but a long visible wait."
+    },
+    "deterministicLive": {
+      "n": 3,
+      "median": 223,
+      "min": 174,
+      "max": 223,
+      "note": "End-to-end over the network, settled answers, no provider call."
+    }
   },
   "security": {
     "injectionAttacksBlocked": 8,
@@ -175,7 +193,9 @@
     "knowledgeInventory": "PASS",
     "contentValidation": "PASS",
     "workerDryRunKiB": 180.5,
-    "workerGzipKiB": 47.37
+    "workerGzipKiB": 47.37,
+    "githubActionsRun": "success (33757120684)",
+    "lockfileResync": "package-lock regenerated so npm ci resolves on Linux"
   },
   "defectsFound": [
     {
@@ -241,16 +261,16 @@
   ],
   "remainingRecommendations": [
     {
-      "priority": "P1",
-      "item": "Deploy the Worker; production still runs the pre-audit build."
+      "priority": "P2",
+      "item": "Lower KAYLA_PROVIDER_TIMEOUT_MS from 12000. One live sample took 12.2s before degrading to the canonical answer, which is already computed before the provider call, so a shorter timeout costs no correctness."
+    },
+    {
+      "priority": "P2",
+      "item": "Measure multi-turn drift over 10-20 turns and response-length adaptation against the deployed Worker."
     },
     {
       "priority": "P2",
       "item": "Add a retrieval-injection fixture test with hostile document text."
-    },
-    {
-      "priority": "P2",
-      "item": "Measure provider latency, multi-turn drift, and length adaptation against wrangler dev."
     },
     {
       "priority": "P3",
@@ -268,5 +288,35 @@
   "caveats": [
     "The repairs and the golden query set were authored in the same session; assertions resolve canonical values from site data at run time rather than hard-coded strings.",
     "No live provider calls were measured after the repairs."
-  ]
+  ],
+  "productionSmoke": {
+    "date": "2026-09-03",
+    "health": "ok",
+    "checks": [
+      {
+        "q": "Who founded Forger Digital Solutions?",
+        "mode": "local",
+        "ms": 179,
+        "result": "correct founder answer (previously returned a CodeForge summary)"
+      },
+      {
+        "q": "What is Sapphire?",
+        "mode": "ai",
+        "ms": 3294,
+        "result": "correct GEMS lineage, RESEARCH state stated (previously returned the contact email)"
+      },
+      {
+        "q": "Tell me about CodeForge v9.0.",
+        "mode": "local",
+        "ms": 145,
+        "result": "false premise corrected"
+      },
+      {
+        "q": "What's the weather today?",
+        "mode": "local",
+        "ms": 218,
+        "result": "scope boundary held"
+      }
+    ]
+  }
 }
