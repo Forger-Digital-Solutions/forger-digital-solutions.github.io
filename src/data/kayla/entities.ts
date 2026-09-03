@@ -39,8 +39,14 @@ const STOPWORDS = new Set([
 
 /** Single-word aliases shorter than this are only accepted as exact tokens. */
 const MIN_FUZZY_LENGTH = 6;
-/** Fuzzy acceptance for one distinctive word: typo tolerance, not synonym tolerance. */
-const FUZZY_THRESHOLD = 0.82;
+/**
+ * Fuzzy acceptance for one distinctive word: typo tolerance, not synonym
+ * tolerance. At 0.82 a single edit in a six-letter word was accepted, so the
+ * brand stem "Forger" matched the Forged storefront. 0.875 needs a longer word
+ * before it forgives an edit, which still resolves run-together typos like
+ * "WeThePeple".
+ */
+const FUZZY_THRESHOLD = 0.875;
 
 export function normalize(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();

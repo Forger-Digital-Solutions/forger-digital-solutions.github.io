@@ -93,7 +93,7 @@ class OpenRouterAIProvider implements KaylaAIProvider {
 
     const endpoint = OPENROUTER_ENDPOINT;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs || 12000);
+    const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs || 9000);
 
     let response: Response;
     try { response = await fetch(endpoint, {
@@ -156,7 +156,7 @@ class OpenRouterAIProvider implements KaylaAIProvider {
 
     const endpoint = OPENROUTER_ENDPOINT;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs || 12000);
+    const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs || 9000);
 
     let response: Response;
     try { response = await fetch(endpoint, {

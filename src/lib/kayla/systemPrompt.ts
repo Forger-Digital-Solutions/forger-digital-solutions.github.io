@@ -33,11 +33,23 @@ export interface ProviderMessage {
   content: string;
 }
 
+/**
+ * Page context reaches the prompt from the request body, so it is reduced to
+ * safe characters here as well as at validation. Nothing a caller supplies
+ * should be able to introduce a new line or forge a prompt section.
+ */
+function safeContextValue(value: string, max: number): string {
+  return value.replace(/[^A-Za-z0-9\-._~/]/g, '').slice(0, max);
+}
+
 function contextLine(context?: KaylaPageContext): string {
   if (!context?.route) return '';
-  return context.entity
-    ? `\nThe visitor is on ${context.route} (viewing: ${context.entity}).`
-    : `\nThe visitor is on ${context.route}.`;
+  const route = safeContextValue(context.route, 256);
+  if (!route) return '';
+  const entity = context.entity ? safeContextValue(context.entity, 64) : '';
+  return entity
+    ? `\nThe visitor is on ${route} (viewing: ${entity}).`
+    : `\nThe visitor is on ${route}.`;
 }
 
 function knowledgeBlock(sources: KaylaKnowledgeResult[]): string {

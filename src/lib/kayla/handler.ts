@@ -5,6 +5,7 @@ import { createKaylaConfig, isAIEnabled } from './config';
 import { validateChatRequest, isPromptInjectionAttempt } from './validate';
 import { checkRateLimit } from './rateLimit';
 import { isSensitiveQuery } from './systemPrompt';
+import { verifyAgainstCanon } from './verify';
 
 export interface KaylaEndpointConfig {
   providerConfig: KaylaProviderConfig;
@@ -31,8 +32,8 @@ function localActions(result?: KaylaKnowledgeResult) {
  * site already owns spends provider budget for nothing.
  */
 const DETERMINISTIC_INTENTS = new Set([
-  'availability', 'version', 'status', 'support', 'contact', 'navigation',
-  'privacy', 'founder', 'assistant_identity', 'external_current',
+  'availability', 'version', 'status', 'pricing', 'support', 'contact',
+  'navigation', 'privacy', 'founder', 'assistant_identity', 'external_current',
   'private_info', 'unsupported_task'
 ]);
 
@@ -41,6 +42,38 @@ function deterministicAnswer(sources: KaylaKnowledgeResult[]): KaylaKnowledgeRes
   if (!top || top.sourceType !== 'canonical') return undefined;
   if (top.settled) return top;
   return top.intent && DETERMINISTIC_INTENTS.has(top.intent) ? top : undefined;
+}
+
+/**
+ * Aggregate-only telemetry: which canonical rules a generated answer broke.
+ * Never the question, the answer, or anything identifying the visitor.
+ */
+function logCanonRejection(kinds: string[]): void {
+  try {
+    console.log(JSON.stringify({ event: 'kayla_canon_rejection', kinds }));
+  } catch { /* logging must never break a response */ }
+}
+
+/**
+ * Accept generated text only when it agrees with canonical FDS data.
+ * Returns the text to use, and whether the model's version was discarded.
+ */
+function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
+  const verdict = verifyAgainstCanon(text);
+  if (verdict.ok) return { accepted: true, kinds: [] };
+  const kinds = [...new Set(verdict.violations.map((violation) => violation.kind))];
+  logCanonRejection(kinds);
+  return { accepted: false, kinds };
+}
+
+/** Split off the part of a buffer that ends on a sentence boundary. */
+function completedPrefix(buffer: string): { ready: string; rest: string } {
+  let cut = -1;
+  for (const marker of ['. ', '.\n', '! ', '? ', '!\n', '?\n', '\n']) {
+    cut = Math.max(cut, buffer.lastIndexOf(marker) + (marker.length - 1));
+  }
+  if (cut <= 0) return { ready: '', rest: buffer };
+  return { ready: buffer.slice(0, cut + 1), rest: buffer.slice(cut + 1) };
 }
 
 function localResponse(topResult?: KaylaKnowledgeResult) {
@@ -98,7 +131,7 @@ export async function handleKaylaChat(
   const localProvider = createProvider();
   let sources: KaylaKnowledgeResult[];
   try {
-    sources = await localProvider.search(message, context);
+    sources = await localProvider.search(message, context, history);
   } catch {
     return {
       status: 200,
@@ -145,6 +178,13 @@ export async function handleKaylaChat(
       context,
       sources
     });
+
+    // The model may phrase a canonical fact; it may not change one. When the
+    // generated answer contradicts the site's data, the canonical answer that
+    // was already computed above is served instead.
+    if (!acceptGenerated(aiResponse.content).accepted) {
+      return { status: 200, response: localResponse(sources[0]) };
+    }
 
     return {
       status: 200,
@@ -206,7 +246,7 @@ export async function* streamKaylaChat(
   }
 
   const localProvider = createProvider();
-  const sources = await localProvider.search(message, context);
+  const sources = await localProvider.search(message, context, history);
 
   const settled = deterministicAnswer(sources);
   if (settled) {
@@ -247,25 +287,67 @@ export async function* streamKaylaChat(
     let providerFailed = false;
     let providerContentReceived = false;
     let aiModeAnnounced = false;
+    // Text is released a sentence at a time and only after it agrees with
+    // canonical data, so a wrong claim never reaches the screen even
+    // momentarily. A violation replaces the whole message with the canonical
+    // answer that was already computed.
+    let pending = '';
+    let rejected = false;
+    const topResult = sources[0];
+
+    const replaceWithCanonical = () => JSON.stringify({
+      replace: true,
+      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+      actions: localActions(topResult),
+      mode: 'local',
+      done: true
+    });
+
     for await (const chunk of aiProvider.stream({ message, history, context, sources })) {
       if (chunk.type === 'error') { providerFailed = true; break; }
+
       if (chunk.type === 'content' && chunk.content) {
         providerContentReceived = true;
+        pending += chunk.content;
+        const { ready, rest } = completedPrefix(pending);
+        if (!ready) continue;
+        if (!acceptGenerated(ready).accepted) { rejected = true; break; }
+        pending = rest;
         if (!aiModeAnnounced) {
-          const topResult = sources[0];
           yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
           aiModeAnnounced = true;
         }
+        yield JSON.stringify({ type: 'content', content: ready });
+        continue;
       }
-      if (chunk.type === 'done' && !providerContentReceived) {
-        providerFailed = true;
-        break;
+
+      if (chunk.type === 'done') {
+        if (!providerContentReceived) { providerFailed = true; break; }
+        if (pending.trim()) {
+          if (!acceptGenerated(pending).accepted) { rejected = true; break; }
+          if (!aiModeAnnounced) {
+            yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
+            aiModeAnnounced = true;
+          }
+          yield JSON.stringify({ type: 'content', content: pending });
+          pending = '';
+        }
+        yield JSON.stringify({ type: 'done' });
       }
-      yield JSON.stringify(chunk);
     }
-    if (providerFailed) {
-      const topResult = sources[0];
-      yield JSON.stringify({ content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`, actions: localActions(topResult), mode: 'local', done: true });
+
+    if (rejected) {
+      yield replaceWithCanonical();
+    } else if (providerFailed) {
+      // If text was already on screen when the provider died, replace it.
+      // Appending left a half-finished sentence followed by an apology.
+      const fallback = {
+        content: `Kayla's conversational AI is temporarily unavailable, but I can still answer from the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
+        actions: localActions(topResult),
+        mode: 'local',
+        done: true
+      };
+      yield JSON.stringify(providerContentReceived ? { ...fallback, replace: true } : fallback);
     }
   } catch {
     const topResult = sources[0];

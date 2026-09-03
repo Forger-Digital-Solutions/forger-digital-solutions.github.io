@@ -66,7 +66,7 @@ export function createKaylaConfig(env: KaylaEnv | Record<string, string | undefi
     aiDailyRequestLimit: getEnvNumber(env, 'KAYLA_AI_DAILY_REQUEST_LIMIT', 40),
     maxPayloadBytes: getEnvNumber(env, 'KAYLA_MAX_PAYLOAD_BYTES', 16384),
     maxObjectDepth: getEnvNumber(env, 'KAYLA_MAX_OBJECT_DEPTH', 6),
-    requestTimeoutMs: getEnvNumber(env, 'KAYLA_PROVIDER_TIMEOUT_MS', getEnvNumber(env, 'KAYLA_REQUEST_TIMEOUT_MS', 12000)),
+    requestTimeoutMs: getEnvNumber(env, 'KAYLA_PROVIDER_TIMEOUT_MS', getEnvNumber(env, 'KAYLA_REQUEST_TIMEOUT_MS', 9000)),
     maxRetries: 0
   };
 }

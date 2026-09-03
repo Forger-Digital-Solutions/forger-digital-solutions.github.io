@@ -1,4 +1,4 @@
-import type { KaylaSafeAction, KaylaPageContext } from './types';
+import type { KaylaSafeAction, KaylaPageContext, KaylaConversationMessage } from './types';
 import { projects } from '../projects';
 import { products } from '../products';
 import { gems, affordability } from '../gems';
@@ -142,6 +142,38 @@ function versionAnswer(entityId: string): CanonicalAnswer | undefined {
   return undefined;
 }
 
+/** Price comes from the product record's pricing model, never from the model. */
+function pricingAnswer(entityId?: string): CanonicalAnswer {
+  const productRecord = entityId ? productFor(entityId) : undefined;
+  if (productRecord) {
+    return {
+      text: `${productRecord.name} is free. FDS does not charge for it, and there is no subscription, licence fee, or paid tier published.`,
+      actions: productRecord.downloadUrl
+        ? [{ type: 'OPEN_DOWNLOAD', label: `Download ${productRecord.name}`, href: productRecord.downloadUrl }]
+        : undefined,
+      sources: [`product-${productRecord.slug}`],
+      intent: 'pricing',
+      entityId
+    };
+  }
+  if (entityId && (project(entityId) || gemFor(entityId))) {
+    const label = displayName(entityId);
+    return {
+      text: `There is no price for ${label} because there is nothing to buy yet — it has no public release. Everything FDS has published so far is free.`,
+      sources: [entityId.startsWith(GEM_PREFIX) ? entityId : `app-${entityId}`],
+      intent: 'pricing',
+      entityId
+    };
+  }
+  const free = products.filter((entry) => entry.downloadUrl).map((entry) => entry.name).join(' and ');
+  return {
+    text: `Everything FDS has released is free: ${free}. There are no subscriptions or paid tiers. Support is voluntary through Cash App or Ko-fi.`,
+    actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+    sources: ['forged-page'],
+    intent: 'pricing'
+  };
+}
+
 function statusAnswer(entityId: string): CanonicalAnswer | undefined {
   const gem = gemFor(entityId);
   if (gem) {
@@ -268,6 +300,68 @@ function roadmapAnswer(entityId?: string): CanonicalAnswer {
   };
 }
 
+/**
+ * "Which projects can I use today?" and "which ones are still research?" are
+ * the same list narrowed by a canonical field, so the filter is derived from
+ * products.ts and each project's status rather than written out.
+ */
+function listFilter(query: string): { label: string; keep: (slug: string) => boolean } | undefined {
+  const text = normalize(query);
+  if (/\bresearch\b/.test(text)) {
+    return { label: 'still in research', keep: (slug) => project(slug)?.status === 'RESEARCH' };
+  }
+  if (/\b(public|available|downloadable|use today|use now|actually use|out now|released|try today|can i use)\b/.test(text)) {
+    return {
+      label: 'available to use today',
+      keep: (slug) => products.some((entry) => (entry.projectSlug || entry.slug) === slug && Boolean(entry.downloadUrl))
+    };
+  }
+  if (/\b(in development|being built|active development|worked on|still building)\b/.test(text)) {
+    return { label: 'in active development', keep: (slug) => Boolean(project(slug)?.status.includes('DEVELOPMENT')) };
+  }
+  return undefined;
+}
+
+function filteredListAnswer(query: string): CanonicalAnswer | undefined {
+  const filter = listFilter(query);
+  if (!filter) return undefined;
+  const matching = projects.filter((entry) => filter.keep(entry.slug));
+  const standalone = filter.label === 'available to use today'
+    ? products.filter((entry) => entry.downloadUrl && !projects.some((p) => p.slug === (entry.projectSlug || entry.slug)))
+    : [];
+
+  if (matching.length === 0 && standalone.length === 0) {
+    return {
+      text: `Nothing is ${filter.label} right now.`,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['fds-ecosystem'],
+      intent: 'list'
+    };
+  }
+
+  const lines = [
+    ...matching.map((entry) => {
+      const productRecord = productFor(entry.slug);
+      return `• ${entry.name} (${entry.status})${productRecord?.version ? ` — ${productRecord.version}` : ''}: ${entry.summary}`;
+    }),
+    ...standalone.map((entry) => `• ${entry.name} (${entry.status})${entry.version ? ` — ${entry.version}` : ''}: ${entry.tagline}`)
+  ].join('\n');
+
+  const heading = filter.label === 'available to use today'
+    ? 'These are the FDS projects you can use today'
+    : `These FDS projects are ${filter.label}`;
+
+  return {
+    text: `${heading}:\n\n${lines}`,
+    actions: filter.label === 'available to use today'
+      ? [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }]
+      : [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+    sources: matching.map((entry) => `app-${entry.slug}`),
+    intent: 'list',
+    settled: true
+  };
+}
+
 function listAnswer(): CanonicalAnswer {
   const lines = projects
     .slice()
@@ -332,13 +426,20 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
  * category, tags, focus areas, and audience rather than a hand-written map, so
  * a new project becomes recommendable by existing in projects.ts.
  */
+/** Words that describe the question rather than the subject of it. */
+const QUESTION_WORDS = new Set(['should', 'would', 'could', 'which', 'recommend', 'need', 'help', 'want', 'project', 'projects', 'product', 'products', 'application', 'applications', 'software', 'tool', 'tools', 'thing', 'things', 'involves', 'involve', 'focused', 'focus', 'about', 'look', 'looking', 'start', 'started', 'best', 'good', 'anything', 'something', 'stuff', 'work', 'works', 'using', 'used']);
+
 function recommendationAnswer(query: string): CanonicalAnswer | undefined {
-  const words = distinctive(normalize(query)).filter((word) => !['should', 'would', 'could', 'which', 'recommend', 'need', 'help', 'want'].includes(word));
+  const words = distinctive(normalize(query)).filter((word) => !QUESTION_WORDS.has(word));
   if (words.length === 0) return undefined;
 
   const scored = projects.map((entry) => {
+    // The problem and differentiation fields describe what a project is *for*
+    // in a visitor's words ("coding assistants", "local food"), which is what a
+    // recommendation question actually asks about.
     const haystack = distinctive(normalize([
       entry.category, entry.name, entry.summary, entry.audience || '',
+      entry.problem || '', entry.differentiation || '',
       (entry.tags || []).join(' '), (entry.focusAreas || []).join(' ')
     ].join(' ')));
     let score = 0;
@@ -533,6 +634,10 @@ function boundaryAnswer(intent: KaylaIntent, query: string): CanonicalAnswer | u
 function gemByRole(query: string): string | undefined {
   const text = normalize(query);
   if (!/\bgems?\b/.test(text)) return undefined;
+  // Only a selector question picks a lineage by role. "What is GEMS / Training
+  // Grounds?" is about the programme, and used to resolve to Peridot because
+  // that lineage's own text mentions Training Grounds.
+  if (!/\b(which|what)\s+gems?\b/.test(text) && !/\bwhich\b/.test(text)) return undefined;
   const words = new Set(distinctive(text));
   if (words.size === 0) return undefined;
 
@@ -561,6 +666,32 @@ function gemByRole(query: string): string | undefined {
 function distinctive(text: string): string[] {
   const skip = new Set(['gem', 'gems', 'the', 'for', 'is', 'are', 'which', 'what', 'who', 'does', 'do', 'handles', 'handle', 'one', 'and', 'with', 'that', 'this', 'about', 'you', 'your', 'work', 'works']);
   return normalize(text).split(' ').filter((token) => token.length >= 4 && !skip.has(token));
+}
+
+/** Does the question lean on something already named in the conversation? */
+function hasAnaphor(query: string): boolean {
+  return /\b(it|its|it's|that|this|these|those|they|them|their|the same|one)\b/i.test(normalize(query));
+}
+
+function has1(intents: KaylaIntent[], intent: KaylaIntent): boolean {
+  return intents.includes(intent);
+}
+
+/**
+ * Entities named in the recent conversation, most recent first. Only the
+ * visitor's own turns are trusted as subjects; an assistant turn can mention
+ * several projects in passing and would drag the topic sideways.
+ */
+function entitiesFromHistory(history: KaylaConversationMessage[]): string[] {
+  const found: string[] = [];
+  for (let index = history.length - 1; index >= 0 && found.length < 2; index--) {
+    const entry = history[index];
+    if (!entry || entry.role !== 'user' || typeof entry.content !== 'string') continue;
+    for (const match of matchEntities(entry.content)) {
+      if (!found.includes(match.entityId)) found.push(match.entityId);
+    }
+  }
+  return found;
 }
 
 /** Pull a named section straight out of the project record, so wording stays canonical. */
@@ -603,11 +734,14 @@ function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | un
   }
 
   // Claimed usage, revenue, or benchmark figures.
-  if (/\b(how many|how much)\b.{0,30}\b(users?|customers?|downloads?|installs?|revenue|subscribers?)\b/.test(text)
+  if (/\b(how many|how much)\b.{0,30}\b(users?|customers?|downloads?|installs?|revenue|subscribers?|employees?|staff|people|developers?|contributors?)\b/.test(text)
     || /\b\d+\s*(million|billion|thousand|k)\b.{0,25}\b(users?|customers?|downloads?|installs?)\b/.test(text)
-    || /\b(benchmark|benchmarks|leaderboard|score[sd]?)\b.{0,25}\b(result|number|score|does|has|beat)\b/.test(text)) {
+    || /\b(benchmark|benchmarks|leaderboard|score[sd]?)\b.{0,25}\b(result|number|score|does|has|have|beat|is)\b/.test(text)
+    || /\bwhat (benchmark|score)\b/.test(text)
+    || /\b(how much|what).{0,20}\b(funding|raised|valuation|worth|revenue|profit)\b/.test(text)
+    || /\bhow (big|large) is (fds|the (team|company|studio))\b/.test(text)) {
     return {
-      text: 'FDS does not publish user counts, download totals, revenue, or benchmark results, so I have no figures to give you and will not estimate any. What I can tell you is what each project is and what state it is actually in.',
+      text: 'FDS does not publish headcount, user counts, download totals, funding, revenue, or benchmark results, so I have no figures to give you and will not estimate any. What I can tell you is what each project is and what state it is actually in.',
       actions: [{ type: 'SHOW_APPS', label: 'View Projects' }],
       sources: ['scope-boundary'],
       intent: 'capability',
@@ -670,12 +804,23 @@ function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | un
     }
   }
 
-  // A launch that has not happened.
-  if (/\b(when|what date|which year)\b.{0,40}\b(launch|launched|release[d]?|came? out|shipped|went public)\b/.test(text)) {
+  // A launch date that does not exist, asked in any tense.
+  if (/\b(when|what date|which year)\b.{0,40}\b(launch\w*|release\w*|ship\w*|came? out|coming out|went public|be (out|available|public))\b/.test(text)
+    || /\b(launch|release|availability) date\b/.test(text)) {
     const productRecord = productFor(primary);
+    const gem = gemFor(primary);
+    if (gem) {
+      return {
+        text: `There is no ${gem.name} launch date. It is a ${gem.state.toLowerCase()} lineage, and FDS does not publish dates for research work — ${gem.notClaimed.charAt(0).toLowerCase()}${gem.notClaimed.slice(1)}`,
+        actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
+        sources: [`gem-${gem.key}`],
+        intent: 'availability',
+        entityId: primary
+      };
+    }
     if (!productRecord?.downloadUrl && project(primary)) {
       return {
-        text: `${name} has not launched publicly, so there is no launch date. ${statusSentence(primary)}`,
+        text: `${name} has not launched publicly and no launch date is published. ${statusSentence(primary)} FDS does not announce dates before work is ready.`,
         actions: [projectPageAction(primary)],
         sources: [`app-${primary}`],
         intent: 'availability',
@@ -691,7 +836,11 @@ function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | un
  * Deterministic answer for a query, or undefined when nothing canonical
  * applies and retrieval should take over.
  */
-export function canonicalAnswer(query: string, context?: KaylaPageContext): CanonicalAnswer | undefined {
+export function canonicalAnswer(
+  query: string,
+  context?: KaylaPageContext,
+  history: KaylaConversationMessage[] = []
+): CanonicalAnswer | undefined {
   const intents = classifyIntents(query).map((match) => match.intent);
   const entityMatches = matchEntities(query);
   let entityIds = entityMatches.map((match) => match.entityId);
@@ -702,7 +851,21 @@ export function canonicalAnswer(query: string, context?: KaylaPageContext): Cano
     if (byRole) entityIds = [byRole, ...entityIds];
   }
 
-  // A project page supplies the subject when the question does not name one.
+  // "Is it public yet?" carries its subject from the previous turn. Without
+  // this, follow-up questions fell back to a generic answer because the
+  // deterministic path never looked at the conversation.
+  if (entityIds.length === 0 && hasAnaphor(query)) {
+    const recalled = entitiesFromHistory(history);
+    if (recalled.length > 0) entityIds = recalled;
+  }
+
+  // A comparison needs two subjects; the second usually came earlier.
+  if (has1(intents, 'comparison') && entityIds.length === 1) {
+    const recalled = entitiesFromHistory(history).filter((id) => id !== entityIds[0]);
+    if (recalled.length > 0) entityIds = [entityIds[0], recalled[0]];
+  }
+
+  // A project page supplies the subject when nothing else did.
   if (entityIds.length === 0 && context?.entity && getKaylaEntity(context.entity)) {
     entityIds = [context.entity];
   }
@@ -740,7 +903,7 @@ export function canonicalAnswer(query: string, context?: KaylaPageContext): Cano
   if (has('support')) return supportAnswer(query);
   if (has('founder')) return founderAnswer();
 
-  if (has('recommendation') && !entityIds.some((id) => getKaylaEntity(id)?.kind === 'project' || getKaylaEntity(id)?.kind === 'product')) {
+  if (has('recommendation') && !entityIds.some((id) => getKaylaEntity(id)?.kind === 'project' || getKaylaEntity(id)?.kind === 'product' || getKaylaEntity(id)?.kind === 'gem')) {
     const answer = recommendationAnswer(query);
     if (answer) return answer;
   }
@@ -763,12 +926,19 @@ export function canonicalAnswer(query: string, context?: KaylaPageContext): Cano
     };
   }
 
+  if (has('list') || has('recommendation')) {
+    const filtered = filteredListAnswer(query);
+    if (filtered) return filtered;
+  }
+
   if (has('roadmap')) return roadmapAnswer(primaryEntity);
 
   if (has('list') && (!primaryEntity || primaryEntity === 'fds' || primaryEntity === 'projects' || primaryEntity === 'forged')) {
     if (primaryEntity === 'forged' && !has('list')) return undefined;
     return listAnswer();
   }
+
+  if (has('pricing')) return pricingAnswer(primaryEntity);
 
   if (primaryEntity) {
     // Version before availability: "what version is public?" is a version

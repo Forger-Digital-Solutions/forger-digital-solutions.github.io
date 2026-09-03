@@ -83,7 +83,7 @@ describe('Kayla Phase 2 - Config', () => {
     expect(config.maxMessageLength).toBe(2000);
     expect(config.maxHistoryMessages).toBe(10);
     expect(config.rateLimitPerMinute).toBe(5);
-    expect(config.requestTimeoutMs).toBe(12000);
+    expect(config.requestTimeoutMs).toBe(9000);
   });
 
   it('reads config from environment variables', () => {

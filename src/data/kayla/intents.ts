@@ -12,6 +12,7 @@ import { normalize } from './entities';
  */
 
 export type KaylaIntent =
+  | 'pricing'
   | 'recommendation'
   | 'availability'
   | 'version'
@@ -88,11 +89,13 @@ const RULES: IntentRule[] = [
     intent: 'recommendation',
     patterns: [
       /\bwhich .{0,20}(app|application|product|tool|project|software|one) (should|would|do|can|is best)\b/,
-      /\bwhat (should|would) i use for\b/,
+      /\bwhich .{0,20}(app|application|product|tool|project|software|one|thing)\b.{0,20}\b(is|are|does|do|involves?|handles?|covers?|focus(es|ed)? on|for)\b/,
+      /\bwhat (should|would) i (use|look at|start with|try)\b/,
       /\brecommend\b/,
       /\bwhich .{0,20}(is best|works best|fits) for\b/,
       /\bi need (help )?(with|to)\b/,
-      /\bwhat do you have for\b/
+      /\bwhat do you have for\b/,
+      /\bwhere (should|would) i start\b/
     ]
   },
   {
@@ -115,6 +118,15 @@ const RULES: IntentRule[] = [
     ]
   },
   {
+    intent: 'pricing',
+    patterns: [
+      /\b(how much (does|is|would)|what does .{0,25}cost|what.{0,6}s the (price|cost)|price of)\b/,
+      /\bis (it|this|that|[a-z]+) (free|paid|open source|a subscription)\b/,
+      /\b(pricing|subscription|licen[cs]e fee|paywall|monthly fee)\b/,
+      /\bdo i (have to |need to )?pay\b/
+    ]
+  },
+  {
     intent: 'availability',
     patterns: [
       /\b(can|could|may) (i|we|you|anyone) (download|install|get|buy|use|try|run|access)\b/,
@@ -122,7 +134,8 @@ const RULES: IntentRule[] = [
       /\bis (it|there|this|that) (available|out|public|released|downloadable|free|open)\b/,
       /\bis [a-z0-9 /]{2,30} (available|out|public|released|downloadable)\b/,
       /\b(has|have) .{0,30}(launched|released|shipped|come out)\b/,
-      /\bwhen did .{0,30}launch\b/,
+      /\bwhen (did|is|will|does) .{0,40}(launch|launching|release|releasing|ship|shipping|come out|be (out|available|public))\b/,
+      /\b(launch|release|availability) date\b/,
       /\b(download|get) (it|this|codeforge|forgerems|kyrablox|gems|topaz|sapphire|peridot|garnet)\b/,
       /\bwhere are the downloads?\b/,
       /\bcan i use it yet\b/,
@@ -187,7 +200,8 @@ const RULES: IntentRule[] = [
   {
     intent: 'list',
     patterns: [
-      /\b(what|which) (projects|apps|applications|products|software|tools)\b/,
+      /\b(what|which) (fds |your |the )?(projects|apps|applications|products|software|tools)\b/,
+      /\bwhich (ones?|of (them|these))\b.{0,30}\b(public|available|released|research|development|downloadable|use)\b/,
       /\b(show|list|see) (me )?(all |the )?(projects|apps|applications|products|software|everything)\b/,
       /\bwhat (do|does) (you|fds|they) (build|make|do|offer|work on)\b/,
       /\bwhat.{0,6}s (available|out) (now|today)\b/,

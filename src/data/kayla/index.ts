@@ -1,4 +1,4 @@
-import type { KaylaKnowledgeResult, KaylaSafeAction, KaylaPageContext } from './types';
+import type { KaylaKnowledgeResult, KaylaSafeAction, KaylaPageContext, KaylaConversationMessage } from './types';
 import { forgerems, getForgerEMSDownload } from './apps/forgerems';
 import { founder } from './company/founder';
 import { fds } from './company/fds';
@@ -341,8 +341,8 @@ export class LocalKaylaProvider {
    *   3. retrieved FDS documents
    *   4. an honest "not documented" rather than a confident irrelevant answer
    */
-  async search(query: string, context?: KaylaPageContext): Promise<KaylaKnowledgeResult[]> {
-    const canonical = canonicalAnswer(query, context);
+  async search(query: string, context?: KaylaPageContext, history: KaylaConversationMessage[] = []): Promise<KaylaKnowledgeResult[]> {
+    const canonical = canonicalAnswer(query, context, history);
     if (canonical) {
       return [{
         type: 'general',

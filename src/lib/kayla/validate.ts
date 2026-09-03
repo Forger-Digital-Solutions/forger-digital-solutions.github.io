@@ -8,6 +8,10 @@ const HISTORY = new Set(['role', 'content']);
 const CONTEXT = new Set(['route', 'pageType', 'entity']);
 const ROLES = new Set(['user', 'assistant']);
 const PRIVILEGED = new Set(['model', 'provider', 'apiKey', 'api_key', 'endpoint', 'systemPrompt', 'system_prompt', 'pricingMode', 'authorization']);
+/** Site-relative path, no whitespace or control characters. */
+const SAFE_ROUTE = /^\/[A-Za-z0-9\-._~/]{0,255}$/;
+/** Project and GEM identifiers are simple slugs. */
+const SAFE_ENTITY = /^[A-Za-z0-9][A-Za-z0-9-]{0,63}$/;
 
 function objectDepth(value: unknown, depth = 0): number {
   if (value === null || typeof value !== 'object') return depth;
@@ -54,8 +58,13 @@ export function validateChatRequest(body: unknown, config: KaylaConfig = getKayl
     else {
       const ctx = req.context as Record<string, unknown>;
       Object.keys(ctx).filter(k => !CONTEXT.has(k)).forEach(k => errors.push({ field: `context.${k}`, message: 'Unknown field is not allowed' }));
-      if (typeof ctx.route !== 'string' || !ctx.route.startsWith('/') || ctx.route.length > 256) errors.push({ field: 'context.route', message: 'Context route must be a bounded site-relative path' });
-      else context = { route: ctx.route, pageType: (ctx.pageType as KaylaPageContext['pageType']) || 'home', entity: typeof ctx.entity === 'string' ? ctx.entity.slice(0, 128) : undefined };
+      // Route and entity are echoed into the model prompt, so they are held to
+      // the shape of real site values. Without this, a caller could post a
+      // route containing newlines and forge a SYSTEM line, or an entity that
+      // impersonates the canonical-fact block.
+      if (typeof ctx.route !== 'string' || !SAFE_ROUTE.test(ctx.route)) errors.push({ field: 'context.route', message: 'Context route must be a bounded site-relative path' });
+      else if (ctx.entity !== undefined && (typeof ctx.entity !== 'string' || !SAFE_ENTITY.test(ctx.entity))) errors.push({ field: 'context.entity', message: 'Context entity must be a simple slug' });
+      else context = { route: ctx.route, pageType: (ctx.pageType as KaylaPageContext['pageType']) || 'home', entity: typeof ctx.entity === 'string' ? ctx.entity : undefined };
     }
   }
   if (errors.length) return { valid: false, errors };

@@ -63,43 +63,45 @@ function scrollToBottom(): void {
   if (c) c.scrollTop = c.scrollHeight;
 }
 
-function addMessage(role: 'user' | 'kayla', text: string, actions?: KaylaSafeAction[]): void {
-  messages.push({ role, text, actions });
-  renderMessages();
-  scrollToBottom();
+function buildBubble(msg: KaylaMessage): HTMLDivElement {
+  const bubble = document.createElement('div');
+  bubble.className = `kayla-msg kayla-msg--${msg.role}`;
+
+  const textEl = document.createElement('div');
+  textEl.className = 'kayla-msg__text';
+  textEl.textContent = msg.text;
+  bubble.appendChild(textEl);
+
+  if (msg.actions && msg.actions.length > 0) {
+    const actionsEl = document.createElement('div');
+    actionsEl.className = 'kayla-msg__actions';
+    for (const action of msg.actions) {
+      if (!isActionAllowed(action)) continue;
+      const btn = document.createElement('button');
+      btn.className = 'kayla-action-btn';
+      btn.textContent = action.label;
+      btn.addEventListener('click', () => executeAction(action));
+      actionsEl.appendChild(btn);
+    }
+    if (actionsEl.children.length > 0) {
+      bubble.appendChild(actionsEl);
+    }
+  }
+
+  return bubble;
 }
 
-function renderMessages(): void {
+/**
+ * Append one bubble rather than rebuilding the transcript. The conversation is
+ * an aria-live region, so replacing its contents re-announced every previous
+ * message on each new turn.
+ */
+function addMessage(role: 'user' | 'kayla', text: string, actions?: KaylaSafeAction[]): void {
+  const msg: KaylaMessage = { role, text, actions };
+  messages.push(msg);
   const c = conversation();
-  if (!c) return;
-  c.innerHTML = '';
-  for (const msg of messages) {
-    const bubble = document.createElement('div');
-    bubble.className = `kayla-msg kayla-msg--${msg.role}`;
-
-    const textEl = document.createElement('div');
-    textEl.className = 'kayla-msg__text';
-    textEl.textContent = msg.text;
-    bubble.appendChild(textEl);
-
-    if (msg.actions && msg.actions.length > 0) {
-      const actionsEl = document.createElement('div');
-      actionsEl.className = 'kayla-msg__actions';
-      for (const action of msg.actions) {
-        if (!isActionAllowed(action)) continue;
-        const btn = document.createElement('button');
-        btn.className = 'kayla-action-btn';
-        btn.textContent = action.label;
-        btn.addEventListener('click', () => executeAction(action));
-        actionsEl.appendChild(btn);
-      }
-      if (actionsEl.children.length > 0) {
-        bubble.appendChild(actionsEl);
-      }
-    }
-
-    c.appendChild(bubble);
-  }
+  if (c) c.appendChild(buildBubble(msg));
+  scrollToBottom();
 }
 
 function getStopButton(): HTMLButtonElement | null {
@@ -308,7 +310,17 @@ async function handleQuery(query: string): Promise<void> {
         if (!trimmed) continue;
 
         try {
-          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; actions?: KaylaSafeAction[]; done?: boolean };
+          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; actions?: KaylaSafeAction[]; done?: boolean; replace?: boolean };
+
+          // The server rejected the model's answer for contradicting canonical
+          // FDS data. Discard whatever streamed and show the canonical answer.
+          if (chunk.replace) {
+            streamingText = chunk.content || '';
+            responseMode = chunk.mode || 'local';
+            streamingActions = chunk.actions?.filter(a => isActionAllowed(a)) ?? streamingActions;
+            updateStreamingMessage(placeholder, streamingText, streamingActions);
+            break;
+          }
 
           if (chunk.error) {
             updateStreamingMessage(placeholder, chunk.errorType === 'RATE_LIMITED'
@@ -356,6 +368,9 @@ async function handleQuery(query: string): Promise<void> {
   } finally {
     setProcessing(false);
     abortController = null;
+    // Focus is lost when the send button is disabled mid-request; hand it back
+    // so a keyboard or screen-reader user can type the next question.
+    if (isOpen) input()?.focus();
   }
 }
 
@@ -424,15 +439,16 @@ function toggle(): void {
   isOpen = !isOpen;
   if (isOpen) {
     p.hidden = false;
-    requestAnimationFrame(() => {
-      p.classList.add('kayla-panel--open');
-      l.classList.add('kayla-launcher--hidden');
-      l.setAttribute('aria-expanded', 'true');
-      setTimeout(() => {
-        const inp = input();
-        if (inp) inp.focus();
-      }, 100);
-    });
+    // Reading a layout property flushes the pre-open styles so the CSS
+    // transition still animates. The open state and focus are then applied
+    // synchronously: they used to sit inside requestAnimationFrame plus a
+    // nested timer, so whenever rAF was throttled — a background tab, reduced
+    // power — the panel stayed non-interactive and focus never entered it.
+    void p.offsetWidth;
+    p.classList.add('kayla-panel--open');
+    l.classList.add('kayla-launcher--hidden');
+    l.setAttribute('aria-expanded', 'true');
+    input()?.focus();
   } else {
     p.classList.remove('kayla-panel--open');
     l.classList.remove('kayla-launcher--hidden');

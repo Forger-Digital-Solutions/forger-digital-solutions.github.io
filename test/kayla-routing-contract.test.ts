@@ -5,6 +5,7 @@ import { classifyIntents } from '../src/data/kayla/intents';
 import { canonicalAnswer } from '../src/data/kayla/answers';
 import { buildChatMessages, KAYLA_SYSTEM_PROMPT } from '../src/lib/kayla/systemPrompt';
 import { isPromptInjectionAttempt } from '../src/lib/kayla/validate';
+import { createKaylaConfig } from '../src/lib/kayla/config';
 import { products } from '../src/data/products';
 import { projects } from '../src/data/projects';
 import { gems } from '../src/data/gems';
@@ -327,5 +328,21 @@ describe('Page context supplies the subject for a bare question', () => {
   it('answers about the project whose page the visitor is on', async () => {
     const result = await ask('Is it available?', { route: '/projects/kyrablox', pageType: 'project', entity: 'kyrablox' });
     expect(contains(result.snippet, 'KyraBlox')).toBe(true);
+  });
+});
+
+describe('Provider timeout stays in an evidence-backed band', () => {
+  it('is short enough to bound the wait and long enough for a real answer', () => {
+    // Twenty live samples: every successful provider call finished under
+    // 7.6s, while 40% of attempts hit the ceiling. Below ~7s legitimate
+    // answers would start failing; above ~10s a visitor waits for nothing,
+    // because the canonical answer is already computed before the call.
+    const timeout = createKaylaConfig({}).requestTimeoutMs;
+    expect(timeout).toBeGreaterThanOrEqual(7000);
+    expect(timeout).toBeLessThanOrEqual(10000);
+  });
+
+  it('reads the timeout from the environment', () => {
+    expect(createKaylaConfig({ KAYLA_PROVIDER_TIMEOUT_MS: '8500' }).requestTimeoutMs).toBe(8500);
   });
 });

@@ -193,7 +193,7 @@ export interface KaylaKnowledgeResult {
 }
 
 export interface KaylaKnowledgeProvider {
-  search(query: string, context?: KaylaPageContext): Promise<KaylaKnowledgeResult[]>;
+  search(query: string, context?: KaylaPageContext, history?: KaylaConversationMessage[]): Promise<KaylaKnowledgeResult[]>;
 }
 
 export interface KaylaConversationMessage {
