@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-03
 **Scope:** Kayla Copilot as deployed on `https://forger-digital-solutions.github.io` and the `kayla-api` Cloudflare Worker.
-**Verdict:** `KAYLA_AUDIT_PASS_WITH_RECOMMENDATIONS` — after the repairs in this document. The pre-repair state was `KAYLA_AUDIT_REPAIR_REQUIRED`.
+**Verdict:** `KAYLA_AUDIT_PASS_WITH_RECOMMENDATIONS` — after the repairs in this document, which are deployed (Worker version `9440aa8d`, Pages run `33757120684`). The pre-repair state was `KAYLA_AUDIT_REPAIR_REQUIRED`.
 
 This document replaces every prior Kayla certification file. The superseded documents are preserved, untracked, in `docs/kayla/archive/`.
 
@@ -117,7 +117,15 @@ Caveat stated plainly: the repairs and this test set were authored in the same s
 | Deterministic canonical answer | 0.10 ms | 0.30 ms | 9.6 ms |
 | Retrieval | 23.6 ms | 28.2 ms | 36.0 ms |
 
-Provider latency was not sampled: the production hourly limit was exhausted at the start of the audit and re-measuring would have meant hammering the live endpoint.
+**Live production latency** after deploy (small n, sampled at 13s intervals to respect the rate limit):
+
+| Path | Samples | Median | Range |
+|---|---|---|---|
+| Settled answer, no provider call | 3 | 223 ms | 174–223 ms |
+| AI-backed answer | 3 | 3191 ms | 2330–7449 ms |
+| Provider timeout → canonical fallback | 1 | — | 12169 ms |
+
+The 12.2s sample is the 12-second provider timeout firing on the free OpenRouter router and degrading to the canonical answer. The degradation is correct, but the visitor waits the full timeout watching "Thinking…". See recommendations.
 
 **AI avoidance:** 49 of 90 golden queries (54.4%) are now answered with no provider call and no AI-budget consumption. Before the change, all 90 would have consumed budget.
 
@@ -167,14 +175,27 @@ Provider latency was not sampled: the production hourly limit was exhausted at t
 
 ## 7. Remaining recommendations
 
-**P1 — deploy.** The Worker changes (rate-limit status, system prompt, canonical routing) only take effect on `wrangler deploy`. Until then production still runs the audited-broken build.
+**P2 — shorten the provider timeout.** `KAYLA_PROVIDER_TIMEOUT_MS` is 12000. The canonical answer is computed *before* the provider call, so a timeout costs nothing but the wait. Dropping to ~8000 would cut the worst case by a third with no loss of correctness.
 
 **P2 — retrieval-injection test with live content.** Retrieved text is labelled as data in the prompt, but no test yet feeds deliberately hostile document text through the pipeline. Worth adding a fixture document containing instructions and asserting the answer ignores them.
 
-**P2 — provider-path measurement.** Latency, multi-turn drift over 10–20 turns, and response-length adaptation were not measured against the live model because production rate limits were exhausted. Run these against `wrangler dev` with a test key once deployed.
+**P2 — multi-turn measurement.** Latency is now sampled, but drift over 10–20 turns and response-length adaptation were not measured. Run these against the deployed Worker or `wrangler dev`.
 
 **P3 — answer-source disclosure.** The response carries `mode: 'local' | 'ai'` but the UI no longer surfaces it per message. Consider a quiet indicator on canonical answers rather than the old status-badge flip.
 
 **P3 — `knownAnswer()` residue.** The legacy hand-written branches in `src/data/kayla/index.ts` now run only when the canonical layer declines. Most are unreachable; they could be removed once the canonical layer has run in production for a while.
 
 **P3 — mobile interaction pass.** Visual evidence exists from the earlier run, but real interaction at 320×800 and 390×844 (open, type, send, long-answer scroll, keyboard, close) was not re-tested this session.
+
+---
+
+## 8. Production smoke test after deploy
+
+Worker version `9440aa8d-5e41-4f28-9c98-ad5e73d19694`, run against the live endpoint on 2026-09-03.
+
+| Question | Mode | Latency | Result |
+|---|---|---|---|
+| Who founded Forger Digital Solutions? | local | 179 ms | Correct founder answer. Previously returned a CodeForge summary. |
+| What is Sapphire? | ai | 3294 ms | Correct GEMS lineage with its RESEARCH state and the "not shipped in CodeForge" disclaimer. Previously returned the contact-us email. |
+| Tell me about CodeForge v9.0. | local | 145 ms | "There is no CodeForge v9.0. The current public version is v0.2.0…" |
+| What's the weather today? | local | 218 ms | Scope boundary held; no provider call. |
