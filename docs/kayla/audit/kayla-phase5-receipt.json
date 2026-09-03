@@ -3,8 +3,8 @@
   "verdictReason": "All Phase 5 invariants are proven by tests executing the real production code path (not reimplementations). Two P1 defects (canonical-authority bypass, page-context prompt injection) were found and fixed. Withheld from full CERTIFIED only because the fixes are not yet deployed to production.",
   "branch": "main",
   "startingHead": "be9e9f5929aca295863a435ac7b5476a26106eb7",
-  "endingHead": null,
-  "commitsCreatedThisPhase": null,
+  "endingHead": "98a974712e803f379c766194ce257c0a7bf0d63c",
+  "commitsCreatedThisPhase": 1,
   "pushed": false,
   "deployment": {
     "deployedThisPhase": false,
@@ -23,18 +23,54 @@
     "tests": 421,
     "testsPassed": 421,
     "newTestFilesThisPhase": [
-      { "file": "test/kayla-canonical-authority.test.ts", "count": 11, "purpose": "hostile-model canonical-fact enforcement, streaming and non-streaming" },
-      { "file": "test/kayla-verify.test.ts", "count": 20, "purpose": "verifier true-positive lie detection and false-positive safety against real canonical prose" },
-      { "file": "test/kayla-conversation.test.ts", "count": 16, "purpose": "multi-turn anaphora, page context, context-injection rejection" },
-      { "file": "test/kayla-failure-matrix.test.ts", "count": 16, "purpose": "every provider/network/validation failure mode against the real handler" },
-      { "file": "test/kayla-coverage-drift.test.ts", "count": 45, "purpose": "every canonical entity reachable; every answer traces to its own source record" }
+      {
+        "file": "test/kayla-canonical-authority.test.ts",
+        "count": 11,
+        "purpose": "hostile-model canonical-fact enforcement, streaming and non-streaming"
+      },
+      {
+        "file": "test/kayla-verify.test.ts",
+        "count": 20,
+        "purpose": "verifier true-positive lie detection and false-positive safety against real canonical prose"
+      },
+      {
+        "file": "test/kayla-conversation.test.ts",
+        "count": 16,
+        "purpose": "multi-turn anaphora, page context, context-injection rejection"
+      },
+      {
+        "file": "test/kayla-failure-matrix.test.ts",
+        "count": 16,
+        "purpose": "every provider/network/validation failure mode against the real handler"
+      },
+      {
+        "file": "test/kayla-coverage-drift.test.ts",
+        "count": 45,
+        "purpose": "every canonical entity reachable; every answer traces to its own source record"
+      }
     ]
   },
-  "typeCheck": { "command": "astro check", "files": 84, "errors": 0, "warnings": 0, "hints": 0 },
-  "build": { "command": "astro build", "pagesBuilt": 26 },
-  "linkCheck": { "checked": 930, "broken": 0 },
+  "typeCheck": {
+    "command": "astro check",
+    "files": 84,
+    "errors": 0,
+    "warnings": 0,
+    "hints": 0
+  },
+  "build": {
+    "command": "astro build",
+    "pagesBuilt": 26
+  },
+  "linkCheck": {
+    "checked": 930,
+    "broken": 0
+  },
   "secretScan": "PASS",
-  "contentValidation": { "projects": 6, "notes": 6, "valid": true },
+  "contentValidation": {
+    "projects": 6,
+    "notes": 6,
+    "valid": true
+  },
   "knowledgeInventory": "PASS",
   "goldenQueryCheck": {
     "command": "node scripts/kayla-golden-check.mjs",
@@ -43,32 +79,78 @@
     "passed": 113,
     "addedThisPhase": 23,
     "tiers": {
-      "1": { "total": 50, "passed": 50, "accuracy": 1.0, "target": 1.0, "meetsTarget": true },
-      "2": { "total": 45, "passed": 45, "accuracy": 1.0, "target": 0.95, "meetsTarget": true },
-      "3": { "total": 18, "passed": 18, "accuracy": 1.0, "target": 0.9, "meetsTarget": true }
+      "1": {
+        "total": 50,
+        "passed": 50,
+        "accuracy": 1,
+        "target": 1,
+        "meetsTarget": true
+      },
+      "2": {
+        "total": 45,
+        "passed": 45,
+        "accuracy": 1,
+        "target": 0.95,
+        "meetsTarget": true
+      },
+      "3": {
+        "total": 18,
+        "passed": 18,
+        "accuracy": 1,
+        "target": 0.9,
+        "meetsTarget": true
+      }
     }
   },
-  "workerBuild": { "command": "wrangler deploy --dry-run", "totalUploadKiB": 198.11, "gzipKiB": 52.00 },
+  "workerBuild": {
+    "command": "wrangler deploy --dry-run",
+    "totalUploadKiB": 198.11,
+    "gzipKiB": 52
+  },
   "workerDeployCheck": "PASS (workers.dev, zero-cost policy, strict CORS, SQLite Durable Object)",
-
   "entityResolution": {
     "falsePositivesFixedThisPhase": [
-      { "input": "the", "before": "we-the-people", "after": null, "cause": "stopword inside a multi-word alias" },
-      { "input": "Forger", "before": "codeforge", "after": null, "cause": "0.82 fuzzy threshold matched 'forge' against 'Forger'" },
-      { "input": "find", "before": "farmstand-finder", "after": null, "cause": "0.82 fuzzy threshold matched 'finder' against 'find'" }
+      {
+        "input": "the",
+        "before": "we-the-people",
+        "after": null,
+        "cause": "stopword inside a multi-word alias"
+      },
+      {
+        "input": "Forger",
+        "before": "codeforge",
+        "after": null,
+        "cause": "0.82 fuzzy threshold matched 'forge' against 'Forger'"
+      },
+      {
+        "input": "find",
+        "before": "farmstand-finder",
+        "after": null,
+        "cause": "0.82 fuzzy threshold matched 'finder' against 'find'"
+      }
     ],
-    "fuzzyThresholdChange": { "before": 0.82, "after": 0.875 },
+    "fuzzyThresholdChange": {
+      "before": 0.82,
+      "after": 0.875
+    },
     "everyProjectResolves": true,
     "everyGemResolvesByNameAndByRole": true,
-    "aliasesAndTyposVerified": ["Code Forge", "Forger EMS", "kyra blox", "WeThePeple", "Kayla Publisher", "Training Ground"]
+    "aliasesAndTyposVerified": [
+      "Code Forge",
+      "Forger EMS",
+      "kyra blox",
+      "WeThePeple",
+      "Kayla Publisher",
+      "Training Ground"
+    ]
   },
-
   "intentRouting": {
     "intentCount": 19,
-    "newIntentsThisPhase": ["pricing"],
+    "newIntentsThisPhase": [
+      "pricing"
+    ],
     "regressionFixed": "Can I download KyraBlox? / Is KyraBlox public? / When is KyraBlox launching? / Where can I get KyraBlox? previously collapsed into one identical answer; now 4 distinct correct intents"
   },
-
   "providerContract": {
     "systemPromptSent": true,
     "historySent": true,
@@ -79,17 +161,31 @@
     "canonicalAnswerLabeledInPrompt": true,
     "retrievedTextLabeledAsDataNotInstructions": true,
     "maxResponseTokens": 700,
-    "timeoutMs": { "before": 12000, "after": 9000 },
-    "regressionTestGuardsTimeoutBand": { "minMs": 7000, "maxMs": 10000 }
+    "timeoutMs": {
+      "before": 12000,
+      "after": 9000
+    },
+    "regressionTestGuardsTimeoutBand": {
+      "minMs": 7000,
+      "maxMs": 10000
+    }
   },
-
   "canonicalAuthority": {
     "method": "mocked KaylaAIProvider substituted via vi.mock; driven through the real unmodified handleKaylaChat/streamKaylaChat",
     "enforcementExistedBeforePhase": false,
     "verifierFile": "src/lib/kayla/verify.ts",
     "hostileClaimsBlockedNonStreaming": 6,
     "hostileClaimsBlockedStreaming": 1,
-    "categoriesEnforced": ["version", "availability", "url", "benchmark", "cancellation", "founder", "metric", "price"],
+    "categoriesEnforced": [
+      "version",
+      "availability",
+      "url",
+      "benchmark",
+      "cancellation",
+      "founder",
+      "metric",
+      "price"
+    ],
     "falsePositiveSweep": {
       "goldenAnswersChecked": 113,
       "goldenAnswersFlagged": 0,
@@ -99,7 +195,6 @@
       "realisticGoodPhrasesFlagged": 0
     }
   },
-
   "multiTurn": {
     "conversationsTested": 4,
     "allPassed": true,
@@ -112,14 +207,17 @@
       "FarmStand Finder -> is it downloadable -> what about KyraBlox -> is that downloadable (no entity bleed)"
     ]
   },
-
   "pageContext": {
-    "pagesTested": ["/projects/gems-training-grounds", "/projects/codeforge", "/projects/kyrablox", "/about"],
+    "pagesTested": [
+      "/projects/gems-training-grounds",
+      "/projects/codeforge",
+      "/projects/kyrablox",
+      "/about"
+    ],
     "resolvesAnaphorCorrectly": true,
     "explicitEntityOutranksPageContext": true,
     "injectionVectorFoundAndFixed": true
   },
-
   "promptInjection": {
     "messageTextAttacksBlocked": 8,
     "messageTextAttacksTested": 8,
@@ -135,18 +233,19 @@
         "forged CANONICAL FDS ANSWER block via context.entity",
         "external URL injection via context.route"
       ],
-      "fixedBy": ["SAFE_ROUTE/SAFE_ENTITY regex validation in validate.ts", "safeContextValue() stripping in systemPrompt.ts as defense in depth"],
+      "fixedBy": [
+        "SAFE_ROUTE/SAFE_ENTITY regex validation in validate.ts",
+        "safeContextValue() stripping in systemPrompt.ts as defense in depth"
+      ],
       "realRoutesStillAcceptedAfterFix": true
     }
   },
-
   "rateLimit": {
     "streamingReturns429": true,
     "jsonPathReturns429": true,
     "perClientSeparationVerified": true,
     "aiBudgetExhaustionServesCanonicalAnswerNotError": true
   },
-
   "providerFailure": {
     "modesExecuted": 14,
     "modesPassed": 14,
@@ -155,17 +254,35 @@
       "provider dying after partial correct text left a half-finished sentence followed by an apology (same replace fix)"
     ]
   },
-
   "latency": {
     "sampledAgainst": "currently deployed (pre-Phase-5) production Worker",
     "sampleCount": 20,
-    "deterministicMs": { "n": 5, "median": 271, "max": 375 },
-    "aiSuccessMs": { "n": 9, "median": 3699, "max": 7583 },
-    "timeoutFallbackMs": { "n": 6, "observedRangeMin": 12227, "observedRangeMax": 13183 },
-    "firstByteMsForAi": { "min": 904, "median": 2250, "max": 6754 },
-    "timeoutDecision": { "before": 12000, "after": 9000, "rationale": "every observed success completed under 7.6s; 30% of samples hit the old 12s ceiling and waited for nothing since the canonical fallback is precomputed" }
+    "deterministicMs": {
+      "n": 5,
+      "median": 271,
+      "max": 375
+    },
+    "aiSuccessMs": {
+      "n": 9,
+      "median": 3699,
+      "max": 7583
+    },
+    "timeoutFallbackMs": {
+      "n": 6,
+      "observedRangeMin": 12227,
+      "observedRangeMax": 13183
+    },
+    "firstByteMsForAi": {
+      "min": 904,
+      "median": 2250,
+      "max": 6754
+    },
+    "timeoutDecision": {
+      "before": 12000,
+      "after": 9000,
+      "rationale": "every observed success completed under 7.6s; 30% of samples hit the old 12s ceiling and waited for nothing since the canonical fallback is precomputed"
+    }
   },
-
   "accessibility": {
     "fixesThisPhase": [
       "focus returns to the composer input after each turn completes",
@@ -174,60 +291,141 @@
       "toggle-open no longer depends on requestAnimationFrame plus a nested setTimeout, which could leave the panel non-interactive with focus never entering it if rAF was throttled"
     ]
   },
-
   "mobileUx": {
-    "viewportsChecked": [320, 375],
+    "viewportsChecked": [
+      320,
+      375
+    ],
     "method": "real browser screenshot at each width after opening the panel and sending a message",
     "result": "panel renders full-width, fully opaque, composer and send button reachable at both widths",
     "caveat": "DOM-inspection APIs (getComputedStyle/getBoundingClientRect) returned internally inconsistent values contradicting the CSS cascade and the screenshot during this check; treated as a testing-bridge artifact since the screenshot is unambiguous, not chased further"
   },
-
   "liveSmoke": {
     "ranAgainstProduction": false,
     "reason": "production runs the pre-Phase-5 build; a smoke test now would validate old code, not this phase's fixes",
     "recommendedNextStep": "deploy, then re-run the 16-question production smoke suite from the prior phase's audit",
     "localDevServerWalkthrough": {
       "ran": true,
-      "interactions": ["open panel", "type and send", "backend-unreachable failure path", "reopen at 320px and 375px"],
+      "interactions": [
+        "open panel",
+        "type and send",
+        "backend-unreachable failure path",
+        "reopen at 320px and 375px"
+      ],
       "failureUxObserved": "clean 'temporarily unavailable' message, no stack trace, input/send re-enabled, stop button hidden afterward"
     }
   },
-
   "defectsFound": [
-    { "severity": "P1", "id": "canonical-authority-not-enforced", "description": "System prompt told the model canonical facts were settled, but nothing enforced it; a hostile or weak model response passed straight through to the visitor.", "fixed": true },
-    { "severity": "P1", "id": "page-context-prompt-injection", "description": "context.route and context.entity were spliced unsanitized into the model prompt; any caller of the public API could forge a SYSTEM instruction or fake canonical-fact block.", "fixed": true },
-    { "severity": "P2", "id": "multi-turn-anaphora-not-resolved", "description": "Deterministic answer layer had no access to conversation history; every pronoun follow-up question fell through to a generic answer.", "fixed": true },
-    { "severity": "P2", "id": "streaming-false-claim-appended-not-replaced", "description": "A rejected/failed mid-stream answer was appended to rather than replacing the already-streamed (possibly wrong or half-finished) text.", "fixed": true },
-    { "severity": "P2", "id": "recommendation-and-list-answers-underpowered", "description": "Several 'which project is for X' and 'which projects are public today' style questions fell through to a generic answer or the wrong entity.", "fixed": true },
-    { "severity": "P3", "id": "entity-fuzzy-threshold-too-loose", "description": "0.82 similarity threshold let 'Forger' match 'forge' (CodeForge) and 'find' match 'finder' (FarmStand Finder).", "fixed": true },
-    { "severity": "P3", "id": "gem-role-matching-false-positive", "description": "'What is GEMS / Training Grounds?' incorrectly resolved to Peridot because 'Training Grounds' appeared in that lineage's own description text.", "fixed": true },
-    { "severity": "P3", "id": "a11y-focus-and-live-region", "description": "Focus was not returned to the composer after a turn; the conversation transcript rebuilt (and re-announced) on every message; toggle-open depended on rAF+setTimeout and could leave the panel non-interactive.", "fixed": true },
-    { "severity": "P3", "id": "provider-timeout-not-evidence-based", "description": "12000ms timeout was inherited without measurement; live sampling showed successes complete well under 8s while failures wasted the full 12s.", "fixed": true }
+    {
+      "severity": "P1",
+      "id": "canonical-authority-not-enforced",
+      "description": "System prompt told the model canonical facts were settled, but nothing enforced it; a hostile or weak model response passed straight through to the visitor.",
+      "fixed": true
+    },
+    {
+      "severity": "P1",
+      "id": "page-context-prompt-injection",
+      "description": "context.route and context.entity were spliced unsanitized into the model prompt; any caller of the public API could forge a SYSTEM instruction or fake canonical-fact block.",
+      "fixed": true
+    },
+    {
+      "severity": "P2",
+      "id": "multi-turn-anaphora-not-resolved",
+      "description": "Deterministic answer layer had no access to conversation history; every pronoun follow-up question fell through to a generic answer.",
+      "fixed": true
+    },
+    {
+      "severity": "P2",
+      "id": "streaming-false-claim-appended-not-replaced",
+      "description": "A rejected/failed mid-stream answer was appended to rather than replacing the already-streamed (possibly wrong or half-finished) text.",
+      "fixed": true
+    },
+    {
+      "severity": "P2",
+      "id": "recommendation-and-list-answers-underpowered",
+      "description": "Several 'which project is for X' and 'which projects are public today' style questions fell through to a generic answer or the wrong entity.",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "entity-fuzzy-threshold-too-loose",
+      "description": "0.82 similarity threshold let 'Forger' match 'forge' (CodeForge) and 'find' match 'finder' (FarmStand Finder).",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "gem-role-matching-false-positive",
+      "description": "'What is GEMS / Training Grounds?' incorrectly resolved to Peridot because 'Training Grounds' appeared in that lineage's own description text.",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "a11y-focus-and-live-region",
+      "description": "Focus was not returned to the composer after a turn; the conversation transcript rebuilt (and re-announced) on every message; toggle-open depended on rAF+setTimeout and could leave the panel non-interactive.",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "provider-timeout-not-evidence-based",
+      "description": "12000ms timeout was inherited without measurement; live sampling showed successes complete well under 8s while failures wasted the full 12s.",
+      "fixed": true
+    }
   ],
-
   "remainingRecommendations": [
-    { "priority": "BLOCKING", "item": "Deploy this phase's changes. Production currently runs the build with the canonical-authority bypass and the context-injection vulnerability." },
-    { "priority": "NON_BLOCKING", "item": "Re-sample provider latency and re-run the live production smoke suite against the newly deployed Worker." },
-    { "priority": "NON_BLOCKING", "item": "verifyAgainstCanon() is pattern-based, scoped to categories FDS's own data can adjudicate (version/availability/url/benchmark/cancellation/founder/metric/price); a subtly wrong relationship between two individually-correct facts would not be caught." },
-    { "priority": "FUTURE_ENHANCEMENT", "item": "Retire residual knownAnswer() branches in src/data/kayla/index.ts now that canonicalAnswer() covers nearly everything they did." },
-    { "priority": "FUTURE_ENHANCEMENT", "item": "Consider a quiet per-message source indicator now that settled answers never touch the model." },
-    { "priority": "FUTURE_ENHANCEMENT", "item": "A manual (non-CI, non-automatic) live adversarial test against the real OpenRouter free-tier model would add confidence beyond the mocked-provider tests, but should not run automatically." }
+    {
+      "priority": "BLOCKING",
+      "item": "Deploy this phase's changes. Production currently runs the build with the canonical-authority bypass and the context-injection vulnerability."
+    },
+    {
+      "priority": "NON_BLOCKING",
+      "item": "Re-sample provider latency and re-run the live production smoke suite against the newly deployed Worker."
+    },
+    {
+      "priority": "NON_BLOCKING",
+      "item": "verifyAgainstCanon() is pattern-based, scoped to categories FDS's own data can adjudicate (version/availability/url/benchmark/cancellation/founder/metric/price); a subtly wrong relationship between two individually-correct facts would not be caught."
+    },
+    {
+      "priority": "FUTURE_ENHANCEMENT",
+      "item": "Retire residual knownAnswer() branches in src/data/kayla/index.ts now that canonicalAnswer() covers nearly everything they did."
+    },
+    {
+      "priority": "FUTURE_ENHANCEMENT",
+      "item": "Consider a quiet per-message source indicator now that settled answers never touch the model."
+    },
+    {
+      "priority": "FUTURE_ENHANCEMENT",
+      "item": "A manual (non-CI, non-automatic) live adversarial test against the real OpenRouter free-tier model would add confidence beyond the mocked-provider tests, but should not run automatically."
+    }
   ],
-
   "filesChanged": {
     "modified": [
-      ".env.example", "src/components/KaylaCopilot.astro", "src/components/KaylaCopilot.ts",
-      "src/data/kayla/answers.ts", "src/data/kayla/entities.ts", "src/data/kayla/index.ts",
-      "src/data/kayla/intents.ts", "src/data/kayla/types.ts", "src/lib/kayla/config.ts",
-      "src/lib/kayla/handler.ts", "src/lib/kayla/provider.ts", "src/lib/kayla/systemPrompt.ts",
-      "src/lib/kayla/validate.ts", "test/kayla-phase2-provider.test.ts",
-      "test/kayla-routing-contract.test.ts", "test/kayla/golden-queries.json", "worker/wrangler.toml"
+      ".env.example",
+      "src/components/KaylaCopilot.astro",
+      "src/components/KaylaCopilot.ts",
+      "src/data/kayla/answers.ts",
+      "src/data/kayla/entities.ts",
+      "src/data/kayla/index.ts",
+      "src/data/kayla/intents.ts",
+      "src/data/kayla/types.ts",
+      "src/lib/kayla/config.ts",
+      "src/lib/kayla/handler.ts",
+      "src/lib/kayla/provider.ts",
+      "src/lib/kayla/systemPrompt.ts",
+      "src/lib/kayla/validate.ts",
+      "test/kayla-phase2-provider.test.ts",
+      "test/kayla-routing-contract.test.ts",
+      "test/kayla/golden-queries.json",
+      "worker/wrangler.toml"
     ],
     "added": [
       "src/lib/kayla/verify.ts",
-      "test/kayla-canonical-authority.test.ts", "test/kayla-conversation.test.ts",
-      "test/kayla-coverage-drift.test.ts", "test/kayla-failure-matrix.test.ts", "test/kayla-verify.test.ts",
-      "docs/kayla/audit/kayla-phase5-certification.md", "docs/kayla/audit/kayla-phase5-receipt.json"
+      "test/kayla-canonical-authority.test.ts",
+      "test/kayla-conversation.test.ts",
+      "test/kayla-coverage-drift.test.ts",
+      "test/kayla-failure-matrix.test.ts",
+      "test/kayla-verify.test.ts",
+      "docs/kayla/audit/kayla-phase5-certification.md",
+      "docs/kayla/audit/kayla-phase5-receipt.json"
     ]
   }
 }
