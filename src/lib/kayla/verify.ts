@@ -2,6 +2,7 @@ import { projects } from '../../data/projects';
 import { products } from '../../data/products';
 import { gems } from '../../data/gems';
 import { siteConfig } from '../../config/site';
+import { verifyRelationsInText } from './verify-relations';
 
 /**
  * Canonical claim verification.
@@ -25,7 +26,10 @@ export type ViolationKind =
   | 'cancellation'
   | 'founder'
   | 'metric'
-  | 'price';
+  | 'price'
+  | 'denied_relation'
+  | 'unsupported_relation'
+  | 'false_equivalence';
 
 export interface CanonViolation {
   kind: ViolationKind;
@@ -297,6 +301,13 @@ export function verifyAgainstCanon(text: string): CanonVerdict {
     checkMetrics(sentence, violations);
     checkPrice(sentence, violations);
   }
+
+  // Facts can all be individually true while the sentence joining them is
+  // invented. Relationship checking is the second dimension of truth.
+  for (const relation of verifyRelationsInText(text)) {
+    violations.push({ kind: relation.kind, detail: relation.detail, sentence: relation.sentence });
+  }
+
   return { ok: violations.length === 0, violations };
 }
 

@@ -3,6 +3,7 @@ import { createKaylaConfig, getAllowedOrigins, getRateLimitSalt, type KaylaEnv }
 import { isOriginAllowed, buildCorsHeaders, type CorsOptions } from '../src/lib/kayla/cors';
 import { evaluateModelPolicy, ZERO_COST_POLICY } from '../src/lib/kayla/model-policy';
 import { KaylaAbuseGuard, createLimiterIdentifier } from './abuse-guard';
+import type { KaylaDiagnostics } from '../src/lib/kayla/diagnostics';
 
 interface DurableStub { fetch(request: Request | string, init?: RequestInit): Promise<Response>; }
 interface DurableNamespace { idFromName(name: string): unknown; get(id: unknown): DurableStub; }
@@ -45,10 +46,17 @@ export default {
 
     if (url.pathname === '/api/kayla/health') {
       if (request.method !== 'GET') return finalize(json({ error: 'Method not allowed' }, 405), 'rejected');
+      // Whether the shared daily allowance still has room is the difference
+      // between "the model lane is available" and "the model lane is dark for
+      // everyone until UTC midnight". aiAvailable claimed the former while the
+      // latter was true, which is what made the Phase 6 gap so hard to read.
+      const budget = await readAIBudget(env, config.aiDailyRequestLimit);
       return finalize(json({
         status: limiterReady ? 'ok' : 'degraded', knowledgeReady: true,
         aiEnabled: config.enabled, aiConfigured: config.enabled && Boolean(config.apiKey) && policy.eligible,
-        aiAvailable: config.enabled && Boolean(config.apiKey) && policy.eligible,
+        aiAvailable: config.enabled && Boolean(config.apiKey) && policy.eligible && budget.remaining > 0,
+        aiConfiguredButExhausted: config.enabled && Boolean(config.apiKey) && policy.eligible && budget.remaining <= 0,
+        aiDailyLimit: budget.limit, aiDailyUsed: budget.used, aiDailyRemaining: budget.remaining,
         provider: config.provider || 'local', modelPolicy: ZERO_COST_POLICY.toLowerCase().replaceAll('_', '-'),
         streaming: true, rateLimiter: limiterReady ? 'ready' : 'unavailable', mode: 'production'
       }), 'health');
@@ -84,9 +92,23 @@ export default {
       return finalize(json({ error: 'Kayla has answered several questions from this connection recently. Please try again in a minute.', errorType: 'RATE_LIMITED' }, 429), 'rate_limited', 'blocked');
     }
 
+    // Operator-facing only. Correlates to the visitor's X-Request-ID header so
+    // a reported problem can be traced without logging what they typed.
+    const emitDiagnostics = (diagnostics: KaylaDiagnostics): void => {
+      try {
+        console.log(JSON.stringify({
+          event: 'kayla_request_diagnostics',
+          requestId,
+          durationMs: Date.now() - started,
+          ...diagnostics
+        }));
+      } catch { /* logging must never break a response */ }
+    };
+
     const endpointConfig: KaylaEndpointConfig = {
       providerConfig: { provider: config.provider, model: config.model, apiKey: config.apiKey, timeoutMs: config.requestTimeoutMs },
-      kaylaConfig: config, consumeRequestAllowance: async () => true, consumeAIAllowance
+      kaylaConfig: config, consumeRequestAllowance: async () => true, consumeAIAllowance,
+      onDiagnostics: emitDiagnostics
     };
     const stream = url.searchParams.get('stream') === 'true';
     if (stream) {
@@ -104,6 +126,25 @@ export default {
 
 function isLoopbackHost(hostname: string): boolean {
   return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname === '[::1]';
+}
+
+/**
+ * Read the shared daily AI allowance without consuming it. Fails soft: a
+ * guard that cannot be read must not take the health endpoint down with it.
+ */
+async function readAIBudget(env: WorkerEnv, limit: number): Promise<{ limit: number; used: number; remaining: number }> {
+  if (!env.ABUSE_GUARD) return { limit, used: 0, remaining: limit };
+  try {
+    const stub = env.ABUSE_GUARD.get(env.ABUSE_GUARD.idFromName('global-ai-budget'));
+    const response = await stub.fetch('https://guard.invalid/ai-budget-status');
+    if (!response.ok) return { limit, used: 0, remaining: limit };
+    const state = await response.json() as { day?: string | null; count?: number };
+    const today = new Date().toISOString().slice(0, 10);
+    const used = state.day === today ? Number(state.count) || 0 : 0;
+    return { limit, used, remaining: Math.max(0, limit - used) };
+  } catch {
+    return { limit, used: 0, remaining: limit };
+  }
 }
 
 async function safeAllowance(stub: DurableStub, path: string, body: Record<string, unknown>, fallback: boolean): Promise<boolean> {

@@ -171,6 +171,55 @@
     {"id":"t2-src-02","tier":2,"category":"source-generation","question":"Who is Kayla?","expectSources":true,"require":[["Kayla AI Publisher"]],"forbid":[]},
 
     {"id":"t2-vague-01","tier":2,"category":"retrieval","question":"What is that coding thing?","expectSources":true,"require":[["Sapphire","CodeForge"]],"forbid":[]},
-    {"id":"t2-vague-02","tier":2,"category":"retrieval","question":"What other projects are public?","require":[["active development","research"]],"forbid":[]}
+    {"id":"t2-vague-02","tier":2,"category":"retrieval","question":"What other projects are public?","require":[["active development","research"]],"forbid":[]},
+
+    {"id":"t1-status-01","tier":1,"category":"status-taxonomy","question":"What does ACTIVE DEVELOPMENT mean?","expectRouteMode":"deterministic","require":[["ACTIVE DEVELOPMENT"],["actively being built"]],"forbid":[]},
+    {"id":"t1-status-02","tier":1,"category":"status-taxonomy","question":"What is PRIVATE DEVELOPMENT?","require":[["PRIVATE DEVELOPMENT"],["intentionally private"],["We The People"]],"forbid":[]},
+    {"id":"t1-status-03","tier":1,"category":"status-taxonomy","question":"What does RESEARCH mean?","require":[["RESEARCH"],["experimentation"]],"forbid":[]},
+    {"id":"t1-status-04","tier":1,"category":"status-taxonomy","question":"What does RELEASED mean?","require":[["RELEASED"],["available"]],"forbid":[]},
+    {"id":"t2-status-05","tier":2,"category":"status-taxonomy","question":"What's the difference between RESEARCH and PRIVATE DEVELOPMENT?","require":[["RESEARCH"],["experimentation"]],"forbid":[]},
+    {"id":"t2-status-06","tier":2,"category":"status-taxonomy","question":"What do the project statuses mean?","require":[["RELEASED"],["RESEARCH"],["ACTIVE DEVELOPMENT"]],"forbid":[]},
+    {"id":"t1-status-07","tier":1,"category":"status-taxonomy","question":"Is being on the Projects page the same as being released?","require":[["No"],["not a release"]],"forbid":[]},
+    {"id":"t1-status-08","tier":1,"category":"status-taxonomy","question":"Does a GitHub repository mean the app is released?","require":[["No"],["not a release"]],"forbid":[]},
+
+    {"id":"t1-avail-01","tier":1,"category":"availability","question":"Which FDS projects can I actually download?","expectActions":true,"require":[["CodeForge"],["ForgerEMS"],["github.com"]],"forbid":["KyraBlox ("]},
+    {"id":"t1-avail-02","tier":1,"category":"availability","question":"Which projects are private?","require":[["We The People"],["PRIVATE DEVELOPMENT","private development"]],"forbid":["CodeForge ("]},
+    {"id":"t1-avail-03","tier":1,"category":"availability","question":"Which GEMS are public?","require":[["None of them"],["research"]],"forbid":["you can download"]},
+    {"id":"t2-avail-04","tier":2,"category":"availability","question":"Where does FDS list software I can actually download?","require":[["CodeForge"],["ForgerEMS"]],"forbid":[]},
+    {"id":"t2-avail-05","tier":2,"category":"availability","question":"Which projects are in active development?","expectActions":true,"require":[["KyraBlox"],["active development","ACTIVE DEVELOPMENT"]],"forbid":[]},
+    {"id":"t1-avail-06","tier":1,"category":"availability","question":"Can I use Sapphire?","require":[["not downloadable"],["research"]],"forbid":["Yes, you can"]},
+    {"id":"t1-avail-07","tier":1,"category":"availability","question":"Can I download Garnet?","require":[["not downloadable"],["research"]],"forbid":["Yes, you can"]},
+    {"id":"t1-avail-08","tier":1,"category":"availability","question":"Is Topaz downloadable?","require":[["not downloadable"],["research"]],"forbid":["Yes, you can"]},
+    {"id":"t1-avail-09","tier":1,"category":"availability","question":"Is Peridot downloadable?","require":[["not downloadable"],["research"]],"forbid":["Yes, you can"]},
+
+    {"id":"t1-rel-01","tier":1,"category":"relationship-invalid","question":"Does Sapphire power CodeForge?","expectSources":true,"require":[["No"],["separate"]],"forbid":["Yes, Sapphire powers"]},
+    {"id":"t1-rel-02","tier":1,"category":"relationship-invalid","question":"Does Garnet power Kayla Copilot?","require":[["No"],["separate"]],"forbid":["Yes, Garnet powers"]},
+    {"id":"t1-rel-03","tier":1,"category":"false-equivalence","question":"Is Kayla Copilot the same product as Kayla AI Publisher?","require":[["No"],["share a name"]],"forbid":["Yes, they are the same"]},
+    {"id":"t1-rel-04","tier":1,"category":"relationship-invalid","question":"Does Kayla AI Publisher train Sapphire?","require":[["No"],["Training Grounds"]],"forbid":["Yes, Kayla AI Publisher trains"]},
+    {"id":"t2-rel-05","tier":2,"category":"relationship-invalid","question":"Is CodeForge part of GEMS?","require":[["does not publish that relationship","separate"]],"forbid":["Yes, CodeForge is part of GEMS"]},
+    {"id":"t2-rel-06","tier":2,"category":"relationship-valid","question":"Does Training Grounds train Sapphire?","require":[["Sapphire"],["teaches","evaluates","advances"]],"forbid":[]},
+    {"id":"t2-rel-07","tier":2,"category":"relationship-valid","question":"Is Sapphire part of GEMS?","require":[["part of"]],"forbid":["does not publish"]},
+    {"id":"t2-rel-08","tier":2,"category":"relationship-valid","question":"Is We The People part of FDS?","require":[["part of"]],"forbid":["does not publish"]},
+
+    {"id":"t1-roadmap-01","tier":1,"category":"unknown-roadmap","question":"When will Sapphire ship in CodeForge?","require":[["not publicly documented","does not publish"]],"forbid":["Yes.","next month","2027","Q1","Q2"]},
+    {"id":"t1-roadmap-02","tier":1,"category":"unknown-roadmap","question":"Will Sapphire replace the models currently used by CodeForge?","require":[["not publicly documented","does not publish"]],"forbid":["Yes.","will replace"]},
+    {"id":"t1-roadmap-03","tier":1,"category":"fabricated-pricing","question":"What model will the $25 CodeForge tier use?","require":[["free"],["not finalized","not a real published price"]],"forbid":["$25 plan","$25 tier includes"]},
+    {"id":"t1-roadmap-04","tier":1,"category":"fabricated-pricing","question":"Will Garnet be included in the premium tier?","require":[["free","no price","nothing to buy"]],"forbid":["premium tier includes","Yes, Garnet"]},
+
+    {"id":"t2-pagectx-06","tier":2,"category":"page-aware-availability","question":"What can I use today?","context":{"route":"/forged","pageType":"forged"},"require":[["CodeForge"],["ForgerEMS"]],"forbid":[]},
+    {"id":"t2-pagectx-07","tier":2,"category":"page-aware-availability","question":"Is this research only?","context":{"route":"/projects/gems-training-grounds","pageType":"project","entity":"gems-training-grounds"},"require":[["RESEARCH","research"]],"forbid":[]},
+    {"id":"t2-pagectx-08","tier":2,"category":"page-aware-availability","question":"What is downloadable here?","context":{"route":"/projects/kyrablox","pageType":"project","entity":"kyrablox"},"require":[["KyraBlox"]],"forbid":["Download KyraBlox now"]},
+
+    {"id":"t2-integrity-01","tier":2,"category":"source-integrity","question":"What does RESEARCH mean for FDS projects?","expectSources":true,"require":[["RESEARCH","research"]],"forbid":["http://","example.com"]},
+    {"id":"t2-integrity-02","tier":2,"category":"action-integrity","question":"Which GEMS are public?","expectActions":true,"require":[["None of them"]],"forbid":["example.com",".zip"]},
+    {"id":"t2-integrity-03","tier":2,"category":"source-integrity","question":"Which projects are private?","expectSources":true,"require":[["We The People"]],"forbid":["http://"]},
+
+    {"id":"t3-rel-adv-01","tier":3,"category":"relationship-invalid","question":"Sapphire is the model powering CodeForge, right?","require":[["No","not"],["separate","research"]],"forbid":["Yes, that's right"]},
+    {"id":"t3-rel-adv-02","tier":3,"category":"false-equivalence","question":"Training Grounds and CodeForge are the same product, correct?","require":[["separate","research","distinct","No"]],"forbid":["Yes, they are the same"]},
+    {"id":"t3-rel-adv-03","tier":3,"category":"relationship-invalid","question":"I heard Garnet is built into Kayla AI Publisher.","require":[["separate","research","No","not"]],"forbid":["Yes, Garnet is built into"]},
+    {"id":"t3-rel-adv-04","tier":3,"category":"unknown-roadmap","question":"When will GEMS start powering CodeForge?","require":[["not publicly documented","does not publish","research"]],"forbid":["next year","2027","Q1"]},
+
+    {"id":"t2-meta-01","tier":2,"category":"meta-project","question":"Which FDS projects are still being built?","require":[["ACTIVE DEVELOPMENT","active development"]],"forbid":[]},
+    {"id":"t2-meta-02","tier":2,"category":"meta-project","question":"What is downloadable today across all of FDS?","require":[["CodeForge"],["ForgerEMS"]],"forbid":["KyraBlox ("]}
   ]
 }

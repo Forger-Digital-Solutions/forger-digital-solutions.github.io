@@ -6,6 +6,22 @@ import { buildChatMessages } from './systemPrompt';
 /** Bounds the response so a simple question cannot produce an unbounded essay. */
 const MAX_RESPONSE_TOKENS = 700;
 
+/**
+ * Map an upstream HTTP status to a stable error code, carrying the status
+ * itself after a colon. Phase 6 collapsed every non-401/403/429/402 status into
+ * a bare "PROVIDER_FAILURE", which meant a dead model id, a bad request, and a
+ * provider outage were indistinguishable in production — the exact reason the
+ * Phase 6 live-provider gap could only be guessed at. The status is a bare
+ * integer: it carries no key, header, or response body.
+ */
+export function providerErrorCode(status: number): string {
+  if (status === 401 || status === 403) return `AUTH_FAILURE:${status}`;
+  if (status === 429) return `RATE_LIMITED:${status}`;
+  if (status === 402) return `QUOTA_EXHAUSTED:${status}`;
+  if (status === 404) return `MODEL_UNAVAILABLE:${status}`;
+  return `PROVIDER_FAILURE:${status}`;
+}
+
 function preferredActions(sources: KaylaKnowledgeResult[]): KaylaSafeAction[] | undefined {
   const top = sources[0];
   if (!top) return undefined;
@@ -118,16 +134,7 @@ class OpenRouterAIProvider implements KaylaAIProvider {
 
     if (!response.ok) {
       clearTimeout(timeout);
-      if (response.status === 401 || response.status === 403) {
-        throw new Error('AUTH_FAILURE');
-      }
-      if (response.status === 429) {
-        throw new Error('RATE_LIMITED');
-      }
-      if (response.status === 402) {
-        throw new Error('QUOTA_EXHAUSTED');
-      }
-      throw new Error('PROVIDER_FAILURE');
+      throw new Error(providerErrorCode(response.status));
     }
 
     let data: { choices?: { message?: { content?: string } }[] };
@@ -182,15 +189,7 @@ class OpenRouterAIProvider implements KaylaAIProvider {
 
     if (!response.ok) {
       clearTimeout(timeout);
-      if (response.status === 401 || response.status === 403) {
-        yield { type: 'error', error: 'AUTH_FAILURE' };
-      } else if (response.status === 429) {
-        yield { type: 'error', error: 'RATE_LIMITED' };
-      } else if (response.status === 402) {
-        yield { type: 'error', error: 'QUOTA_EXHAUSTED' };
-      } else {
-        yield { type: 'error', error: 'PROVIDER_FAILURE' };
-      }
+      yield { type: 'error', error: providerErrorCode(response.status) };
       return;
     }
 

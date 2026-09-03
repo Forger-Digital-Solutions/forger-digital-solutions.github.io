@@ -8,6 +8,8 @@ import { fds } from './company/fds';
 import { founder } from './company/founder';
 import { matchEntities, getKaylaEntity, normalize } from './entities';
 import { classifyIntents, type KaylaIntent } from './intents';
+import { downloadableNow, statusesInUse, byStatus, gemNames } from './availability';
+import { findCanonicalRelation, findDeniedRelation, type RelationPredicate } from './semantic-relations';
 
 /**
  * Canonical answer derivation.
@@ -272,6 +274,180 @@ function capabilityAnswer(entityId: string, query: string): CanonicalAnswer | un
     sources: [`app-${entityId}`],
     intent: 'capability',
     entityId
+  };
+}
+
+/**
+ * Answering a question *about* a relationship, which is the mirror of the
+ * verifier that rejects one. "Does Sapphire power CodeForge?" used to return a
+ * CodeForge description that never addressed the question, and "When will
+ * Sapphire ship in CodeForge?" opened with "Yes." — reading as confirmation of
+ * a premise the site explicitly denies. An undocumented link has to be named as
+ * undocumented rather than answered around.
+ */
+function relationshipAnswer(query: string, entityIds: string[]): CanonicalAnswer | undefined {
+  const text = normalize(query);
+  const subjects = entityIds.filter((id) => getKaylaEntity(id));
+  if (subjects.length < 2) return undefined;
+
+  const [first, second] = subjects;
+  const askedPredicate: RelationPredicate | undefined =
+    // "part of" is membership, which the canonical table records as 'part-of';
+    // testing it before the containment verbs keeps "Is X part of FDS?" from
+    // being read as "does X ship inside FDS".
+    /\bpart of\b|\bbelongs? to\b/.test(text) ? 'part-of'
+    : /\b(powers?|powering|powered by|runs on|built on|which model|what model|drives|replaces?|replacing|models? used by|used by)\b/.test(text) ? 'powers'
+    : /\b(ships? in|shipping in|built into|included in|inside|bundled|integrated into)\b/.test(text) ? 'contains'
+    : /\b(same thing|same as|same product|another name for|identical|rebranded)\b/.test(text) ? 'same-as'
+    : /\b(trains?|teaches|teaching)\b/.test(text) ? 'trains'
+    : /\b(related|relate|relationship|connect|connects|connection|fit together|work together)\b/.test(text) ? 'related-to'
+    : undefined;
+  if (!askedPredicate) return undefined;
+
+  const nameOf = (id: string) => displayName(id);
+
+  // Forward-looking framing asks about a plan, not a current fact. FDS does not
+  // publish dated roadmaps, so this must never be answered from architecture.
+  const isFutureFraming = /\b(will|going to|plan|planned|roadmap|when will|eventually|replace|migrate|switch to)\b/.test(text);
+  if (isFutureFraming) {
+    return {
+      text: `FDS has not publicly documented that. There is no published plan, timeline, or commitment connecting ${nameOf(first)} and ${nameOf(second)} that way — GEMS lineages are research with no released model, and FDS does not announce dates before work is ready.`,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['semantic-relations'],
+      intent: 'capability',
+      settled: true
+    };
+  }
+
+  const denied = findDeniedRelation(first, askedPredicate, second) || findDeniedRelation(second, askedPredicate, first);
+  if (denied) {
+    return {
+      text: `No. ${nameOf(denied.subject)} does not ${askedPredicate === 'same-as' ? 'mean the same thing as' : askedPredicate === 'powers' ? 'power' : askedPredicate === 'contains' ? 'ship inside' : 'train'} ${nameOf(denied.object)} — ${denied.reason}. They are separate systems in the published FDS information.`,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['semantic-relations'],
+      intent: 'comparison',
+      settled: true
+    };
+  }
+
+  const supported = findCanonicalRelation(first, askedPredicate, second) || findCanonicalRelation(second, askedPredicate, first);
+  if (supported) {
+    const description = askedPredicate === 'trains'
+      ? `${nameOf(supported.subject)} is the environment that teaches, evaluates, and advances ${nameOf(supported.object)}.`
+      : askedPredicate === 'part-of' || askedPredicate === 'contains'
+        ? `${nameOf(supported.subject)} is part of ${nameOf(supported.object)}.`
+        : `${nameOf(supported.subject)} and ${nameOf(supported.object)} are related in published FDS information.`;
+    return {
+      text: description,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['semantic-relations'],
+      intent: 'comparison'
+    };
+  }
+
+  // "How are X and Y related?" with no strong claim asked: describe both and
+  // let the separation stand rather than inventing a link.
+  if (askedPredicate === 'related-to') return undefined;
+
+  return {
+    text: `FDS does not publish that relationship. ${nameOf(first)} and ${nameOf(second)} are described as separate things in the public FDS information, and nothing there establishes that ${askedPredicate === 'powers' ? 'one powers the other' : askedPredicate === 'contains' ? 'one ships inside the other' : askedPredicate === 'part-of' ? 'one belongs to the other' : askedPredicate === 'same-as' ? 'they are the same product' : 'one trains the other'}.`,
+    actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+    sources: ['semantic-relations'],
+    intent: 'comparison',
+    settled: true
+  };
+}
+
+/**
+ * What a status label means, and what it does not imply.
+ *
+ * A visible project page is not a release, and a public repository is not a
+ * product. Answering these from `statusMeta` keeps the explanation identical to
+ * what the project pages themselves render.
+ */
+function statusTaxonomyAnswer(query: string): CanonicalAnswer {
+  const text = normalize(query);
+  const inUse = statusesInUse();
+  const named = inUse.find((entry) => text.includes(normalize(entry.status)));
+
+  // "Is being on the Projects page the same as being released?" and friends.
+  if (/\bprojects page\b|\bgithub repo|\brepository\b/.test(text)) {
+    const downloads = downloadableNow();
+    return {
+      text: `No. Every FDS project has a public page, but a page is a description, not a release. Only ${downloads.map((entry) => `${entry.name}${entry.version ? ` (${entry.version})` : ''}`).join(' and ')} have public builds you can download today — everything else is still in development or research. A public GitHub repository does not mean a released application either.`,
+      actions: [{ type: 'OPEN_FORGED', label: 'See what is available now', href: '/forged' }],
+      sources: ['status-taxonomy'],
+      intent: 'status_taxonomy',
+      settled: true
+    };
+  }
+
+  if (named) {
+    const others = inUse.filter((entry) => entry.status !== named.status);
+    const contrast = /\bdifference\b/.test(text) && others.length
+      ? `\n\nFor contrast: ${others.slice(0, 3).map((entry) => `${entry.status} means ${entry.short.charAt(0).toLowerCase()}${entry.short.slice(1)}`).join('; ')}`
+      : '';
+    return {
+      text: `${named.status} means ${named.description.charAt(0).toLowerCase()}${named.description.slice(1)}${named.projects.length ? ` Currently: ${named.projects.join(', ')}.` : ''}${contrast}`,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['status-taxonomy'],
+      intent: 'status_taxonomy',
+      settled: true
+    };
+  }
+
+  return {
+    text: `FDS labels each project with the stage it is actually in:\n\n${inUse.map((entry) => `• ${entry.status} — ${entry.short.charAt(0).toLowerCase()}${entry.short.slice(1)} (${entry.projects.join(', ')})`).join('\n')}\n\nA project page existing does not mean the software is downloadable; Forged lists what you can actually use today.`,
+    actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }, { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+    sources: ['status-taxonomy'],
+    intent: 'status_taxonomy',
+    settled: true
+  };
+}
+
+/**
+ * "What can I download?" is a narrower question than "what exists?", and
+ * answering it with the full project list is what made these questions feel
+ * like a catalogue dump rather than an answer.
+ */
+function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
+  const text = normalize(query);
+
+  if (/\b(download|downloadable|installer|get the (software|app))\b/.test(text)) {
+    const downloads = downloadableNow();
+    return {
+      text: `${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''} — ${entry.route}`).join('\n')}\n\nThose are the only FDS builds with a public download right now. Everything else is in development or research with no public build. Forged is where released software is listed.`,
+      actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+      sources: ['availability-matrix'],
+      intent: 'availability',
+      settled: true
+    };
+  }
+
+  if (/\bprivate\b/.test(text)) {
+    const privateProjects = byStatus('PRIVATE DEVELOPMENT');
+    return {
+      text: privateProjects.length
+        ? `${privateProjects.map((entry) => `• ${entry.name}`).join('\n')}\n\n${privateProjects.length === 1 ? 'That project is' : 'Those projects are'} in PRIVATE DEVELOPMENT: active work with portions intentionally kept private. FDS does not publish a more specific reason than that.`
+        : 'No FDS project is currently in private development.',
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['availability-matrix'],
+      intent: 'availability',
+      settled: true
+    };
+  }
+
+  return undefined;
+}
+
+/** No GEMS lineage has a released model, so "which GEMS are public" has one answer. */
+function gemsAvailabilityAnswer(): CanonicalAnswer {
+  return {
+    text: `None of them. ${gemNames().join(', ')} are all research lineages inside GEMS — none has been trained to release, and there is no GEM model to download or run. The GEMS project page describes the research; it does not offer software.`,
+    actions: [{ type: 'OPEN_APP', label: 'View GEMS research', href: '/projects/gems-training-grounds' }],
+    sources: ['availability-matrix', 'gems-family'],
+    intent: 'availability',
+    settled: true
   };
 }
 
@@ -789,7 +965,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   // free-or-no-price answer; this only prepends the specific rejection.
   if (primary && (project(primary) || gemFor(primary) || productFor(primary))) {
     const dollarMatch = query.match(/\$\s?(\d+(?:\.\d{1,2})?)/) || text.match(/\b(\d+(?:\.\d{1,2})?)\s*(?:dollars|usd)\b/);
-    const paidTierMention = /\b(paid tier|paid plan|pro tier|pro plan|future tiers?|tier cost|pricing tier)\b/i.test(text);
+    const paidTierMention = /\b(paid tier|paid plan|pro tier|pro plan|premium tier|premium plan|future tiers?|tier cost|pricing tier)\b/i.test(text);
     if (dollarMatch || paidTierMention) {
       const base = pricingAnswer(primary);
       // Deliberately does not echo the fabricated figure back (e.g. "$49"):
@@ -945,11 +1121,39 @@ export function canonicalAnswer(
     }
   }
 
+  // What a status label means is a question about the taxonomy, not about
+  // whichever project happens to score highest in retrieval.
+  if (has('status_taxonomy')) return statusTaxonomyAnswer(query);
+
   if (has('assistant_identity')) return { ...assistantIdentityAnswer(query), settled: true };
+
+  // "Which GEMS are public?" is a question about the whole family and has one
+  // canonical answer. It is matched on shape rather than intent because the
+  // plural family form ("which GEMS are…") matches no entity by name — only
+  // the role matcher, which would otherwise answer for one arbitrary lineage.
+  // A question naming a specific GEM keeps its own per-lineage answer.
+  const namesSpecificGem = entityMatches.some((match) => match.entityId.startsWith(GEM_PREFIX));
+  if (!namesSpecificGem
+    && /\bgems\b/.test(normalize(query))
+    && /\b(public|available|downloadable|released|can i (use|run|get|download))\b/.test(normalize(query))) {
+    return gemsAvailabilityAnswer();
+  }
+
+  // Availability questions asked across the whole catalogue rather than about
+  // one entity: answer the narrow question instead of listing everything.
+  if ((has('availability') || has('list')) && !entityIds.some((id) => project(id) || gemFor(id) || productFor(id))) {
+    const availability = availabilityListAnswer(query);
+    if (availability) return availability;
+  }
 
   // Correct a false premise before answering anything built on top of it.
   const premise = premiseAnswer(query, entityIds, history);
   if (premise) return { ...premise, settled: true };
+
+  // A question about how two entities relate must be answered as a question
+  // about the relationship — not by describing whichever entity matched first.
+  const relationship = relationshipAnswer(query, entityIds);
+  if (relationship) return relationship;
 
   if (has('comparison')) {
     const subjects = entityIds.length >= 2

@@ -11,7 +11,14 @@ KAYLA_MODEL = "openrouter/free"
 KAYLA_ALLOWED_ORIGINS = "https://forger-digital-solutions.github.io"
 KAYLA_RATE_LIMIT_PER_MINUTE = "5"
 KAYLA_RATE_LIMIT_PER_HOUR = "60"
-KAYLA_AI_DAILY_REQUEST_LIMIT = "40"
+# Shared daily allowance for the zero-cost model lane. This is an abuse guard,
+# not a billing guard: openrouter/free is priced 0/0, so a higher ceiling costs
+# nothing. At 40 the lane went dark for every visitor for the rest of the UTC
+# day after routine engineering work alone consumed it (measured: 40/40 used,
+# 0 remaining, with the provider never contacted). 150 keeps a real ceiling
+# while leaving the feature actually available to visitors. Upstream free-tier
+# limits still apply above this and are now classified separately.
+KAYLA_AI_DAILY_REQUEST_LIMIT = "150"
 KAYLA_MAX_PAYLOAD_BYTES = "16384"
 KAYLA_PROVIDER_TIMEOUT_MS = "9000"
 

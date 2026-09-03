@@ -12,6 +12,7 @@ import { normalize } from './entities';
  */
 
 export type KaylaIntent =
+  | 'status_taxonomy'
   | 'pricing'
   | 'recommendation'
   | 'availability'
@@ -42,6 +43,22 @@ interface IntentRule {
  * answer layer decides which combination it can serve.
  */
 const RULES: IntentRule[] = [
+  {
+    // Asks about the meaning of a status label itself, not about a project.
+    // Ordered first: "what does ACTIVE DEVELOPMENT mean" would otherwise fall
+    // through to retrieval and come back with whichever project happens to
+    // score highest, which is how this class of question used to be answered.
+    intent: 'status_taxonomy',
+    patterns: [
+      /\bwhat (does|do) (active development|private development|research|released|preview|beta|concept)\b.{0,20}\b(mean|indicate|imply)\b/,
+      /\bwhat (is|are) (an? )?(active development|private development|research|released|preview \/ beta|concept)\b/,
+      /\bdifference between\b.{0,40}\b(research|development|released|preview|concept|private)\b/,
+      /\bwhat do (the |your )?(status|statuses|labels?|stages?|badges?)\b/,
+      /\b(status|statuses) (mean|meanings?|explained)\b/,
+      /\bis being (on|listed on) the projects page the same as\b/,
+      /\bdoes (a|an) (project page|github repo(sitory)?|projects page)\b.{0,30}\bmean\b/
+    ]
+  },
   {
     intent: 'private_info',
     patterns: [

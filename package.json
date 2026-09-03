@@ -16,6 +16,7 @@
     "validate": "node scripts/validate-content.mjs && node scripts/kayla-knowledge.mjs && node scripts/kayla-golden-check.mjs && astro check && astro build && node scripts/check-internal-links.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "kayla:knowledge": "node scripts/kayla-knowledge.mjs",
     "kayla:deploy:check": "node scripts/kayla-deploy-check.mjs",
     "kayla:deploy": "npm run kayla:deploy:check && npm --prefix worker run deploy",

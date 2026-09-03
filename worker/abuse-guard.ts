@@ -13,6 +13,14 @@ export class KaylaAbuseGuard {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     if (request.method === 'GET' && url.pathname === '/ping') return Response.json({ ready: true });
+    // Read-only budget inspection. Consuming the allowance was previously the
+    // only way to learn anything about it, so an exhausted day could not be
+    // told apart from a provider outage without spending the very budget under
+    // investigation. Returns counters only — no visitor data.
+    if (request.method === 'GET' && url.pathname === '/ai-budget-status') {
+      const current = await this.state.storage.get<BudgetState>('ai-budget');
+      return Response.json({ day: current?.day ?? null, count: current?.count ?? 0 });
+    }
     if (request.method !== 'POST') return Response.json({ allowed: false }, { status: 405 });
     let input: Record<string, unknown>;
     try { input = await request.json() as Record<string, unknown>; } catch { return Response.json({ allowed: false }, { status: 400 }); }

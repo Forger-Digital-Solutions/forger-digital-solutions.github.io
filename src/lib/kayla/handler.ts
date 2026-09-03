@@ -7,6 +7,12 @@ import { checkRateLimit } from './rateLimit';
 import { isSensitiveQuery } from './systemPrompt';
 import { verifyAgainstCanon } from './verify';
 import { toKaylaSources } from './sources';
+import {
+  classifyProviderError,
+  emptyDiagnostics,
+  parseProviderError,
+  type KaylaDiagnostics
+} from './diagnostics';
 
 export interface KaylaEndpointConfig {
   providerConfig: KaylaProviderConfig;
@@ -14,6 +20,12 @@ export interface KaylaEndpointConfig {
   getClientIp?: () => string;
   consumeRequestAllowance?: () => Promise<boolean>;
   consumeAIAllowance?: () => Promise<boolean>;
+  /**
+   * Operator-facing diagnostics for this request. Called at most once, on the
+   * branch that actually produced the answer. Never receives the prompt, the
+   * answer, or anything identifying the visitor.
+   */
+  onDiagnostics?: (diagnostics: KaylaDiagnostics) => void;
 }
 
 function getConfig(kaylaConfig?: KaylaConfig): KaylaConfig {
@@ -81,6 +93,38 @@ function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
 }
 
 
+/**
+ * Build the diagnostics record for a completed request. Kept beside the
+ * response shaping so a new branch can't quietly ship without saying which
+ * lane it took and why.
+ */
+function reportDiagnostics(
+  config: KaylaEndpointConfig,
+  top: KaylaKnowledgeResult | undefined,
+  routeMode: KaylaRouteMode,
+  overrides: Partial<KaylaDiagnostics> = {}
+): void {
+  if (!config.onDiagnostics) return;
+  try {
+    config.onDiagnostics({
+      ...emptyDiagnostics(),
+      routeMode,
+      intent: top?.intent,
+      entity: top?.id,
+      sourceCount: top ? toKaylaSources([top]).length : 0,
+      actionCount: localActions(top)?.length ?? 0,
+      ...overrides
+    });
+  } catch { /* diagnostics must never break a response */ }
+}
+
+/** Classify a thrown provider error into a failure class plus upstream status. */
+function providerFailureFrom(error: unknown): Pick<KaylaDiagnostics, 'providerFailure' | 'upstreamStatus'> {
+  const message = error instanceof Error ? error.message : String(error ?? '');
+  const { code, status } = parseProviderError(message);
+  return { providerFailure: classifyProviderError(code), upstreamStatus: status };
+}
+
 function localResponse(topResult?: KaylaKnowledgeResult, routeMode?: KaylaRouteMode) {
   return {
     answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
@@ -125,6 +169,7 @@ export async function handleKaylaChat(
   const { message, history, context } = validation.data;
 
   if (isPromptInjectionAttempt(message) || isSensitiveQuery(message)) {
+    reportDiagnostics(config, undefined, 'deterministic', { fallbackReason: 'refused_unsafe_request' });
     return {
       status: 200,
       response: {
@@ -142,6 +187,7 @@ export async function handleKaylaChat(
   try {
     sources = await localProvider.search(message, context, history);
   } catch {
+    reportDiagnostics(config, undefined, 'no_results', { fallbackReason: 'retrieval_failure' });
     return {
       status: 200,
       response: {
@@ -156,19 +202,36 @@ export async function handleKaylaChat(
 
   const settled = deterministicAnswer(sources);
   if (settled) {
+    reportDiagnostics(config, settled, 'deterministic');
     return { status: 200, response: localResponse(settled, 'deterministic') };
   }
 
   if (!isAIEnabled(kaylaConfig)) {
+    const routeMode = classifyLocalRoute(sources[0]);
+    reportDiagnostics(config, sources[0], routeMode, { fallbackReason: 'ai_disabled' });
     return { status: 200, response: localResponse(sources[0]) };
   }
 
   const aiProvider = createAIProvider(config.providerConfig);
   if (!aiProvider) {
+    reportDiagnostics(config, sources[0], 'provider_failed_fallback', {
+      providerOutcome: 'failed',
+      providerFailure: 'not_configured',
+      fallbackReason: 'provider_not_constructed'
+    });
     return { status: 200, response: localResponse(sources[0], 'provider_failed_fallback') };
   }
 
+  // The local daily allowance is spent before the provider is ever contacted,
+  // so this branch means *we* declined, not the provider. Phase 6 could not
+  // tell these two apart in production; that ambiguity is the whole reason the
+  // live-provider gap could only be guessed at.
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
+    reportDiagnostics(config, sources[0], 'provider_failed_fallback', {
+      providerOutcome: 'failed',
+      providerFailure: 'budget_exhausted',
+      fallbackReason: 'local_ai_budget_denied'
+    });
     return { status: 200, response: localResponse(sources[0], 'provider_failed_fallback') };
   }
 
@@ -183,10 +246,25 @@ export async function handleKaylaChat(
     // The model may phrase a canonical fact; it may not change one. When the
     // generated answer contradicts the site's data, the canonical answer that
     // was already computed above is served instead.
-    if (!acceptGenerated(aiResponse.content).accepted) {
+    const verdict = acceptGenerated(aiResponse.content);
+    if (!verdict.accepted) {
+      reportDiagnostics(config, sources[0], 'provider_replaced', {
+        providerAttempted: true,
+        providerOutcome: 'rejected_replaced',
+        verificationOutcome: 'rejected',
+        verificationKinds: verdict.kinds,
+        fallbackReason: 'canonical_verification_rejected'
+      });
       return { status: 200, response: localResponse(sources[0], 'provider_replaced') };
     }
 
+    reportDiagnostics(config, sources[0], 'provider_accepted', {
+      providerAttempted: true,
+      providerOutcome: 'accepted',
+      verificationOutcome: 'passed',
+      sourceCount: toKaylaSources(sources).length,
+      actionCount: aiResponse.actions?.length ?? 0
+    });
     return {
       status: 200,
       response: {
@@ -203,8 +281,14 @@ export async function handleKaylaChat(
         routeMode: 'provider_accepted'
       }
     };
-  } catch {
+  } catch (error) {
     const topResult = sources[0];
+    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      providerAttempted: true,
+      providerOutcome: 'failed',
+      fallbackReason: 'provider_threw',
+      ...providerFailureFrom(error)
+    });
     return {
       status: 200,
       response: {
@@ -242,6 +326,7 @@ export async function* streamKaylaChat(
   const { message, history, context } = validation.data;
 
   if (isPromptInjectionAttempt(message) || isSensitiveQuery(message)) {
+    reportDiagnostics(config, undefined, 'deterministic', { fallbackReason: 'refused_unsafe_request' });
     yield JSON.stringify({
       content: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions.",
       mode: 'local',
@@ -257,12 +342,14 @@ export async function* streamKaylaChat(
 
   const settled = deterministicAnswer(sources);
   if (settled) {
+    reportDiagnostics(config, settled, 'deterministic');
     yield JSON.stringify({ content: settled.snippet, actions: localActions(settled), mode: 'local', done: true, routeMode: 'deterministic', sourceLinks: toKaylaSources([settled]) });
     return;
   }
 
   if (!isAIEnabled(kaylaConfig)) {
     const topResult = sources[0];
+    reportDiagnostics(config, topResult, classifyLocalRoute(topResult), { fallbackReason: 'ai_disabled' });
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
       actions: localActions(topResult),
@@ -277,6 +364,11 @@ export async function* streamKaylaChat(
   const aiProvider = createAIProvider(config.providerConfig);
   if (!aiProvider || !aiProvider.stream) {
     const topResult = sources[0];
+    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      providerOutcome: 'failed',
+      providerFailure: 'not_configured',
+      fallbackReason: 'provider_not_constructed'
+    });
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
       actions: localActions(topResult),
@@ -288,8 +380,15 @@ export async function* streamKaylaChat(
     return;
   }
 
+  // See the JSON path: this branch is *our* allowance declining, not the
+  // provider's, and the two must stay distinguishable in production logs.
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     const topResult = sources[0];
+    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      providerOutcome: 'failed',
+      providerFailure: 'budget_exhausted',
+      fallbackReason: 'local_ai_budget_denied'
+    });
     yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', done: true, routeMode: 'provider_failed_fallback', sourceLinks: topResult ? toKaylaSources([topResult]) : [] });
     return;
   }
@@ -298,11 +397,13 @@ export async function* streamKaylaChat(
     let providerFailed = false;
     let providerContentReceived = false;
     let bufferedText = '';
+    let providerErrorCode: string | undefined;
     const topResult = sources[0];
 
     for await (const chunk of aiProvider.stream({ message, history, context, sources })) {
       if (chunk.type === 'error') {
         providerFailed = true;
+        providerErrorCode = chunk.error;
         break;
       }
 
@@ -314,12 +415,21 @@ export async function* streamKaylaChat(
       if (chunk.type === 'done') {
         if (!providerContentReceived) {
           providerFailed = true;
+          providerErrorCode = providerErrorCode ?? 'EMPTY_RESPONSE';
         }
         break;
       }
     }
 
     if (providerFailed || !providerContentReceived) {
+      const { code, status } = parseProviderError(providerErrorCode ?? 'EMPTY_RESPONSE');
+      reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+        providerAttempted: true,
+        providerOutcome: 'failed',
+        providerFailure: classifyProviderError(code),
+        upstreamStatus: status,
+        fallbackReason: 'provider_stream_failed'
+      });
       const fallback = {
         content: `Kayla's conversational AI is temporarily unavailable, but I can still answer from the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
         actions: localActions(topResult),
@@ -334,7 +444,15 @@ export async function* streamKaylaChat(
     }
 
     // Full buffer canonical verification: never stream unverified tokens to the visitor
-    if (!acceptGenerated(bufferedText).accepted) {
+    const verdict = acceptGenerated(bufferedText);
+    if (!verdict.accepted) {
+      reportDiagnostics(config, topResult, 'provider_replaced', {
+        providerAttempted: true,
+        providerOutcome: 'rejected_replaced',
+        verificationOutcome: 'rejected',
+        verificationKinds: verdict.kinds,
+        fallbackReason: 'canonical_verification_rejected'
+      });
       yield JSON.stringify({
         replace: true,
         content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
@@ -348,11 +466,23 @@ export async function* streamKaylaChat(
     }
 
     // Verified output: safe to emit
+    reportDiagnostics(config, topResult, 'provider_accepted', {
+      providerAttempted: true,
+      providerOutcome: 'accepted',
+      verificationOutcome: 'passed',
+      sourceCount: toKaylaSources(sources).length
+    });
     yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
     yield JSON.stringify({ type: 'content', content: bufferedText });
     yield JSON.stringify({ type: 'done', done: true, routeMode: 'provider_accepted', sourceLinks: toKaylaSources(sources) });
-  } catch {
+  } catch (error) {
     const topResult = sources[0];
+    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      providerAttempted: true,
+      providerOutcome: 'failed',
+      fallbackReason: 'provider_threw',
+      ...providerFailureFrom(error)
+    });
     yield JSON.stringify({
       content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
       actions: localActions(topResult),
