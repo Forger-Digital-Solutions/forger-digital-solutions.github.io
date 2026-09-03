@@ -138,6 +138,22 @@
       "automatedRegressionTest": "test/kayla-ui-contract.test.ts asserts the fix is present in source; no jsdom environment is configured in this project, so a full DOM-level assertion was not possible and is not claimed."
     }
   ],
+  "pagesDeployment": {
+    "deployedTwice": true,
+    "firstDeployReason": "ship the Phase 6 backend/frontend changes (commit c51686f)",
+    "secondDeployReason": "ship the is:global styling fix found during the first deploy's own live verification (commit a8850e7)",
+    "workflow": ".github/workflows/deploy.yml (Deploy to GitHub Pages)",
+    "firstRunId": "33787896351",
+    "secondRunId": "33788567533",
+    "bothRunsSucceeded": true,
+    "secondDeployReVerifiedLive": {
+      "userMessageBubbleBackground": "rgb(24,71,199)",
+      "actionButtonBorder": "0.8px solid rgba(184,205,239,.25)",
+      "sourcesRowDisplay": "flex",
+      "sourcesRowGap": "6.4px",
+      "focusTrapHeldOnLiveSite": true
+    }
+  },
   "liveSmoke": {
     "ranAgainstProduction": true,
     "endpoint": "https://kayla-api.forgerdigitalsolutions.workers.dev",

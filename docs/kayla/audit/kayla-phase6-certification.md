@@ -154,6 +154,14 @@ This was not introduced this phase — it predates Phase 5 — and was never cau
 
 ## 10. Live Production Smoke Matrix (Part 20)
 
+### 10.1 Styling-fix re-verification (after the second deploy)
+Following the §9.1 fix, the front-end (GitHub Pages) was redeployed and the live site was reloaded and re-tested directly, not assumed fixed from the local build:
+
+- `"Can I download KyraBlox?"` asked against `https://forger-digital-solutions.github.io`: the visitor's message rendered as a properly styled blue bubble, Kayla's reply as a dark bordered bubble, two action buttons ("View KyraBlox", "See what is available now") rendered with the intended outlined style — not the browser's default button chrome — and a "SOURCES" row rendered below the answer with correct label/spacing.
+- Direct `getComputedStyle` confirmation on the live page: `.kayla-msg--user` background `rgb(24,71,199)` (the real accent color, was `rgba(0,0,0,0)`); `.kayla-action-btn` background `rgba(0,0,0,0)` with border `0.8px solid rgba(184,205,239,.25)` (the intended transparent/outlined look, was the default gray 3D-outset button); `.kayla-msg__sources` `display: flex` with a `6.4px` gap (was `display: block` with no gap, which is why the label and the source ran together as "SourcesGEMS / Training Grounds" in the very first live check).
+- Re-verified the focus trap on this same live page: 6 Tab presses from the composer stayed within the open panel (landed on `kayla-send`, `panelOpen: true`) — confirming the §9's fix also holds in the actual production deployment, not only locally.
+
+
 Deployed via the repository's canonical path (`npm run kayla:deploy` → `kayla-deploy-check.mjs` then `wrangler deploy`), no alternate deployment flow. See §12 for the exact endpoint/version/commit record.
 
 15 live requests against `https://kayla-api.forgerdigitalsolutions.workers.dev`, paced at 15 s intervals (well under the 5-req/min limit; the rate limiter was not disabled or bypassed). Full detail in §12's table. Summary: **15/15 HTTP 200**, every canonical fact correct, every false premise (fabricated pricing, fabricated founder) corrected, the injection attempt refused, the external fake-download-domain attempt never echoed the fake domain, the conversational follow-up correctly resolved its subject, and the page-context question correctly resolved to the page's project — all with zero unverified tokens exposed (buffer-then-validate architecture unchanged) and zero internal errors leaked.
