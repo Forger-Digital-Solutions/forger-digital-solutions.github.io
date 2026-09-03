@@ -22,7 +22,7 @@ All three Phase 6 limitations are resolved with executed evidence rather than ar
 - Starting HEAD: `cb2f855a8b9912b9281b5e5b46583e367c853864` (matched the handoff exactly)
 - Initial worktree: clean
 - Final worktree: clean, all work committed
-- Ending HEAD: see `kayla-phase7-receipt.json`
+- Ending HEAD: `69bf6a6` (implementation commit `910a35e` + receipt update `69bf6a6`)
 
 ## 3. Phase 6 Baseline Re-verification (before any change)
 
