@@ -69,7 +69,16 @@
   initKaylaCopilot();
 </script>
 
-<style>
+<style is:global>
+  /* is:global is required, not stylistic: every message bubble, action
+     button, source link, and regenerated starter is created at runtime by
+     KaylaCopilot.ts via document.createElement, so none of them ever carry
+     the data-astro-cid attribute Astro's scoping relies on. A scoped block
+     here silently matches nothing on any dynamically created element —
+     confirmed live: action buttons rendered as unstyled default <button>s
+     and message bubbles had no background, padding, or radius at all.
+     Class names are kayla-* and used nowhere else in the site, so global
+     scope carries no collision risk. */
   .kayla-launcher {
     position: fixed;
     z-index: 9000;
