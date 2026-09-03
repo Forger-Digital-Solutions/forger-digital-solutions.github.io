@@ -178,11 +178,17 @@ export interface KaylaKnowledgeResult {
   title: string;
   snippet: string;
   action?: KaylaSafeAction;
+  /** Full action set when an answer offers more than one useful route. */
+  actions?: KaylaSafeAction[];
   data?: unknown;
   score?: number;
   id?: string;
   route?: string;
   sourceType?: string;
+  /** Set when a canonical (entity + intent) answer produced this result. */
+  intent?: string;
+  /** A settled fact or scope boundary: serve as-is, never send to a model. */
+  settled?: boolean;
   lastUpdated?: string;
 }
 

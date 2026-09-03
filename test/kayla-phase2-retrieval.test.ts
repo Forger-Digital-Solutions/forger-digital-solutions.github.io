@@ -45,7 +45,15 @@ describe('Kayla Phase 2 - Fuzzy Retrieval', () => {
     expect(resolveEntity('gems')).toBe('gems-training-grounds');
     expect(resolveEntity('forger ems')).toBe('forgerems');
     expect(resolveEntity('ems')).toBe('forgerems');
-    expect(resolveEntity('toolkit')).toBe('forgerems');
+  });
+
+  it('does not resolve an entity from generic words', () => {
+    // "toolkit" used to alias ForgerEMS and "the" used to alias We The People,
+    // so any sentence containing them resolved to a product.
+    expect(resolveEntity('toolkit')).toBeUndefined();
+    expect(resolveEntity('the')).toBeUndefined();
+    expect(resolveEntity("what is the weather today")).toBeUndefined();
+    expect(resolveEntity('Who founded Forger Digital Solutions?')).not.toBe('codeforge');
   });
 
   it('resolves fuzzy entity names', () => {

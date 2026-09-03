@@ -311,13 +311,17 @@ async function handleQuery(query: string): Promise<void> {
           const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; actions?: KaylaSafeAction[]; done?: boolean };
 
           if (chunk.error) {
-            updateStreamingMessage(placeholder, `Kayla's conversational AI is temporarily unavailable, but I can still help with FDS knowledge.`);
+            updateStreamingMessage(placeholder, chunk.errorType === 'RATE_LIMITED'
+              ? 'Kayla has answered several questions from this connection recently. Please try again in a minute.'
+              : `Kayla's conversational AI is temporarily unavailable, but I can still help with FDS knowledge.`);
             break;
           }
 
+          // Track the mode for the transcript, but leave the header alone: a
+          // canonical answer served without the model is not a degraded
+          // service, and flipping the badge per message reads like an outage.
           if (chunk.mode) {
             responseMode = chunk.mode;
-            updateStatus(responseMode);
           }
 
           if (chunk.actions) {
@@ -398,7 +402,7 @@ function updateStreamingMessage(bubble: HTMLDivElement | null, text: string, act
 }
 
 function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, actions: KaylaSafeAction[] | undefined, mode: KaylaMode): void {
-  updateStatus(mode);
+  if (mode === 'unavailable') updateStatus(mode);
   if (!bubble) {
     if (text) {
       addMessage('kayla', text, actions);

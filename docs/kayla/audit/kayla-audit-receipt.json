@@ -1,0 +1,272 @@
+{
+  "audit": "kayla-copilot-architecture-knowledge-reliability-trust",
+  "date": "2026-09-03",
+  "verdict": "KAYLA_AUDIT_PASS_WITH_RECOMMENDATIONS",
+  "verdictScope": "Applies to the repaired build in this commit. The pre-repair state was KAYLA_AUDIT_REPAIR_REQUIRED.",
+  "repository": {
+    "startHead": "1c54b2aa5faf2d6e85b8c65f31d50fc6d4f2c13a",
+    "branch": "main",
+    "endHead": "PENDING_COMMIT"
+  },
+  "worker": {
+    "name": "kayla-api",
+    "deployed": false,
+    "note": "Worker changes require wrangler deploy; production ran the pre-audit build at audit time."
+  },
+  "fallback": {
+    "mode": "provider disabled (outage simulation)",
+    "priorBaseline": {
+      "passed": 11,
+      "total": 45,
+      "accuracy": 0.244,
+      "note": "Prior scorer required rubric prose as literal substrings; part of that failure rate was a measurement artifact."
+    },
+    "total": 90,
+    "passed": 90,
+    "accuracy": 1,
+    "tiers": {
+      "1": {
+        "total": 43,
+        "passed": 43,
+        "accuracy": 1,
+        "target": 1,
+        "meetsTarget": true
+      },
+      "2": {
+        "total": 32,
+        "passed": 32,
+        "accuracy": 1,
+        "target": 0.95,
+        "meetsTarget": true
+      },
+      "3": {
+        "total": 15,
+        "passed": 15,
+        "accuracy": 1,
+        "target": 0.9,
+        "meetsTarget": true
+      }
+    },
+    "answeredByLayer": {
+      "canonical": 86,
+      "local": 4
+    }
+  },
+  "provider": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "model": "openrouter/free",
+    "costPolicy": "ZERO_COST_ONLY",
+    "systemPromptSent": true,
+    "conversationHistorySent": true,
+    "pageContextSent": true,
+    "maxResponseTokens": 700,
+    "timeoutMs": 12000,
+    "retries": 0,
+    "preAuditFindings": [
+      "system prompt never sent",
+      "history discarded",
+      "page context discarded",
+      "no max_tokens"
+    ]
+  },
+  "efficiency": {
+    "goldenQueries": 90,
+    "servedWithoutProviderCall": 49,
+    "routedToModel": 41,
+    "aiCallsAvoidedPct": 0.544
+  },
+  "latencyMs": {
+    "deterministic": {
+      "n": 240,
+      "median": 0.102,
+      "p95": 0.297,
+      "max": 9.604
+    },
+    "retrieval": {
+      "n": 120,
+      "median": 23.618,
+      "p95": 28.165,
+      "max": 35.982
+    },
+    "provider": null,
+    "providerNote": "Not sampled: the production per-IP hourly allowance was exhausted before the audit began."
+  },
+  "security": {
+    "injectionAttacksBlocked": 8,
+    "injectionAttacksTested": 8,
+    "falsePositivesOnOrdinaryQuestions": 0,
+    "ordinaryQuestionsTested": 12,
+    "secretScan": "PASS",
+    "secretsInClientBundle": 0,
+    "retrievedContentTreatedAsData": true
+  },
+  "hallucination": {
+    "falsePremiseTraps": 8,
+    "corrected": 8,
+    "fabricated": 0,
+    "traps": [
+      "CodeForge v9.0",
+      "Garnet cancelled",
+      "FarmStand Finder launch date",
+      "CodeForge user counts",
+      "GEMS frontier parity",
+      "We The People partisanship",
+      "ForgerEMS as Ventoy-only",
+      "Garnet image generation"
+    ]
+  },
+  "staleFacts": {
+    "searched": [
+      "five projects",
+      "five ecosystems",
+      "internal machinery",
+      "not another consumer application",
+      "Sapphire optimization",
+      "Peridot evaluation",
+      "Garnet automation",
+      "KyraBlox beta",
+      "Ventoy-based toolkit manager",
+      "v1.2.4-preview.5"
+    ],
+    "found": 0
+  },
+  "requestPayload": {
+    "fieldsSentByBrowser": [
+      "message",
+      "history",
+      "context.route",
+      "context.pageType",
+      "context.entity"
+    ],
+    "unknownFieldsRejected": true,
+    "privilegedFieldsRejected": [
+      "model",
+      "provider",
+      "apiKey",
+      "endpoint",
+      "systemPrompt",
+      "pricingMode",
+      "authorization"
+    ],
+    "cookies": "none",
+    "identifiers": "none",
+    "serverSideIpUse": "salted SHA-256 hash for rate limiting only"
+  },
+  "rateLimits": {
+    "perMinutePerClient": 5,
+    "perHourPerClient": 60,
+    "perHourPerClientBefore": 20,
+    "globalAiPerDay": 40,
+    "scope": "per hashed client address, Durable Object backed",
+    "localAnswersConsumeAiBudget": false,
+    "streamingRateLimitStatus": 429,
+    "streamingRateLimitStatusBefore": 200
+  },
+  "validation": {
+    "vitestFiles": 19,
+    "vitestTests": 310,
+    "vitestFailures": 0,
+    "astroCheckErrors": 0,
+    "astroCheckWarnings": 0,
+    "astroCheckHints": 0,
+    "pagesBuilt": 26,
+    "internalLinksChecked": 930,
+    "internalLinksBroken": 0,
+    "knowledgeInventory": "PASS",
+    "contentValidation": "PASS",
+    "workerDryRunKiB": 180.5,
+    "workerGzipKiB": 47.37
+  },
+  "defectsFound": [
+    {
+      "severity": "P1",
+      "id": "system-prompt-not-sent",
+      "fixed": true
+    },
+    {
+      "severity": "P1",
+      "id": "history-and-context-discarded",
+      "fixed": true
+    },
+    {
+      "severity": "P1",
+      "id": "entity-resolver-matches-stopwords",
+      "fixed": true
+    },
+    {
+      "severity": "P1",
+      "id": "entity-match-discards-intent",
+      "fixed": true
+    },
+    {
+      "severity": "P1",
+      "id": "gems-lineages-absent-from-knowledge",
+      "fixed": true
+    },
+    {
+      "severity": "P1",
+      "id": "streaming-rate-limit-returns-200",
+      "fixed": true
+    },
+    {
+      "severity": "P2",
+      "id": "retrieval-has-no-relevance-floor",
+      "fixed": true
+    },
+    {
+      "severity": "P2",
+      "id": "every-question-spends-ai-budget",
+      "fixed": true
+    },
+    {
+      "severity": "P2",
+      "id": "hourly-limit-gates-free-answers",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "injection-guard-gaps",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "knownanswer-ordering-bugs",
+      "fixed": true
+    },
+    {
+      "severity": "P3",
+      "id": "playwright-specs-collected-by-vitest",
+      "fixed": true
+    }
+  ],
+  "remainingRecommendations": [
+    {
+      "priority": "P1",
+      "item": "Deploy the Worker; production still runs the pre-audit build."
+    },
+    {
+      "priority": "P2",
+      "item": "Add a retrieval-injection fixture test with hostile document text."
+    },
+    {
+      "priority": "P2",
+      "item": "Measure provider latency, multi-turn drift, and length adaptation against wrangler dev."
+    },
+    {
+      "priority": "P3",
+      "item": "Consider a quiet answer-source indicator for canonical answers."
+    },
+    {
+      "priority": "P3",
+      "item": "Retire the residual knownAnswer() branches once canonical routing has soaked."
+    },
+    {
+      "priority": "P3",
+      "item": "Re-run mobile interaction testing at 320x800 and 390x844."
+    }
+  ],
+  "caveats": [
+    "The repairs and the golden query set were authored in the same session; assertions resolve canonical values from site data at run time rather than hard-coded strings.",
+    "No live provider calls were measured after the repairs."
+  ]
+}

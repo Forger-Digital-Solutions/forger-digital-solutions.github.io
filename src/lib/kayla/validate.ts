@@ -64,5 +64,33 @@ export function validateChatRequest(body: unknown, config: KaylaConfig = getKayl
 
 export function sanitizeInput(input: string): string { return input.replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, getKaylaConfig().maxMessageLength); }
 export function isPromptInjectionAttempt(input: string): boolean {
-  return [/ignore\s+(previous|all|above)\s+instructions/i, /ignore\s+(your\s+)?(fds\s+)?(knowledge|instructions|rules)/i, /(reveal|show|print|repeat)\s+(your\s+)?(hidden\s+)?system\s+(instructions|prompt)/i, /system\s*prompt/i, /reveal\s+(your|the)\s+(api|secret|key|password|credential)/i, /read\s+\.env/i, /what\s+(are|is)\s+(your|the)\s+(secret|key|password|credential)/i, /pretend\s+(you\s+are|to\s+be)\s+(the\s+)?(developer|admin|root)/i, /bypass\s+(security|restrictions|rules)/i, /execute\s+(javascript|js|script)/i, /<script/i, /javascript\s*:/i, /data\s*:\s*text\/html/i, /vbscript\s*:/i, /invent\s+.*(unreleased|private|secret)/i].some(pattern => pattern.test(input));
+  return [
+    /ignore\s+(previous|all|above)\s+instructions/i,
+    /ignore\s+(your\s+)?(fds\s+)?(knowledge|instructions|rules)/i,
+    /(reveal|show|print|repeat)\s+(your\s+)?(hidden\s+)?system\s+(instructions|prompt)/i,
+    /system\s*prompt/i,
+    /reveal\s+(your|the)\s+(api|secret|key|password|credential)/i,
+    /read\s+\.env/i,
+    /what\s+(are|is)\s+(your|the)\s+(secret|key|password|credential)/i,
+    /pretend\s+(you\s+are|to\s+be)\s+(the\s+)?(developer|admin|root)/i,
+    /bypass\s+(security|restrictions|rules)/i,
+    /execute\s+(javascript|js|script)/i,
+    /<script/i,
+    /javascript\s*:/i,
+    /data\s*:\s*text\/html/i,
+    /vbscript\s*:/i,
+    // Requests to fabricate FDS facts. The system prompt forbids invention, but
+    // the guard refuses before a model is ever asked.
+    /\b(make\s+up|fabricate|invent|hallucinate|imagine)\b[^.?!]{0,50}\b(feature|version|release|fact|detail|number|statistic|user|benchmark|project|product|price|date|quote)/i,
+    /\bpretend\b[^.?!]{0,50}\b(released|available|launched|shipped|public|cancell?ed|finished|complete)/i,
+    // Persona and rule-override attempts.
+    // Scoped to second-person persona swaps: "how does CodeForge act as an
+    // engineering agent?" is an ordinary product question.
+    /\b(you\s+are\s+now|from\s+now\s+on\s+you|you\s+must\s+now)\b/i,
+    /\b(you\s+(should|must|will)\s+)?(act|behave|respond|roleplay)\s+as\s+(a|an|the)?\s*(unrestricted|jailbroken|uncensored|different|another|dan|developer|admin|root|god)\b/i,
+    /\b(dev\s?mode|developer\s+mode|jailbreak|dan\s+mode|god\s+mode|unrestricted\s+mode)\b/i,
+    /\b(disable|turn\s+off|forget|drop|override|remove)\b[^.?!]{0,30}\b(rules?|restrictions?|guidelines?|instructions?|safety|filters?|guardrails?)/i,
+    // Attempts to extract configuration under another name.
+    /\b(hidden|secret|internal|underlying|original)\s+(instructions?|prompt|rules?|configuration|directives?)/i
+  ].some(pattern => pattern.test(input));
 }

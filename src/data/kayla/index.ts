@@ -11,6 +11,7 @@ import { githubRepos } from './github';
 import { officialSites } from './sites';
 import { productRelationships } from './relationships';
 import { retrieveKnowledge, toKnowledgeResult, resolveEntity } from './retrieval';
+import { canonicalAnswer } from './answers';
 
 function normalize(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -333,7 +334,30 @@ function synthesizeEcosystem(): { text: string; title?: string; actions?: KaylaS
 }
 
 export class LocalKaylaProvider {
+  /**
+   * Answer routing, strongest authority first:
+   *   1. canonical facts derived from site data (entity + intent)
+   *   2. remaining hand-written explanations
+   *   3. retrieved FDS documents
+   *   4. an honest "not documented" rather than a confident irrelevant answer
+   */
   async search(query: string, context?: KaylaPageContext): Promise<KaylaKnowledgeResult[]> {
+    const canonical = canonicalAnswer(query, context);
+    if (canonical) {
+      return [{
+        type: 'general',
+        title: canonical.title || 'Answer',
+        snippet: canonical.text,
+        action: canonical.actions?.[0],
+        actions: canonical.actions,
+        score: 100,
+        id: canonical.sources[0],
+        sourceType: 'canonical',
+        intent: canonical.intent,
+        settled: canonical.settled
+      }];
+    }
+
     const known = knownAnswer(query, context);
     if (known) {
       const result: KaylaKnowledgeResult = {
@@ -341,7 +365,8 @@ export class LocalKaylaProvider {
         title: known.title || 'Answer',
         snippet: known.text,
         action: known.actions?.[0],
-        score: 100,
+        actions: known.actions,
+        score: 95,
         sourceType: 'known-answer'
       };
       return [result];
@@ -373,7 +398,7 @@ export class LocalKaylaProvider {
       return [{
         type: 'general',
         title: 'No results',
-        snippet: "I couldn't find that in the current public FDS knowledge base.",
+        snippet: "I don't have that documented in the current public FDS knowledge base. I can help with FDS projects, their real status, what is downloadable today, releases, navigation, and support routes.",
         score: 0,
         sourceType: 'none'
       }];

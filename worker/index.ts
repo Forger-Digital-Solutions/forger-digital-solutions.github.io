@@ -73,12 +73,20 @@ export default {
     if (!limiterId || !env.ABUSE_GUARD) return finalize(json({ error: 'Kayla is temporarily unavailable. Please try again later.', errorType: 'SERVICE_UNAVAILABLE' }, 503), 'guard_unavailable', 'unavailable');
     const rateStub = env.ABUSE_GUARD.get(env.ABUSE_GUARD.idFromName(`client:${limiterId}`));
     const globalStub = env.ABUSE_GUARD.get(env.ABUSE_GUARD.idFromName('global-ai-budget'));
-    const consumeRequestAllowance = async () => safeAllowance(rateStub, '/rate', { minuteLimit: config.rateLimitPerMinute, hourLimit: config.rateLimitPerHour }, false);
     const consumeAIAllowance = async () => safeAllowance(globalStub, '/ai-budget', { limit: config.aiDailyRequestLimit }, false);
+
+    // Consume the per-client allowance once, at the edge, so the streaming and
+    // JSON paths agree. Previously the stream consumed it inside the generator
+    // and reported exhaustion as HTTP 200 with an error body, which the browser
+    // rendered as an AI outage instead of a rate limit.
+    const requestAllowed = await safeAllowance(rateStub, '/rate', { minuteLimit: config.rateLimitPerMinute, hourLimit: config.rateLimitPerHour }, false);
+    if (!requestAllowed) {
+      return finalize(json({ error: 'Kayla has answered several questions from this connection recently. Please try again in a minute.', errorType: 'RATE_LIMITED' }, 429), 'rate_limited', 'blocked');
+    }
 
     const endpointConfig: KaylaEndpointConfig = {
       providerConfig: { provider: config.provider, model: config.model, apiKey: config.apiKey, timeoutMs: config.requestTimeoutMs },
-      kaylaConfig: config, consumeRequestAllowance, consumeAIAllowance
+      kaylaConfig: config, consumeRequestAllowance: async () => true, consumeAIAllowance
     };
     const stream = url.searchParams.get('stream') === 'true';
     if (stream) {

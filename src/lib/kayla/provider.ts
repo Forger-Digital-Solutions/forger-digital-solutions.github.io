@@ -1,6 +1,17 @@
-import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, KaylaAIProvider } from '../../data/kayla/types';
+import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, KaylaAIProvider, KaylaAIRequest } from '../../data/kayla/types';
 import { LocalKaylaProvider, kaylaKnowledge } from '../../data/kayla/index';
 import { evaluateModelPolicy, isApprovedProviderEndpoint, OPENROUTER_ENDPOINT, OPENROUTER_FREE_MODEL } from './model-policy';
+import { buildChatMessages } from './systemPrompt';
+
+/** Bounds the response so a simple question cannot produce an unbounded essay. */
+const MAX_RESPONSE_TOKENS = 700;
+
+function preferredActions(sources: KaylaKnowledgeResult[]): KaylaSafeAction[] | undefined {
+  const top = sources[0];
+  if (!top) return undefined;
+  if (top.actions?.length) return top.actions;
+  return top.action ? [top.action] : undefined;
+}
 
 export { kaylaKnowledge };
 
@@ -75,13 +86,10 @@ class OpenRouterAIProvider implements KaylaAIProvider {
     return Boolean(this.config.apiKey);
   }
 
-  async chat(request: { message: string; sources: KaylaKnowledgeResult[] }): Promise<{ content: string; actions?: KaylaSafeAction[] }> {
+  async chat(request: KaylaAIRequest): Promise<{ content: string; actions?: KaylaSafeAction[] }> {
     if (!this.config.apiKey) {
       throw new Error('NO_PROVIDER');
     }
-
-    const sourceTexts = request.sources.slice(0, 5).map(s => `[${s.title}] ${s.snippet}`).join('\n\n');
-    const userPrompt = `Question: ${request.message}\n\nRelevant FDS knowledge:\n${sourceTexts}`;
 
     const endpoint = OPENROUTER_ENDPOINT;
     const controller = new AbortController();
@@ -98,9 +106,8 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       },
       body: JSON.stringify({
         model: this.config.model || OPENROUTER_FREE_MODEL,
-        messages: [
-          { role: 'user', content: userPrompt }
-        ]
+        messages: buildChatMessages(request),
+        max_tokens: MAX_RESPONSE_TOKENS
       }),
       signal: controller.signal
     }); } catch (error) {
@@ -138,17 +145,14 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       throw new Error('MALFORMED_RESPONSE');
     }
 
-    return { content, actions: request.sources[0]?.action ? [request.sources[0].action] : undefined };
+    return { content, actions: preferredActions(request.sources) };
   }
 
-  async *stream(request: { message: string; sources: KaylaKnowledgeResult[] }): AsyncIterable<{ type: 'content' | 'done' | 'error'; content?: string; error?: string }> {
+  async *stream(request: KaylaAIRequest): AsyncIterable<{ type: 'content' | 'done' | 'error'; content?: string; error?: string }> {
     if (!this.config.apiKey) {
       yield { type: 'error', error: 'NO_PROVIDER' };
       return;
     }
-
-    const sourceTexts = request.sources.slice(0, 5).map(s => `[${s.title}] ${s.snippet}`).join('\n\n');
-    const userPrompt = `Question: ${request.message}\n\nRelevant FDS knowledge:\n${sourceTexts}`;
 
     const endpoint = OPENROUTER_ENDPOINT;
     const controller = new AbortController();
@@ -165,9 +169,8 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       },
       body: JSON.stringify({
         model: this.config.model || OPENROUTER_FREE_MODEL,
-        messages: [
-          { role: 'user', content: userPrompt }
-        ],
+        messages: buildChatMessages(request),
+        max_tokens: MAX_RESPONSE_TOKENS,
         stream: true
       }),
       signal: controller.signal

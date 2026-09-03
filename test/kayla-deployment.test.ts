@@ -10,7 +10,7 @@ describe('Kayla Deployment - Config', () => {
     expect(config.apiKey).toBe('');
     expect(config.maxMessageLength).toBe(2000);
     expect(config.rateLimitPerMinute).toBe(5);
-    expect(config.rateLimitPerHour).toBe(20);
+    expect(config.rateLimitPerHour).toBe(60);
   });
 
   it('reads config from env object', () => {

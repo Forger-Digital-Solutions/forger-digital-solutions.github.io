@@ -31,3 +31,9 @@ Thumbs.db
 .claude/
 .visual-audit/
 public/images/codeforge/codeforge-v0-2-workspace.png
+
+# Superseded Kayla certification artifacts and ad-hoc QA output.
+# Kept on disk as evidence; the current record is docs/kayla/audit/.
+docs/kayla/archive/
+test-results/
+playwright-report/

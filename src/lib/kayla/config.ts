@@ -62,7 +62,7 @@ export function createKaylaConfig(env: KaylaEnv | Record<string, string | undefi
     maxMessageLength: getEnvNumber(env, 'KAYLA_MAX_MESSAGE_LENGTH', 2000),
     maxHistoryMessages: getEnvNumber(env, 'KAYLA_MAX_HISTORY_MESSAGES', 10),
     rateLimitPerMinute: getEnvNumber(env, 'KAYLA_RATE_LIMIT_PER_MINUTE', 5),
-    rateLimitPerHour: getEnvNumber(env, 'KAYLA_RATE_LIMIT_PER_HOUR', 20),
+    rateLimitPerHour: getEnvNumber(env, 'KAYLA_RATE_LIMIT_PER_HOUR', 60),
     aiDailyRequestLimit: getEnvNumber(env, 'KAYLA_AI_DAILY_REQUEST_LIMIT', 40),
     maxPayloadBytes: getEnvNumber(env, 'KAYLA_MAX_PAYLOAD_BYTES', 16384),
     maxObjectDepth: getEnvNumber(env, 'KAYLA_MAX_OBJECT_DEPTH', 6),

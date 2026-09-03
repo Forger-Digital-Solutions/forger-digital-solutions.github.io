@@ -3,13 +3,15 @@ import { forgerems } from './apps/forgerems';
 import { faqs } from './support';
 import { fds } from './company/fds';
 import { founder } from './company/founder';
-import { apps, appAliases } from './apps';
+import { apps } from './apps';
 import { roadmap } from './roadmap';
 import { community } from './community';
 import { downloads } from './downloads';
 import { releases } from './releases';
 import { githubRepos } from './github';
 import { officialSites } from './sites';
+import { gems } from '../gems';
+import { matchEntity, distinctiveTokens } from './entities';
 
 export interface KaylaDocument {
   id: string;
@@ -426,33 +428,56 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     weight: 1.0
   });
 
+  // The four GEMS lineages, sourced from src/data/gems.ts so the site and Kayla
+  // cannot drift apart on a GEM role, state, or disclaimed capability.
+  for (const gem of gems) {
+    addDoc({
+      id: `gem-${gem.key}`,
+      type: 'app',
+      title: gem.name,
+      text: `${gem.name} is the GEMS lineage for ${gem.role}. ${gem.direction} State: ${gem.state}. ${gem.fit} ${gem.foundationStrategy} Not claimed: ${gem.notClaimed}`,
+      route: '/projects/gems-training-grounds',
+      entityId: `gem-${gem.key}`,
+      tags: [gem.key, gem.name.toLowerCase(), 'gem', 'gems', 'model', 'lineage', gem.state.toLowerCase()],
+      weight: 1.0
+    });
+  }
+
+  addDoc({
+    id: 'gems-family',
+    type: 'app',
+    title: 'GEMS Family Roles',
+    text: `The GEMS family has four independent research lineages: ${gems.map(g => `${g.name} for ${g.role.toLowerCase()}`).join('; ')}. Training Grounds is the environment that teaches, evaluates, and advances them. No GEM has been released, downloaded, or independently benchmarked.`,
+    route: '/projects/gems-training-grounds',
+    entityId: 'gems-training-grounds',
+    tags: ['gems', 'gem', 'family', 'topaz', 'sapphire', 'peridot', 'garnet', 'training grounds', 'roles'],
+    weight: 1.0
+  });
+
+  addDoc({
+    id: 'kayla-copilot',
+    type: 'general',
+    title: 'Kayla Copilot',
+    text: 'Kayla Copilot is the guide embedded in the Forger Digital Solutions website. She answers questions about FDS, its projects, statuses, releases, downloads, navigation, and support routes using published FDS information. She is not Kayla AI Publisher, which is a separate FDS creative and publishing product, and she has no live external data.',
+    route: '/',
+    entityId: 'kayla-copilot',
+    tags: ['kayla', 'copilot', 'kayla copilot', 'assistant', 'guide'],
+    weight: 1.0
+  });
+
   return index;
 }
 
 const entityIndex = buildEntityIndex();
 
+/**
+ * Entity resolution delegates to the phrase-based matcher in entities.ts.
+ * The previous implementation compared every query token against every alias
+ * token with a 0.6 Levenshtein threshold, so a bare stopword resolved a
+ * project and any mention of Forger resolved CodeForge.
+ */
 export function resolveEntity(query: string): string | undefined {
-  const normalized = normalizeText(query);
-  if (appAliases[normalized]) return appAliases[normalized];
-
-  const tokens = tokenize(query);
-  for (const token of tokens) {
-    if (appAliases[token]) return appAliases[token];
-  }
-
-  const fuzzyEntries = Object.entries(appAliases);
-  for (const [alias, id] of fuzzyEntries) {
-    const aliasTokens = tokenize(alias);
-    for (const qt of tokens) {
-      for (const at of aliasTokens) {
-        if (fuzzySimilarity(qt, at) >= FUZZY_THRESHOLD) {
-          return id;
-        }
-      }
-    }
-  }
-
-  return undefined;
+  return matchEntity(query);
 }
 
 function scoreDocument(query: string, queryTokens: string[], doc: KaylaDocument, context?: KaylaPageContext): number {
@@ -495,15 +520,42 @@ function scoreDocument(query: string, queryTokens: string[], doc: KaylaDocument,
   return score;
 }
 
+/**
+ * A document must share at least one meaningful word with the question.
+ * Without this, stopword overlap alone made unrelated FAQ entries the top
+ * result — a question about model benchmarks returned the contact-us answer.
+ */
+function isRelevant(doc: KaylaDocument, meaningful: string[]): boolean {
+  if (meaningful.length === 0) return false;
+  const haystack = new Set([...tokenize(doc.title), ...tokenize(doc.text), ...doc.tags.flatMap(tag => tokenize(tag))]);
+  // Space-free forms so a run-together typo ("WeThePeple") still reaches the
+  // document whose title is "We The People".
+  const squashed = [normalizeText(doc.title).replace(/\s+/g, ''), ...doc.tags.map(tag => normalizeText(tag).replace(/\s+/g, ''))]
+    .filter((value) => value.length >= 5);
+  return meaningful.some((token) => {
+    if (haystack.has(token)) return true;
+    for (const candidate of haystack) {
+      if (candidate.length >= 5 && token.length >= 5 && fuzzySimilarity(token, candidate) >= 0.85) return true;
+    }
+    if (token.length >= 6) {
+      for (const candidate of squashed) {
+        if (fuzzySimilarity(token, candidate) >= 0.8) return true;
+      }
+    }
+    return false;
+  });
+}
+
 export function retrieveKnowledge(query: string, context?: KaylaPageContext, limit = 5): KaylaScoredResult[] {
   const queryTokens = tokenize(query);
   if (queryTokens.length === 0) return [];
+  const meaningful = distinctiveTokens(query);
 
   const results: KaylaScoredResult[] = [];
 
   for (const doc of entityIndex.values()) {
     const score = scoreDocument(query, queryTokens, doc, context);
-    if (score > 10) {
+    if (score > 10 && isRelevant(doc, meaningful)) {
       results.push({ doc, score });
     }
   }

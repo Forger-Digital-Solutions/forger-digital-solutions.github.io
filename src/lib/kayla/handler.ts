@@ -18,6 +18,40 @@ function getConfig(kaylaConfig?: KaylaConfig): KaylaConfig {
   return kaylaConfig || createKaylaConfig();
 }
 
+/** Canonical answers can offer more than one route; older results carry one. */
+function localActions(result?: KaylaKnowledgeResult) {
+  if (result?.actions?.length) return result.actions;
+  return result?.action ? [result.action] : undefined;
+}
+
+/**
+ * Intents whose answers are settled facts or scope boundaries. A model must
+ * not decide whether something is downloadable, what version is public, or
+ * whether Kayla can report the weather — and calling one to restate a fact the
+ * site already owns spends provider budget for nothing.
+ */
+const DETERMINISTIC_INTENTS = new Set([
+  'availability', 'version', 'status', 'support', 'contact', 'navigation',
+  'privacy', 'founder', 'assistant_identity', 'external_current',
+  'private_info', 'unsupported_task'
+]);
+
+function deterministicAnswer(sources: KaylaKnowledgeResult[]): KaylaKnowledgeResult | undefined {
+  const top = sources[0];
+  if (!top || top.sourceType !== 'canonical') return undefined;
+  if (top.settled) return top;
+  return top.intent && DETERMINISTIC_INTENTS.has(top.intent) ? top : undefined;
+}
+
+function localResponse(topResult?: KaylaKnowledgeResult) {
+  return {
+    answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+    actions: localActions(topResult),
+    mode: 'local' as const,
+    sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
+  };
+}
+
 export async function handleKaylaChat(
   body: unknown,
   config: KaylaEndpointConfig
@@ -76,17 +110,13 @@ export async function handleKaylaChat(
     };
   }
 
+  const settled = deterministicAnswer(sources);
+  if (settled) {
+    return { status: 200, response: localResponse(settled) };
+  }
+
   if (!isAIEnabled(kaylaConfig)) {
-    const topResult = sources[0];
-    return {
-      status: 200,
-      response: {
-        answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-        actions: topResult?.action ? [topResult.action] : undefined,
-        mode: 'local',
-        sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
-      }
-    };
+    return { status: 200, response: localResponse(sources[0]) };
   }
 
   const aiProvider = createAIProvider(config.providerConfig);
@@ -96,7 +126,7 @@ export async function handleKaylaChat(
       status: 200,
       response: {
         answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-        actions: topResult?.action ? [topResult.action] : undefined,
+        actions: localActions(topResult),
         mode: 'local',
         sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
       }
@@ -105,7 +135,7 @@ export async function handleKaylaChat(
 
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     const topResult = sources[0];
-    return { status: 200, response: { answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: topResult?.action ? [topResult.action] : undefined, mode: 'local', sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : [] } };
+    return { status: 200, response: { answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : [] } };
   }
 
   try {
@@ -136,7 +166,7 @@ export async function handleKaylaChat(
       status: 200,
       response: {
         answer: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
-        actions: topResult?.action ? [topResult.action] : undefined,
+        actions: localActions(topResult),
         mode: 'local',
         sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
       }
@@ -178,11 +208,17 @@ export async function* streamKaylaChat(
   const localProvider = createProvider();
   const sources = await localProvider.search(message, context);
 
+  const settled = deterministicAnswer(sources);
+  if (settled) {
+    yield JSON.stringify({ content: settled.snippet, actions: localActions(settled), mode: 'local', done: true });
+    return;
+  }
+
   if (!isAIEnabled(kaylaConfig)) {
     const topResult = sources[0];
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-      actions: topResult?.action ? [topResult.action] : undefined,
+      actions: localActions(topResult),
       mode: 'local',
       done: true
     });
@@ -194,7 +230,7 @@ export async function* streamKaylaChat(
     const topResult = sources[0];
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-      actions: topResult?.action ? [topResult.action] : undefined,
+      actions: localActions(topResult),
       mode: 'local',
       done: true
     });
@@ -203,7 +239,7 @@ export async function* streamKaylaChat(
 
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     const topResult = sources[0];
-    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: topResult?.action ? [topResult.action] : undefined, mode: 'local', done: true });
+    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', done: true });
     return;
   }
 
@@ -217,7 +253,7 @@ export async function* streamKaylaChat(
         providerContentReceived = true;
         if (!aiModeAnnounced) {
           const topResult = sources[0];
-          yield JSON.stringify({ mode: 'ai', actions: topResult?.action ? [topResult.action] : undefined });
+          yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
           aiModeAnnounced = true;
         }
       }
@@ -229,13 +265,13 @@ export async function* streamKaylaChat(
     }
     if (providerFailed) {
       const topResult = sources[0];
-      yield JSON.stringify({ content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`, actions: topResult?.action ? [topResult.action] : undefined, mode: 'local', done: true });
+      yield JSON.stringify({ content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`, actions: localActions(topResult), mode: 'local', done: true });
     }
   } catch {
     const topResult = sources[0];
     yield JSON.stringify({
       content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
-      actions: topResult?.action ? [topResult.action] : undefined,
+      actions: localActions(topResult),
       mode: 'local',
       done: true
     });

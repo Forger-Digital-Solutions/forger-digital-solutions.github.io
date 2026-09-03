@@ -11,9 +11,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "validate:content": "node scripts/validate-content.mjs",
-    "validate:knowledge": "node scripts/kayla-knowledge.mjs",
+    "validate:knowledge": "node scripts/kayla-knowledge.mjs && node scripts/kayla-golden-check.mjs",
     "validate:links": "node scripts/check-internal-links.mjs",
-    "validate": "node scripts/validate-content.mjs && node scripts/kayla-knowledge.mjs && astro check && astro build && node scripts/check-internal-links.mjs",
+    "validate": "node scripts/validate-content.mjs && node scripts/kayla-knowledge.mjs && node scripts/kayla-golden-check.mjs && astro check && astro build && node scripts/check-internal-links.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "kayla:knowledge": "node scripts/kayla-knowledge.mjs",
@@ -24,7 +24,8 @@
     "worker:build": "npm --prefix worker run build",
     "astro": "astro",
     "worker:dev": "cd worker && npm run dev",
-    "worker:deploy": "cd worker && npm run deploy"
+    "worker:deploy": "cd worker && npm run deploy",
+    "kayla:golden": "node scripts/kayla-golden-check.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/node": "^11.1.4",
+    "@playwright/test": "^1.62.1",
     "typescript": "^5.6.0",
     "vitest": "^4.1.11"
   }
