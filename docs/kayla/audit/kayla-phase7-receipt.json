@@ -3,7 +3,7 @@
   "verdictReason": "All three Phase 6 limitations resolved with executed evidence. Limitation A (no live provider acceptance): root cause proven in production to be the local 40/day Durable Object allowance denying requests before OpenRouter was contacted (providerAttempted=false, aiDailyUsed=40/40), not the provider; allowance raised to 150 on a zero-cost model and three live provider_accepted responses subsequently observed. Limitation B (relationship-blind verification): bounded canonical relationship layer added with explicit denied relations quoted from site data; rejects invented linkages built from individually true nouns. Limitation C (weak taxonomy answers): status and availability semantics made first-class deterministic knowledge. Limitation D (no browser regression proof): 14-case Playwright suite added and proven to fail when the Phase 6 styling fix is reverted.",
   "branch": "main",
   "startingHead": "cb2f855a8b9912b9281b5e5b46583e367c853864",
-  "endingHead": "PLACEHOLDER_FILLED_AFTER_COMMIT",
+  "endingHead": "910a35e",
   "initialWorktree": "clean",
   "finalWorktree": "clean",
   "phase6BaselineReVerification": {
