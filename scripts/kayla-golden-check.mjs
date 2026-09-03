@@ -53,7 +53,9 @@ try {
   const results = [];
 
   for (const query of dataset.queries) {
-    const { response } = await handleKaylaChat({ message: query.question, history: [], context: { route: '/', pageType: 'home' } }, endpointConfig);
+    const context = query.context || { route: '/', pageType: 'home' };
+    const history = query.history || [];
+    const { response } = await handleKaylaChat({ message: query.question, history, context }, endpointConfig);
     const text = response.answer || response.error || '';
     const top = { snippet: text, sourceType: response.sources?.[0]?.id ? 'canonical' : (response.answer ? 'local' : 'error'), actions: response.actions };
     const answer = `${text} ${(top.actions || []).filter(Boolean).map((a) => `${a.label} ${a.href || ''}`).join(' ')}`;
@@ -66,6 +68,11 @@ try {
       .map(resolve)
       .filter((needle) => haystack.includes(needle.toLowerCase()));
 
+    const structuralFailures = [];
+    if (query.expectActions && !(response.actions?.length > 0)) structuralFailures.push('expected at least one action, got none');
+    if (query.expectSources && !(response.sourceLinks?.length > 0)) structuralFailures.push('expected at least one source, got none');
+    if (query.expectRouteMode && response.routeMode !== query.expectRouteMode) structuralFailures.push(`expected routeMode "${query.expectRouteMode}", got "${response.routeMode}"`);
+
     results.push({
       id: query.id,
       tier: query.tier,
@@ -73,9 +80,11 @@ try {
       question: query.question,
       layer: top.sourceType || 'none',
       intent: top.intent || null,
-      pass: missing.length === 0 && present.length === 0,
+      routeMode: response.routeMode || null,
+      pass: missing.length === 0 && present.length === 0 && structuralFailures.length === 0,
       missing: missing.map((group) => group.join(' | ')),
       forbidden: present,
+      structuralFailures,
       answer: (top.snippet || '').replace(/\s+/g, ' ').slice(0, 300)
     });
   }
@@ -125,6 +134,7 @@ try {
         console.log(`FAIL [${failure.id}] ${failure.question}`);
         if (failure.missing.length) console.log(`   missing: ${failure.missing.join('  //  ')}`);
         if (failure.forbidden.length) console.log(`   forbidden present: ${failure.forbidden.join(', ')}`);
+        if (failure.structuralFailures.length) console.log(`   structural: ${failure.structuralFailures.join('  //  ')}`);
         if (verbose) console.log(`   answer: ${failure.answer}`);
       }
     }

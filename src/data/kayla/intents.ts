@@ -124,7 +124,10 @@ const RULES: IntentRule[] = [
       /\bis (it|this|that|[a-z]+) (free|paid|open source|a subscription)\b/,
       /\b(pricing|subscription|licen[cs]e fee|paywall|monthly fee)\b/,
       /\bdo i (have to |need to )?pay\b/,
-      /\b(what will .{0,25}cost|does .{0,25}cost|why does .{0,25}cost|paid (tier|plan|subscription)|tier cost|pricing tier)\b/
+      /\b(what will .{0,25}cost|does .{0,25}cost|why does .{0,25}cost|paid (tier|plan|subscription)|tier cost|pricing tier)\b/,
+      // Follow-up to an already-claimed price/tier ("What do I get with that
+      // plan?"): the plan itself carries the pricing subject, no cost word needed.
+      /\b(what (do|would|does) (i|it|that|you) (get|include|come with)|what.{0,10}(is |comes )?included)\b.{0,20}\b(plan|tier|subscription)\b/
     ]
   },
   {
@@ -212,7 +215,8 @@ const RULES: IntentRule[] = [
       /\becosystem\b/,
       /\bexplain (all of|everything about|the whole)\b/,
       /\ball of fds\b/,
-      /\bhow do (all )?the (apps|projects|products) fit together\b/
+      /\bhow do (all )?the (apps|projects|products) fit together\b/,
+      /\b(quick )?tour\b.{0,20}\b(projects|apps|fds|ecosystem)\b/
     ]
   },
   {

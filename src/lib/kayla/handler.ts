@@ -1,4 +1,4 @@
-import type { KaylaChatResponse, KaylaKnowledgeResult, KaylaErrorType, KaylaConfig } from '../../data/kayla/types';
+import type { KaylaChatResponse, KaylaKnowledgeResult, KaylaErrorType, KaylaConfig, KaylaRouteMode } from '../../data/kayla/types';
 import { createProvider, createAIProvider } from './provider';
 import type { KaylaProviderConfig } from './provider';
 import { createKaylaConfig, isAIEnabled } from './config';
@@ -6,6 +6,7 @@ import { validateChatRequest, isPromptInjectionAttempt } from './validate';
 import { checkRateLimit } from './rateLimit';
 import { isSensitiveQuery } from './systemPrompt';
 import { verifyAgainstCanon } from './verify';
+import { toKaylaSources } from './sources';
 
 export interface KaylaEndpointConfig {
   providerConfig: KaylaProviderConfig;
@@ -45,6 +46,19 @@ function deterministicAnswer(sources: KaylaKnowledgeResult[]): KaylaKnowledgeRes
 }
 
 /**
+ * Which lane produced a local (non-provider) answer, for tests and live
+ * verification to prove rather than assume. A canonical/known-answer result
+ * is a settled or near-settled fact; an entity match or retrieved document is
+ * assembled from site content; "none" is honest absence of evidence.
+ */
+function classifyLocalRoute(top?: KaylaKnowledgeResult): KaylaRouteMode {
+  if (!top) return 'no_results';
+  if (top.sourceType === 'none') return 'no_results';
+  if (top.sourceType === 'canonical' || top.sourceType === 'known-answer') return 'deterministic';
+  return 'retrieval';
+}
+
+/**
  * Aggregate-only telemetry: which canonical rules a generated answer broke.
  * Never the question, the answer, or anything identifying the visitor.
  */
@@ -67,12 +81,14 @@ function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
 }
 
 
-function localResponse(topResult?: KaylaKnowledgeResult) {
+function localResponse(topResult?: KaylaKnowledgeResult, routeMode?: KaylaRouteMode) {
   return {
     answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
     actions: localActions(topResult),
     mode: 'local' as const,
-    sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
+    sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : [],
+    sourceLinks: topResult ? toKaylaSources([topResult]) : [],
+    routeMode: routeMode ?? classifyLocalRoute(topResult)
   };
 }
 
@@ -114,7 +130,9 @@ export async function handleKaylaChat(
       response: {
         answer: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions, our projects, and public resources. How can I help you learn about FDS?",
         mode: 'local',
-        sources: []
+        sources: [],
+        sourceLinks: [],
+        routeMode: 'deterministic'
       }
     };
   }
@@ -129,14 +147,16 @@ export async function handleKaylaChat(
       response: {
         answer: "I'm having trouble accessing the FDS knowledge base right now. Please try again in a moment.",
         mode: 'local',
-        sources: []
+        sources: [],
+        sourceLinks: [],
+        routeMode: 'no_results'
       }
     };
   }
 
   const settled = deterministicAnswer(sources);
   if (settled) {
-    return { status: 200, response: localResponse(settled) };
+    return { status: 200, response: localResponse(settled, 'deterministic') };
   }
 
   if (!isAIEnabled(kaylaConfig)) {
@@ -145,21 +165,11 @@ export async function handleKaylaChat(
 
   const aiProvider = createAIProvider(config.providerConfig);
   if (!aiProvider) {
-    const topResult = sources[0];
-    return {
-      status: 200,
-      response: {
-        answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-        actions: localActions(topResult),
-        mode: 'local',
-        sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
-      }
-    };
+    return { status: 200, response: localResponse(sources[0], 'provider_failed_fallback') };
   }
 
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
-    const topResult = sources[0];
-    return { status: 200, response: { answer: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : [] } };
+    return { status: 200, response: localResponse(sources[0], 'provider_failed_fallback') };
   }
 
   try {
@@ -174,7 +184,7 @@ export async function handleKaylaChat(
     // generated answer contradicts the site's data, the canonical answer that
     // was already computed above is served instead.
     if (!acceptGenerated(aiResponse.content).accepted) {
-      return { status: 200, response: localResponse(sources[0]) };
+      return { status: 200, response: localResponse(sources[0], 'provider_replaced') };
     }
 
     return {
@@ -188,7 +198,9 @@ export async function handleKaylaChat(
           title: s.title,
           type: s.type,
           route: s.route
-        }))
+        })),
+        sourceLinks: toKaylaSources(sources),
+        routeMode: 'provider_accepted'
       }
     };
   } catch {
@@ -199,6 +211,8 @@ export async function handleKaylaChat(
         answer: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
         actions: localActions(topResult),
         mode: 'local',
+        routeMode: 'provider_failed_fallback',
+        sourceLinks: topResult ? toKaylaSources([topResult]) : [],
         sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
       }
     };
@@ -231,7 +245,9 @@ export async function* streamKaylaChat(
     yield JSON.stringify({
       content: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions.",
       mode: 'local',
-      done: true
+      done: true,
+      routeMode: 'deterministic',
+      sourceLinks: []
     });
     return;
   }
@@ -241,7 +257,7 @@ export async function* streamKaylaChat(
 
   const settled = deterministicAnswer(sources);
   if (settled) {
-    yield JSON.stringify({ content: settled.snippet, actions: localActions(settled), mode: 'local', done: true });
+    yield JSON.stringify({ content: settled.snippet, actions: localActions(settled), mode: 'local', done: true, routeMode: 'deterministic', sourceLinks: toKaylaSources([settled]) });
     return;
   }
 
@@ -251,7 +267,9 @@ export async function* streamKaylaChat(
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
       actions: localActions(topResult),
       mode: 'local',
-      done: true
+      done: true,
+      routeMode: classifyLocalRoute(topResult),
+      sourceLinks: topResult ? toKaylaSources([topResult]) : []
     });
     return;
   }
@@ -263,14 +281,16 @@ export async function* streamKaylaChat(
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
       actions: localActions(topResult),
       mode: 'local',
-      done: true
+      done: true,
+      routeMode: 'provider_failed_fallback',
+      sourceLinks: topResult ? toKaylaSources([topResult]) : []
     });
     return;
   }
 
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     const topResult = sources[0];
-    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', done: true });
+    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', done: true, routeMode: 'provider_failed_fallback', sourceLinks: topResult ? toKaylaSources([topResult]) : [] });
     return;
   }
 
@@ -305,7 +325,9 @@ export async function* streamKaylaChat(
         actions: localActions(topResult),
         mode: 'local',
         done: true,
-        replace: true
+        replace: true,
+        routeMode: 'provider_failed_fallback',
+        sourceLinks: topResult ? toKaylaSources([topResult]) : []
       };
       yield JSON.stringify(fallback);
       return;
@@ -318,7 +340,9 @@ export async function* streamKaylaChat(
         content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
         actions: localActions(topResult),
         mode: 'local',
-        done: true
+        done: true,
+        routeMode: 'provider_replaced',
+        sourceLinks: topResult ? toKaylaSources([topResult]) : []
       });
       return;
     }
@@ -326,7 +350,7 @@ export async function* streamKaylaChat(
     // Verified output: safe to emit
     yield JSON.stringify({ mode: 'ai', actions: localActions(topResult) });
     yield JSON.stringify({ type: 'content', content: bufferedText });
-    yield JSON.stringify({ type: 'done', done: true });
+    yield JSON.stringify({ type: 'done', done: true, routeMode: 'provider_accepted', sourceLinks: toKaylaSources(sources) });
   } catch {
     const topResult = sources[0];
     yield JSON.stringify({
@@ -334,7 +358,9 @@ export async function* streamKaylaChat(
       actions: localActions(topResult),
       mode: 'local',
       done: true,
-      replace: true
+      replace: true,
+      routeMode: 'provider_failed_fallback',
+      sourceLinks: topResult ? toKaylaSources([topResult]) : []
     });
   }
 }

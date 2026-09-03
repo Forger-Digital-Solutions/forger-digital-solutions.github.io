@@ -208,7 +208,38 @@ export interface KaylaSourceReference {
   route?: string;
 }
 
+/**
+ * Where a fact came from, for visitors who want to check it themselves.
+ * 'canonical' means the fact is represented only by internal FDS knowledge
+ * with no single page to point to — it is not a placeholder used to give
+ * every answer a link.
+ */
+export type KaylaSourceKind = 'page' | 'project' | 'github' | 'release' | 'canonical';
+
+export interface KaylaSource {
+  label: string;
+  route?: string;
+  url?: string;
+  kind: KaylaSourceKind;
+}
+
 export type KaylaChatMode = 'ai' | 'local' | 'unavailable';
+
+/**
+ * Which lane actually produced an answer. Distinct from KaylaChatMode
+ * ('ai'/'local'/'unavailable'), which only describes what the visitor sees:
+ * a 'local' mode can be a settled fact, a retrieved document, or a provider
+ * answer that verification rejected and replaced. This field exists so tests
+ * and live smoke checks can prove which lane fired instead of inferring it
+ * from prose.
+ */
+export type KaylaRouteMode =
+  | 'deterministic'
+  | 'retrieval'
+  | 'provider_accepted'
+  | 'provider_replaced'
+  | 'provider_failed_fallback'
+  | 'no_results';
 
 export type KaylaErrorType =
   | 'NO_PROVIDER'
@@ -259,7 +290,10 @@ export interface KaylaChatResponse {
   answer: string;
   actions?: KaylaSafeAction[];
   sources?: KaylaSourceReference[];
+  /** Structured, visitor-facing source links derived from `sources`. */
+  sourceLinks?: KaylaSource[];
   mode: KaylaChatMode;
+  routeMode?: KaylaRouteMode;
 }
 
 export interface KaylaConfig {

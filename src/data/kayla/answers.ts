@@ -706,7 +706,17 @@ function sectionText(slug: string, title: string): string | undefined {
  * cancelled project, a launch that never happened, a benchmark result. These
  * are factual claims, so they are settled here rather than left to the model.
  */
-function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | undefined {
+/** Names outside the FDS founder that a question or a prior turn might assert. */
+const FALSE_FOUNDER = /\b(elon\s+musk|musk|sam\s+altman|gates|zuckerberg|bezos)\b/i;
+/** A pronoun follow-up asking about a founding action ("When did he do that?"). */
+const FOUNDER_PRONOUN_FOLLOWUP = /\b(he|him|his|she|her|they|them)\b.{0,25}\b(do|did|does|found\w*|start\w*|creat\w*|establish\w*|built?)\b/i;
+
+/** Did an earlier visitor turn (not Kayla's own reply) name a false founder? */
+function priorTurnClaimedFalseFounder(history: KaylaConversationMessage[]): boolean {
+  return history.some((entry) => entry?.role === 'user' && typeof entry.content === 'string' && FALSE_FOUNDER.test(entry.content));
+}
+
+function premiseAnswer(query: string, entityIds: string[], history: KaylaConversationMessage[] = []): CanonicalAnswer | undefined {
   const text = normalize(query);
   const primary = entityIds[0];
   const gemsInvolved = entityIds.some((id) => id.startsWith(GEM_PREFIX) || id === 'gems-training-grounds');
@@ -750,7 +760,7 @@ function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | un
   }
 
   // False founder premise: Elon Musk or other non-canonical founders
-  if (/\b(elon\s+musk|musk|sam\s+altman|gates|zuckerberg|bezos)\b/i.test(text)) {
+  if (FALSE_FOUNDER.test(text)) {
     return {
       text: `${founder.name} founded Forger Digital Solutions, not Elon Musk or anyone else. FDS is an independent studio founded and operated by ${founder.name}.`,
       actions: [{ type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }],
@@ -759,18 +769,35 @@ function premiseAnswer(query: string, entityIds: string[]): CanonicalAnswer | un
     };
   }
 
-  // False pricing premise, $49 rumor, or speculative paid tier inquiries
-  if (/\b(cost|priced?|charging|\$|dollars|subscription|tier|plan)\b/i.test(text)) {
-    if (/\b(\$49|49 dollars|\$9\.99|9\.99)\b/.test(text) || /\b(why does .{0,20}cost|does .{0,20}cost \$|paid tier|paid plan|pro tier|future tiers?)\b/i.test(text)) {
-      return {
-        text: 'CodeForge does not have a $49 price or any published paid tier. All currently released CodeForge versions are completely free. Future paid-tier pricing, tier names, and usage allowances are not finalized or documented in official FDS information.',
-        actions: productFor('codeforge')?.downloadUrl
-          ? [{ type: 'OPEN_DOWNLOAD', label: 'Download CodeForge', href: productFor('codeforge')!.downloadUrl }]
-          : undefined,
-        sources: ['product-codeforge'],
-        intent: 'pricing',
-        entityId: 'codeforge'
-      };
+  // A pronoun follow-up to an already-claimed false founder ("When did he do
+  // that?") must not be left unanswered, and must not let the false name back
+  // in through an anaphor the entity/premise checks above don't parse as a
+  // person. Only fires when this same conversation actually raised the false
+  // name; an isolated "when did he found it" about nothing is left alone.
+  if (FOUNDER_PRONOUN_FOLLOWUP.test(text) && priorTurnClaimedFalseFounder(history)) {
+    return {
+      text: `There is no founding date to give for that, because ${founder.name} — not Elon Musk or anyone else — founded Forger Digital Solutions. ${founder.name} is FDS's only founder.`,
+      actions: [{ type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }],
+      sources: ['founder-bio'],
+      intent: 'founder'
+    };
+  }
+
+  // False pricing premise: an explicit dollar figure or a paid-tier/plan claim
+  // attached to a real FDS entity. Delegates the actual price text to
+  // pricingAnswer() so every entity (not just CodeForge) gets its own correct
+  // free-or-no-price answer; this only prepends the specific rejection.
+  if (primary && (project(primary) || gemFor(primary) || productFor(primary))) {
+    const dollarMatch = query.match(/\$\s?(\d+(?:\.\d{1,2})?)/) || text.match(/\b(\d+(?:\.\d{1,2})?)\s*(?:dollars|usd)\b/);
+    const paidTierMention = /\b(paid tier|paid plan|pro tier|pro plan|future tiers?|tier cost|pricing tier)\b/i.test(text);
+    if (dollarMatch || paidTierMention) {
+      const base = pricingAnswer(primary);
+      // Deliberately does not echo the fabricated figure back (e.g. "$49"):
+      // verifyAgainstCanon()'s price check has no negation awareness by
+      // design, so repeating the exact amount here would make this settled
+      // answer collide with the same rule that must reject a model asserting it.
+      const rejection = dollarMatch ? `That is not a real published price for ${displayName(primary)}. ` : '';
+      return { ...base, text: `${rejection}${base.text}` };
     }
   }
 
@@ -921,7 +948,7 @@ export function canonicalAnswer(
   if (has('assistant_identity')) return { ...assistantIdentityAnswer(query), settled: true };
 
   // Correct a false premise before answering anything built on top of it.
-  const premise = premiseAnswer(query, entityIds);
+  const premise = premiseAnswer(query, entityIds, history);
   if (premise) return { ...premise, settled: true };
 
   if (has('comparison')) {

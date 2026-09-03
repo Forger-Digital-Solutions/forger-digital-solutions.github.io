@@ -1,11 +1,21 @@
 import { isActionAllowed, executeAction } from '../lib/kayla/actions';
-import type { KaylaSafeAction, KaylaPageContext } from '../data/kayla/types';
+import type { KaylaSafeAction, KaylaPageContext, KaylaSource } from '../data/kayla/types';
 import { getPageType, getEntity } from '../lib/kayla/context';
 
 interface KaylaMessage {
   role: 'user' | 'kayla';
   text: string;
   actions?: KaylaSafeAction[];
+  sources?: KaylaSource[];
+}
+
+/** A source link renders only when it points somewhere real: an internal
+ * site-relative route, or an https URL. Defense in depth alongside the
+ * server-side derivation, which already never invents a source. */
+export function isSourceLinkSafe(source: KaylaSource): boolean {
+  if (source.route) return source.route.startsWith('/');
+  if (source.url) return /^https:\/\//i.test(source.url);
+  return true; // a source with neither is still a valid "internal knowledge, no link" citation
 }
 
 type KaylaMode = 'ai' | 'local' | 'unavailable';
@@ -63,6 +73,42 @@ function scrollToBottom(): void {
   if (c) c.scrollTop = c.scrollHeight;
 }
 
+function buildSourcesRow(sources: KaylaSource[]): HTMLDivElement | null {
+  const safe = sources.filter(isSourceLinkSafe);
+  if (safe.length === 0) return null;
+
+  const row = document.createElement('div');
+  row.className = 'kayla-msg__sources';
+
+  const label = document.createElement('span');
+  label.className = 'kayla-msg__sources-label';
+  label.textContent = 'Sources';
+  row.appendChild(label);
+
+  for (const source of safe) {
+    const href = source.route || source.url;
+    if (href) {
+      const link = document.createElement('a');
+      link.className = 'kayla-source-link';
+      link.textContent = source.label;
+      link.href = href;
+      if (source.url) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      }
+      row.appendChild(link);
+    } else {
+      // Internal knowledge with nothing to link to: cite it as text, not a link.
+      const span = document.createElement('span');
+      span.className = 'kayla-source-text';
+      span.textContent = source.label;
+      row.appendChild(span);
+    }
+  }
+
+  return row;
+}
+
 function buildBubble(msg: KaylaMessage): HTMLDivElement {
   const bubble = document.createElement('div');
   bubble.className = `kayla-msg kayla-msg--${msg.role}`;
@@ -88,6 +134,11 @@ function buildBubble(msg: KaylaMessage): HTMLDivElement {
     }
   }
 
+  if (msg.sources && msg.sources.length > 0) {
+    const sourcesEl = buildSourcesRow(msg.sources);
+    if (sourcesEl) bubble.appendChild(sourcesEl);
+  }
+
   return bubble;
 }
 
@@ -96,8 +147,8 @@ function buildBubble(msg: KaylaMessage): HTMLDivElement {
  * an aria-live region, so replacing its contents re-announced every previous
  * message on each new turn.
  */
-function addMessage(role: 'user' | 'kayla', text: string, actions?: KaylaSafeAction[]): void {
-  const msg: KaylaMessage = { role, text, actions };
+function addMessage(role: 'user' | 'kayla', text: string, actions?: KaylaSafeAction[], sources?: KaylaSource[]): void {
+  const msg: KaylaMessage = { role, text, actions, sources };
   messages.push(msg);
   const c = conversation();
   if (c) c.appendChild(buildBubble(msg));
@@ -293,6 +344,7 @@ async function handleQuery(query: string): Promise<void> {
     let buffer = '';
     let streamingText = '';
     let streamingActions: KaylaSafeAction[] | undefined;
+    let streamingSources: KaylaSource[] | undefined;
     let responseMode: KaylaMode = 'local';
 
     const placeholder = addStreamingMessage();
@@ -310,7 +362,7 @@ async function handleQuery(query: string): Promise<void> {
         if (!trimmed) continue;
 
         try {
-          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; actions?: KaylaSafeAction[]; done?: boolean; replace?: boolean };
+          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; actions?: KaylaSafeAction[]; sourceLinks?: KaylaSource[]; done?: boolean; replace?: boolean };
 
           // The server rejected the model's answer for contradicting canonical
           // FDS data. Discard whatever streamed and show the canonical answer.
@@ -318,6 +370,7 @@ async function handleQuery(query: string): Promise<void> {
             streamingText = chunk.content || '';
             responseMode = chunk.mode || 'local';
             streamingActions = chunk.actions?.filter(a => isActionAllowed(a)) ?? streamingActions;
+            streamingSources = chunk.sourceLinks ?? streamingSources;
             updateStreamingMessage(placeholder, streamingText, streamingActions);
             break;
           }
@@ -340,6 +393,10 @@ async function handleQuery(query: string): Promise<void> {
             streamingActions = chunk.actions.filter(a => isActionAllowed(a));
           }
 
+          if (chunk.sourceLinks) {
+            streamingSources = chunk.sourceLinks;
+          }
+
           if (chunk.content) {
             streamingText += chunk.content;
             updateStreamingMessage(placeholder, streamingText, streamingActions);
@@ -354,7 +411,7 @@ async function handleQuery(query: string): Promise<void> {
       }
     }
 
-    finalizeStreamingMessage(placeholder, streamingText, streamingActions, responseMode);
+    finalizeStreamingMessage(placeholder, streamingText, streamingActions, responseMode, streamingSources);
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
       addMessage('kayla', 'Response cancelled.');
@@ -416,11 +473,11 @@ function updateStreamingMessage(bubble: HTMLDivElement | null, text: string, act
   scrollToBottom();
 }
 
-function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, actions: KaylaSafeAction[] | undefined, mode: KaylaMode): void {
+function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, actions: KaylaSafeAction[] | undefined, mode: KaylaMode, sources?: KaylaSource[]): void {
   if (mode === 'unavailable') updateStatus(mode);
   if (!bubble) {
     if (text) {
-      addMessage('kayla', text, actions);
+      addMessage('kayla', text, actions, sources);
     }
     return;
   }
@@ -429,7 +486,12 @@ function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, a
   const textEl = bubble.querySelector('.kayla-msg__text');
   if (textEl) textEl.textContent = text || "I couldn't find that in the current public FDS knowledge base.";
 
-  messages.push({ role: 'kayla', text: text || "I couldn't find that in the current public FDS knowledge base.", actions });
+  if (sources && sources.length > 0) {
+    const sourcesEl = buildSourcesRow(sources);
+    if (sourcesEl) bubble.appendChild(sourcesEl);
+  }
+
+  messages.push({ role: 'kayla', text: text || "I couldn't find that in the current public FDS knowledge base.", actions, sources });
 }
 
 function toggle(): void {
@@ -532,7 +594,14 @@ function init(): void {
     if (e.key === 'Escape' && isOpen) {
       close();
     } else if (e.key === 'Tab' && isOpen) {
-      const focusable = [...p.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')].filter(el => !el.hidden);
+      // The starters row and the stop button are hidden with style.display,
+      // not the hidden attribute, so el.hidden alone missed them: the trap
+      // computed "last" as an invisible, unfocusable node (typically the
+      // stop button once a message had been sent), and a real Tab press from
+      // the last visible control never matched it — focus escaped the dialog
+      // entirely into the rest of the page. offsetParent is null for any
+      // display:none element regardless of how it was hidden.
+      const focusable = [...p.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')].filter(el => !el.hidden && el.offsetParent !== null);
       if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
