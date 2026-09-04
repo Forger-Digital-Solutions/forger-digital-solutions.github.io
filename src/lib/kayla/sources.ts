@@ -30,10 +30,33 @@ export function toKaylaSource(result: KaylaKnowledgeResult): KaylaSource | undef
   };
 }
 
-/** Structured sources for the top N results, skipping any with nothing attributable. */
+/**
+ * The place a source actually points a visitor to. Two results can be
+ * distinct KaylaKnowledgeResult entries (a project's summary doc and its
+ * roadmap doc, say) that both resolve to the same page — showing both wastes
+ * a source slot on a link the visitor already has.
+ */
+function destinationKey(source: KaylaSource): string {
+  return `${source.kind}:${source.url || source.route || source.label}`.toLowerCase();
+}
+
+/**
+ * Structured sources for the top N *distinct destinations*, skipping any
+ * result with nothing attributable and any result that would only repeat a
+ * link already included. Scored highest-relevance-first, so the first result
+ * reaching a destination is the one that keeps the slot.
+ */
 export function toKaylaSources(results: KaylaKnowledgeResult[], limit = 3): KaylaSource[] {
-  return results
-    .slice(0, limit)
-    .map(toKaylaSource)
-    .filter((source): source is KaylaSource => Boolean(source));
+  const seen = new Set<string>();
+  const sources: KaylaSource[] = [];
+  for (const result of results) {
+    if (sources.length >= limit) break;
+    const source = toKaylaSource(result);
+    if (!source) continue;
+    const key = destinationKey(source);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    sources.push(source);
+  }
+  return sources;
 }

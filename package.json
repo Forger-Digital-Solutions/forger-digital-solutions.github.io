@@ -26,7 +26,9 @@
     "astro": "astro",
     "worker:dev": "cd worker && npm run dev",
     "worker:deploy": "cd worker && npm run deploy",
-    "kayla:golden": "node scripts/kayla-golden-check.mjs"
+    "kayla:golden": "node scripts/kayla-golden-check.mjs",
+    "kayla:routing-eval": "node scripts/kayla-routing-eval.mjs",
+    "kayla:retrieval-eval": "node scripts/kayla-retrieval-eval.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

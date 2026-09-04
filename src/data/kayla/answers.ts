@@ -556,6 +556,12 @@ function listAnswer(): CanonicalAnswer {
     text: `Forger Digital Solutions is currently building:\n\n${lines}${standalone ? `\n${standalone}` : ''}\n\nForged is the shelf for software you can download and use today.`,
     actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }, { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
     sources: ['fds-ecosystem', ...projects.map((entry) => `app-${entry.slug}`)],
+    // Deliberately not settled: this same branch answers both a bare catalog
+    // dump ("what software has an official release?") and an ecosystem
+    // explanation ("explain all of FDS to me"), and the latter is exactly the
+    // multi-record synthesis Phase 7 certified the provider for live. Settling
+    // it here would silence that certified case along with the bare dump, so
+    // the model stays eligible and this stands as its grounding evidence.
     intent: 'list'
   };
 }

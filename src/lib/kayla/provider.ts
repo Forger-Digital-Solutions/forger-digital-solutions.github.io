@@ -2,6 +2,7 @@ import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, Kay
 import { LocalKaylaProvider, kaylaKnowledge } from '../../data/kayla/index';
 import { evaluateModelPolicy, isApprovedProviderEndpoint, OPENROUTER_ENDPOINT, OPENROUTER_FREE_MODEL } from './model-policy';
 import { buildChatMessages } from './systemPrompt';
+import { dedupeActions } from './actions';
 
 /** Bounds the response so a simple question cannot produce an unbounded essay. */
 const MAX_RESPONSE_TOKENS = 700;
@@ -25,7 +26,7 @@ export function providerErrorCode(status: number): string {
 function preferredActions(sources: KaylaKnowledgeResult[]): KaylaSafeAction[] | undefined {
   const top = sources[0];
   if (!top) return undefined;
-  if (top.actions?.length) return top.actions;
+  if (top.actions?.length) return dedupeActions(top.actions);
   return top.action ? [top.action] : undefined;
 }
 

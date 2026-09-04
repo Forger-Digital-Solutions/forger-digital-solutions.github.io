@@ -44,6 +44,53 @@ describe('machine scaffolding is not an answer', () => {
   }
 });
 
+/**
+ * A free router can also fail by looping rather than by leaking scaffolding —
+ * the same "this is not an answer" problem in a different shape. Part 14.
+ */
+describe('pathological repetition is not an answer', () => {
+  it('rejects a sentence repeated back to back several times', () => {
+    const text = Array(5).fill('CodeForge is free.').join(' ');
+    const verdict = checkAnswerShape(text);
+    expect(verdict.ok).toBe(false);
+    expect(verdict.kinds).toContain('pathological_repetition');
+  });
+
+  it('rejects a paragraph looped back to back', () => {
+    const paragraph = 'CodeForge is a free, released autonomous software-engineering platform for Windows.';
+    const text = Array(4).fill(paragraph).join('\n\n');
+    const verdict = checkAnswerShape(text);
+    expect(verdict.ok).toBe(false);
+    expect(verdict.kinds).toContain('pathological_repetition');
+  });
+
+  it('does not reject a fact stated once and echoed once later', () => {
+    const text = 'CodeForge is free. It is released for Windows, CLI, and editor work. ' +
+      'To recap: CodeForge is free, and there is no paid tier.';
+    expect(checkAnswerShape(text).ok).toBe(true);
+  });
+
+  it('does not reject an ordinary bullet list of distinct short lines', () => {
+    const text = '• CodeForge (RELEASED)\n• ForgerEMS (public preview)\n• KyraBlox (ACTIVE DEVELOPMENT)\n• GEMS (RESEARCH)';
+    expect(checkAnswerShape(text).ok).toBe(true);
+  });
+});
+
+describe('an oversized answer is not an answer a visitor should read', () => {
+  it('rejects text far beyond what a 700-token provider response should produce', () => {
+    const text = 'CodeForge is free and released for Windows. '.repeat(200);
+    const verdict = checkAnswerShape(text);
+    expect(verdict.ok).toBe(false);
+    expect(verdict.kinds).toContain('oversized_answer');
+  });
+
+  it('accepts an ordinary long-form canonical answer', () => {
+    const text = 'Forger Digital Solutions is currently building:\n\n' +
+      Array.from({ length: 8 }, (_, i) => `• Project ${i} (RELEASED): a distinct one-line summary of project ${i}.`).join('\n');
+    expect(checkAnswerShape(text).ok).toBe(true);
+  });
+});
+
 describe('real answers are not mistaken for scaffolding', () => {
   const legitimate = [
     'CodeForge is a free-first autonomous software-engineering platform for Windows.',

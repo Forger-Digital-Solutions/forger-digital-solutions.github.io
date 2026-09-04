@@ -24,7 +24,12 @@ export default defineConfig({
     screenshot: 'off'
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } }
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    // Firefox and WebKit run only the bounded critical-shell smoke spec, not
+    // the full Chromium suite — see kayla-widget-crossbrowser-smoke.spec.ts
+    // for why a full re-run per engine is not the right tradeoff here.
+    { name: 'firefox', testMatch: /kayla-widget-crossbrowser-smoke\.spec\.ts/, use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', testMatch: /kayla-widget-crossbrowser-smoke\.spec\.ts/, use: { ...devices['Desktop Safari'] } }
   ],
   webServer: {
     // Playwright spawns this without a shell and the child does not inherit a

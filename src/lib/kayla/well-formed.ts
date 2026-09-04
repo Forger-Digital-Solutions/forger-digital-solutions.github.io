@@ -18,7 +18,7 @@
  * and the canonical answer is already computed and waiting.
  */
 
-export type AnswerShapeViolation = 'control_token' | 'tool_call_scaffolding' | 'reasoning_leak' | 'empty_answer';
+export type AnswerShapeViolation = 'control_token' | 'tool_call_scaffolding' | 'reasoning_leak' | 'empty_answer' | 'pathological_repetition' | 'oversized_answer';
 
 export interface AnswerShapeVerdict {
   ok: boolean;
@@ -39,6 +39,48 @@ const TOOL_SCAFFOLDING = /<\/?tool_call\b|\[TOOL_CALLS\]|<\/?function_call\b|<\/
 const REASONING_LEAK = /<\/?think\b|<\/?thinking\b|<\/?reasoning\b|<\/?scratchpad\b/i;
 
 /**
+ * A free router can front a model that gets stuck looping rather than
+ * emitting scaffolding — the same failure mode, a different shape. This is
+ * deliberately conservative: it only fires on a whole sentence or paragraph
+ * repeated back to back several times, never on ordinary short repetition
+ * ("CodeForge is free. It has no subscription.") that legitimate FDS prose
+ * produces.
+ */
+const MIN_REPEATED_UNIT_LENGTH = 12;
+const REPEATED_UNIT_THRESHOLD = 4;
+
+/** provider.ts bounds the request to 700 tokens; ~4 chars/token plus slack. */
+const MAX_ANSWER_CHARS = 6000;
+
+function paragraphs(text: string): string[] {
+  return text.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
+}
+
+function sentenceUnits(text: string): string[] {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length >= MIN_REPEATED_UNIT_LENGTH);
+}
+
+/**
+ * A paragraph or sentence repeated back-to-back several times in a row —
+ * the loop shape a stuck free-router model produces. Counts consecutive
+ * runs only, so a fact stated once early and echoed once later (ordinary,
+ * legitimate re-emphasis) never trips it.
+ */
+function hasPathologicalRepetition(text: string): boolean {
+  for (const units of [paragraphs(text), sentenceUnits(text)]) {
+    let run = 1;
+    for (let i = 1; i < units.length; i++) {
+      run = units[i] === units[i - 1] ? run + 1 : 1;
+      if (run >= REPEATED_UNIT_THRESHOLD) return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Whether generated text is shaped like an answer a visitor can read.
  * Deliberately narrow: it looks for machine scaffolding, never for tone,
  * length, or whether the model sounded confident.
@@ -52,6 +94,8 @@ export function checkAnswerShape(text: string): AnswerShapeVerdict {
   if (CONTROL_TOKEN.test(text)) kinds.push('control_token');
   if (TOOL_SCAFFOLDING.test(text)) kinds.push('tool_call_scaffolding');
   if (REASONING_LEAK.test(text)) kinds.push('reasoning_leak');
+  if (text.length > MAX_ANSWER_CHARS) kinds.push('oversized_answer');
+  if (hasPathologicalRepetition(text)) kinds.push('pathological_repetition');
 
   return { ok: kinds.length === 0, kinds };
 }

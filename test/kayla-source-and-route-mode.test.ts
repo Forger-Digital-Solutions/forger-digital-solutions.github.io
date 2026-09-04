@@ -45,6 +45,29 @@ describe('Structured source derivation', () => {
     const many = Array.from({ length: 10 }, (_, i) => ({ type: 'app' as const, title: `App ${i}`, snippet: '', id: `app-${i}`, route: `/projects/app-${i}`, sourceType: 'canonical' }));
     expect(toKaylaSources(many, 3)).toHaveLength(3);
   });
+
+  it('drops a lower-ranked result that points at the same destination as one already included', () => {
+    // A project's summary doc and its roadmap doc are two distinct
+    // KaylaKnowledgeResult entries that both resolve to the same project page.
+    const results = [
+      { type: 'app' as const, title: 'CodeForge', snippet: '', id: 'app-codeforge', route: '/projects/codeforge', sourceType: 'canonical' },
+      { type: 'app' as const, title: 'CodeForge Roadmap', snippet: '', id: 'app-codeforge-roadmap', route: '/projects/codeforge', sourceType: 'canonical' },
+      { type: 'app' as const, title: 'GEMS', snippet: '', id: 'app-gems', route: '/projects/gems-training-grounds', sourceType: 'canonical' }
+    ];
+    const sources = toKaylaSources(results, 3);
+    expect(sources).toHaveLength(2);
+    expect(sources.map((s) => s.route)).toEqual(['/projects/codeforge', '/projects/gems-training-grounds']);
+  });
+
+  it('fills the requested limit with distinct destinations rather than stopping early on a duplicate', () => {
+    const results = [
+      { type: 'app' as const, title: 'CodeForge', snippet: '', id: 'app-codeforge', route: '/projects/codeforge', sourceType: 'canonical' },
+      { type: 'app' as const, title: 'CodeForge Roadmap', snippet: '', id: 'app-codeforge-roadmap', route: '/projects/codeforge', sourceType: 'canonical' },
+      { type: 'app' as const, title: 'GEMS', snippet: '', id: 'app-gems', route: '/projects/gems-training-grounds', sourceType: 'canonical' },
+      { type: 'app' as const, title: 'ForgerEMS', snippet: '', id: 'app-forgerems', route: '/projects/forgerems', sourceType: 'canonical' }
+    ];
+    expect(toKaylaSources(results, 3)).toHaveLength(3);
+  });
 });
 
 describe('routeMode: deterministic and retrieval lanes', () => {

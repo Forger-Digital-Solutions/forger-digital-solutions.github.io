@@ -73,7 +73,8 @@ describe('scaffolding never reaches the visitor', () => {
     ['control_token', '<|im_start|>assistant\nCodeForge is free.'],
     ['tool_call_scaffolding', '<tool_call>{"name":"FDS_Knowledge"}</tool_call>'],
     ['reasoning_leak', '<think>They want CodeForge.</think> CodeForge is free.'],
-    ['empty_answer', '   ']
+    ['empty_answer', '   '],
+    ['pathological_repetition', Array(5).fill('CodeForge is free.').join(' ')]
   ];
 
   for (const [kind, reply] of replies) {

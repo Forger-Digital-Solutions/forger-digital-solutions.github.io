@@ -112,7 +112,9 @@ const RULES: IntentRule[] = [
       /\bwhich .{0,20}(is best|works best|fits) for\b/,
       /\bi need (help )?(with|to)\b/,
       /\bwhat do you have for\b/,
-      /\bwhere (should|would) i start\b/
+      // "a developer"/"someone" is as common a subject here as "I" — the
+      // original only matched the first person and missed the third.
+      /\bwhere (should|would) (i|a \w+|someone|you) start\b/
     ]
   },
   {
@@ -150,8 +152,12 @@ const RULES: IntentRule[] = [
   {
     intent: 'availability',
     patterns: [
-      /\b(can|could|may) (i|we|you|anyone) (download|install|get|buy|use|try|run|access)\b/,
-      /\b(where|how) (can|do|would) (i|we|you) (download|get|find|install|buy|try)\b/,
+      // A single adverb between the pronoun and the verb ("can I actually
+      // download", "can I really use") is ordinary phrasing that the earlier,
+      // stricter pattern missed entirely — the question fell through to
+      // keyword retrieval instead of the canonical availability answer.
+      /\b(can|could|may) (i|we|you|anyone) (?:\w+\s+)?(download|install|get|buy|use|try|run|access)\b/,
+      /\b(where|how) (can|do|would) (i|we|you) (?:\w+\s+)?(download|get|find|install|buy|try)\b/,
       /\bis (it|there|this|that) (available|out|public|released|downloadable|free|open)\b/,
       /\bis [a-z0-9 /]{2,30} (available|out|public|released|downloadable)\b/,
       /\b(has|have) .{0,30}(launched|released|shipped|come out)\b/,
@@ -223,7 +229,11 @@ const RULES: IntentRule[] = [
   {
     intent: 'list',
     patterns: [
-      /\b(what|which) (fds |your |the )?(projects|apps|applications|products|software|tools)\b/,
+      // A single descriptive adjective before the category noun ("what AI
+      // projects", "which ML tools") is ordinary phrasing the bare form
+      // missed, and fell through to keyword retrieval instead of the
+      // ecosystem-aware canonical listing.
+      /\b(what|which) (fds |your |the )?(ai |ml |machine learning |research |software |developer )?(projects|apps|applications|products|software|tools)\b/,
       /\bwhich (ones?|of (them|these))\b.{0,30}\b(public|available|released|research|development|downloadable|use)\b/,
       /\b(show|list|see) (me )?(all |the )?(projects|apps|applications|products|software|everything)\b/,
       /\bwhat (do|does) (you|fds|they) (build|make|do|offer|work on)\b/,

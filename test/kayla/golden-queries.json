@@ -220,6 +220,10 @@
     {"id":"t3-rel-adv-04","tier":3,"category":"unknown-roadmap","question":"When will GEMS start powering CodeForge?","require":[["not publicly documented","does not publish","research"]],"forbid":["next year","2027","Q1"]},
 
     {"id":"t2-meta-01","tier":2,"category":"meta-project","question":"Which FDS projects are still being built?","require":[["ACTIVE DEVELOPMENT","active development"]],"forbid":[]},
-    {"id":"t2-meta-02","tier":2,"category":"meta-project","question":"What is downloadable today across all of FDS?","require":[["CodeForge"],["ForgerEMS"]],"forbid":["KyraBlox ("]}
+    {"id":"t2-meta-02","tier":2,"category":"meta-project","question":"What is downloadable today across all of FDS?","require":[["CodeForge"],["ForgerEMS"]],"forbid":["KyraBlox ("]},
+
+    {"id":"t2-adaptive-01","tier":2,"category":"adaptive-routing","question":"What can I actually download?","require":[["CodeForge"],["ForgerEMS"],["github.com"]],"forbid":["FarmStand Finder"]},
+    {"id":"t2-adaptive-02","tier":2,"category":"adaptive-routing","question":"What AI projects does FDS have?","require":[["GEMS"],["Kayla AI Publisher"]],"forbid":[]},
+    {"id":"t2-adaptive-03","tier":2,"category":"adaptive-routing","question":"Where should a developer start?","require":[["CodeForge"]],"forbid":[]}
   ]
 }

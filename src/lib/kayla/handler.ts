@@ -8,6 +8,7 @@ import { isSensitiveQuery } from './systemPrompt';
 import { canonicalEntitiesIn, verifyAgainstCanon } from './verify';
 import { checkAnswerShape } from './well-formed';
 import { toKaylaSources } from './sources';
+import { dedupeActions } from './actions';
 import { classifyIntent } from '../../data/kayla/intents';
 import {
   classifyProviderError,
@@ -36,7 +37,7 @@ function getConfig(kaylaConfig?: KaylaConfig): KaylaConfig {
 
 /** Canonical answers can offer more than one route; older results carry one. */
 function localActions(result?: KaylaKnowledgeResult) {
-  if (result?.actions?.length) return result.actions;
+  if (result?.actions?.length) return dedupeActions(result.actions);
   return result?.action ? [result.action] : undefined;
 }
 
@@ -116,7 +117,15 @@ export function isProviderEligible(message: string, sources: KaylaKnowledgeResul
   return true;
 }
 
-function deterministicAnswer(sources: KaylaKnowledgeResult[]): KaylaKnowledgeResult | undefined {
+/**
+ * Whether a top result is a settled fact the handler serves without ever
+ * consulting isProviderEligible. Exported so an offline evaluation script can
+ * classify a corpus's real routing outcome — settled vs. provider-eligible vs.
+ * neither — without constructing a live provider, which isProviderEligible's
+ * own return value cannot do alone (a settled canonical answer short-circuits
+ * before that gate runs at all).
+ */
+export function deterministicAnswer(sources: KaylaKnowledgeResult[]): KaylaKnowledgeResult | undefined {
   const top = sources[0];
   if (!top || top.sourceType !== 'canonical') return undefined;
   if (top.settled) return top;

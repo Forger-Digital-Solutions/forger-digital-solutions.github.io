@@ -208,6 +208,52 @@ test.describe('Narrow mobile', () => {
   });
 });
 
+test.describe('Mobile at 390px', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('launcher, composer, send, sources, and actions stay usable with no horizontal overflow', async ({ page }) => {
+    await stubHealth(page);
+    await stubChat(page, ndjson(CANONICAL_ANSWER));
+    await openWidget(page);
+    await expect(page.locator('#kayla-input')).toBeVisible();
+    await expect(page.locator('#kayla-send')).toBeVisible();
+    await sendMessage(page, 'Can I download CodeForge?');
+
+    const overflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    );
+    expect(overflow, 'page scrolls horizontally at 390px').toBe(false);
+
+    const lastMessage = page.locator('.kayla-msg--kayla').last();
+    await expect(lastMessage.locator('.kayla-msg__actions')).toBeVisible();
+    // The transcript itself may scroll vertically; the document must not.
+    await expect(page.locator('#kayla-conversation')).toBeVisible();
+  });
+});
+
+test.describe('Reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('opens, closes, and answers with controls and loading state still usable', async ({ page }) => {
+    await stubHealth(page);
+    await stubChat(page, ndjson(CANONICAL_ANSWER));
+    await openWidget(page);
+
+    // Loading state must communicate progress without relying on an animation
+    // a reduced-motion visitor may not perceive.
+    await page.locator('#kayla-input').fill('Can I download CodeForge?');
+    await page.locator('#kayla-send').click();
+    await expect(page.locator('.kayla-msg--kayla').last()).toBeVisible();
+    await expect(page.locator('.kayla-msg--kayla').last()).not.toHaveText(/^Thinking/, { timeout: 10_000 });
+
+    await expect(page.locator('#kayla-input')).toBeVisible();
+    await expect(page.locator('#kayla-send')).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#kayla-panel')).toBeHidden();
+  });
+});
+
 test.describe('Failure UX', () => {
   test('a rate limit shows visitor-friendly wording, not protocol internals', async ({ page }) => {
     await stubHealth(page);
