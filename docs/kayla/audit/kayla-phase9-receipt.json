@@ -55,6 +55,12 @@
     },
     "deployPolicy": "PASS"
   },
+  "deployment": {
+    "endpoint": "https://kayla-api.forgerdigitalsolutions.workers.dev",
+    "startingWorkerVersion": "22a218be-6324-4042-afb5-44d0abd5a2a5",
+    "finalWorkerVersion": "d1f151d2-0c0c-4d4d-863a-e75096068cb9",
+    "liveVerified": true
+  },
   "retrievalDefectResolution": {
     "query": "Which projects are visible publicly but not released?",
     "rootCause": "listFilter in answers.ts matched 'released' inside 'not released' without negation context, returning CodeForge as sole released project",
