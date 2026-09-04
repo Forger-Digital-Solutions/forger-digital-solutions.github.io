@@ -29,14 +29,64 @@ export interface AnswerShapeVerdict {
  * Special-token delimiters. No legitimate prose about FDS contains `<|…|>`;
  * it is the delimiter shape used by Llama, Qwen, GPT-OSS and others for turn,
  * channel, and tool markers.
+ *
+ * Phase 9: also covers ChatML <|im_start|>/<|im_end|> and the Qwen/Mistral
+ * <|assistant|>, <|analysis|>, <|user|> family — all caught by the same
+ * `<|…|>` pattern since that shape is unique to model infrastructure.
  */
 const CONTROL_TOKEN = /<\|[^|>]{0,64}\|>/;
 
-/** Tool-call scaffolding in the shapes the common open-weight models emit. */
-const TOOL_SCAFFOLDING = /<\/?tool_call\b|\[TOOL_CALLS\]|<\/?function_call\b|<\/?tool_response\b|^\s*\[?\s*\w+\(query\s*=/im;
+/**
+ * Tool-call scaffolding in the shapes common open-weight models emit.
+ *
+ * Phase 8 patterns:
+ * - </?tool_call>  — XML-style tool wrapper
+ * - [TOOL_CALLS]   — Mistral/Mixtral bracket notation
+ * - </?function_call> — alternate XML form
+ * - </?tool_response> — response wrapper
+ * - FunctionName(query= — positional call notation
+ *
+ * Phase 9 additions:
+ * - "function_call": — OpenAI-style JSON key leaking as plain text
+ * - assistant to=   — some instruction-tuned models address tool channels inline
+ * - ^<tool> / ^</tool> — raw XML tool blocks at line start
+ * - ^TOOL_CALL: / ^FUNCTION_CALL: — plain-text protocol labels at line start
+ */
+const TOOL_SCAFFOLDING_PATTERNS: RegExp[] = [
+  /<\/?tool_call\b|\[TOOL_CALLS\]|<\/?function_call\b|<\/?tool_response\b|^\s*\[?\s*\w+\(query\s*=/im,
+  /"function_call"\s*:/i,
+  /\bassistant\s+to\s*=/i,
+  /^<\/?tool>/im,
+  /^TOOL_CALL:\s/im,
+  /^FUNCTION_CALL:\s/im
+];
 
-/** Chain-of-thought markers that were never meant to reach a reader. */
-const REASONING_LEAK = /<\/?think\b|<\/?thinking\b|<\/?reasoning\b|<\/?scratchpad\b/i;
+function hasToolScaffolding(text: string): boolean {
+  return TOOL_SCAFFOLDING_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+/**
+ * Chain-of-thought markers that were never meant to reach a reader.
+ *
+ * Phase 8 patterns:
+ * - </?think> / </?thinking> / </?reasoning> / </?scratchpad>
+ *
+ * Phase 9 additions:
+ * - </?analysis> / </?chain_of_thought> — XML-style CoT wrappers used by
+ *   some instruction-tuned models as explicit reasoning containers.
+ */
+const REASONING_LEAK = /<\/?think\b|<\/?thinking\b|<\/?reasoning\b|<\/?scratchpad\b|<\/?analysis\b|<\/?chain_of_thought\b/i;
+
+/**
+ * Prose-level reasoning section headers that appear when a model exposes its
+ * internal scratch pad as a visible response section.
+ *
+ * Phase 9 addition. Checked at line-start only (^, multiline) so the word
+ * "analysis" in a sentence like "FDS's technical analysis shows…" is never hit.
+ * Only fires when a model opens with these headers as section dividers — which
+ * is always scaffolding, never a legitimate visitor answer.
+ */
+const REASONING_SECTION_HEADER = /^(Analysis|Chain of thought|Internal reasoning|My reasoning|Let me think|First I should|We need to answer)\s*:/im;
 
 /**
  * A free router can front a model that gets stuck looping rather than
@@ -84,6 +134,10 @@ function hasPathologicalRepetition(text: string): boolean {
  * Whether generated text is shaped like an answer a visitor can read.
  * Deliberately narrow: it looks for machine scaffolding, never for tone,
  * length, or whether the model sounded confident.
+ *
+ * Phase 9: added REASONING_SECTION_HEADER check (prose-level scratch-pad
+ * section headers) and expanded tool-scaffolding to cover additional patterns
+ * from common free-model families.
  */
 export function checkAnswerShape(text: string): AnswerShapeVerdict {
   const kinds: AnswerShapeViolation[] = [];
@@ -92,8 +146,8 @@ export function checkAnswerShape(text: string): AnswerShapeVerdict {
     return { ok: false, kinds: ['empty_answer'] };
   }
   if (CONTROL_TOKEN.test(text)) kinds.push('control_token');
-  if (TOOL_SCAFFOLDING.test(text)) kinds.push('tool_call_scaffolding');
-  if (REASONING_LEAK.test(text)) kinds.push('reasoning_leak');
+  if (hasToolScaffolding(text)) kinds.push('tool_call_scaffolding');
+  if (REASONING_LEAK.test(text) || REASONING_SECTION_HEADER.test(text)) kinds.push('reasoning_leak');
   if (text.length > MAX_ANSWER_CHARS) kinds.push('oversized_answer');
   if (hasPathologicalRepetition(text)) kinds.push('pathological_repetition');
 

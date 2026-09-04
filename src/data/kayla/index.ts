@@ -131,6 +131,14 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     };
   }
 
+  if (q.includes('hardware') || q.includes('laptop') || q.includes('computer') || q.includes('gpu') || q.includes('server') || q.includes('donate equipment')) {
+    return {
+      text: `Yes! FDS accepts donations of laptops, workstations, GPUs, servers, storage, and other usable computing equipment. Logistics are coordinated privately after initial contact. Email ${fds.supportEmail} with details about what you have available.`,
+      actions: [{ type: 'OPEN_CONTACT', label: 'Donate Hardware', href: `mailto:${fds.supportEmail}` }],
+      sources: ['hardware-donations']
+    };
+  }
+
   if (q.includes('how can i support fds') || q.includes('support fds') || q.includes('donate')) {
     return {
       text: `You can support FDS development through Cash App (${fds.cashAppHandle}) or Ko-fi. You can also donate hardware by emailing ${fds.supportEmail}. Community-impact funding is not yet active.`,
@@ -167,14 +175,6 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
         `Forged is the public shelf for software that can be downloaded, tested, or used now.`,
       actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
       sources: ['fds-ecosystem', 'fds-forged']
-    };
-  }
-
-  if (q.includes('can i donate old hardware') || q.includes('donate hardware') || q.includes('hardware donation')) {
-    return {
-      text: `Yes! FDS accepts donations of laptops, workstations, GPUs, servers, storage, and other usable computing equipment. Logistics are coordinated privately after initial contact. Email ${fds.supportEmail} with details about what you have available.`,
-      actions: [{ type: 'OPEN_CONTACT', label: 'Donate Hardware', href: `mailto:${fds.supportEmail}` }],
-      sources: ['hardware-donations']
     };
   }
 

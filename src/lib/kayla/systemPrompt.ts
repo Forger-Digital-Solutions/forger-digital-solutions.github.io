@@ -87,10 +87,50 @@ export function buildRAGPrompt(
 }
 
 /**
+ * Phase 9 — Explicit context budgets.
+ *
+ * The principle: highest-value evidence first, bounded by real limits.
+ * Canonical facts get unlimited priority because they are the ground truth.
+ * Supporting retrieved docs are capped at 4 to avoid dumping unrelated site
+ * content into the provider context when 2 records answer the question.
+ * History is capped at 6 recent turns, each trimmed to 2000 chars, so a
+ * visitor filling chat with giant messages cannot inflate the context.
+ */
+export const CONTEXT_BUDGET = {
+  /** Maximum retrieved (non-canonical) sources passed to provider. */
+  maxSupportingSources: 4,
+  /** Maximum history turns (user+assistant pairs counted separately). */
+  maxHistoryTurns: 6,
+  /** Maximum chars per history turn before trimming. */
+  maxHistoryTurnChars: 2000
+} as const;
+
+/**
+ * Measure approximate context chars for a provider request.
+ * Used in diagnostics to track before/after efficiency.
+ */
+export function measureContextChars(request: {
+  message: string;
+  history?: KaylaConversationMessage[];
+  sources: KaylaKnowledgeResult[];
+}): number {
+  const historyChars = (request.history || [])
+    .slice(-CONTEXT_BUDGET.maxHistoryTurns)
+    .reduce((sum, entry) => sum + Math.min((entry.content || '').length, CONTEXT_BUDGET.maxHistoryTurnChars), 0);
+  const sourceChars = request.sources.slice(0, CONTEXT_BUDGET.maxSupportingSources + 1)
+    .reduce((sum, source) => sum + (source.snippet || '').length + (source.title || '').length, 0);
+  return KAYLA_SYSTEM_PROMPT.length + historyChars + sourceChars + request.message.length;
+}
+
+/**
  * The full message array sent to the provider: system rules, recent
  * conversation, then the grounded question. Previously the provider sent a
  * single unadorned user message, so none of the rules above reached the model
  * and follow-up questions lost their referents.
+ *
+ * Phase 9: bounded history (CONTEXT_BUDGET.maxHistoryTurns) and bounded
+ * supporting evidence (CONTEXT_BUDGET.maxSupportingSources). Canonical
+ * evidence has no cap — it is the ground truth the provider must honour.
  */
 export function buildChatMessages(request: {
   message: string;
@@ -100,10 +140,10 @@ export function buildChatMessages(request: {
 }): ProviderMessage[] {
   const history = (request.history || [])
     .filter((entry) => entry && typeof entry.content === 'string' && entry.content.trim().length > 0)
-    .slice(-6)
+    .slice(-CONTEXT_BUDGET.maxHistoryTurns)
     .map((entry): ProviderMessage => ({
       role: entry.role === 'assistant' ? 'assistant' : 'user',
-      content: entry.content.slice(0, 2000)
+      content: entry.content.slice(0, CONTEXT_BUDGET.maxHistoryTurnChars)
     }));
 
   return [

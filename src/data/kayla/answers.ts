@@ -396,6 +396,21 @@ function statusTaxonomyAnswer(query: string): CanonicalAnswer {
     };
   }
 
+  const metaMatch = Object.entries(statusMeta).find(([key]) => text.includes(normalize(key)) || (key === 'PREVIEW / BETA' && /\b(preview|beta)\b/.test(text)));
+  if (metaMatch) {
+    const [statusKey, meta] = metaMatch;
+    const projectMention = statusKey === 'PREVIEW / BETA'
+      ? ' Currently, ForgerEMS is in public preview.'
+      : ` No published FDS project is currently in ${statusKey.toLowerCase()}.`;
+    return {
+      text: `${statusKey} means ${meta.description.charAt(0).toLowerCase()}${meta.description.slice(1)}${projectMention}`,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: ['status-taxonomy'],
+      intent: 'status_taxonomy',
+      settled: true
+    };
+  }
+
   return {
     text: `FDS labels each project with the stage it is actually in:\n\n${inUse.map((entry) => `• ${entry.status} — ${entry.short.charAt(0).toLowerCase()}${entry.short.slice(1)} (${entry.projects.join(', ')})`).join('\n')}\n\nA project page existing does not mean the software is downloadable; Forged lists what you can actually use today.`,
     actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }, { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
@@ -412,6 +427,40 @@ function statusTaxonomyAnswer(query: string): CanonicalAnswer {
  */
 function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
   const text = normalize(query);
+
+  // A query asking which projects are PUBLICLY VISIBLE but NOT RELEASED/DOWNLOADABLE.
+  // Must fire BEFORE the positive-availability pattern below, because that pattern
+  // also matches the word "released" or "download" — without negation awareness — and
+  // would incorrectly return only the released projects as the answer.
+  // Signals: "visible/listed/public/page" combined with explicit negation of release.
+  // "no download", "no public download", "no release", "not released", "not downloadable"
+  // are all caught. The ordering ensures this fires before the download branch.
+  const publicButNotReleased =
+    (/\b(visible|listed|viewable|shown|pages?|on the site|publicly|projects?)\b/.test(text) &&
+      (
+        /\bnot\b.{0,25}\b(released|downloadable|available|out|public build)\b/.test(text) ||
+        /\bno\b.{0,25}\b(download|release|public build|public download)\b/.test(text) ||
+        /\b(unreleased|not yet released|no public build|no release)\b/.test(text)
+      )) ||
+    (/\b(show|list|which|what)\b/.test(text) && /\b(no|without)\s+(public\s+)?downloads?\b/.test(text));
+  if (publicButNotReleased) {
+    const notReleased = projects.filter((entry) =>
+      !products.some((prod) =>
+        (prod.projectSlug || prod.slug) === entry.slug && Boolean(prod.downloadUrl) && !prod.comingSoon
+      )
+    );
+    const lines = notReleased
+      .sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99))
+      .map((entry) => `• ${entry.name} (${entry.status}): ${entry.summary}`)
+      .join('\n');
+    return {
+      text: `Every FDS project has a public page, but a page is not a release. These projects are publicly listed but have no download today:\n\n${lines}\n\nOnly software on Forged has a public build you can actually run.`,
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }, { type: 'OPEN_FORGED', label: 'See what is available now', href: '/forged' }],
+      sources: notReleased.map((entry) => `app-${entry.slug}`),
+      intent: 'availability',
+      settled: true
+    };
+  }
 
   if (/\b(download|downloadable|installer|get the (software|app))\b/.test(text)) {
     const downloads = downloadableNow();
@@ -609,11 +658,18 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
  * a new project becomes recommendable by existing in projects.ts.
  */
 /** Words that describe the question rather than the subject of it. */
-const QUESTION_WORDS = new Set(['should', 'would', 'could', 'which', 'recommend', 'need', 'help', 'want', 'project', 'projects', 'product', 'products', 'application', 'applications', 'software', 'tool', 'tools', 'thing', 'things', 'involves', 'involve', 'focused', 'focus', 'about', 'look', 'looking', 'start', 'started', 'best', 'good', 'anything', 'something', 'stuff', 'work', 'works', 'using', 'used']);
+const QUESTION_WORDS = new Set(['should', 'would', 'could', 'which', 'recommend', 'need', 'needs', 'help', 'helps', 'want', 'wants', 'project', 'projects', 'product', 'products', 'application', 'applications', 'software', 'tool', 'tools', 'thing', 'things', 'involves', 'involve', 'focused', 'focus', 'about', 'look', 'looking', 'start', 'started', 'best', 'good', 'anything', 'something', 'stuff', 'work', 'works', 'using', 'used', 'fit', 'fits', 'suited']);
 
 function recommendationAnswer(query: string): CanonicalAnswer | undefined {
   const words = distinctive(normalize(query)).filter((word) => !QUESTION_WORDS.has(word));
-  if (words.length === 0) return undefined;
+  if (words.length === 0) {
+    return {
+      text: 'It depends on the job. Choose CodeForge for repository engineering, GEMS / Training Grounds for model research, KyraBlox for game projects, Kayla AI Publisher for long-form creative work, FarmStand Finder for nearby food, We The People for civic information, or ForgerEMS for technician diagnostics and maintenance.',
+      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      sources: projects.map((p) => `app-${p.slug}`),
+      intent: 'recommendation'
+    };
+  }
 
   const scored = projects.map((entry) => {
     // The problem and differentiation fields describe what a project is *for*
@@ -698,7 +754,7 @@ function navigationAnswer(entityId?: string): CanonicalAnswer | undefined {
 }
 
 function supportAnswer(query: string): CanonicalAnswer {
-  const hardware = /\b(hardware|equipment|computer|laptop|gpu|server|pc|old tech|drive|ram|monitor)\b/.test(normalize(query));
+  const hardware = /\b(hardware|equipment|computers?|laptops?|gpus?|servers?|pcs?|old tech|drives?|ram|monitors?)\b/.test(normalize(query));
   if (hardware) {
     return {
       text: `Yes — FDS accepts working computing equipment: ${siteConfig.hardwareExamples.slice(0, 6).join(', ')}, and similar gear. Email ${siteConfig.supportEmail} with the model, specs, condition, and your general location; logistics are arranged privately after that. No shipping address is published.`,
@@ -1148,6 +1204,17 @@ export function canonicalAnswer(
   // Availability questions asked across the whole catalogue rather than about
   // one entity: answer the narrow question instead of listing everything.
   if ((has('availability') || has('list')) && !entityIds.some((id) => project(id) || gemFor(id) || productFor(id))) {
+    // When the visitor is on /forged, answer specifically for what is available on Forged
+    if (context?.route === '/forged' || context?.pageType === 'forged') {
+      const downloads = downloadableNow();
+      return {
+        text: `On Forged, these software downloads are available today:\n\n${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''} — ${entry.route}`).join('\n')}`,
+        actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+        sources: ['forged-page'],
+        intent: 'availability',
+        settled: true
+      };
+    }
     const availability = availabilityListAnswer(query);
     if (availability) return availability;
   }

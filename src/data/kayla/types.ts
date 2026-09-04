@@ -277,6 +277,7 @@ export interface KaylaAIRequest {
 export interface KaylaAIResponse {
   content: string;
   actions?: KaylaSafeAction[];
+  resolvedModel?: string;
 }
 
 export interface KaylaAIChunk {

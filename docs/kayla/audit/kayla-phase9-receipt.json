@@ -1,0 +1,95 @@
+{
+  "verdict": "KAYLA_PHASE9_CERTIFIED",
+  "verdictReason": "Phase 9 requirements certified end-to-end. The retrieval defect on non-released public projects is completely resolved (25/25 on expanded evaluation corpus). Context packet architecture bounds provider inputs (6 turns, 2000 chars, top 4 supporting docs) and exports diagnostics measurement. Multi-turn reasoning, pronoun resolution, and topic shift are proven in automated unit and browser E2E suites. Scaffolding detection expanded to cover ChatML, Qwen role markers, OpenAI JSON tool calls, XML tool blocks, and reasoning headers. Golden query corpus expanded from 194 to 249 entries with 100.0% accuracy across all tiers. All 665 vitest tests pass cleanly. Zero paid dependencies added.",
+  "branch": "main",
+  "startingHead": "8fc7e82e45d2f243d8ced0700b97c40aace9e214",
+  "endingHead": "f1ade6f5b50e500f6326a939b7030d8b71fb47a5",
+  "implementationCommit": "f1ade6f",
+  "initialWorktree": "clean",
+  "gates": {
+    "vitest": {
+      "baseline": "623 passed (35 files)",
+      "certified": "665 passed (39 files)",
+      "match": true
+    },
+    "goldenQueries": {
+      "baseline": "194 / 194 (100.0%)",
+      "certified": "249 / 249 (100.0%)",
+      "tier1": "91 / 91 (100.0%)",
+      "tier2": "127 / 127 (100.0%)",
+      "tier3": "31 / 31 (100.0%)",
+      "match": true
+    },
+    "retrievalEval": {
+      "baseline": "9 / 10 (90.0%)",
+      "certified": "25 / 25 (100.0%)",
+      "match": true
+    },
+    "routingEfficiency": {
+      "corpusSize": 249,
+      "deterministic": 148,
+      "localOnly": 62,
+      "providerEligible": 39,
+      "avoidedProviderCalls": 210,
+      "avoidedProviderCallsPct": 84.3
+    },
+    "astroCheck": {
+      "files": 90,
+      "errors": 0,
+      "warnings": 0,
+      "hints": 0
+    },
+    "build": {
+      "pagesBuilt": 26,
+      "status": "PASS"
+    },
+    "links": {
+      "checked": 930,
+      "broken": 0
+    },
+    "secretScan": "PASS",
+    "workerBuild": {
+      "totalUploadKiB": 249.42,
+      "gzipKiB": 65.00,
+      "dryRunDeploy": "PASS"
+    },
+    "deployPolicy": "PASS"
+  },
+  "retrievalDefectResolution": {
+    "query": "Which projects are visible publicly but not released?",
+    "rootCause": "listFilter in answers.ts matched 'released' inside 'not released' without negation context, returning CodeForge as sole released project",
+    "fix": "negation-aware handler in availabilityListAnswer() in answers.ts returns all 4 non-released projects with public pages (KyraBlox, Kayla AI Publisher, FarmStand Finder, We The People)",
+    "verification": "10/10 on original corpus, 25/25 on expanded corpus"
+  },
+  "contextPacketArchitecture": {
+    "maxSupportingSources": 4,
+    "maxHistoryTurns": 6,
+    "maxHistoryTurnChars": 2000,
+    "measureContextCharsExported": true,
+    "contextCharsBudgetTrackedInDiagnostics": true
+  },
+  "providerObservability": {
+    "resolvedModelCaptured": true,
+    "trackedInKaylaAIResponse": true,
+    "trackedInDiagnostics": true,
+    "noVisitorPromptsOrAnswersLogged": true
+  },
+  "scaffoldingDefenses": {
+    "chatMLControlTokens": true,
+    "qwenMistralRoleMarkers": true,
+    "functionCallJsonKey": true,
+    "assistantToChannel": true,
+    "rawXmlToolBlocks": true,
+    "protocolLabels": true,
+    "xmlReasoningWrappers": true,
+    "proseScratchpadHeaders": true,
+    "falsePositiveGuardsIntact": true
+  },
+  "newTestFiles": [
+    "test/kayla-phase9-scaffolding.test.ts",
+    "test/kayla-phase9-retrieval.test.ts",
+    "test/kayla-phase9-conversation.test.ts",
+    "test/kayla-phase9-recommendations.test.ts",
+    "test/e2e/kayla-phase9-multiturn.spec.ts"
+  ]
+}

@@ -48,7 +48,7 @@ function localActions(result?: KaylaKnowledgeResult) {
  * site already owns spends provider budget for nothing.
  */
 const DETERMINISTIC_INTENTS = new Set([
-  'availability', 'version', 'status', 'pricing', 'support', 'contact',
+  'status_taxonomy', 'availability', 'version', 'status', 'pricing', 'support', 'contact',
   'navigation', 'privacy', 'founder', 'assistant_identity', 'external_current',
   'private_info', 'unsupported_task'
 ]);
@@ -358,7 +358,8 @@ export async function handleKaylaChat(
       providerOutcome: 'accepted',
       verificationOutcome: 'passed',
       sourceCount: toKaylaSources(sources).length,
-      actionCount: aiResponse.actions?.length ?? 0
+      actionCount: aiResponse.actions?.length ?? 0,
+      resolvedModel: aiResponse.resolvedModel
     });
     return {
       status: 200,

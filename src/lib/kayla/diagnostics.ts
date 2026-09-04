@@ -46,12 +46,24 @@ export interface KaylaDiagnostics {
    * telling "our own budget said no" apart from "OpenRouter said no".
    */
   upstreamStatus?: number;
+  /**
+   * Phase 9: the underlying model actually selected by the free router, when
+   * OpenRouter exposes it in the response body. Useful for correlating
+   * tool-scaffold leaks, timeouts, or malformed output with specific models.
+   * Never logged when absent; never exposed to visitors.
+   */
+  resolvedModel?: string;
   verificationOutcome: KaylaVerificationOutcome;
   /** Canonical rule kinds a rejected generation broke (aggregate only). */
   verificationKinds?: string[];
   fallbackReason?: string;
   sourceCount: number;
   actionCount: number;
+  /**
+   * Phase 9: approximate character count of the evidence packet sent to the
+   * provider. Tracked to measure context efficiency before/after optimization.
+   */
+  contextCharsBudget?: number;
 }
 
 export function emptyDiagnostics(): KaylaDiagnostics {

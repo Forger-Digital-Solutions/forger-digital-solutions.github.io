@@ -50,8 +50,8 @@ const RULES: IntentRule[] = [
     // score highest, which is how this class of question used to be answered.
     intent: 'status_taxonomy',
     patterns: [
-      /\bwhat (does|do) (active development|private development|research|released|preview|beta|concept)\b.{0,20}\b(mean|indicate|imply)\b/,
-      /\bwhat (is|are) (an? )?(active development|private development|research|released|preview \/ beta|concept)\b/,
+      /\bwhat (does|do) (active development|private development|research|released|(?:public\s+)?preview|(?:public\s+)?beta|concept)\b.{0,20}\b(mean|indicate|imply)\b/,
+      /\bwhat (is|are) (an? )?(active development|private development|research|released|(?:public\s+)?preview(\s*\/\s*beta)?|concept)\b/,
       /\bdifference between\b.{0,40}\b(research|development|released|preview|concept|private)\b/,
       /\bwhat do (the |your )?(status|statuses|labels?|stages?|badges?)\b/,
       /\b(status|statuses) (mean|meanings?|explained)\b/,
@@ -88,7 +88,7 @@ const RULES: IntentRule[] = [
     patterns: [
       /\b(write|build|create|generate|code|refactor|debug|fix)\s+(me\s+)?(a|an|my|this|some)\s+(python|javascript|typescript|java|c\+\+|rust|go|php|ruby|swift|kotlin|sql|html|css|bash|powershell|script|program|app|application|website|function|class|game)\b/,
       /\b(edit|proofread|rewrite|revise|publish|format|translate)\s+(my|this|the)\s+(manuscript|book|novel|chapter|story|draft|document|essay|paper)\b/,
-      /\b(diagnose|fix|repair|troubleshoot)\s+my\s+(computer|pc|laptop|drive|windows|machine|system)\b/,
+      /\b(diagnose|fix|repair|troubleshoot)\b.{0,25}\b(my\s+)?(computer|pc|laptop|drive|windows|machine|system)\b/,
       /\bdo my (homework|taxes|assignment)\b/
     ]
   },
@@ -106,7 +106,7 @@ const RULES: IntentRule[] = [
     intent: 'recommendation',
     patterns: [
       /\bwhich .{0,20}(app|application|product|tool|project|software|one) (should|would|do|can|is best)\b/,
-      /\bwhich .{0,20}(app|application|product|tool|project|software|one|thing)\b.{0,20}\b(is|are|does|do|involves?|handles?|covers?|focus(es|ed)? on|for)\b/,
+      /\b(which|what) .{0,20}(app|application|product|tool|project|software|one|thing)\b.{0,20}\b(is|are|does|do|involves?|handles?|covers?|helps?( with)?|focus(es|ed)? on|for)\b/,
       /\bwhat (should|would) i (use|look at|start with|try)\b/,
       /\brecommend\b/,
       /\bwhich .{0,20}(is best|works best|fits) for\b/,
@@ -165,6 +165,8 @@ const RULES: IntentRule[] = [
       /\b(launch|release|availability) date\b/,
       /\b(download|get) (it|this|codeforge|forgerems|kyrablox|gems|topaz|sapphire|peridot|garnet)\b/,
       /\bwhere are the downloads?\b/,
+      /\b(what|which)\s+downloads?\b/,
+      /\bdownloads?\s+(are|can i|available|here)\b/,
       /\bcan i use it yet\b/,
       /\bis it out yet\b/
     ]
@@ -195,9 +197,9 @@ const RULES: IntentRule[] = [
       /\b(support|donate|donation|contribute|fund|sponsor|back) (fds|you|the (project|studio|work))\b/,
       /\bhow (can|do) i (support|donate|help|contribute)\b/,
       /\b(cash ?app|ko-?fi|patreon|paypal|venmo|github sponsors)\b/,
-      /\bdonate .{0,20}(hardware|computer|laptop|gpu|equipment|tech|pc|server)\b/,
+      /\bdonate .{0,20}(hardware|computers?|laptops?|gpus?|equipment|tech|pcs?|servers?)\b/,
       /\b(hardware|equipment|old (tech|computer)) donation\b/,
-      /\bgive .{0,20}(old|used) (tech|hardware|computer|laptop)\b/
+      /\bgive .{0,20}(old|used) (tech|hardware|computers?|laptops?)\b/
     ]
   },
   {
@@ -242,7 +244,7 @@ const RULES: IntentRule[] = [
       /\becosystem\b/,
       /\bexplain (all of|everything about|the whole)\b/,
       /\ball of fds\b/,
-      /\bhow do (all )?the (apps|projects|products) fit together\b/,
+      /\bhow do (all )?the (fds )?(apps|projects|products) fit together\b/,
       /\b(quick )?tour\b.{0,20}\b(projects|apps|fds|ecosystem)\b/
     ]
   },

@@ -1,4 +1,4 @@
-import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, KaylaAIProvider, KaylaAIRequest } from '../../data/kayla/types';
+import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, KaylaAIProvider, KaylaAIRequest, KaylaAIResponse } from '../../data/kayla/types';
 import { LocalKaylaProvider, kaylaKnowledge } from '../../data/kayla/index';
 import { evaluateModelPolicy, isApprovedProviderEndpoint, OPENROUTER_ENDPOINT, OPENROUTER_FREE_MODEL } from './model-policy';
 import { buildChatMessages } from './systemPrompt';
@@ -72,15 +72,16 @@ class MockAIProvider implements KaylaAIProvider {
     return true;
   }
 
-  async chat(request: { message: string; sources: KaylaKnowledgeResult[] }): Promise<{ content: string; actions?: KaylaSafeAction[] }> {
+  async chat(request: KaylaAIRequest): Promise<KaylaAIResponse> {
     const sourceTexts = request.sources.slice(0, 3).map(s => `[${s.title}] ${s.snippet}`).join('\n\n');
     return {
       content: `[Mock AI] I found ${request.sources.length} relevant sources about your question. Here is what the FDS knowledge base says:\n\n${sourceTexts || 'No specific sources found.'}`,
-      actions: request.sources[0]?.action ? [request.sources[0].action] : undefined
+      actions: request.sources[0]?.action ? [request.sources[0].action] : undefined,
+      resolvedModel: 'mock-model'
     };
   }
 
-  async *stream(request: { message: string; sources: KaylaKnowledgeResult[] }): AsyncIterable<{ type: 'content' | 'done' | 'error'; content?: string; error?: string }> {
+  async *stream(request: KaylaAIRequest): AsyncIterable<{ type: 'content' | 'done' | 'error'; content?: string; error?: string }> {
     const response = await this.chat(request);
     const words = response.content.split(' ');
     for (const word of words) {
@@ -103,7 +104,7 @@ class OpenRouterAIProvider implements KaylaAIProvider {
     return Boolean(this.config.apiKey);
   }
 
-  async chat(request: KaylaAIRequest): Promise<{ content: string; actions?: KaylaSafeAction[] }> {
+  async chat(request: KaylaAIRequest): Promise<{ content: string; actions?: KaylaSafeAction[]; resolvedModel?: string }> {
     if (!this.config.apiKey) {
       throw new Error('NO_PROVIDER');
     }
@@ -138,9 +139,9 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       throw new Error(providerErrorCode(response.status));
     }
 
-    let data: { choices?: { message?: { content?: string } }[] };
+    let data: { choices?: { message?: { content?: string } }[]; model?: string };
     try {
-      data = await response.json() as { choices?: { message?: { content?: string } }[] };
+      data = await response.json() as { choices?: { message?: { content?: string } }[]; model?: string };
     } catch {
       if (controller.signal.aborted) throw new Error('TIMEOUT');
       throw new Error('MALFORMED_RESPONSE');
@@ -153,7 +154,11 @@ class OpenRouterAIProvider implements KaylaAIProvider {
       throw new Error('MALFORMED_RESPONSE');
     }
 
-    return { content, actions: preferredActions(request.sources) };
+    // Phase 9: capture the underlying model OpenRouter actually used, when it
+    // exposes it in the response body. Never log prompt or answer content.
+    const resolvedModel = typeof data.model === 'string' && data.model.length > 0 ? data.model : undefined;
+
+    return { content, actions: preferredActions(request.sources), resolvedModel };
   }
 
   async *stream(request: KaylaAIRequest): AsyncIterable<{ type: 'content' | 'done' | 'error'; content?: string; error?: string }> {
