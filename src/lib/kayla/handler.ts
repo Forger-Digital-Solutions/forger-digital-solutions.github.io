@@ -6,6 +6,7 @@ import { validateChatRequest, isPromptInjectionAttempt } from './validate';
 import { checkRateLimit } from './rateLimit';
 import { isSensitiveQuery } from './systemPrompt';
 import { canonicalEntitiesIn, verifyAgainstCanon } from './verify';
+import { checkAnswerShape } from './well-formed';
 import { toKaylaSources } from './sources';
 import { classifyIntent } from '../../data/kayla/intents';
 import {
@@ -150,6 +151,15 @@ function logCanonRejection(kinds: string[]): void {
  * Returns the text to use, and whether the model's version was discarded.
  */
 function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
+  // Shape before substance. Canonical verification asks whether an answer is
+  // true, which it cannot do for text that makes no claim — raw tool-call
+  // scaffolding passed verification in production and was served to a visitor.
+  const shape = checkAnswerShape(text);
+  if (!shape.ok) {
+    logCanonRejection(shape.kinds);
+    return { accepted: false, kinds: shape.kinds };
+  }
+
   const verdict = verifyAgainstCanon(text);
   if (verdict.ok) return { accepted: true, kinds: [] };
   const kinds = [...new Set(verdict.violations.map((violation) => violation.kind))];
