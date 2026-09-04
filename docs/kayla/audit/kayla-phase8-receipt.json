@@ -1,0 +1,284 @@
+{
+  "verdict": "KAYLA_PHASE8_CERTIFIED",
+  "verdictReason": "Every mandatory local gate passes, the deployed Worker matches the pushed commit, and adaptive routing / answer-shape / semantic verification are certified end to end through handleKaylaChat rather than assumed from isolated gate functions. Two real, evaluation-driven defects were found and fixed (adverbial phrasing breaking availability/list/recommendation intent classification); one attempted fix (settling the generic listAnswer()) was found to regress a certified Phase 7 live case and was reverted before commit.",
+  "branch": "main",
+  "startingHead": "8cbc7e2248595691640a699e66768648663ccbab",
+  "endingHead": "bdf93c4f6bcf1bac4c256d8bc90de997e3a6a5ca",
+  "implementationCommit": "bdf93c4",
+  "initialWorktree": "clean",
+  "finalWorktree": "clean",
+  "briefClaimsIndependentlyVerified": {
+    "startingWorkerVersion": { "claimed": "db85e758", "verified": "db85e758-1d9b-4fc1-84a6-058670d970da", "match": true, "method": "wrangler deployments list" },
+    "startingAiDailyUsed": { "claimed": "4/150", "verified": "4/150", "match": true, "method": "GET /api/kayla/health" }
+  },
+  "phase7ContinuationBaselineReverification": {
+    "vitest": { "claimed": "598 / 34 files", "reRun": "598 / 34 files", "match": true },
+    "golden": { "claimed": "191/191", "reRun": "191/191", "match": true },
+    "astroCheck": { "claimed": "0/0/0", "reRun": "0/0/0 (90 files)", "match": true },
+    "build": { "reRun": "26 pages", "match": true },
+    "links": { "claimed": "930 / 0 broken", "reRun": "930 / 0", "match": true },
+    "secretScan": { "claimed": "PASS", "reRun": "PASS", "match": true },
+    "deployPolicy": { "claimed": "PASS", "reRun": "PASS", "match": true },
+    "drift": "none"
+  },
+  "adaptiveProviderRouting": {
+    "existingImplementationAudited": [
+      "DETERMINISTIC_INTENTS / PROVIDER_ELIGIBLE_INTENTS in handler.ts",
+      "canonicalEntitiesIn() dedup in verify.ts",
+      "RELATIONAL_QUESTION phrasing override in handler.ts",
+      "deterministicAnswer() short-circuit ahead of isProviderEligible (the mechanism that actually implements Part 4's deterministic multi-record synthesis, via CanonicalAnswer.settled)"
+    ],
+    "regressionFoundAndReverted": {
+      "attemptedChange": "mark listAnswer() as settled: true to close a minor evaluation-corpus gap",
+      "brokenTest": "test/kayla-canonical-authority.test.ts > sends a system message on every provider call (question: \"Explain all of FDS to me\")",
+      "rootCause": "listAnswer() serves both a bare catalog dump and the certified ecosystem-synthesis case; settling it would silence the certified case",
+      "resolution": "reverted before commit; full suite (623/623) and golden (194/194) re-run to confirm",
+      "revertedFileNowCarries": "explanatory comment only, no behavior change from baseline"
+    },
+    "formalCertificationMatrix": {
+      "file": "test/kayla-provider-call-matrix.test.ts",
+      "testCount": 12,
+      "method": "handleKaylaChat end-to-end with scripted (non-network) provider shaped like production config; asserts diagnostics.providerAttempted",
+      "deterministicCases": [
+        "Who founded FDS?",
+        "What does CodeForge cost?",
+        "Can I download KyraBlox?",
+        "What does ACTIVE DEVELOPMENT mean?",
+        "Which projects are downloadable?"
+      ],
+      "providerEligibleCases": [
+        "Compare CodeForge and Kayla AI Publisher.",
+        "How are GEMS and Training Grounds related?",
+        "How do the FDS apps fit together?",
+        "CodeForge vs ForgerEMS"
+      ],
+      "retrievalQualityRegressionCases": [
+        "What can I actually download?",
+        "How can I actually get CodeForge?",
+        "Can I really use KyraBlox today?"
+      ]
+    },
+    "providerCallsAvoidedEvaluation": {
+      "script": "scripts/kayla-routing-eval.mjs",
+      "label": "EVALUATION CORPUS (test/kayla/golden-queries.json) - not production traffic",
+      "total": 191,
+      "deterministic": 115,
+      "localOnly": 51,
+      "providerEligible": 25,
+      "avoidedProviderCalls": 166,
+      "avoidedProviderCallsPct": 86.9
+    }
+  },
+  "retrievalIntelligence": {
+    "evaluationScript": "scripts/kayla-retrieval-eval.mjs",
+    "corpusSize": 10,
+    "passedBeforeFixes": 6,
+    "passedAfterFixes": 9,
+    "defectsFoundAndFixed": [
+      {
+        "question": "What can I actually download?",
+        "before": "top result FarmStand Finder via raw keyword retrieval",
+        "after": "settled canonical availability listing naming CodeForge and ForgerEMS",
+        "fix": "src/data/kayla/intents.ts availability pattern tolerates one interstitial word between pronoun and verb"
+      },
+      {
+        "question": "What AI projects does FDS have?",
+        "before": "generic fds-company canonical fallback naming no AI project",
+        "after": "full ecosystem listing naming GEMS, Kayla AI Publisher, CodeForge",
+        "fix": "list intent pattern tolerates an adjective (ai/ml/machine learning/research/software/developer) before the category noun"
+      },
+      {
+        "question": "Where should a developer start?",
+        "before": "unrelated top-3 (Kayla AI Publisher, KyraBlox), CodeForge absent",
+        "after": "CodeForge (matches audience/category text)",
+        "fix": "recommendation intent 'where should X start' pattern now accepts a|a \\w+|someone|you as well as i"
+      }
+    ],
+    "remainingFailure": {
+      "question": "Which projects are visible publicly but not released?",
+      "status": "documented limitation, not fixed this session",
+      "reason": "no existing intent pattern matches; a broader fix risked the same over-generalization that caused the listAnswer() regression"
+    },
+    "multiRecordSynthesisConfirmedExisting": [
+      "filteredListAnswer (research/available-today/in-development filters)",
+      "availabilityListAnswer (downloadable/private filters)",
+      "gemsAvailabilityAnswer"
+    ],
+    "retrievalScoringChanged": false,
+    "retrievalTrustRuleHeld": true
+  },
+  "evidenceAnswerPlanning": {
+    "newAbstractionIntroduced": false,
+    "reasoning": "existing layered search() + deterministicAnswer()/isProviderEligible() + buildChatMessages() already implements decide-evidence -> decide-route -> generate-prose without a model call deciding truth"
+  },
+  "providerGrounding": {
+    "evidencePacketUnchanged": true,
+    "promptBounds": { "historyTurns": 6, "historyCharsPerTurn": 2000, "supportingKnowledgeEntries": 4 },
+    "outputBounds": { "providerMaxTokens": 700, "newLocalCharCeiling": 6000 },
+    "timeoutMs": 9000,
+    "timeoutChanged": false,
+    "timeoutChangeJustification": "not raised; Part 16 instructs reducing unnecessary work first, which the intent-classification fixes do"
+  },
+  "semanticVerificationV2": {
+    "relationshipVerifierAudited": "src/lib/kayla/verify-relations.ts - denied_relation, unsupported_relation, false_equivalence - already implemented, untouched",
+    "temporalVerifierAudited": "checkTemporalClaims() in verify.ts - already implemented, untouched",
+    "causalVerifierAudited": "checkCausalClaims() in verify.ts - already implemented, untouched",
+    "roadmapVerifierAudited": "checkRoadmapClaims() in verify.ts - already implemented including the determiner fix, confirmed by existing test at test/kayla-verify.test.ts line 46, untouched",
+    "multiSentenceContradiction": {
+      "mechanism": "verifyAgainstCanon() iterates every sentence independently, so one fabricated sentence among true ones is still caught",
+      "newTestCommitted": false,
+      "confirmedBy": "manual verification during this session against the existing per-sentence code path"
+    },
+    "liveConfirmation": {
+      "question": "When will Sapphire be added to CodeForge?",
+      "routeMode": "provider_accepted",
+      "outcome": "model itself declined to invent a date; firewall held on a genuine live response"
+    }
+  },
+  "answerShapeVerification": {
+    "liveDefectInherited": {
+      "requestId": "77b88132",
+      "servedToVisitor": "<|tool_call_start|>[FDS_Knowledge(query=...)]",
+      "status": "already fixed by the prior continuation; audited and confirmed this session, not re-fixed"
+    },
+    "existingKindsConfirmed": ["control_token", "tool_call_scaffolding", "reasoning_leak", "empty_answer"],
+    "newKindsAddedThisSession": ["pathological_repetition", "oversized_answer"],
+    "repetitionDetection": {
+      "unit": "consecutive identical sentence or paragraph",
+      "threshold": 4,
+      "minUnitLength": 12,
+      "falsePositiveSweep": ["fact restated once later", "ordinary bullet list of distinct lines", "every canonical answer Kayla produces"]
+    },
+    "oversizedAnswerCeiling": 6000,
+    "falsePositiveSweepPreserved": true,
+    "handlerReplacementProof": "test/kayla-scaffolding-rejection.test.ts extended with pathological_repetition case, asserts routeMode provider_replaced and correct diagnostics.verificationKinds",
+    "orderingPreserved": "provider output -> answer-shape verification -> canonical verification -> accept or safe replacement"
+  },
+  "sourceActionRelevance": {
+    "gapFound": "toKaylaSources() and action assembly did not dedupe by destination",
+    "fix": {
+      "sources": "src/lib/kayla/sources.ts toKaylaSources() dedupes by kind:url|route|label before applying limit",
+      "actions": "src/lib/kayla/actions.ts dedupeActions(), wired into handler.ts localActions() and provider.ts preferredActions()"
+    },
+    "verifiedLive": "browser check on the real production site showed two distinct, non-duplicated action buttons for a KyraBlox availability answer"
+  },
+  "recommendationIntelligence": {
+    "gapFound": "'where should a developer start' did not match the recommendation intent's first-person-only pattern",
+    "fix": "src/data/kayla/intents.ts pattern broadened to accept i|a \\w+|someone|you as the subject",
+    "hiddenTraitInference": false
+  },
+  "inputContextTrust": {
+    "pageTypeCanonicalization": "unchanged, confirmed intact (KAYLA_PAGE_TYPES single source of truth)",
+    "pageTypeDriftTest": "unchanged, confirmed passing",
+    "malformedPageTypeHandling": "unchanged, confirmed passing (123, null, true, array, object all normalize to 'other')",
+    "oversizedInputHandling": "unchanged, confirmed passing"
+  },
+  "providerResilience": {
+    "existingFailureMatrixAudited": "test/kayla-failure-matrix.test.ts - no-provider, HTTP failure, timeout, malformed output, false-fact rejection, 429, budget exhausted, empty/oversized prompt, unknown fact, empty retrieval, streaming equivalents - already comprehensive, untouched",
+    "liveEvidenceObservedNaturally": {
+      "question": "Give me a short explanation of how the main FDS projects fit together.",
+      "routeMode": "provider_failed_fallback",
+      "note": "occurred naturally during the ordinary live matrix run; not sought out or retried into existence"
+    },
+    "coreInvariantReconfirmed": "provider failure != Kayla failure"
+  },
+  "efficiency": {
+    "evaluationRoutingSplit": { "deterministic": 115, "localOnly": 51, "providerEligible": 25, "total": 191 },
+    "avoidedProviderCallsPct": 86.9,
+    "promptSizeChanged": false,
+    "responseLengthPolicyChanged": false,
+    "latencyLiveSampleMsRange": {
+      "deterministic": [250, 397],
+      "providerAcceptedSampleCount": 1,
+      "providerAcceptedMs": 1774,
+      "providerFailedFallbackSampleCount": 1,
+      "providerFailedFallbackMs": 4156,
+      "note": "sample size too small for percentiles; reported as observed range only"
+    }
+  },
+  "browserAccessibility": {
+    "chromium": { "before": 14, "after": 16, "passed": 16, "newCases": ["390px mobile", "reduced motion"] },
+    "firefox": { "installed": true, "scope": "bounded critical-shell smoke spec only", "passed": 3, "total": 3 },
+    "webkit": { "installed": true, "scope": "bounded critical-shell smoke spec only", "passed": 3, "total": 3 },
+    "reducedMotion": { "added": true, "passed": true },
+    "mobile320": { "preexisting": true, "passed": true },
+    "mobile390": { "added": true, "passed": true },
+    "focusContainmentAndRestoration": "preexisting, confirmed still passing",
+    "fullConcurrentSuiteFlakeNote": "a single pre-existing (not authored this session) Chromium test occasionally times out under 3-engine concurrent worker contention; passes reliably in isolation and with --workers=1 run of that file alone; documented as an environment characteristic, not a regression"
+  },
+  "privacyObservability": {
+    "promptLogged": false,
+    "answerLogged": false,
+    "historyLogged": false,
+    "rawIpLogged": false,
+    "newDiagnosticsFieldsAdded": false
+  },
+  "tests": {
+    "vitest": { "files": 35, "tests": 623, "passed": 623, "baselineFiles": 34, "baselineTests": 598 },
+    "golden": {
+      "total": 194, "passed": 194, "baseline": 191,
+      "tiers": { "1": { "total": 78, "passed": 78 }, "2": { "total": 90, "passed": 90 }, "3": { "total": 26, "passed": 26 } },
+      "newCategory": "adaptive-routing",
+      "newQueryIds": ["t2-adaptive-01", "t2-adaptive-02", "t2-adaptive-03"]
+    },
+    "browserE2E": { "chromium": { "total": 16, "passed": 16 }, "firefox": { "total": 3, "passed": 3 }, "webkit": { "total": 3, "passed": 3 } },
+    "astroCheck": { "files": 90, "errors": 0, "warnings": 0, "hints": 0 },
+    "build": { "pagesBuilt": 26 },
+    "links": { "checked": 930, "broken": 0 },
+    "secretScan": "PASS",
+    "deployPolicy": "PASS",
+    "workerBuild": { "totalUploadKiB": 245.02, "gzipKiB": 63.80 },
+    "aggregateValidate": "PASS",
+    "newEvaluationScripts": [
+      { "file": "scripts/kayla-routing-eval.mjs", "purpose": "provider-calls-avoided evaluation corpus" },
+      { "file": "scripts/kayla-retrieval-eval.mjs", "purpose": "retrieval grounding evaluation corpus" }
+    ],
+    "newTestFiles": [
+      { "file": "test/kayla-provider-call-matrix.test.ts", "count": 12 },
+      { "file": "test/e2e/kayla-widget-crossbrowser-smoke.spec.ts", "count": 3 }
+    ]
+  },
+  "deployment": {
+    "endpoint": "https://kayla-api.forgerdigitalsolutions.workers.dev",
+    "startingWorkerVersion": "db85e758-1d9b-4fc1-84a6-058670d970da",
+    "finalWorkerVersion": "22a218be-6324-4042-afb5-44d0abd5a2a5",
+    "deployCommand": "npm run kayla:deploy",
+    "pagesDeployment": {
+      "workflow": "Deploy to GitHub Pages",
+      "runId": "33927642675",
+      "status": "success",
+      "durationSeconds": 56,
+      "commit": "bdf93c4"
+    }
+  },
+  "liveApiCertification": {
+    "requestCount": 8,
+    "distinctQuestions": 7,
+    "aiDailyUsedBefore": 4,
+    "aiDailyUsedAfter": 6,
+    "sharedProviderQuotaConsumedThisSession": 2,
+    "rateLimitObserved": true,
+    "cases": [
+      { "question": "Who founded Forger Digital Solutions?", "http": 200, "latencyMs": 397, "routeMode": "deterministic" },
+      { "question": "Can I download KyraBlox?", "http": 200, "latencyMs": 272, "routeMode": "deterministic" },
+      { "question": "What does CodeForge cost?", "http": 200, "latencyMs": 250, "routeMode": "deterministic" },
+      { "question": "Which FDS projects can I use today?", "http": 200, "latencyMs": 265, "routeMode": "deterministic" },
+      { "question": "When will Sapphire be added to CodeForge?", "http": 200, "latencyMs": 1774, "routeMode": "provider_accepted" },
+      { "question": "Why is We The People private? (1st attempt)", "http": 429, "latencyMs": 252, "routeMode": "rate_limited" },
+      { "question": "Why is We The People private? (retry)", "http": 200, "latencyMs": 288, "routeMode": "deterministic" },
+      { "question": "Give me a short explanation of how the main FDS projects fit together.", "http": 200, "latencyMs": 4156, "routeMode": "provider_failed_fallback" }
+    ]
+  },
+  "liveBrowserVerification": {
+    "target": "https://forger-digital-solutions.github.io (real public site)",
+    "desktop": { "widgetOpened": true, "answerRendered": true, "actionsDistinctNoDuplicates": true, "sourcesRendered": true },
+    "mobile375": { "horizontalOverflow": false, "composerVisible": true, "sendVisible": true, "actionsRendered": true }
+  },
+  "knownLimitations": [
+    "One retrieval-evaluation case ('Which projects are visible publicly but not released?') still resolves to a generic top hit; documented rather than fixed with a broader regex this session.",
+    "A single pre-existing Chromium Playwright test flakes under full 3-engine concurrent worker contention; reliable in isolation. Recommend CI pin a moderate worker count.",
+    "Multi-sentence contradiction rejection is confirmed functionally correct but has no dedicated new committed test case this session.",
+    "No live recurrence of the tool-call-scaffolding defect was sought, per the explicit no-brute-force instruction; live proof remains 'lane is healthy post-fix', not 'rejection fired live'.",
+    "Upstream OpenRouter free-tier limits above the local 150/day ceiling remain unmeasured, unchanged from Phase 7."
+  ]
+}
