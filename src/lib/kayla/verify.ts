@@ -29,7 +29,10 @@ export type ViolationKind =
   | 'price'
   | 'denied_relation'
   | 'unsupported_relation'
-  | 'false_equivalence';
+  | 'false_equivalence'
+  | 'temporal_claim'
+  | 'causal_claim'
+  | 'roadmap_claim';
 
 export interface CanonViolation {
   kind: ViolationKind;
@@ -286,6 +289,84 @@ function checkPrice(sentence: string, violations: CanonViolation[]): void {
 }
 
 /**
+ * Temporal claim firewall: reject unsupported dates/times for FDS entities.
+ * Only allow dates explicitly documented in canonical data.
+ */
+function checkTemporalClaims(sentence: string, violations: CanonViolation[]): void {
+  if (isNegated(sentence)) return;
+
+  // Future dates with FDS entities: "Sapphire will ship in October"
+  const futureDatePatterns = [
+    /\b(?:will|going to|planned to|scheduled to|set to)\s+(?:ship|launch|release|be added|be included|become available|arrive)\s+(?:in|on|by|during)\s+(?:next\s+)?(?:january|february|march|april|may|june|july|august|september|october|november|december|oct|nov|dec|spring|summer|fall|autumn|winter|q[1-4]|quarter)\b/i,
+    /\b(?:will|going to)\s+(?:ship|launch|release)\s+(?:next\s+)?(?:month|year|week)\b/i,
+    /\b(?:shipped|launched|released)\s+(?:last\s+)?(?:year|month|week)\b/i
+  ];
+
+  for (const pattern of futureDatePatterns) {
+    if (pattern.test(sentence) && entitiesIn(sentence).length > 0) {
+      violations.push({ kind: 'temporal_claim', detail: 'canonical data does not document this future date for FDS entities', sentence });
+      return;
+    }
+  }
+
+  // Past dates with release claims not in canonical data - catch any date claim
+  const pastDatePattern = /\b(?:was\s+)?(?:released|launched|shipped)\s+(?:in|on|during)\s+(?:\d{4}|january|february|march|april|may|june|july|august|september|october|november|december)\b/i;
+  if (pastDatePattern.test(sentence) && entitiesIn(sentence).length > 0) {
+    // Conservative: reject any specific date claim for FDS entities
+    violations.push({ kind: 'temporal_claim', detail: 'canonical data does not document this release date', sentence });
+  }
+}
+
+/**
+ * Causal claim firewall: reject unsupported reasons for FDS project states.
+ * Models frequently hallucinate reasons like "because of legal concerns" or "because development failed".
+ */
+function checkCausalClaims(sentence: string, violations: CanonViolation[]): void {
+  if (isNegated(sentence)) return;
+
+  const causalPatterns = [
+    /\b(?:because|due to|so that|therefore|as a result of|reason (why|is|for))\b.{0,50}\b(?:legal\s+(?:concerns|issues|reasons)|regulation|compliance|failed\s+(?:development|to\s+develop)|development\s+(?:failed|paused|stopped)|lack of (funding|resources|interest)|market (conditions|pressure|demand)|security (concerns|issues|risks)|technical (issues|limitations|constraints))\b/i,
+    /\b(?:private|kept private|remains private)\b.{0,30}\bbecause\b/i,
+    /\b(?:not\s+public|not\s+released|not\s+available)\b.{0,30}\bbecause\b/i
+  ];
+
+  for (const pattern of causalPatterns) {
+    if (pattern.test(sentence) && entitiesIn(sentence).length > 0) {
+      violations.push({ kind: 'causal_claim', detail: 'canonical data does not document this reason for project state', sentence });
+      return;
+    }
+  }
+}
+
+/**
+ * Roadmap claim firewall: reject unsupported future plans and commitments.
+ * Protect private planning discussions from exposure.
+ */
+function checkRoadmapClaims(sentence: string, violations: CanonViolation[]): void {
+  if (isNegated(sentence)) return;
+
+  // An optional determiner sits between verb and object in the phrasing a model
+  // actually writes ("will replace THE free model with Sapphire"). Written
+  // without it, these rules only caught the headline-style phrasing and let the
+  // natural one through.
+  const det = String.raw`(?:the|its|our|a|their)\s+`;
+  const roadmapPatterns = [
+    new RegExp(String.raw`\b(?:will|plans to|planning to|going to)\s+(?:add|include|integrate|support|replace|switch to|use|adopt)\s+` + det + '?' + String.raw`(?:sapphire|garnet|topaz|peridot|claude|gpt|openai|anthropic|gemini|mistral)\b`, 'i'),
+    new RegExp(String.raw`\b(?:will|plans to|planning to|going to)\s+(?:have|include|offer|add|introduce|launch)\s+(?:a\s+)?(?:paid|pro|premium|subscription|tier)\b`, 'i'),
+    new RegExp(String.raw`\b(?:will|plans to|planning to|going to)\s+(?:replace|upgrade|switch from|move off|drop)\s+` + det + '?' + String.raw`(?:openrouter|free\s+model|current\s+model|free\s+tier)\b`, 'i'),
+    new RegExp(String.raw`\b(?:will|plans to|planning to|going to)\s+(?:become|turn|go)\s+` + det + '?' + String.raw`(?:paid|commercial)\b`, 'i'),
+    /\b(?:launch|release)\s+(?:date|timeline|schedule)\b.{0,20}\b(?:is|will be|set for|planned)\b/i
+  ];
+
+  for (const pattern of roadmapPatterns) {
+    if (pattern.test(sentence)) {
+      violations.push({ kind: 'roadmap_claim', detail: 'canonical data does not document this future plan or commitment', sentence });
+      return;
+    }
+  }
+}
+
+/**
  * Check generated text against canonical FDS data.
  * Returns every contradiction found, so callers can log what happened.
  */
@@ -300,6 +381,9 @@ export function verifyAgainstCanon(text: string): CanonVerdict {
     checkFounder(sentence, violations);
     checkMetrics(sentence, violations);
     checkPrice(sentence, violations);
+    checkTemporalClaims(sentence, violations);
+    checkCausalClaims(sentence, violations);
+    checkRoadmapClaims(sentence, violations);
   }
 
   // Facts can all be individually true while the sentence joining them is
@@ -312,6 +396,20 @@ export function verifyAgainstCanon(text: string): CanonVerdict {
 }
 
 /** Introspection for tests and the certification receipt. */
+/**
+ * Which canonical FDS entities a piece of text names. Exposed so routing can
+ * tell a single-entity lookup ("what is CodeForge?") from a multi-entity
+ * question ("how are GEMS and Training Grounds related?"), which are answered
+ * by very different lanes.
+ */
+export function canonicalEntitiesIn(text: string): string[] {
+  // entityNames lists the same name under more than one record, so the raw
+  // scan reports "CodeForge" twice for a single mention. Callers that count
+  // entities need distinct ones; the verifier's own callers only ever ask
+  // whether the list is non-empty, so they are left on the raw scan.
+  return [...new Set(entitiesIn(text))];
+}
+
 export function canonAllowList() {
   return {
     versions: [...allowedVersions],

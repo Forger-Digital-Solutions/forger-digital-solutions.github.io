@@ -39,7 +39,12 @@ describe('verifier catches contradictions of canonical data', () => {
     ['benchmark', 'Sapphire achieved frontier parity with GPT-5.'],
     ['version', 'CodeForge 9.0 launched this week.'],
     ['cancellation', 'We The People was shelved indefinitely.'],
-    ['availability', 'You can install KyraBlox today.']
+    ['availability', 'You can install KyraBlox today.'],
+    ['temporal_claim', 'Sapphire will ship in October.'],
+    ['causal_claim', 'KyraBlox is private because of legal concerns.'],
+    ['causal_claim', 'GEMS development failed due to lack of funding.'],
+    ['roadmap_claim', 'CodeForge will replace the free model with Sapphire.'],
+    ['roadmap_claim', 'Kayla will add a paid subscription tier next month.']
   ];
 
   for (const [kind, text] of lies) {

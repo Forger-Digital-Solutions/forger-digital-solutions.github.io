@@ -167,9 +167,22 @@ export interface KaylaSafeAction {
   payload?: Record<string, unknown>;
 }
 
+/**
+ * Every page type the site actually emits (see getPageType in lib/kayla/context.ts),
+ * plus 'other' as the sink for anything a caller sends that the site never
+ * produces. validate.ts derives its allowlist from this array, so the accepted
+ * values and the type cannot drift apart.
+ */
+export const KAYLA_PAGE_TYPES = [
+  'home', 'projects', 'project', 'about', 'technology', 'lab', 'forged',
+  'notes', 'support', 'hardware', 'community', 'faq', 'privacy', 'terms', 'other'
+] as const;
+
+export type KaylaPageType = (typeof KAYLA_PAGE_TYPES)[number];
+
 export interface KaylaPageContext {
   route: string;
-  pageType: 'home' | 'project' | 'product' | 'projects' | 'forged' | 'lab' | 'notes' | 'about' | 'support' | 'hardware' | 'community' | 'faq' | 'technology' | 'privacy' | 'terms' | '404';
+  pageType: KaylaPageType;
   entity?: string;
 }
 

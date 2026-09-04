@@ -1,4 +1,4 @@
-import type { KaylaPageContext, KaylaConversationMessage } from '../../data/kayla/types';
+import { KAYLA_PAGE_TYPES, type KaylaPageContext, type KaylaConversationMessage } from '../../data/kayla/types';
 import { getKaylaConfig, type KaylaConfig } from './config';
 
 export interface ValidatedChatRequest { message: string; history: KaylaConversationMessage[]; context?: KaylaPageContext; }
@@ -12,6 +12,8 @@ const PRIVILEGED = new Set(['model', 'provider', 'apiKey', 'api_key', 'endpoint'
 const SAFE_ROUTE = /^\/[A-Za-z0-9\-._~/]{0,255}$/;
 /** Project and GEM identifiers are simple slugs. */
 const SAFE_ENTITY = /^[A-Za-z0-9][A-Za-z0-9-]{0,63}$/;
+/** Page types the site emits. Anything else normalises to 'other'. */
+const VALID_PAGE_TYPES = new Set<string>(KAYLA_PAGE_TYPES);
 
 function objectDepth(value: unknown, depth = 0): number {
   if (value === null || typeof value !== 'object') return depth;
@@ -64,7 +66,15 @@ export function validateChatRequest(body: unknown, config: KaylaConfig = getKayl
       // impersonates the canonical-fact block.
       if (typeof ctx.route !== 'string' || !SAFE_ROUTE.test(ctx.route)) errors.push({ field: 'context.route', message: 'Context route must be a bounded site-relative path' });
       else if (ctx.entity !== undefined && (typeof ctx.entity !== 'string' || !SAFE_ENTITY.test(ctx.entity))) errors.push({ field: 'context.entity', message: 'Context entity must be a simple slug' });
-      else context = { route: ctx.route, pageType: (ctx.pageType as KaylaPageContext['pageType']) || 'home', entity: typeof ctx.entity === 'string' ? ctx.entity : undefined };
+      else {
+        // pageType is relevance metadata, never authority, so an unrecognised
+        // value is normalised rather than rejected: a stale or third-party
+        // client must not be able to lock a visitor out of the assistant. Any
+        // non-string is treated as unrecognised instead of being called into.
+        const claimed = typeof ctx.pageType === 'string' ? ctx.pageType.toLowerCase() : '';
+        const pageType = ctx.pageType === undefined ? 'home' : (VALID_PAGE_TYPES.has(claimed) ? claimed : 'other');
+        context = { route: ctx.route, pageType: pageType as KaylaPageContext['pageType'], entity: typeof ctx.entity === 'string' ? ctx.entity : undefined };
+      }
     }
   }
   if (errors.length) return { valid: false, errors };

@@ -5,8 +5,9 @@ import { createKaylaConfig, isAIEnabled } from './config';
 import { validateChatRequest, isPromptInjectionAttempt } from './validate';
 import { checkRateLimit } from './rateLimit';
 import { isSensitiveQuery } from './systemPrompt';
-import { verifyAgainstCanon } from './verify';
+import { canonicalEntitiesIn, verifyAgainstCanon } from './verify';
 import { toKaylaSources } from './sources';
+import { classifyIntent } from '../../data/kayla/intents';
 import {
   classifyProviderError,
   emptyDiagnostics,
@@ -49,6 +50,70 @@ const DETERMINISTIC_INTENTS = new Set([
   'navigation', 'privacy', 'founder', 'assistant_identity', 'external_current',
   'private_info', 'unsupported_task'
 ]);
+
+/**
+ * Intents where a model earns its call: the visitor is asking for several
+ * canonical records to be weighed against each other, not for one fact to be
+ * read back. Capability and roadmap are deliberately absent — they are gated
+ * on retrieval strength below, because when the site already answers them the
+ * model only paraphrases.
+ */
+const PROVIDER_ELIGIBLE_INTENTS = new Set(['comparison', 'recommendation', 'list']);
+
+/**
+ * Phrasing that asks how things stand in relation to each other rather than
+ * what one thing is. These questions are answered by weighing several records
+ * together, which is the one job a model does better than a lookup.
+ */
+const RELATIONAL_QUESTION = /\b(?:related|relationship|relates?|fit together|works? together|works with|differs?|differences?|compared?|comparison|versus|vs|connected|connects?|interacts?|overlaps?|apart from|instead of)\b/i;
+
+/** A retrieval hit at or above this score already answers the question. */
+const STRONG_CANONICAL_SCORE = 90;
+const STRONG_RETRIEVAL_SCORE = 50;
+const ADEQUATE_RETRIEVAL_SCORE = 40;
+
+/**
+ * Whether a provider call would add anything beyond what canonical data and
+ * retrieval already produced. This is a budget decision, not a safety one:
+ * every lane below still passes through the same canonical verification, so
+ * declining a call can only cost synthesis quality, never correctness.
+ *
+ * Phase 7 proved the model lane went dark because our own daily allowance was
+ * spent restating facts the site already owned. Spending it only where it buys
+ * something is what keeps the lane lit for the questions that need it.
+ */
+export function isProviderEligible(message: string, sources: KaylaKnowledgeResult[], providerConfig?: KaylaProviderConfig): boolean {
+  // Scripted providers exist to exercise the provider path in tests; gating
+  // them here would make the tests assert the gate instead of the path.
+  const providerId = providerConfig?.provider?.toLowerCase();
+  if (providerId === 'mock' || providerId === 'test') return true;
+
+  const intent = classifyIntent(message);
+  if (DETERMINISTIC_INTENTS.has(intent)) return false;
+  if (PROVIDER_ELIGIBLE_INTENTS.has(intent)) return true;
+
+  const top = sources[0];
+  const score = top?.score ?? 0;
+
+  // An identity-classified question can still be a relationship question:
+  // "how are GEMS and Training Grounds related?" and "how do the FDS apps fit
+  // together?" both land on 'identity' but are exactly the synthesis the model
+  // earned in Phase 7. Two signals keep them on the provider lane — naming more
+  // than one canonical entity, and relational phrasing — because neither alone
+  // catches both ("fit together" names no entity; "CodeForge vs ForgerEMS"
+  // uses no relational verb).
+  const relational = RELATIONAL_QUESTION.test(message);
+  if (intent === 'identity' && !relational && canonicalEntitiesIn(message).length <= 1) {
+    if (top && (top.sourceType === 'canonical' || top.sourceType === 'known-answer' || top.sourceType === 'entity-match') && score >= STRONG_CANONICAL_SCORE) return false;
+    if (top && top.sourceType === 'retrieval' && score >= STRONG_RETRIEVAL_SCORE) return false;
+  }
+
+  // Roadmap and capability answers are worth synthesising only when retrieval
+  // came back thin; a solid hit is already the documented answer.
+  if ((intent === 'roadmap' || intent === 'capability') && score >= ADEQUATE_RETRIEVAL_SCORE) return false;
+
+  return true;
+}
 
 function deterministicAnswer(sources: KaylaKnowledgeResult[]): KaylaKnowledgeResult | undefined {
   const top = sources[0];
@@ -212,6 +277,17 @@ export async function handleKaylaChat(
     return { status: 200, response: localResponse(sources[0]) };
   }
 
+  // Adaptive routing: only call provider when it would add value
+  if (!isProviderEligible(message, sources, config.providerConfig)) {
+    const routeMode = classifyLocalRoute(sources[0]);
+    reportDiagnostics(config, sources[0], routeMode, {
+      providerAttempted: false,
+      providerOutcome: 'not_attempted',
+      fallbackReason: 'deterministic_or_retrieval_sufficient'
+    });
+    return { status: 200, response: localResponse(sources[0]) };
+  }
+
   const aiProvider = createAIProvider(config.providerConfig);
   if (!aiProvider) {
     reportDiagnostics(config, sources[0], 'provider_failed_fallback', {
@@ -356,6 +432,26 @@ export async function* streamKaylaChat(
       mode: 'local',
       done: true,
       routeMode: classifyLocalRoute(topResult),
+      sourceLinks: topResult ? toKaylaSources([topResult]) : []
+    });
+    return;
+  }
+
+  // Adaptive routing: only call provider when it would add value
+  if (!isProviderEligible(message, sources, config.providerConfig)) {
+    const topResult = sources[0];
+    const routeMode = classifyLocalRoute(topResult);
+    reportDiagnostics(config, topResult, routeMode, {
+      providerAttempted: false,
+      providerOutcome: 'not_attempted',
+      fallbackReason: 'deterministic_or_retrieval_sufficient'
+    });
+    yield JSON.stringify({
+      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
+      actions: localActions(topResult),
+      mode: 'local',
+      done: true,
+      routeMode: routeMode,
       sourceLinks: topResult ? toKaylaSources([topResult]) : []
     });
     return;
