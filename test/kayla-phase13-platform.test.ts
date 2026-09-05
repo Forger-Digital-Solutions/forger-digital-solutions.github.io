@@ -276,10 +276,13 @@ describe('Phase 13 - Kayla storage audit (static: chat layer touches no web stor
 
   it('documents the pre-existing site-owned keys (not Kayla, no chat content)', () => {
     const counter = readFileSync(new URL('../src/components/VisitorCounter.astro', import.meta.url), 'utf8');
-    expect(counter).toContain('fds_visitor_id');
-    // Random 128-bit dedup id + 24h expiry for an anonymous counter hit:
-    // no Kayla involvement, no prompts, no answers, no transcripts. (The word
-    // "message" appears only as the DOM BroadcastChannel event name.)
+    // Privacy posture: a bare 24h last-hit timestamp gates the count — no
+    // persistent visitor identifier is stored. The only random value is an
+    // ephemeral per-tab claim id that never persists beyond the tab race.
+    expect(counter).toContain('fds_visitor_last_hit');
+    expect(counter).not.toContain('fds_visitor_id');
+    expect(counter).toContain('DEDUP_MS = 24 * 60 * 60 * 1000');
+    // No Kayla involvement, no prompts, no answers, no transcripts.
     expect(counter).not.toMatch(/kayla/i);
     expect(counter).not.toMatch(/prompt/i);
     expect(counter).not.toMatch(/answer/i);

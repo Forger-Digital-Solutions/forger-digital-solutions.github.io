@@ -9,78 +9,63 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
 </span>
 <script>
   (function () {
-    const STORAGE_KEY = 'fds_visitor_id';
-    const EXPIRY_KEY = 'fds_visitor_expiry';
-    const COUNTED_KEY = 'fds_visitor_counted_at';
+    // One browser visit is counted per 24-hour window. The only local state is
+    // a last-hit timestamp and a short-lived cross-tab claim: no visitor
+    // identifier, nothing personal, nothing sent anywhere by this script.
+    const LAST_HIT_KEY = 'fds_visitor_last_hit';
+    const CLAIM_KEY = 'fds_visitor_claim';
+    const CHANNEL = 'fds_visitor_counter';
     const DEDUP_MS = 24 * 60 * 60 * 1000;
-    const url = document.getElementById('fds-visitor-counter')?.dataset.counterUrl;
+    const CLAIM_TTL_MS = 5000; // a stale claim never blocks the next real visit
+    const FOLLOWER_WAIT_MS = 3000; // how long a co-loading tab waits for the winner's value
 
     const counterEl = document.getElementById('fds-visitor-counter');
     const valueEl = document.getElementById('fds-visitor-count');
-    if (!counterEl || !valueEl || !url) return;
+    const hitUrl = counterEl?.dataset.counterUrl;
+    if (!counterEl || !valueEl || !hitUrl) return;
+    const getUrl = hitUrl.replace('/hit/', '/get/');
+
+    const store = {
+      get(key: string): string | null {
+        try { return window.localStorage.getItem(key); } catch { return null; }
+      },
+      set(key: string, value: string): void {
+        try { window.localStorage.setItem(key, value); } catch { /* blocked storage */ }
+      }
+    };
+
+    const format = (raw: unknown): string => {
+      const n = Number(raw);
+      return Number.isFinite(n) ? n.toLocaleString() : '0';
+    };
 
     // The counter stays invisible until a real value exists, so a failed or
-    // blocked fetch never leaves a bare placeholder next to the hero status.
+    // blocked fetch never leaves a bare placeholder or a misleading 0.
     const setValue = (value: string) => {
       valueEl.textContent = value;
       counterEl.dataset.state = 'ready';
     };
 
-    const generateId = () => {
-      const arr = new Uint8Array(16);
-      crypto.getRandomValues(arr);
-      return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
-    };
-
-    let visitorId: string | null = null;
-    let expiry: number | null = null;
-    try {
-      visitorId = window.localStorage.getItem(STORAGE_KEY);
-      expiry = Number(window.localStorage.getItem(EXPIRY_KEY));
-      if (Number.isNaN(expiry)) expiry = null;
-    } catch {
-      // blocked storage
-    }
-
-    const now = Date.now();
-    const isExpired = !expiry || now >= expiry;
-
-    if (!visitorId || isExpired) {
-      visitorId = generateId();
-      try {
-        window.localStorage.setItem(STORAGE_KEY, visitorId);
-        window.localStorage.setItem(EXPIRY_KEY, String(now + DEDUP_MS));
-      } catch {
-        // ignore storage failures
-      }
-    }
-
-    let counted = false;
     let bc: BroadcastChannel | null = null;
-
     try {
-      bc = new BroadcastChannel('fds_visitor_counter');
+      bc = new BroadcastChannel(CHANNEL);
       bc.addEventListener('message', (ev) => {
         if (ev.data && ev.data.type === 'fds_counted') {
-          counted = true;
-          setValue(String(ev.data.value ?? '0'));
+          // The winning tab's hit covers this browser's 24-hour window too.
+          store.set(LAST_HIT_KEY, String(Date.now()));
+          setValue(format(ev.data.value));
         }
       });
     } catch {
-      // BroadcastChannel not supported — ignore
+      // BroadcastChannel not supported — tabs fall back to the read endpoint.
     }
 
-    const tryCount = async () => {
-      if (counted) return;
-      counted = true;
+    const readCount = async () => {
       try {
-        const res = await fetch(url, { method: 'GET', keepalive: true });
-        if (!res.ok) throw new Error('Counter request failed');
+        const res = await fetch(getUrl, { method: 'GET', keepalive: true });
+        if (!res.ok) throw new Error('Counter read failed');
         const data = await res.json();
-        const value = data.value != null ? Number(data.value).toLocaleString() : '0';
-        setValue(value);
-        bc?.postMessage({ type: 'fds_counted', value: data.value });
-        try { window.localStorage.setItem(COUNTED_KEY, String(Date.now())); } catch {}
+        if (data.value != null) setValue(format(data.value));
       } catch {
         // Backend unreachable or blocked: leave the counter hidden rather than
         // showing a misleading 0. A real value from another tab can still
@@ -88,22 +73,74 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
       }
     };
 
-    const recentLocalCount = (() => {
+    let claimId: string | null = null;
+
+    const recordHit = async () => {
+      // Re-verify the claim at fetch time: a tab that lost a sub-millisecond
+      // write race (its claim was overwritten) becomes a follower instead of
+      // double-counting.
       try {
-        const raw = window.localStorage.getItem(COUNTED_KEY);
-        if (!raw) return false;
-        return Date.now() - Number(raw) < 2000;
+        const claim = JSON.parse(store.get(CLAIM_KEY) ?? '{}') as { id?: string };
+        if (!claim.id || claim.id !== claimId) {
+          void readCount();
+          return;
+        }
       } catch {
-        return false;
+        // claim unreadable: proceed as the sole claimant
       }
-    })();
+      try {
+        const res = await fetch(hitUrl, { method: 'GET', keepalive: true });
+        if (!res.ok) throw new Error('Counter request failed');
+        const data = await res.json();
+        store.set(LAST_HIT_KEY, String(Date.now()));
+        setValue(format(data.value));
+        bc?.postMessage({ type: 'fds_counted', value: data.value });
+      } catch {
+        // No timestamp is stored on failure, so the next navigation retries;
+        // the counter itself stays hidden instead of showing a fake value.
+      }
+      store.set(CLAIM_KEY, '');
+    };
 
-    if (recentLocalCount) return;
+    // Multi-tab: exactly one tab claims the 24-hour increment. The claim is
+    // re-read after writing; a tab whose claim was overwritten becomes a
+    // follower and only reads, so five tabs never equal five visitors.
+    const tryClaim = (): boolean => {
+      claimId = Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => b.toString(16).padStart(2, '0')).join('');
+      const now = Date.now();
+      const raw = store.get(CLAIM_KEY);
+      if (raw) {
+        try {
+          const claim = JSON.parse(raw) as { id?: string; ts?: number };
+          if (claim && claim.id !== claimId && typeof claim.ts === 'number' && now - claim.ts < CLAIM_TTL_MS) return false;
+        } catch {
+          // malformed claim: overwrite it
+        }
+      }
+      store.set(CLAIM_KEY, JSON.stringify({ id: claimId, ts: now }));
+      const check = store.get(CLAIM_KEY);
+      if (!check) return false;
+      try { return (JSON.parse(check) as { id?: string }).id === claimId; } catch { return false; }
+    };
 
-    setTimeout(() => {
-      if (counted) return;
-      tryCount();
-    }, 150);
+    const lastHit = Number(store.get(LAST_HIT_KEY));
+    const eligible = !Number.isFinite(lastHit) || lastHit <= 0 || Date.now() - lastHit >= DEDUP_MS;
+
+    if (!eligible) {
+      void readCount();
+      return;
+    }
+
+    if (!tryClaim()) {
+      // Another tab took the increment: show its value if it reports in, else
+      // fall back to the read-only endpoint without incrementing.
+      setTimeout(() => {
+        if (counterEl.dataset.state !== 'ready') void readCount();
+      }, FOLLOWER_WAIT_MS);
+      return;
+    }
+
+    setTimeout(recordHit, 150);
   })();
 </script>
 <style>

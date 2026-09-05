@@ -7,8 +7,7 @@
  * four lineages again as cards here duplicated what the visual already shows.
  */
 import SectionHeader from './SectionHeader.astro';
-import VisualEvidence from './VisualEvidence.astro';
-import { visualAssets } from '../data/visuals';
+import GemsLearningSystem from './GemsLearningSystem.astro';
 
 const statusStrip = ['From-Scratch Research', 'Training Grounds', 'Held-Out Evaluation', 'Advancement by Evidence'];
 ---
@@ -25,9 +24,7 @@ const statusStrip = ['From-Scratch Research', 'Training Grounds', 'Held-Out Eval
     and learning process. Every lineage advances rung by rung inside Training Grounds, and no capability is claimed until evidence supports it.
   </p>
 
-  <div class="gems-story__evidence">
-    <VisualEvidence {...visualAssets.gemsFamily} />
-  </div>
+  <GemsLearningSystem />
 
   <ul class="gems-story__status" role="list">
     {statusStrip.map((item) => <li>{item}</li>)}

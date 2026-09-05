@@ -1,0 +1,391 @@
+---
+/**
+ * Signature GEMS learning-system visual for the homepage.
+ *
+ * Replaces the former static four-box SVG with a live architecture: Training
+ * Grounds as a central learning core, a seven-stage cycle (Curriculum → Teach
+ * → Test → Diagnose → Refine → Verify → Advance) rendered as a segmented ring
+ * around it, and the four GEM lineages connected as system nodes with slow
+ * bidirectional data pulses. Stage labels, lineage names, and roles are real
+ * HTML (lineages come from the canonical data module); the SVG carries only
+ * decorative geometry and is aria-hidden.
+ *
+ * Responsive by structure, not scale: below 640px the square diagram becomes
+ * a vertical system stack (lineage → core → numbered stage list) instead of a
+ * shrunken desktop image.
+ */
+import { gems } from '../data/gems';
+
+const STAGES = ['Curriculum', 'Teach', 'Test', 'Diagnose', 'Refine', 'Verify', 'Advance'] as const;
+const STEP = 360 / 7;
+const CYCLE_S = 7.7; // one full learning cycle; each stage holds the ring for 1.1s
+
+const rad = (deg: number) => (deg * Math.PI) / 180;
+const pt = (deg: number, r: number) => [500 + r * Math.cos(rad(deg)), 500 + r * Math.sin(rad(deg))] as const;
+const arc = (a0: number, a1: number, r: number) => {
+  const [x0, y0] = pt(a0, r);
+  const [x1, y1] = pt(a1, r);
+  return `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+};
+
+// Stage labels sit inside the ring band, on the core-facing side, so the four
+// lineage connectors (which stop at the ring's outer edge) never cross them.
+const stages = STAGES.map((label, i) => {
+  const mid = -90 + i * STEP;
+  const left = 50 + 50 * Math.cos(rad(mid));
+  const top = 50 + 50 * Math.sin(rad(mid));
+  return { label, left, top, delay: i * (CYCLE_S / 7), num: String(i + 1).padStart(2, '0') };
+});
+
+const ringSegs = STAGES.map((_, i) => {
+  const mid = -90 + i * STEP;
+  return arc(mid - STEP / 2 + 2.8, mid + STEP / 2 - 2.8, 252);
+});
+
+const calTicks = Array.from({ length: 16 }, (_, k) => {
+  const a = k * 22.5;
+  const [x0, y0] = pt(a, 281);
+  const [x1, y1] = pt(a, 292);
+  return { d: `M ${x0.toFixed(1)} ${y0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)}`, major: k % 4 === 0 };
+});
+
+// Fixed, sparse instrumentation points — decorative, deterministic, quiet.
+const fieldPoints = [
+  { x: 96, y: 120, r: 2 }, { x: 210, y: 74, r: 1.4 }, { x: 806, y: 96, r: 1.6 },
+  { x: 918, y: 176, r: 2.2 }, { x: 62, y: 812, r: 1.8 }, { x: 148, y: 916, r: 1.3 },
+  { x: 872, y: 886, r: 2 }, { x: 942, y: 768, r: 1.4 }, { x: 500, y: 34, r: 1.4 }, { x: 500, y: 968, r: 1.4 }
+];
+const fieldLinks = ['M 96 120 L 210 74 L 500 34', 'M 806 96 L 918 176', 'M 62 812 L 148 916 L 500 968'];
+
+const gemColors: Record<string, string> = {
+  topaz: '#e9ba61',
+  sapphire: '#6fa3ff',
+  peridot: '#58c9a2',
+  garnet: '#c18cff'
+};
+---
+
+<figure class="gems-system">
+  <div class="gems-system__frame">
+    <p class="gems-system__hud" aria-hidden="true">
+      <span>GEMS // TRAINING GROUNDS</span>
+      <span>LEARNING CYCLE // ACTIVE</span>
+    </p>
+
+    <div class="gems-stage">
+      <svg class="gems-art" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="gemsCore" cx="50%" cy="42%" r="65%">
+            <stop stop-color="#1b3158"></stop>
+            <stop offset="0.62" stop-color="#101d38"></stop>
+            <stop offset="1" stop-color="#0a1426"></stop>
+          </radialGradient>
+        </defs>
+
+        <g class="gems-art__field">
+          <path d={fieldLinks[0]}></path>
+          <path d={fieldLinks[1]}></path>
+          <path d={fieldLinks[2]}></path>
+          {fieldPoints.map((p) => <circle cx={p.x} cy={p.y} r={p.r}></circle>)}
+        </g>
+
+        <circle class="gems-art__calib" cx="500" cy="500" r="286"></circle>
+        <g class="gems-art__ticks">
+          {calTicks.map((t) => <path d={t.d} class:list={[{ 'tick--major': t.major }]}></path>)}
+        </g>
+
+        <g class="gems-art__connectors">
+          <path d="M 500 96 L 500 236"></path>
+          <path d="M 96 500 L 236 500"></path>
+          <path d="M 904 500 L 764 500"></path>
+          <path d="M 500 904 L 500 764"></path>
+        </g>
+        <g class="gems-art__pulse gems-art__pulse--in">
+          <path style={`animation-delay: 0s`} d="M 500 96 L 500 236"></path>
+          <path style={`animation-delay: 1.4s`} d="M 96 500 L 236 500"></path>
+          <path style={`animation-delay: 2.8s`} d="M 904 500 L 764 500"></path>
+          <path style={`animation-delay: 2.1s`} d="M 500 904 L 500 764"></path>
+        </g>
+        <g class="gems-art__pulse gems-art__pulse--out">
+          <path style={`animation-delay: 3.6s`} d="M 500 96 L 500 236"></path>
+          <path style={`animation-delay: 0.6s`} d="M 96 500 L 236 500"></path>
+          <path style={`animation-delay: 1.9s`} d="M 904 500 L 764 500"></path>
+          <path style={`animation-delay: 4.4s`} d="M 500 904 L 500 764"></path>
+        </g>
+
+        <g class="gems-art__ring">
+          {ringSegs.map((d) => <path d={d}></path>)}
+        </g>
+        <g class="gems-art__ring-glow">
+          {ringSegs.map((d, i) => <path d={d} style={`animation-delay: ${stages[i].delay}s`}></path>)}
+        </g>
+
+        <circle class="gems-art__track" cx="500" cy="500" r="222"></circle>
+        <circle class="gems-art__core" cx="500" cy="500" r="140"></circle>
+      </svg>
+
+      <div class="gems-core-wrap">
+        <div class="gems-core">
+          <span class="gems-core__name">Training Grounds</span>
+          <span class="gems-core__sub">Learning program</span>
+          <span class="gems-core__gate">Evidence-gated advancement</span>
+        </div>
+
+        <ol class="gems-cycle" aria-label="Training Grounds learning cycle">
+          {stages.map((stage) => (
+            <li
+              style={`--d: ${stage.delay}s; left: ${stage.left.toFixed(2)}%; top: ${stage.top.toFixed(2)}%;`}
+            >
+              <span class="gems-cycle__num" aria-hidden="true">{stage.num}</span>
+              <span class="gems-cycle__label">{stage.label}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <ul class="gems-nodes" role="list" aria-label="GEMS research lineages">
+        {gems.map((gem) => (
+          <li class="gems-node" data-gem={gem.key} style={`--gem-color: ${gemColors[gem.key] ?? 'var(--color-accent-bright)'}`}>
+            <span class="gems-node__gem" aria-hidden="true"></span>
+            <span class="gems-node__name">{gem.name}</span>
+            <span class="gems-node__role">{gem.role}</span>
+            <span class="gems-node__state"><span aria-hidden="true"></span>{gem.state}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <figcaption class="gems-system__caption">
+    <span class="gems-system__state">Conceptual diagram</span>
+    <span class="gems-system__text">
+      GEMS learning system: one shared Training Grounds program runs a seven-stage cycle; four independent lineages advance only when evidence supports it.
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  .gems-system { margin: 0; }
+  .gems-system__frame {
+    position: relative;
+    overflow: hidden;
+    padding: 1rem 1.4rem 1.3rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(rgba(85, 138, 231, 0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(85, 138, 231, 0.028) 1px, transparent 1px),
+      radial-gradient(58rem 40rem at 50% 8%, rgba(29, 58, 122, 0.16), transparent 68%),
+      #070b12;
+    background-size: 44px 44px, 44px 44px, auto, auto;
+    box-shadow: var(--shadow-md), inset 0 1px rgba(255, 255, 255, 0.045);
+  }
+  .gems-system__frame::before {
+    position: absolute;
+    z-index: 4;
+    top: 1.05rem;
+    left: 1.4rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--color-status-experimental);
+    box-shadow: 0 0 10px var(--color-status-experimental);
+    content: '';
+  }
+  .gems-system__frame::after {
+    position: absolute;
+    inset: 0.55rem;
+    border: 1px solid rgba(111, 163, 255, 0.07);
+    border-radius: var(--radius-md);
+    content: '';
+    pointer-events: none;
+  }
+  .gems-system__hud {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 0.4rem;
+    padding-left: 0.9rem;
+    color: var(--color-text-subtle);
+    font: 700 0.62rem/1.4 var(--font-mono);
+    letter-spacing: 0.13em;
+  }
+
+  .gems-stage {
+    position: relative;
+    width: min(100%, 40rem);
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+
+  .gems-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .gems-art__field path { fill: none; stroke: rgba(111, 163, 255, 0.09); stroke-width: 1; }
+  .gems-art__field circle { fill: rgba(148, 183, 255, 0.16); }
+  .gems-art__calib { fill: none; stroke: rgba(111, 163, 255, 0.1); stroke-width: 1; }
+  .gems-art__ticks path { stroke: rgba(148, 183, 255, 0.12); stroke-width: 1; }
+  .gems-art__ticks .tick--major { stroke: rgba(148, 183, 255, 0.22); stroke-width: 1.4; }
+
+  .gems-art__connectors path { stroke: rgba(76, 106, 168, 0.62); stroke-width: 2; fill: none; }
+  .gems-art__pulse path {
+    stroke: #7fa3ff;
+    stroke-width: 2.4;
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 15 381;
+    opacity: 0.55;
+    animation: gemsTravel 5.4s linear infinite;
+  }
+  .gems-art__pulse--out path { stroke-dasharray: 9 387; animation-duration: 7.1s; opacity: 0.4; }
+  @keyframes gemsTravel { from { stroke-dashoffset: 396; } to { stroke-dashoffset: 0; } }
+
+  .gems-art__ring path { stroke: rgba(58, 86, 140, 0.78); stroke-width: 26; fill: none; }
+  .gems-art__ring-glow path {
+    stroke: #6fa3ff;
+    stroke-width: 26;
+    fill: none;
+    opacity: 0;
+    animation: gemsStageLight 7.7s linear infinite;
+  }
+  @keyframes gemsStageLight { 0% { opacity: 0; } 5% { opacity: 0.8; } 24% { opacity: 0.24; } 42% { opacity: 0; } 100% { opacity: 0; } }
+
+  .gems-art__track { fill: none; stroke: rgba(111, 163, 255, 0.14); stroke-width: 1; stroke-dasharray: 2 7; }
+  .gems-art__core { fill: url(#gemsCore); stroke: rgba(95, 133, 210, 0.5); stroke-width: 1.4; animation: gemsCoreBreath 7.7s ease-in-out infinite; }
+  @keyframes gemsCoreBreath { 0%, 78% { stroke-opacity: 0.5; } 86% { stroke-opacity: 0.95; } 100% { stroke-opacity: 0.5; } }
+
+  /* Training Grounds core — real HTML text over the SVG disc */
+  .gems-core-wrap { position: absolute; inset: 0; z-index: 2; width: 38%; aspect-ratio: 1; margin: auto; }
+  .gems-core {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    padding: 8%;
+    border-radius: 50%;
+    text-align: center;
+  }
+  .gems-core__name { color: var(--color-text); font-size: clamp(0.78rem, 1.75vw, 1rem); font-weight: 800; letter-spacing: 0.02em; line-height: 1.12; text-wrap: balance; }
+  .gems-core__sub { color: var(--color-accent-bright); font: 700 clamp(0.5rem, 1vw, 0.58rem)/1 var(--font-mono); letter-spacing: 0.17em; text-transform: uppercase; }
+  .gems-core__gate { color: var(--color-text-subtle); font: 650 clamp(0.46rem, 0.9vw, 0.54rem)/1.35 var(--font-mono); letter-spacing: 0.09em; text-transform: uppercase; }
+
+  /* Learning cycle: ring labels on desktop, stepped list on mobile */
+  .gems-cycle { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; counter-reset: stage; }
+  .gems-cycle li {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transform: translate(-50%, -50%);
+    color: #93a5c6;
+    font: 700 clamp(0.55rem, 1.5vw, 0.68rem)/1 var(--font-mono);
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    animation: gemsLabelLight 7.7s linear infinite;
+    animation-delay: var(--d, 0s);
+  }
+  @keyframes gemsLabelLight { 0% { color: #93a5c6; } 6% { color: #eaf2ff; } 30% { color: #93a5c6; } 100% { color: #93a5c6; } }
+  .gems-cycle__num { display: none; color: var(--color-accent-bright); }
+
+  /* GEM lineage nodes */
+  .gems-nodes { display: contents; }
+  .gems-node {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.22rem;
+    width: min(19%, 12rem);
+    padding: 0.62rem 0.55rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--gem-color) 42%, var(--color-border));
+    border-radius: 0.7rem;
+    background: #0c1424;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px rgba(255, 255, 255, 0.05);
+    text-align: center;
+  }
+  .gems-node__gem { width: 0.42rem; height: 0.42rem; background: var(--gem-color); box-shadow: 0 0 8px color-mix(in srgb, var(--gem-color) 70%, transparent); rotate: 45deg; }
+  .gems-node__name { color: var(--gem-color); font-size: clamp(0.72rem, 1.5vw, 0.86rem); font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; line-height: 1; }
+  .gems-node__role { color: var(--color-text-muted); font-size: clamp(0.6rem, 1.3vw, 0.72rem); line-height: 1.35; }
+  .gems-node__state { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.14rem; color: var(--gem-color); font: 700 clamp(0.52rem, 1.1vw, 0.6rem)/1 var(--font-mono); letter-spacing: 0.13em; }
+  .gems-node__state span { width: 0.3rem; height: 0.3rem; border-radius: 50%; background: var(--gem-color); }
+  .gems-node[data-gem='topaz'] { top: 0; left: 50%; transform: translateX(-50%); }
+  .gems-node[data-gem='sapphire'] { top: 50%; left: 0; transform: translateY(-50%); }
+  .gems-node[data-gem='peridot'] { top: 50%; right: 0; transform: translateY(-50%); }
+  .gems-node[data-gem='garnet'] { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+  .gems-system__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.8rem;
+    align-items: baseline;
+    margin-top: 0.6rem;
+    color: var(--color-text-subtle);
+    font: 0.72rem/1.5 var(--font-mono);
+  }
+  .gems-system__state { color: var(--color-status-experimental); font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+
+  /* Vertical system stack: the diagram restructures instead of shrinking */
+  @media (max-width: 640px) {
+    .gems-system__frame { padding: 0.9rem 1rem 1.1rem; }
+    .gems-system__hud { padding-left: 0.8rem; font-size: 0.56rem; }
+    .gems-stage { display: flex; flex-direction: column; align-items: stretch; width: 100%; aspect-ratio: auto; }
+    .gems-art { display: none; }
+
+    .gems-core-wrap { position: static; order: 3; width: 100%; aspect-ratio: auto; margin: 0.4rem 0; }
+    .gems-core { position: relative; inset: auto; padding: 1.15rem 1rem; border: 1px solid rgba(95, 133, 210, 0.45); border-radius: var(--radius-lg); background: radial-gradient(120% 120% at 50% 0%, rgba(27, 49, 88, 0.55), rgba(10, 20, 38, 0.9)); box-shadow: inset 0 1px rgba(255, 255, 255, 0.05); }
+    .gems-core__name { font-size: 1.02rem; }
+    .gems-core__sub { font-size: 0.56rem; }
+    .gems-core__gate { font-size: 0.52rem; }
+
+    .gems-cycle { position: static; margin-top: 0.9rem; }
+    .gems-cycle li { position: static; transform: none; justify-content: flex-start; padding: 0.42rem 0.2rem; border-bottom: 1px solid rgba(111, 163, 255, 0.09); font-size: 0.72rem; animation: none; }
+    .gems-cycle li:last-child { border-bottom: 0; }
+    .gems-cycle__num { display: inline; min-width: 1.55rem; font-size: 0.62rem; }
+    .gems-cycle__label { color: var(--color-text-muted); }
+    .gems-cycle li { color: var(--color-text-muted); }
+
+    .gems-nodes { display: contents; }
+    /* (0,2,0) specificity: must tie with the desktop per-GEM placement rules
+       so their absolute offsets lose the cascade here. */
+    .gems-node[data-gem] { position: relative; inset: auto; transform: none; order: 0; width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.2rem 0.6rem; padding: 0.7rem 0.8rem; margin: 0.55rem 0; }
+    .gems-node__role { flex-basis: 100%; }
+    .gems-node[data-gem='topaz'] { order: 1; margin-top: 0; }
+    .gems-node[data-gem='sapphire'] { order: 2; }
+    .gems-node[data-gem='peridot'] { order: 4; }
+    .gems-node[data-gem='garnet'] { order: 5; margin-bottom: 0; }
+
+    /* Short vertical connectors stitch the stack together */
+    .gems-node::after, .gems-core-wrap::before, .gems-core-wrap::after {
+      position: absolute;
+      left: 50%;
+      width: 1px;
+      height: 1.35rem;
+      background: linear-gradient(180deg, rgba(94, 127, 201, 0.7), rgba(94, 127, 201, 0.12));
+      content: '';
+    }
+    .gems-node::after { top: 100%; }
+    .gems-node[data-gem='sapphire']::after { height: 0.9rem; }
+    .gems-core-wrap::before { top: -0.95rem; height: 0.9rem; }
+    .gems-core-wrap::after { top: 100%; height: 0.9rem; background: linear-gradient(180deg, rgba(94, 127, 201, 0.12), rgba(94, 127, 201, 0.7)); }
+    .gems-node[data-gem='garnet']::after { display: none; }
+  }
+
+  @media (max-width: 400px) {
+    .gems-node__role { font-size: 0.66rem; }
+    .gems-cycle li { font-size: 0.68rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gems-art__pulse path, .gems-art__ring-glow path, .gems-art__core, .gems-cycle li { animation: none; }
+    .gems-art__ring-glow path { opacity: 0.14; }
+    .gems-art__core { stroke-opacity: 0.7; }
+  }
+
+  @media (forced-colors: active) {
+    .gems-art { display: none; }
+    .gems-node, .gems-core { border-color: CanvasText; }
+  }
+</style>
