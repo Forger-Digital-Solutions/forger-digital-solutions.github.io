@@ -1,0 +1,128 @@
+{
+  "verdict": "KAYLA_PHASE10_CERTIFIED",
+  "verdictReason": "Phase 10 requirements certified end-to-end. Single source-of-truth knowledge derivation established across projects, products, gems, status, and config. Releases.ts dynamic derivation eliminated hardcoded version drift. Canonical knowledge registry and deterministic 16-hex knowledge versioning implemented and wired into Worker health/diagnostics (be8d05ff146c8c98 deployed and locally matching). Automated drift detector with 8 integrity checks and Public Knowledge Coverage Matrix integrated into npm run validate. 12 mutation/drift tests proven with vitest (678/678 passed across 41 files). Golden query suite expanded from 249 to 277 queries with 100.0% accuracy across all tiers (Tier 1: 103/103 100%, Tier 2: 141/141 100%, Tier 3: 33/33 100%). Zero provider calls on golden corpus (86.3% avoided overall). Worker deployed to production (version 76581247-3403-43e7-a83c-15a8c40c4d1d) and live verified. Zero paid dependencies added.",
+  "branch": "main",
+  "baseCommit": "8fc7e82e45d2f243d8ced0700b97c40aace9e214",
+  "knowledgeVersion": "be8d05ff146c8c98",
+  "gates": {
+    "vitest": {
+      "baseline": "665 passed (39 files)",
+      "certified": "678 passed (41 files)",
+      "match": true
+    },
+    "goldenQueries": {
+      "baseline": "249 / 249 (100.0%)",
+      "certified": "277 / 277 (100.0%)",
+      "tier1": "103 / 103 (100.0%)",
+      "tier2": "141 / 141 (100.0%)",
+      "tier3": "33 / 33 (100.0%)",
+      "match": true
+    },
+    "retrievalEval": {
+      "baseline": "25 / 25 (100.0%)",
+      "certified": "25 / 25 (100.0%)",
+      "match": true
+    },
+    "routingEfficiency": {
+      "corpusSize": 277,
+      "deterministic": 169,
+      "localOnly": 70,
+      "providerEligible": 38,
+      "avoidedProviderCalls": 239,
+      "avoidedProviderCallsPct": 86.3
+    },
+    "knowledgeCheck": {
+      "knowledgeVersion": "be8d05ff146c8c98",
+      "canonicalEntities": 20,
+      "canonicalProjects": 6,
+      "canonicalProducts": 2,
+      "gemsLineages": 4,
+      "recognizedStatuses": 6,
+      "canonicalRoutes": 19,
+      "semanticRelations": 22,
+      "deniedRelations": 11,
+      "publishedReleases": 2,
+      "retrievalDocuments": 67,
+      "canonicalExternalLinks": 7,
+      "routeIntegrity": "PASS",
+      "statusConsistency": "PASS",
+      "availabilityConsistency": "PASS",
+      "releaseConsistency": "PASS",
+      "relationIntegrity": "PASS",
+      "retrievalCoverage": "PASS",
+      "driftErrors": 0,
+      "driftWarnings": 0,
+      "status": "PASS"
+    },
+    "astroCheck": {
+      "files": 93,
+      "errors": 0,
+      "warnings": 0,
+      "hints": 0
+    },
+    "build": {
+      "pagesBuilt": 26,
+      "status": "PASS"
+    },
+    "links": {
+      "checked": 930,
+      "broken": 0
+    },
+    "secretScan": "PASS",
+    "workerBuild": {
+      "totalUploadKiB": 261.36,
+      "gzipKiB": 68.66,
+      "dryRunDeploy": "PASS"
+    },
+    "deployPolicy": "PASS",
+    "playwrightE2E": {
+      "tests": 27,
+      "passed": 27,
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "status": "PASS"
+    }
+  },
+  "deployment": {
+    "endpoint": "https://kayla-api.forgerdigitalsolutions.workers.dev",
+    "startingWorkerVersion": "d1f151d2-0c0c-4d4d-863a-e75096068cb9",
+    "finalWorkerVersion": "76581247-3403-43e7-a83c-15a8c40c4d1d",
+    "knowledgeVersion": "be8d05ff146c8c98",
+    "knowledgeAlignment": "EXACT_MATCH",
+    "liveVerified": true
+  },
+  "driftElimination": {
+    "releasesHardcoding": "Replaced hardcoded CodeForge v0.2.0 and download URL in src/data/kayla/releases.ts with dynamic derivation from src/data/products.ts",
+    "ambiguousAliases": "Added ambiguous alias resolution to entities.ts disambiguating kayla between kayla-copilot and kayla-ai-publisher using query keywords, page context, and history",
+    "retrievalCoverage": "Dynamic project doc generation in retrieval.ts ensures every project in projects.ts has a KNOWLEDGE_BASE document",
+    "semanticRelations": "CanonicalRelations and deniedRelations validated against CANONICAL_ENTITIES with zero collision tolerance",
+    "forgedAlignment": "Forged storefront items, products with download URLs, and downloadableNow() matrix strictly validated"
+  },
+  "mutationTests": [
+    "detects mutated release version metadata mismatch (VERSION_METADATA_MISMATCH)",
+    "detects unknown project status value (UNKNOWN_PROJECT_STATUS)",
+    "detects project with missing canonical route (MISSING_PROJECT_ROUTE)",
+    "detects RELEASED project missing download URL (RELEASED_PROJECT_MISSING_DOWNLOAD_URL)",
+    "detects RESEARCH project incorrectly marked downloadable (RESEARCH_PROJECT_CANNOT_BE_DOWNLOADABLE)",
+    "detects PRIVATE DEVELOPMENT project with downloadable assets (PRIVATE_DEV_CANNOT_BE_DOWNLOADABLE)",
+    "detects canonical relation with unknown subject entity (INVALID_RELATION_SUBJECT)",
+    "detects collision where a claim is in both canonicalRelations and deniedRelations (CONTRADICTORY_RELATION)",
+    "detects missing retrieval document for a public project (MISSING_RETRIEVAL_DOCUMENT)",
+    "detects missing retrieval document for a GEMS lineage (MISSING_RETRIEVAL_DOCUMENT)",
+    "disambiguates ambiguous alias based on query keywords and context",
+    "produces deterministic knowledge version hash that mutates on data change"
+  ],
+  "newFiles": [
+    "src/lib/kayla/hash.ts",
+    "src/data/kayla/canonical-registry.ts",
+    "src/data/kayla/drift-detector.ts",
+    "scripts/kayla-knowledge-check.mjs",
+    "test/kayla-phase10-drift.test.ts",
+    "test/kayla-phase10-drift-mutation.test.ts",
+    "docs/kayla/audit/kayla-phase10-certification.md",
+    "docs/kayla/audit/kayla-phase10-receipt.json"
+  ]
+}

@@ -4,6 +4,7 @@ import { isOriginAllowed, buildCorsHeaders, type CorsOptions } from '../src/lib/
 import { evaluateModelPolicy, ZERO_COST_POLICY } from '../src/lib/kayla/model-policy';
 import { KaylaAbuseGuard, createLimiterIdentifier } from './abuse-guard';
 import type { KaylaDiagnostics } from '../src/lib/kayla/diagnostics';
+import { getCanonicalKnowledgeVersion } from '../src/data/kayla/canonical-registry';
 
 interface DurableStub { fetch(request: Request | string, init?: RequestInit): Promise<Response>; }
 interface DurableNamespace { idFromName(name: string): unknown; get(id: unknown): DurableStub; }
@@ -53,6 +54,7 @@ export default {
       const budget = await readAIBudget(env, config.aiDailyRequestLimit);
       return finalize(json({
         status: limiterReady ? 'ok' : 'degraded', knowledgeReady: true,
+        knowledgeVersion: getCanonicalKnowledgeVersion(),
         aiEnabled: config.enabled, aiConfigured: config.enabled && Boolean(config.apiKey) && policy.eligible,
         aiAvailable: config.enabled && Boolean(config.apiKey) && policy.eligible && budget.remaining > 0,
         aiConfiguredButExhausted: config.enabled && Boolean(config.apiKey) && policy.eligible && budget.remaining <= 0,
@@ -99,6 +101,7 @@ export default {
         console.log(JSON.stringify({
           event: 'kayla_request_diagnostics',
           requestId,
+          knowledgeVersion: getCanonicalKnowledgeVersion(),
           durationMs: Date.now() - started,
           ...diagnostics
         }));

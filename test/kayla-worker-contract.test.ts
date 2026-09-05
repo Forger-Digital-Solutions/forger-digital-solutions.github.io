@@ -57,6 +57,8 @@ describe('Kayla Worker - health', () => {
     expect(response.status).toBe(200);
     const body = await response.json() as Record<string, unknown>;
     expect(body.knowledgeReady).toBe(true);
+    expect(typeof body.knowledgeVersion).toBe('string');
+    expect(body.knowledgeVersion).toHaveLength(16);
     expect(body.modelPolicy).toBe('zero-cost-only');
     expect(body.rateLimiter).toBe('ready');
   });

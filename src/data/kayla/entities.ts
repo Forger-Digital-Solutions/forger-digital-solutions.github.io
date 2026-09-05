@@ -237,3 +237,72 @@ export function matchEntity(query: string): string | undefined {
 export function getKaylaEntity(id: string): KaylaEntity | undefined {
   return entities.find((entity) => entity.id === id);
 }
+
+export interface AmbiguousAliasDefinition {
+  alias: string;
+  candidates: string[];
+  disambiguate: (
+    query: string,
+    context?: { route?: string; pageType?: string; entity?: string },
+    history?: { role?: string; content?: string }[]
+  ) => string | undefined;
+}
+
+export const AMBIGUOUS_ALIASES: AmbiguousAliasDefinition[] = [
+  {
+    alias: 'kayla',
+    candidates: ['kayla-copilot', 'kayla-ai-publisher'],
+    disambiguate: (query, context, history) => {
+      const q = normalize(query);
+      // Explicit assistant context: who are you, website guide, chatbot
+      if (/\b(who are you|your name|you|copilot|assistant|help me|guide|bot|website guide|site guide)\b/.test(q)) {
+        return 'kayla-copilot';
+      }
+      // Explicit publishing / creative writing context
+      if (/\b(publisher|publishing|manuscript|book|writing|story|novel|author|chapters|drafts)\b/.test(q)) {
+        return 'kayla-ai-publisher';
+      }
+      // Page context: currently viewing Kayla AI Publisher detail page
+      if (context?.entity === 'kayla-ai-publisher' || context?.route?.includes('kayla-ai-publisher')) {
+        return 'kayla-ai-publisher';
+      }
+      // Conversation history context: previous turns discussed publishing or copilot
+      if (history && history.length > 0) {
+        const lastFew = history.slice(-3).map((h) => (h.content || '').toLowerCase()).join(' ');
+        if (/\b(publisher|publishing|manuscript|book|novel)\b/.test(lastFew)) {
+          return 'kayla-ai-publisher';
+        }
+        if (/\b(copilot|assistant|you|who are you)\b/.test(lastFew)) {
+          return 'kayla-copilot';
+        }
+      }
+      return undefined;
+    }
+  }
+];
+
+export function resolveEntityWithContext(
+  query: string,
+  context?: { route?: string; pageType?: string; entity?: string },
+  history?: { role?: string; content?: string }[]
+): string | undefined {
+  const matched = matchEntity(query);
+  if (matched) return matched;
+
+  const normalized = normalize(query);
+  const tokens = tokenize(query);
+
+  for (const item of AMBIGUOUS_ALIASES) {
+    if (tokens.includes(item.alias) || normalized.includes(item.alias)) {
+      const resolved = item.disambiguate(query, context, history);
+      if (resolved) return resolved;
+    }
+  }
+
+  if (context?.entity && getKaylaEntity(context.entity)) {
+    return context.entity;
+  }
+
+  return undefined;
+}
+

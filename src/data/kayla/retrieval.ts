@@ -595,3 +595,10 @@ export function toKnowledgeResult(scored: KaylaScoredResult): KaylaKnowledgeResu
 export function getRetrievalIndexSize(): number {
   return entityIndex.size;
 }
+
+export function getAllDocuments(): KaylaDocument[] {
+  return Array.from(entityIndex.values());
+}
+
+export { entityIndex };
+

@@ -199,7 +199,10 @@ const RULES: IntentRule[] = [
       /\b(cash ?app|ko-?fi|patreon|paypal|venmo|github sponsors)\b/,
       /\bdonate .{0,20}(hardware|computers?|laptops?|gpus?|equipment|tech|pcs?|servers?)\b/,
       /\b(hardware|equipment|old (tech|computer)) donation\b/,
-      /\bgive .{0,20}(old|used) (tech|hardware|computers?|laptops?)\b/
+      /\bgive .{0,20}(old|used) (tech|hardware|computers?|laptops?)\b/,
+      /\b(donation|donate|donating|support|supporting)\s+(routes?|channels?|links?|methods?|options?|pages?|ways?)\b/,
+      /\b(where|how)\s+can\s+i\s+(send|give)\s+(money|donations?|funds?|support)\b/,
+      /\bwhat\s+(is|are)\s+(the\s+)?(official\s+)?(donation|support|funding)\s+(routes?|channels?|links?|methods?|options?|pages?|ways?)\b/
     ]
   },
   {
@@ -235,9 +238,9 @@ const RULES: IntentRule[] = [
       // projects", "which ML tools") is ordinary phrasing the bare form
       // missed, and fell through to keyword retrieval instead of the
       // ecosystem-aware canonical listing.
-      /\b(what|which) (fds |your |the )?(ai |ml |machine learning |research |software |developer )?(projects|apps|applications|products|software|tools)\b/,
+      /\b(what|which) (fds |your |the )?(ai |ml |machine learning |research |software |developer )?(projects?|apps?|applications?|products?|software|tools?)\b/,
       /\bwhich (ones?|of (them|these))\b.{0,30}\b(public|available|released|research|development|downloadable|use)\b/,
-      /\b(show|list|see) (me )?(all |the )?(projects|apps|applications|products|software|everything)\b/,
+      /\b(show|list|see) (me )?(all |the )?(projects?|apps?|applications?|products?|software|everything)\b/,
       /\bwhat (do|does) (you|fds|they) (build|make|do|offer|work on)\b/,
       /\bwhat.{0,6}s (available|out) (now|today)\b/,
       /\beverything (you|fds) (build|make|offer)\b/,

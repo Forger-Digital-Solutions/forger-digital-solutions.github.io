@@ -78,6 +78,7 @@ try {
       tier: query.tier,
       category: query.category,
       question: query.question,
+      canonicalRefs: query.canonicalRefs || [],
       layer: top.sourceType || 'none',
       intent: top.intent || null,
       routeMode: response.routeMode || null,
@@ -132,6 +133,9 @@ try {
       console.log('-'.repeat(56));
       for (const failure of failures) {
         console.log(`FAIL [${failure.id}] ${failure.question}`);
+        if (failure.canonicalRefs && failure.canonicalRefs.length) {
+          console.log(`   Canonical Ref: ${failure.canonicalRefs.join(', ')} (verify if canonical source was intentionally changed)`);
+        }
         if (failure.missing.length) console.log(`   missing: ${failure.missing.join('  //  ')}`);
         if (failure.forbidden.length) console.log(`   forbidden present: ${failure.forbidden.join(', ')}`);
         if (failure.structuralFailures.length) console.log(`   structural: ${failure.structuralFailures.join('  //  ')}`);

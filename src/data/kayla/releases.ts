@@ -1,13 +1,17 @@
 import type { KaylaRelease } from './types';
 import { products } from '../products';
 
+const codeforgeProduct = products.find((product) => product.slug === 'codeforge');
 const forgeremsProduct = products.find((product) => product.slug === 'forgerems');
 
 export const releases: KaylaRelease[] = [
   {
-    appId: 'codeforge', version: 'v0.2.0', status: 'stable', date: '2026-08-29',
+    appId: 'codeforge',
+    version: codeforgeProduct?.version || 'v0.2.0',
+    status: 'stable',
+    date: '2026-08-29',
     notes: 'Released Windows build of the free-first autonomous software-engineering platform.',
-    downloads: ['https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest'],
+    downloads: codeforgeProduct?.downloadUrl ? [codeforgeProduct.downloadUrl] : ['https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest'],
     changelog: 'Installer and portable builds with published SHA-256 checksums.'
   },
   {

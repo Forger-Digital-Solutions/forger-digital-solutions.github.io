@@ -287,6 +287,17 @@ function capabilityAnswer(entityId: string, query: string): CanonicalAnswer | un
  */
 function relationshipAnswer(query: string, entityIds: string[]): CanonicalAnswer | undefined {
   const text = normalize(query);
+
+  if (/\bgems?\b/.test(text) && /\btraining grounds?\b/.test(text) && /\b(relationship|between|connect|fit together|work together|difference)\b/.test(text)) {
+    return {
+      text: 'GEMS is the research family of specialized model lineages (Topaz, Sapphire, Peridot, Garnet), while Training Grounds is the environment that teaches, evaluates, and advances them. Training Grounds owns the shared evaluation and advancement discipline across all GEMS lineages.',
+      actions: [{ type: 'OPEN_APP', label: 'View GEMS / Training Grounds', href: '/projects/gems-training-grounds' }],
+      sources: ['app-gems-training-grounds', 'semantic-relations'],
+      intent: 'comparison',
+      settled: true
+    };
+  }
+
   const subjects = entityIds.filter((id) => getKaylaEntity(id));
   if (subjects.length < 2) return undefined;
 
@@ -541,6 +552,9 @@ function listFilter(query: string): { label: string; keep: (slug: string) => boo
       keep: (slug) => products.some((entry) => (entry.projectSlug || entry.slug) === slug && Boolean(entry.downloadUrl))
     };
   }
+  if (/\b(private development|private)\b/.test(text)) {
+    return { label: 'in private development', keep: (slug) => project(slug)?.status === 'PRIVATE DEVELOPMENT' };
+  }
   if (/\b(in development|being built|active development|worked on|still building)\b/.test(text)) {
     return { label: 'in active development', keep: (slug) => Boolean(project(slug)?.status.includes('DEVELOPMENT')) };
   }
@@ -732,7 +746,15 @@ function recommendationAnswer(query: string): CanonicalAnswer | undefined {
   };
 }
 
-function navigationAnswer(entityId?: string): CanonicalAnswer | undefined {
+function navigationAnswer(entityId?: string, query?: string): CanonicalAnswer | undefined {
+  if (query && /\b(github|repo|repository|source code)\b/i.test(query)) {
+    return {
+      text: `The official GitHub organization for Forger Digital Solutions is ${siteConfig.githubUrl}.`,
+      actions: [{ type: 'OPEN_GITHUB', label: 'FDS on GitHub', href: siteConfig.githubUrl }],
+      sources: ['site-navigation'],
+      intent: 'navigation'
+    };
+  }
   if (entityId) {
     const entity = getKaylaEntity(entityId);
     if (entity?.route) {
@@ -1243,6 +1265,11 @@ export function canonicalAnswer(
   if (has('support')) return supportAnswer(query);
   if (has('founder')) return founderAnswer();
 
+  if (has('list') || has('recommendation')) {
+    const filtered = filteredListAnswer(query);
+    if (filtered) return filtered;
+  }
+
   if (has('recommendation') && !entityIds.some((id) => getKaylaEntity(id)?.kind === 'project' || getKaylaEntity(id)?.kind === 'product' || getKaylaEntity(id)?.kind === 'gem')) {
     const answer = recommendationAnswer(query);
     if (answer) return answer;
@@ -1264,11 +1291,6 @@ export function canonicalAnswer(
       sources: ['fds-contact'],
       intent: 'contact'
     };
-  }
-
-  if (has('list') || has('recommendation')) {
-    const filtered = filteredListAnswer(query);
-    if (filtered) return filtered;
   }
 
   if (has('roadmap')) return roadmapAnswer(primaryEntity);
@@ -1296,7 +1318,7 @@ export function canonicalAnswer(
       if (answer) return answer;
     }
     if (has('navigation')) {
-      const answer = navigationAnswer(primaryEntity);
+      const answer = navigationAnswer(primaryEntity, query);
       if (answer) return answer;
     }
     if (has('capability')) {
@@ -1329,7 +1351,7 @@ export function canonicalAnswer(
     };
   }
 
-  if (has('navigation')) return navigationAnswer(primaryEntity);
+  if (has('navigation')) return navigationAnswer(primaryEntity, query);
   if (has('list')) return listAnswer();
 
   return undefined;
