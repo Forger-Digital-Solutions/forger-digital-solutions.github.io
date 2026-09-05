@@ -11,6 +11,9 @@ import { toKaylaSources } from './sources';
 import { dedupeActions } from './actions';
 import { classifyIntent } from '../../data/kayla/intents';
 import { buildTaskPlan, type KaylaTaskPlan } from './task-planner';
+import { resolveConversation } from './conversation';
+import { conversationAnswer, rankConversationActions } from './conversation-answer';
+import { buildGroundingPacket, verifyGroundedSlots } from './grounding';
 import {
   classifyProviderError,
   emptyDiagnostics,
@@ -179,7 +182,7 @@ function logCanonRejection(kinds: string[]): void {
  * Accept generated text only when it agrees with canonical FDS data.
  * Returns the text to use, and whether the model's version was discarded.
  */
-function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
+function acceptGenerated(text: string, sources: KaylaKnowledgeResult[] = []): { accepted: boolean; kinds: string[] } {
   // Shape before substance. Canonical verification asks whether an answer is
   // true, which it cannot do for text that makes no claim — raw tool-call
   // scaffolding passed verification in production and was served to a visitor.
@@ -187,6 +190,17 @@ function acceptGenerated(text: string): { accepted: boolean; kinds: string[] } {
   if (!shape.ok) {
     logCanonRejection(shape.kinds);
     return { accepted: false, kinds: shape.kinds };
+  }
+
+  // The canonical verifier protects the known FDS facts. The grounding packet
+  // also constrains the generated slots that are easy to invent safely enough
+  // to evade a fact match: URLs, prices, dates, platforms, model names, and
+  // availability language. It is built from the exact bounded evidence sent
+  // to the provider for this request.
+  const grounded = verifyGroundedSlots(text, buildGroundingPacket(sources));
+  if (!grounded.ok) {
+    logCanonRejection(grounded.kinds);
+    return { accepted: false, kinds: grounded.kinds };
   }
 
   const verdict = verifyAgainstCanon(text);
@@ -272,7 +286,10 @@ export async function handleKaylaChat(
     };
   }
 
-  const { message, history, context } = validation.data;
+  const { message: rawMessage, context } = validation.data;
+  const conversation = resolveConversation(rawMessage, validation.data.history, context);
+  const message = conversation.resolvedQuery;
+  const history = conversation.history;
   const taskPlan = buildTaskPlan(message, context, history);
   const taskDiag = { goal: taskPlan.goal, plannedEntityCount: taskPlan.entities.length };
 
@@ -293,7 +310,17 @@ export async function handleKaylaChat(
   const localProvider = createProvider();
   let sources: KaylaKnowledgeResult[];
   try {
-    sources = await localProvider.search(message, context, history);
+    const retrieved = await localProvider.search(message, context, history);
+    const composed = conversationAnswer(conversation);
+    // conversationAnswer only returns a defined result for turns it is
+    // narrowly scoped to handle (clarification, corrections, goal or entity
+    // continuity, multi-entity synthesis, high-risk overrides); every other
+    // turn falls through undefined and the standalone canonical/retrieval
+    // lane below remains authoritative.
+    sources = composed && composed.length ? composed : (retrieved.length ? retrieved : []);
+    const actions = rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
+    taskPlan.recommendedActions = actions;
+    if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };
   } catch {
     reportDiagnostics(config, undefined, 'no_results', { fallbackReason: 'retrieval_failure', ...taskDiag });
     return {
@@ -368,7 +395,7 @@ export async function handleKaylaChat(
     // The model may phrase a canonical fact; it may not change one. When the
     // generated answer contradicts the site's data, the canonical answer that
     // was already computed above is served instead.
-    const verdict = acceptGenerated(aiResponse.content);
+    const verdict = acceptGenerated(aiResponse.content, sources);
     if (!verdict.accepted) {
       reportDiagnostics(config, sources[0], 'provider_replaced', {
         providerAttempted: true,
@@ -453,7 +480,10 @@ export async function* streamKaylaChat(
     return;
   }
 
-  const { message, history, context } = validation.data;
+  const { message: rawMessage, context } = validation.data;
+  const conversation = resolveConversation(rawMessage, validation.data.history, context);
+  const message = conversation.resolvedQuery;
+  const history = conversation.history;
   const taskPlan = buildTaskPlan(message, context, history);
   const taskDiag = { goal: taskPlan.goal, plannedEntityCount: taskPlan.entities.length };
 
@@ -470,7 +500,12 @@ export async function* streamKaylaChat(
   }
 
   const localProvider = createProvider();
-  const sources = await localProvider.search(message, context, history);
+  const retrieved = await localProvider.search(message, context, history);
+  const composed = conversationAnswer(conversation);
+  const sources = composed && composed.length ? composed : (retrieved.length ? retrieved : []);
+  const actions = rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
+  taskPlan.recommendedActions = actions;
+  if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };
 
   const settled = deterministicAnswer(sources);
   if (settled) {
@@ -597,7 +632,7 @@ export async function* streamKaylaChat(
     }
 
     // Full buffer canonical verification: never stream unverified tokens to the visitor
-    const verdict = acceptGenerated(bufferedText);
+    const verdict = acceptGenerated(bufferedText, sources);
     if (!verdict.accepted) {
       reportDiagnostics(config, topResult, 'provider_replaced', {
         providerAttempted: true,

@@ -34,6 +34,7 @@
     "kayla:perf": "node scripts/kayla-perf.mjs",
     "kayla:load-test": "node scripts/kayla-load-test.mjs",
     "kayla:do-race": "node scripts/kayla-do-race.mjs"
+    ,"kayla:conversation-eval": "node scripts/kayla-conversation-eval.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

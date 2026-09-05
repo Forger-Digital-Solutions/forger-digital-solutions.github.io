@@ -278,7 +278,7 @@ describe('The provider request carries the grounding contract', () => {
     scriptedReply = 'an answer';
     await handleKaylaChat(
       {
-        message: 'How is that different?',
+        message: 'Compare Sapphire and Topaz.',
         history: [{ role: 'user', content: 'What is Sapphire?' }, { role: 'assistant', content: 'Sapphire is the coding lineage.' }],
         context: { route: '/', pageType: 'home' }
       },
@@ -292,7 +292,7 @@ describe('The provider request carries the grounding contract', () => {
   it('passes page context through to the provider', async () => {
     scriptedReply = 'an answer';
     await handleKaylaChat(
-      { message: 'Explain this project in depth', history: [], context: { route: '/projects/codeforge', pageType: 'project', entity: 'codeforge' } },
+      { message: 'Compare CodeForge and GEMS.', history: [], context: { route: '/projects/codeforge', pageType: 'project', entity: 'codeforge' } },
       endpoint
     );
     expect(capturedRequests.at(-1)!.context?.entity).toBe('codeforge');
