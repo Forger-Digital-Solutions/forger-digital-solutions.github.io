@@ -129,6 +129,9 @@ test.describe('Stale, duplicate, and cancelled requests', () => {
   });
 
   test('slow stream shows loading + Stop; Stop cancels cleanly and layout holds', async ({ page }) => {
+    // Step budget, not a sleep: fixed 1200ms route delay plus several
+    // sequential settles must fit even when parallel workers contend CPU.
+    test.setTimeout(90_000);
     await page.route(CHAT_ROUTE, (route: Route) => new Promise<void>((resolve) => {
       setTimeout(() => { void route.fulfill({ status: 200, contentType: 'application/x-ndjson', body: ndjson(DOWNLOAD_ANSWER) }).then(resolve); }, 1200);
     }));
@@ -277,6 +280,7 @@ test.describe('Real navigation journeys', () => {
   });
 
   test('action -> project page -> Back keeps the widget functional', async ({ page }) => {
+    test.setTimeout(90_000); // Step budget: navigation plus chat settles under parallel load.
     await page.route(CHAT_ROUTE, (route: Route) =>
       route.fulfill({ status: 200, contentType: 'application/x-ndjson', body: ndjson(DOWNLOAD_ANSWER) })
     );
@@ -331,6 +335,7 @@ test.describe('Real navigation journeys', () => {
   });
 
   test('closing mid-request then reopening shows the settled answer without errors', async ({ page }) => {
+    test.setTimeout(90_000); // Step budget: fixed 800ms delay plus reopen settle.
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(String(error)));
     await page.route(CHAT_ROUTE, (route: Route) => new Promise<void>((resolve) => {
@@ -352,6 +357,7 @@ test.describe('Keyboard, viewports, layout, and console', () => {
   test.beforeEach(async ({ page }) => { await stubHealth(page); });
 
   test('keyboard-only journey: open, ask, and navigate without a mouse', async ({ page }) => {
+    test.setTimeout(90_000); // Step budget: up to 30 Tab steps plus navigation.
     await page.route(CHAT_ROUTE, (route: Route) =>
       route.fulfill({ status: 200, contentType: 'application/x-ndjson', body: ndjson(DOWNLOAD_ANSWER) })
     );
@@ -431,6 +437,7 @@ test.describe('Keyboard, viewports, layout, and console', () => {
   });
 
   test('ten open/close cycles leave exactly one send handler (no listener leak)', async ({ page }) => {
+    test.setTimeout(90_000); // Step budget: 20 sequential open/close transitions.
     let calls = 0;
     await page.route(CHAT_ROUTE, (route: Route) => {
       calls++;

@@ -32,7 +32,8 @@
     "kayla:retrieval-eval": "node scripts/kayla-retrieval-eval.mjs",
     "kayla:task-eval": "node scripts/kayla-task-eval.mjs",
     "kayla:perf": "node scripts/kayla-perf.mjs",
-    "kayla:load-test": "node scripts/kayla-load-test.mjs"
+    "kayla:load-test": "node scripts/kayla-load-test.mjs",
+    "kayla:do-race": "node scripts/kayla-do-race.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/node": "^11.1.4",
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.62.1",
     "typescript": "^5.6.0",
     "vitest": "^4.1.11"

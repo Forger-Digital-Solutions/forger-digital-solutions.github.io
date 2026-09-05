@@ -15,6 +15,13 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './test/e2e',
   fullyParallel: true,
+  // Phase 13 measurement: the default (CPU-count-based) worker pool lets
+  // step-heavy journeys (20 open/close cycles, 100-turn session, navigation
+  // storms) contend for the single dev server until their step budgets
+  // expire — timeouts with zero assertion failures. Four workers keeps the
+  // suite parallel while bounding that contention; slow tests additionally
+  // carry explicit step budgets via test.setTimeout.
+  workers: 4,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'list' : [['list']],

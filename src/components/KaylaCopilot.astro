@@ -34,7 +34,7 @@
       <button class="kayla-close" type="button" aria-label="Close Kayla Copilot">&times;</button>
     </div>
 
-    <div id="kayla-conversation" class="kayla-conversation" aria-live="polite" aria-relevant="additions text"></div>
+    <div id="kayla-conversation" class="kayla-conversation" aria-live="polite" aria-relevant="additions text" tabindex="0"></div>
 
     <div id="kayla-starters" class="kayla-starters">
       <button class="kayla-starter" type="button" data-query="Where should I start?">Where should I start?</button>
@@ -138,6 +138,11 @@
     bottom: 5rem;
     width: min(100vw - 2.5rem, 26rem);
     max-height: min(70vh, 38rem);
+    /* Dynamic viewport units track the on-screen keyboard and collapsing
+       browser chrome where supported; the vh line above remains the fallback.
+       Phase 13: composer must stay reachable when the visual viewport shrinks
+       to keyboard-open heights. */
+    max-height: min(70dvh, 38rem);
     display: flex;
     flex-direction: column;
     border: 1px solid var(--color-border-strong);
@@ -424,12 +429,35 @@
       left: 0;
       width: 100vw;
       max-height: min(85vh, 38rem);
+      max-height: min(85dvh, 38rem);
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       border-bottom: 0;
     }
     .kayla-launcher {
       right: 1rem;
       bottom: 1rem;
+    }
+  }
+
+  /* Keyboard-open / short viewports (Phase 13): the transcript and the
+     composer win. The subtitle and the starter-chip row are progressive
+     enhancement — hiding them keeps the composer reachable when the visual
+     viewport collapses. The !important on starters beats the inline
+     display:flex the controller sets after each answer. */
+  @media (max-height: 28rem) {
+    .kayla-panel__subtitle {
+      display: none;
+    }
+    .kayla-panel__header {
+      flex-wrap: nowrap;
+      padding: .6rem .8rem;
+    }
+    .kayla-starters {
+      display: none !important;
+    }
+    .kayla-conversation {
+      padding: .7rem;
+      gap: .6rem;
     }
   }
 
