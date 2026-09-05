@@ -473,7 +473,7 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
     };
   }
 
-  if (/\b(download|downloadable|installer|get the (software|app))\b/.test(text)) {
+  if (/\b(download|downloadable|installer|get the (software|app)|ready to run|ready to use|can i use|use (now|today)|available (now|today)|ready)\b/.test(text)) {
     const downloads = downloadableNow();
     return {
       text: `${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''} — ${entry.route}`).join('\n')}\n\nThose are the only FDS builds with a public download right now. Everything else is in development or research with no public build. Forged is where released software is listed.`,
@@ -557,6 +557,22 @@ function listFilter(query: string): { label: string; keep: (slug: string) => boo
   }
   if (/\b(in development|being built|active development|worked on|still building)\b/.test(text)) {
     return { label: 'in active development', keep: (slug) => Boolean(project(slug)?.status.includes('DEVELOPMENT')) };
+  }
+  if (/\b(community|civic)\b/.test(text)) {
+    return {
+      label: 'community and civic initiatives',
+      keep: (slug) => {
+        const p = project(slug);
+        return Boolean(p && (
+          p.ecosystem === 'Civic' ||
+          p.category.toLowerCase().includes('community') ||
+          p.category.toLowerCase().includes('civic') ||
+          p.summary.toLowerCase().includes('community') ||
+          p.slug === 'farmstand-finder' ||
+          p.slug === 'we-the-people'
+        ));
+      }
+    };
   }
   return undefined;
 }
@@ -675,14 +691,19 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
 const QUESTION_WORDS = new Set(['should', 'would', 'could', 'which', 'recommend', 'need', 'needs', 'help', 'helps', 'want', 'wants', 'project', 'projects', 'product', 'products', 'application', 'applications', 'software', 'tool', 'tools', 'thing', 'things', 'involves', 'involve', 'focused', 'focus', 'about', 'look', 'looking', 'start', 'started', 'best', 'good', 'anything', 'something', 'stuff', 'work', 'works', 'using', 'used', 'fit', 'fits', 'suited']);
 
 function recommendationAnswer(query: string): CanonicalAnswer | undefined {
-  const words = distinctive(normalize(query)).filter((word) => !QUESTION_WORDS.has(word));
-  if (words.length === 0) {
+  const baseWords = distinctive(normalize(query)).filter((word) => !QUESTION_WORDS.has(word));
+  if (baseWords.length === 0) {
     return {
       text: 'It depends on the job. Choose CodeForge for repository engineering, GEMS / Training Grounds for model research, KyraBlox for game projects, Kayla AI Publisher for long-form creative work, FarmStand Finder for nearby food, We The People for civic information, or ForgerEMS for technician diagnostics and maintenance.',
       actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
       sources: projects.map((p) => `app-${p.slug}`),
       intent: 'recommendation'
     };
+  }
+
+  const words = [...baseWords];
+  if (baseWords.some((w) => w.startsWith('programm'))) {
+    words.push('developer', 'coding', 'software');
   }
 
   const scored = projects.map((entry) => {
@@ -767,6 +788,19 @@ function navigationAnswer(entityId?: string, query?: string): CanonicalAnswer | 
       };
     }
   }
+  if (query && /\b(start here|where (should|do) i start|new (here|to fds)|newcomer|give me a tour|best place to start|tour of fds)\b/i.test(query)) {
+    return {
+      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Software you can use now: Forged (/forged) has current public builds, starting with CodeForge (free-first developer workbench).\n• AI research: GEMS Training Grounds (/projects/gems-training-grounds) covers our 4 specialized foundation lineages.\n• Full catalog: Projects (/projects) displays everything FDS is building across developer tools, AI, publishing, and community.\n• Studio story: About (/about) explains the engineering philosophy and founder background.',
+      actions: [
+        { type: 'OPEN_FORGED', label: 'See Available Software', href: '/forged' },
+        { type: 'SHOW_APPS', label: 'Explore Projects', href: '/projects' },
+        { type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }
+      ],
+      sources: ['site-navigation', 'forged-page'],
+      intent: 'navigation',
+      settled: true
+    };
+  }
   return {
     text: 'The main sections are Projects (/projects), Forged for downloadable software (/forged), Lab for the engineering method (/lab), Notes for build logs (/notes), Technology (/technology), About (/about), and Support (/support).',
     actions: [{ type: 'SHOW_APPS', label: 'View Projects' }, { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
@@ -776,7 +810,8 @@ function navigationAnswer(entityId?: string, query?: string): CanonicalAnswer | 
 }
 
 function supportAnswer(query: string): CanonicalAnswer {
-  const hardware = /\b(hardware|equipment|computers?|laptops?|gpus?|servers?|pcs?|old tech|drives?|ram|monitors?)\b/.test(normalize(query));
+  const norm = normalize(query);
+  const hardware = /\b(hardware|equipment|computers?|laptops?|gpus?|servers?|pcs?|old tech|drives?|ram|monitors?)\b/.test(norm);
   if (hardware) {
     return {
       text: `Yes — FDS accepts working computing equipment: ${siteConfig.hardwareExamples.slice(0, 6).join(', ')}, and similar gear. Email ${siteConfig.supportEmail} with the model, specs, condition, and your general location; logistics are arranged privately after that. No shipping address is published.`,
@@ -788,8 +823,10 @@ function supportAnswer(query: string): CanonicalAnswer {
       intent: 'support'
     };
   }
+  const githubSponsors = /\b(github|patreon|paypal|venmo)\b/.test(norm);
+  const githubPrefix = githubSponsors ? 'FDS does not currently have GitHub Sponsors, Patreon, or PayPal active. ' : '';
   return {
-    text: `You can support FDS development through Cash App (${siteConfig.cashAppHandle}) or Ko-fi (${siteConfig.kofiUrl}). Working hardware donations are also welcome — email ${siteConfig.supportEmail}. This supports development, operations, and hardware; it is not charitable giving, and community-project funding is not active yet.`,
+    text: `${githubPrefix}You can support FDS development through Cash App (${siteConfig.cashAppHandle}) or Ko-fi (${siteConfig.kofiUrl}). Working hardware donations are also welcome — email ${siteConfig.supportEmail}. This supports development, operations, and hardware; it is not charitable giving, and community-project funding is not active yet.`,
     actions: [
       { type: 'OPEN_DONATE', label: 'Support FDS', href: '/support' },
       { type: 'OPEN_CONTACT', label: 'Donate Hardware', href: `mailto:${siteConfig.supportEmail}` }
@@ -875,6 +912,22 @@ function boundaryAnswer(intent: KaylaIntent, query: string): CanonicalAnswer | u
         text: `I cannot diagnose your machine — I only answer questions about this website and FDS. ForgerEMS is the FDS product for technician work: diagnostics, drive validation, USB tooling, and driver guidance on Windows${productFor('forgerems')?.version ? ` (currently ${productFor('forgerems')?.version})` : ''}.`,
         actions: [{ type: 'OPEN_DOWNLOAD', label: 'Download ForgerEMS', href: productFor('forgerems')?.downloadUrl || '/forged' }],
         sources: ['kayla-copilot', 'product-forgerems'],
+        intent
+      };
+    }
+    if (/\b(account|register|sign\s*up|log\s*in|sign\s*in)\b/.test(text)) {
+      return {
+        text: 'FDS has no user accounts, and I cannot create accounts, handle logins, or manage credentials. I am a read-only website assistant, and this site requires no account or registration.',
+        actions: [{ type: 'OPEN_PAGE', label: 'Privacy Policy', href: '/privacy' }],
+        sources: ['scope-boundary'],
+        intent
+      };
+    }
+    if (/\b(download|install|run|execute|launch)\b.{0,40}\b(on my|device|machine|pc|laptop|for me)\b/.test(text)) {
+      return {
+        text: 'I cannot download, install, or run executables on your device — I am a read-only browser assistant. You can download CodeForge and other released software yourself directly from GitHub Releases or the Forged page.',
+        actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+        sources: ['scope-boundary'],
         intent
       };
     }
@@ -1049,7 +1102,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   // free-or-no-price answer; this only prepends the specific rejection.
   if (primary && (project(primary) || gemFor(primary) || productFor(primary))) {
     const dollarMatch = query.match(/\$\s?(\d+(?:\.\d{1,2})?)/) || text.match(/\b(\d+(?:\.\d{1,2})?)\s*(?:dollars|usd)\b/);
-    const paidTierMention = /\b(paid tier|paid plan|pro tier|pro plan|premium tier|premium plan|future tiers?|tier cost|pricing tier)\b/i.test(text);
+    const paidTierMention = /\b(paid tier|paid plan|pro tier|pro plan|premium tier|premium plan|future tiers?|tier cost|pricing tier|subscribe|subscription|buy|purchase|codeforge\s+pro|commercial license)\b/i.test(text);
     if (dollarMatch || paidTierMention) {
       const base = pricingAnswer(primary);
       // Deliberately does not echo the fabricated figure back (e.g. "$49"):
@@ -1059,6 +1112,21 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
       const rejection = dollarMatch ? `That is not a real published price for ${displayName(primary)}. ` : '';
       return { ...base, text: `${rejection}${base.text}` };
     }
+  }
+
+  // Goal conflict: GEMS / AI research is not downloadable
+  const hasSpecificNonGemProject = entityIds.some((id) => !id.startsWith(GEM_PREFIX) && id !== 'gems-training-grounds' && Boolean(project(id)));
+  if (!hasSpecificNonGemProject && /\b(ai|gems|model)\b/i.test(text) && /\b(download|run|install)\b/i.test(text) && !/codeforge/i.test(text)) {
+    return {
+      text: 'FDS AI research (GEMS) is foundation research and evaluation — there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS. Projects still in development or research are not presented as downloads.',
+      actions: [
+        { type: 'OPEN_FORGED', label: 'See Released Software', href: '/forged' },
+        { type: 'OPEN_APP', label: 'Explore GEMS Research', href: '/projects/gems-training-grounds' }
+      ],
+      sources: ['gems-family', 'forged-page'],
+      intent: 'availability',
+      settled: true
+    };
   }
 
   // Fabricated download link check (e.g. example.com/kyrablox.zip)
@@ -1223,6 +1291,19 @@ export function canonicalAnswer(
     return gemsAvailabilityAnswer();
   }
 
+  // "What are the four GEM lineages?" or "What are the GEM lineages?"
+  if (!namesSpecificGem
+    && /\bgems?\b/.test(normalize(query))
+    && /\b(lineages?|models?|specializations?|four)\b/.test(normalize(query))) {
+    return {
+      text: `The four GEMS research lineages are Topaz (broad reasoning and orchestration), Sapphire (software engineering and repair), Peridot (mathematics and quantitative reasoning), and Garnet (multimodal and publishing intelligence). All four are guided and evaluated through Training Grounds.`,
+      actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
+      sources: ['gems-family', 'app-gems-training-grounds'],
+      intent: 'capability',
+      settled: true
+    };
+  }
+
   // Availability questions asked across the whole catalogue rather than about
   // one entity: answer the narrow question instead of listing everything.
   if ((has('availability') || has('list')) && !entityIds.some((id) => project(id) || gemFor(id) || productFor(id))) {
@@ -1286,7 +1367,7 @@ export function canonicalAnswer(
 
   if (has('contact')) {
     return {
-      text: `Email is the best route: ${siteConfig.supportEmail}. There is also a Discord community at ${siteConfig.discordUrl}, plus GitHub and YouTube links in the site footer.`,
+      text: `Email is the best route: ${siteConfig.supportEmail}. There is also a Discord community at ${siteConfig.discordUrl}, plus GitHub (${siteConfig.githubUrl}) and YouTube links in the site footer.`,
       actions: [{ type: 'OPEN_CONTACT', label: 'Email FDS', href: `mailto:${siteConfig.supportEmail}` }],
       sources: ['fds-contact'],
       intent: 'contact'

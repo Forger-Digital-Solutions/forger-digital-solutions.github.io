@@ -226,24 +226,40 @@ function getPageContext(): KaylaPageContext {
   };
 }
 
-function getStartersForContext(): string[] {
+export function getStartersForContext(): string[] {
   const ctx = getPageContext();
   const starters: Record<string, string[]> = {
     home: [
-      'What is FDS?',
-      'Show me all the apps.',
-      "What's available now?",
-      "What's coming next?"
+      'Where should I start?',
+      'What can I use now?',
+      'Explore the projects',
+      'Learn about GEMS',
+      'Try CodeForge',
+      'Support FDS'
     ],
     forged: [
-      "What's available?",
-      'Which app should I try?',
-      'Show me downloads.'
+      'What can I use now?',
+      'Tell me about CodeForge',
+      'Where do I download releases?',
+      'Support FDS'
     ],
     projects: [
-      'Which FDS app should I use?',
+      'Which FDS project should I explore?',
+      'Tell me about CodeForge',
       'What is GEMS?',
-      'What is KyraBlox?'
+      'Where do I start?'
+    ],
+    support: [
+      'How can I support FDS?',
+      'What hardware can I donate?',
+      'How do I sponsor FDS on GitHub?',
+      'Explore the projects'
+    ],
+    downloads: [
+      'What can I download right now?',
+      'Where do I get CodeForge?',
+      'How do I install CodeForge?',
+      'Support FDS'
     ]
   };
 
@@ -251,6 +267,12 @@ function getStartersForContext(): string[] {
 
   if (ctx.entity) {
     const appStarters: Record<string, string[]> = {
+      'codeforge': [
+        'How do I install CodeForge?',
+        'Where do I download CodeForge?',
+        'How does CodeForge compare to GEMS?',
+        'What version is CodeForge?'
+      ],
       'forgerems': [
         'What does ForgerEMS do?',
         'Download ForgerEMS',
@@ -283,6 +305,53 @@ function getStartersForContext(): string[] {
   }
 
   return pageStarters;
+}
+
+export function getFollowUpSuggestions(lastQuery: string, actions?: KaylaSafeAction[]): string[] {
+  const q = lastQuery.toLowerCase();
+  if (q.includes('codeforge')) {
+    return ['See the release', 'How does it compare?', 'Explore other projects'];
+  }
+  if (q.includes('gems') || q.includes('training grounds')) {
+    return ['Is GEMS available to download?', 'Explore all projects', 'How can I support FDS?'];
+  }
+  if (q.includes('support') || q.includes('donate') || q.includes('contribute') || q.includes('hardware')) {
+    return ['What hardware can I donate?', 'Explore active projects', 'Where should I start?'];
+  }
+  if (q.includes('start') || q.includes('new here') || q.includes('what is fds') || q.includes('mission')) {
+    return ['What can I use now?', 'Explore the projects', 'How can I support FDS?'];
+  }
+  if (q.includes('download') || q.includes('release') || q.includes('use now') || q.includes('available')) {
+    return ['Try CodeForge', 'Learn about GEMS', 'Where should I start?'];
+  }
+  if (actions && actions.length > 0) {
+    const hasProjectsAction = actions.some(a => a.href === '/projects');
+    if (hasProjectsAction) {
+      return ['What can I use now?', 'Learn about GEMS', 'Support FDS'];
+    }
+    return ['See the release', 'What can I use now?', 'Explore the projects'];
+  }
+  return ['Where should I start?', 'What can I use now?', 'Explore the projects'];
+}
+
+function showFollowUpStarters(query: string, actions?: KaylaSafeAction[]): void {
+  const starters = starterPrompts();
+  if (!starters) return;
+  const followUps = getFollowUpSuggestions(query, actions);
+  if (!followUps || followUps.length === 0) return;
+  starters.innerHTML = '';
+  for (const fQuery of followUps) {
+    const btn = document.createElement('button');
+    btn.className = 'kayla-starter';
+    btn.type = 'button';
+    btn.setAttribute('data-query', fQuery);
+    btn.textContent = fQuery;
+    btn.addEventListener('click', () => {
+      handleQuery(fQuery);
+    });
+    starters.appendChild(btn);
+  }
+  starters.style.display = 'flex';
 }
 
 function updateStarters(): void {
@@ -318,6 +387,7 @@ async function handleQuery(query: string): Promise<void> {
   if (starters) (starters as HTMLElement).style.display = 'none';
 
   abortController = new AbortController();
+  let streamingActions: KaylaSafeAction[] | undefined;
 
   try {
     const response = await fetch(`${API_ENDPOINTS.chat}?stream=true`, {
@@ -340,10 +410,9 @@ async function handleQuery(query: string): Promise<void> {
       throw new Error('No response body');
     }
 
-    const decoder = new TextDecoder();
+    let decoder = new TextDecoder();
     let buffer = '';
     let streamingText = '';
-    let streamingActions: KaylaSafeAction[] | undefined;
     let streamingSources: KaylaSource[] | undefined;
     let responseMode: KaylaMode = 'local';
 
@@ -425,6 +494,7 @@ async function handleQuery(query: string): Promise<void> {
   } finally {
     setProcessing(false);
     abortController = null;
+    showFollowUpStarters(query, streamingActions);
     // Focus is lost when the send button is disabled mid-request; hand it back
     // so a keyboard or screen-reader user can type the next question.
     if (isOpen) input()?.focus();

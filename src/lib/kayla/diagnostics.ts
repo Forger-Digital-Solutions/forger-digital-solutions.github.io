@@ -60,6 +60,11 @@ export interface KaylaDiagnostics {
   sourceCount: number;
   actionCount: number;
   /**
+   * Phase 11: Task-oriented visitor goal classification (privacy-safe category only).
+   */
+  goal?: string;
+  plannedEntityCount?: number;
+  /**
    * Phase 9: approximate character count of the evidence packet sent to the
    * provider. Tracked to measure context efficiency before/after optimization.
    */

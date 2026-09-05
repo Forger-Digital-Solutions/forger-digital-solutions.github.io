@@ -52,15 +52,17 @@ try {
   console.log(`Published Releases:       ${report.inventory.releases}`);
   console.log(`Retrieval Documents:      ${report.inventory.retrievalDocs}`);
   console.log(`Canonical External Links: ${report.inventory.externalLinks}`);
+  console.log(`Task Goals:               ${report.inventory.taskGoals}`);
   console.log('--------------------------------------------------------');
 
   // Check categories status
-  const hasRouteErrors = report.errors.some((e) => e.code.includes('ROUTE'));
+  const hasRouteErrors = report.errors.some((e) => e.code.includes('ROUTE') && !e.code.includes('TASK'));
   const hasStatusErrors = report.errors.some((e) => e.code.includes('STATUS'));
   const hasAvailErrors = report.errors.some((e) => e.code.includes('DOWNLOAD') || e.code.includes('AVAIL'));
   const hasReleaseErrors = report.errors.some((e) => e.code.includes('RELEASE') || e.code.includes('VERSION'));
   const hasRelationErrors = report.errors.some((e) => e.code.includes('RELATION'));
   const hasRetrievalErrors = report.errors.some((e) => e.code.includes('RETRIEVAL'));
+  const hasTaskGoalErrors = report.errors.some((e) => e.code.includes('TASK'));
 
   console.log(`Route Integrity:          ${hasRouteErrors ? 'FAIL' : 'PASS'}`);
   console.log(`Status Consistency:       ${hasStatusErrors ? 'FAIL' : 'PASS'}`);
@@ -68,6 +70,7 @@ try {
   console.log(`Release Consistency:      ${hasReleaseErrors ? 'FAIL' : 'PASS'}`);
   console.log(`Relation Integrity:       ${hasRelationErrors ? 'FAIL' : 'PASS'}`);
   console.log(`Retrieval Coverage:       ${hasRetrievalErrors ? 'FAIL' : 'PASS'}`);
+  console.log(`Task Goal Integrity:      ${hasTaskGoalErrors ? 'FAIL' : 'PASS'}`);
   console.log('--------------------------------------------------------');
 
   if (showMatrix) {

@@ -1,27 +1,10 @@
 import type { KaylaSafeAction } from '../../data/kayla/types';
+import { validateSafeAction, ALLOWED_ACTION_TYPES, FORBIDDEN_ACTION_TYPES } from './action-validator';
 
-const ALLOWED_ACTIONS = new Set<string>([
-  'OPEN_PAGE',
-  'OPEN_APP',
-  'OPEN_DOWNLOAD',
-  'OPEN_GITHUB',
-  'OPEN_FORGED',
-  'OPEN_CONTACT',
-  'OPEN_DONATE',
-  'SHOW_APPS',
-  'SHOW_ROADMAP'
-]);
+export { ALLOWED_ACTION_TYPES, FORBIDDEN_ACTION_TYPES, validateSafeAction };
 
 export function isActionAllowed(action: unknown): action is KaylaSafeAction {
-  if (!action || typeof action !== 'object') return false;
-  const a = action as Record<string, unknown>;
-  if (typeof a.type !== 'string') return false;
-  if (!ALLOWED_ACTIONS.has(a.type)) return false;
-  if (a.type === 'OPEN_PAGE' || a.type === 'OPEN_APP' || a.type === 'OPEN_DOWNLOAD' || a.type === 'OPEN_GITHUB' || a.type === 'OPEN_FORGED' || a.type === 'OPEN_CONTACT' || a.type === 'OPEN_DONATE') {
-    if (typeof a.href !== 'string') return false;
-    if (/\b(javascript|data|vbscript|file):/i.test(a.href)) return false;
-  }
-  return true;
+  return validateSafeAction(action).valid;
 }
 
 /**

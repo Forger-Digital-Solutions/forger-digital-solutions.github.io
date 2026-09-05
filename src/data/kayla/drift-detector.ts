@@ -20,6 +20,8 @@ import {
   CANONICAL_ENTITIES
 } from './canonical-registry';
 import { getAllDocuments, type KaylaDocument } from './retrieval';
+import { buildTaskPlan } from '../../lib/kayla/task-planner';
+import type { VisitorGoal } from './goals';
 
 export interface DriftIssue {
   code: string;
@@ -63,6 +65,7 @@ export interface DriftReport {
     releases: number;
     retrievalDocs: number;
     externalLinks: number;
+    taskGoals: number;
   };
   coverageMatrix: EntityCoverageItem[];
 }
@@ -446,6 +449,79 @@ export function runDriftCheck(options: DriftDetectorOptions = {}): DriftReport {
     }
   }
 
+  // 11. TASK PLANNER ROUTE & GOAL INTEGRITY (Phase 11 Part 51 & Part 72)
+  const goalRepresentativeQueries: Record<VisitorGoal, string> = {
+    EXPLORE_FDS: "Where should I start if I'm new?",
+    EXPLORE_PROJECTS: "Show me all the projects FDS is building",
+    FIND_RELEASED_SOFTWARE: "What can I actually download today?",
+    FIND_DEVELOPER_PROJECTS: "I'm a software developer. What should I look at?",
+    EXPLORE_AI_RESEARCH: "Tell me about your AI research",
+    COMPARE_PROJECTS: "Show me the difference between the projects",
+    LEARN_PROJECT_STATUS: "What's public versus still being built?",
+    DOWNLOAD_SOFTWARE: "Where do I download CodeForge?",
+    VIEW_RELEASE: "Where can I see what FDS has released?",
+    LEARN_GEMS: "How does GEMS work?",
+    FIND_COMMUNITY_PROJECT: "I'm looking for something community-focused",
+    SUPPORT_FDS: "How can I support FDS?",
+    DONATE_HARDWARE: "I have old computer hardware I want to donate",
+    FOLLOW_FDS: "Where can I follow FDS?",
+    LEARN_ABOUT_FDS: "What is the story behind FDS?",
+    FIND_TECHNOLOGY_INFO: "What tech stack does FDS use?",
+    FIND_LAB_INFO: "What is happening in the Lab?",
+    UNKNOWN: "What is the weather outside?"
+  };
+
+  for (const [goal, sampleQuery] of Object.entries(goalRepresentativeQueries)) {
+    const plan = buildTaskPlan(sampleQuery);
+    if (!plan.recommendedActions || plan.recommendedActions.length === 0) {
+      if (goal !== 'UNKNOWN') {
+        addError({
+          code: 'TASK_GOAL_MISSING_ACTIONS',
+          entity: goal,
+          field: 'recommendedActions',
+          expected: 'at least one recommended action for supported goal',
+          actual: '0 actions returned',
+          message: `Goal ${goal} has no recommended actions in task plan`,
+          action: 'Ensure task planner produces safe actions for this goal'
+        });
+      }
+    }
+
+    for (const act of plan.recommendedActions || []) {
+      if (act.href && act.href.startsWith('/')) {
+        const norm = act.href.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+        if (!routeSet.has(norm)) {
+          addError({
+            code: 'TASK_PLANNER_STALE_ROUTE',
+            entity: goal,
+            field: 'action.href',
+            expected: `route present in internalRoutes: ${norm}`,
+            actual: act.href,
+            message: `Task plan for goal "${goal}" references route "${act.href}" which does not exist in canonical internal routes`,
+            action: 'Update task plan destination or register new route in CANONICAL_INTERNAL_ROUTES'
+          });
+        }
+      }
+    }
+
+    for (const src of plan.recommendedSources || []) {
+      if (src.route && src.route.startsWith('/')) {
+        const norm = src.route.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+        if (!routeSet.has(norm)) {
+          addError({
+            code: 'TASK_PLANNER_STALE_ROUTE',
+            entity: goal,
+            field: 'source.route',
+            expected: `route present in internalRoutes: ${norm}`,
+            actual: src.route,
+            message: `Task plan for goal "${goal}" references source route "${src.route}" which does not exist in canonical internal routes`,
+            action: 'Update task plan source or register new route in CANONICAL_INTERNAL_ROUTES'
+          });
+        }
+      }
+    }
+  }
+
   // Build Coverage Matrix (Part 72)
   const coverageMatrix: EntityCoverageItem[] = CANONICAL_ENTITIES.map((e) => {
     const hasRetrieval = retrievalDocs.some(d => d.entityId === e.id || d.id === `app-${e.id}` || d.id === e.id || d.id.startsWith(`${e.id}-`) || (e.route && d.route === e.route));
@@ -484,7 +560,8 @@ export function runDriftCheck(options: DriftDetectorOptions = {}): DriftReport {
       deniedRelations: deniedRelations.length,
       releases: releases.length,
       retrievalDocs: retrievalDocs.length,
-      externalLinks: CANONICAL_EXTERNAL_LINKS.length
+      externalLinks: CANONICAL_EXTERNAL_LINKS.length,
+      taskGoals: Object.keys(goalRepresentativeQueries).length
     },
     coverageMatrix
   };

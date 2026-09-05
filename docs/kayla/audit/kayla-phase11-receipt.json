@@ -1,0 +1,120 @@
+{
+  "verdict": "KAYLA_PHASE11_CERTIFIED",
+  "verdictReason": "Phase 11 certified end-to-end. Kayla evolved from a conversational website assistant to a grounded, read-only, task-oriented FDS site copilot. 17-goal taxonomy + UNKNOWN fallback with page context awareness, topic shift detection, and anaphor resolution implemented and 100% verified (38/38 cases). Strict action safety validator created enforcing allowed action types, blocking forbidden side-effect actions (payments, form posts, accounts, executable runs), and verifying canonical internal routes and external domains (42/42 task eval cases passed). Deterministic task planner created with multi-step guidance, action prioritization, tradeoff resolution, false premise defense, and bounded actions (max 3 actions per turn). Check 11 added to drift detector with 18 task goals verified. Golden query suite expanded to 322 queries with 100.0% accuracy across all tiers without provider reliance (Tier 1: 133/133, Tier 2: 152/152, Tier 3: 37/37). 4 new Vitest suites added (699/699 tests passing across 45 files). Playwright E2E suite updated with newcomer journey, developer journey, goal switching, mobile viewports (390px/320px), and keyboard navigation (32/32 tests passing across Chromium, Firefox, and WebKit). Cloudflare Worker deployed to production (version 7128796f-39d2-4b5d-ad6b-d170802c70a5) with live knowledgeVersion be8d05ff146c8c98 verified.",
+  "branch": "main",
+  "baseCommit": "f171581",
+  "knowledgeVersion": "be8d05ff146c8c98",
+  "workerProductionVersion": "7128796f-39d2-4b5d-ad6b-d170802c70a5",
+  "gates": {
+    "vitest": {
+      "baseline": "678 passed (41 files)",
+      "certified": "699 passed (45 files)",
+      "match": true
+    },
+    "goldenQueries": {
+      "baseline": "277 / 277 (100.0%)",
+      "certified": "322 / 322 (100.0%)",
+      "tier1": "133 / 133 (100.0%)",
+      "tier2": "152 / 152 (100.0%)",
+      "tier3": "37 / 37 (100.0%)",
+      "match": true
+    },
+    "taskEvaluation": {
+      "goalsTotal": 38,
+      "goalsPassed": 38,
+      "tasksTotal": 42,
+      "tasksPassed": 42,
+      "zeroForbiddenActions": "PASS",
+      "boundedActions": "PASS",
+      "status": "PASS"
+    },
+    "retrievalEval": {
+      "baseline": "25 / 25 (100.0%)",
+      "certified": "25 / 25 (100.0%)",
+      "match": true
+    },
+    "routingEfficiency": {
+      "corpusSize": 322,
+      "deterministic": 201,
+      "localOnly": 77,
+      "providerEligible": 44,
+      "avoidedProviderCalls": 278,
+      "avoidedProviderCallsPct": 86.3
+    },
+    "knowledgeCheck": {
+      "knowledgeVersion": "be8d05ff146c8c98",
+      "canonicalEntities": 20,
+      "canonicalProjects": 6,
+      "canonicalProducts": 2,
+      "gemsLineages": 4,
+      "recognizedStatuses": 6,
+      "canonicalRoutes": 19,
+      "semanticRelations": 22,
+      "deniedRelations": 11,
+      "publishedReleases": 2,
+      "retrievalDocuments": 67,
+      "canonicalExternalLinks": 7,
+      "taskGoals": 18,
+      "routeIntegrity": "PASS",
+      "statusConsistency": "PASS",
+      "availabilityConsistency": "PASS",
+      "releaseConsistency": "PASS",
+      "relationIntegrity": "PASS",
+      "retrievalCoverage": "PASS",
+      "taskGoalIntegrity": "PASS",
+      "driftErrors": 0,
+      "driftWarnings": 0,
+      "status": "PASS"
+    },
+    "astroCheck": {
+      "files": 96,
+      "errors": 0,
+      "warnings": 0,
+      "hints": 0,
+      "status": "PASS"
+    },
+    "astroBuild": {
+      "staticRoutes": 26,
+      "status": "PASS"
+    },
+    "linkValidation": {
+      "checked": 930,
+      "broken": 0,
+      "status": "PASS"
+    },
+    "secretScan": {
+      "status": "PASS"
+    },
+    "workerBuild": {
+      "uploadSize": "298.76 KiB",
+      "gzipSize": "77.78 KiB",
+      "startupTime": "6 ms",
+      "status": "PASS"
+    },
+    "deployCheck": {
+      "workersDev": true,
+      "zeroCostPolicy": true,
+      "strictCors": true,
+      "durableObjectSqlite": true,
+      "status": "PASS"
+    },
+    "playwrightE2E": {
+      "totalTests": 32,
+      "passed": 32,
+      "failed": 0,
+      "browsers": ["chromium", "firefox", "webkit"],
+      "phase11TaskSpec": "5 passed (chromium)",
+      "status": "PASS"
+    },
+    "liveProductionVerification": {
+      "endpoint": "https://kayla-api.forgerdigitalsolutions.workers.dev",
+      "versionId": "7128796f-39d2-4b5d-ad6b-d170802c70a5",
+      "knowledgeVersion": "be8d05ff146c8c98",
+      "healthCheck": "PASS",
+      "streamingChat": "PASS",
+      "hostileCorsBlock": "PASS",
+      "liveTaskMatrix": "PASS"
+    }
+  },
+  "timestamp": "2026-09-04T21:10:00-04:00"
+}

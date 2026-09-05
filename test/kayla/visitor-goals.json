@@ -1,0 +1,256 @@
+{
+  "version": "1.0",
+  "description": "Kayla Copilot Phase 11 visitor goal classification test cases",
+  "cases": [
+    {
+      "id": "goal-01-start-direct",
+      "question": "Where should I start?",
+      "expectedGoal": "EXPLORE_FDS",
+      "category": "direct"
+    },
+    {
+      "id": "goal-02-start-casual",
+      "question": "I'm new here, what is this site all about?",
+      "expectedGoal": "EXPLORE_FDS",
+      "category": "casual"
+    },
+    {
+      "id": "goal-03-start-typo",
+      "question": "wher shuld i begin exploring fds",
+      "expectedGoal": "EXPLORE_FDS",
+      "category": "typo"
+    },
+    {
+      "id": "goal-04-explore-projects-direct",
+      "question": "Show me all the projects.",
+      "expectedGoal": "EXPLORE_PROJECTS",
+      "category": "direct"
+    },
+    {
+      "id": "goal-05-explore-projects-casual",
+      "question": "What kind of software are you guys building?",
+      "expectedGoal": "EXPLORE_PROJECTS",
+      "category": "casual"
+    },
+    {
+      "id": "goal-06-explore-projects-typo",
+      "question": "projcts list and directory",
+      "expectedGoal": "EXPLORE_PROJECTS",
+      "category": "typo"
+    },
+    {
+      "id": "goal-07-released-direct",
+      "question": "What can I actually use right now?",
+      "expectedGoal": "FIND_RELEASED_SOFTWARE",
+      "category": "direct"
+    },
+    {
+      "id": "goal-08-released-casual",
+      "question": "Is anything ready for me to try today?",
+      "expectedGoal": "FIND_RELEASED_SOFTWARE",
+      "category": "casual"
+    },
+    {
+      "id": "goal-09-developer-direct",
+      "question": "I am a developer, what tools do you have for me?",
+      "expectedGoal": "FIND_DEVELOPER_PROJECTS",
+      "category": "direct"
+    },
+    {
+      "id": "goal-10-developer-casual",
+      "question": "What coding tools and programmer apps do you make?",
+      "expectedGoal": "FIND_DEVELOPER_PROJECTS",
+      "category": "casual"
+    },
+    {
+      "id": "goal-11-ai-research-direct",
+      "question": "What are your AI research projects?",
+      "expectedGoal": "EXPLORE_AI_RESEARCH",
+      "category": "direct"
+    },
+    {
+      "id": "goal-12-ai-research-casual",
+      "question": "Tell me about your artificial intelligence and synthetic intelligence work",
+      "expectedGoal": "EXPLORE_AI_RESEARCH",
+      "category": "casual"
+    },
+    {
+      "id": "goal-13-ai-research-typo",
+      "question": "fds ai reserch work",
+      "expectedGoal": "EXPLORE_AI_RESEARCH",
+      "category": "typo"
+    },
+    {
+      "id": "goal-14-compare-direct",
+      "question": "How does CodeForge compare to GEMS?",
+      "expectedGoal": "COMPARE_PROJECTS",
+      "expectedEntities": ["codeforge", "gems-training-grounds"],
+      "category": "direct"
+    },
+    {
+      "id": "goal-15-compare-casual",
+      "question": "What is the difference between CodeForge and Training Grounds?",
+      "expectedGoal": "COMPARE_PROJECTS",
+      "expectedEntities": ["codeforge", "gems-training-grounds"],
+      "category": "casual"
+    },
+    {
+      "id": "goal-16-status-direct",
+      "question": "What is the current status of FarmStand Finder?",
+      "expectedGoal": "LEARN_PROJECT_STATUS",
+      "expectedEntities": ["farmstand-finder"],
+      "category": "direct"
+    },
+    {
+      "id": "goal-17-status-casual",
+      "question": "Is We The People still in active development?",
+      "expectedGoal": "LEARN_PROJECT_STATUS",
+      "expectedEntities": ["we-the-people"],
+      "category": "casual"
+    },
+    {
+      "id": "goal-18-download-direct",
+      "question": "Where can I download CodeForge?",
+      "expectedGoal": "DOWNLOAD_SOFTWARE",
+      "expectedEntities": ["codeforge"],
+      "category": "direct"
+    },
+    {
+      "id": "goal-19-download-casual",
+      "question": "How do I get the CodeForge app on my computer?",
+      "expectedGoal": "DOWNLOAD_SOFTWARE",
+      "expectedEntities": ["codeforge"],
+      "category": "casual"
+    },
+    {
+      "id": "goal-20-download-typo",
+      "question": "downlaod codeforge windows",
+      "expectedGoal": "DOWNLOAD_SOFTWARE",
+      "expectedEntities": ["codeforge"],
+      "category": "typo"
+    },
+    {
+      "id": "goal-21-release-direct",
+      "question": "Where can I see the latest release notes for CodeForge?",
+      "expectedGoal": "VIEW_RELEASE",
+      "expectedEntities": ["codeforge"],
+      "category": "direct"
+    },
+    {
+      "id": "goal-22-release-casual",
+      "question": "What came out in the CodeForge release?",
+      "expectedGoal": "VIEW_RELEASE",
+      "expectedEntities": ["codeforge"],
+      "category": "casual"
+    },
+    {
+      "id": "goal-23-gems-direct",
+      "question": "What is the GEMS project?",
+      "expectedGoal": "LEARN_GEMS",
+      "expectedEntities": ["gems-training-grounds"],
+      "category": "direct"
+    },
+    {
+      "id": "goal-24-gems-casual",
+      "question": "Can you explain Training Grounds and synthetic intelligence?",
+      "expectedGoal": "LEARN_GEMS",
+      "expectedEntities": ["gems-training-grounds"],
+      "category": "casual"
+    },
+    {
+      "id": "goal-25-community-direct",
+      "question": "Do you have any community or local projects?",
+      "expectedGoal": "FIND_COMMUNITY_PROJECT",
+      "category": "direct"
+    },
+    {
+      "id": "goal-26-community-casual",
+      "question": "Tell me about civic and local projects like FarmStand Finder",
+      "expectedGoal": "FIND_COMMUNITY_PROJECT",
+      "category": "casual"
+    },
+    {
+      "id": "goal-27-support-direct",
+      "question": "How can I support Forger Digital Solutions?",
+      "expectedGoal": "SUPPORT_FDS",
+      "category": "direct"
+    },
+    {
+      "id": "goal-28-support-casual",
+      "question": "I want to sponsor FDS and contribute",
+      "expectedGoal": "SUPPORT_FDS",
+      "category": "casual"
+    },
+    {
+      "id": "goal-29-donate-hardware-direct",
+      "question": "Can I donate old hardware or servers to FDS?",
+      "expectedGoal": "DONATE_HARDWARE",
+      "category": "direct"
+    },
+    {
+      "id": "goal-30-donate-hardware-casual",
+      "question": "How do I send lab equipment or GPUs to help your research?",
+      "expectedGoal": "DONATE_HARDWARE",
+      "category": "casual"
+    },
+    {
+      "id": "goal-31-follow-direct",
+      "question": "Where can I follow FDS online?",
+      "expectedGoal": "FOLLOW_FDS",
+      "category": "direct"
+    },
+    {
+      "id": "goal-32-follow-casual",
+      "question": "Do you guys have a GitHub organization or social channels?",
+      "expectedGoal": "FOLLOW_FDS",
+      "category": "casual"
+    },
+    {
+      "id": "goal-33-about-direct",
+      "question": "Who founded Forger Digital Solutions and what is your mission?",
+      "expectedGoal": "LEARN_ABOUT_FDS",
+      "category": "direct"
+    },
+    {
+      "id": "goal-34-tech-direct",
+      "question": "What technology stack and architectures do you use?",
+      "expectedGoal": "FIND_TECHNOLOGY_INFO",
+      "category": "direct"
+    },
+    {
+      "id": "goal-35-lab-direct",
+      "question": "Tell me about the homelab and hardware testbed infrastructure",
+      "expectedGoal": "FIND_LAB_INFO",
+      "category": "direct"
+    },
+    {
+      "id": "goal-36-unknown-direct",
+      "question": "What is the capital of Australia?",
+      "expectedGoal": "UNKNOWN",
+      "category": "off-topic"
+    },
+    {
+      "id": "goal-37-context-entity",
+      "question": "Where do I get it?",
+      "expectedGoal": "DOWNLOAD_SOFTWARE",
+      "context": {
+        "route": "/projects/codeforge",
+        "pageType": "project",
+        "entity": "codeforge"
+      },
+      "expectedEntities": ["codeforge"],
+      "category": "page-aware"
+    },
+    {
+      "id": "goal-38-history-anaphor",
+      "question": "How do I download that?",
+      "expectedGoal": "DOWNLOAD_SOFTWARE",
+      "history": [
+        { "role": "user", "content": "What is CodeForge?" },
+        { "role": "assistant", "content": "CodeForge is an offline-capable code editor." }
+      ],
+      "expectedEntities": ["codeforge"],
+      "category": "follow-up"
+    }
+  ]
+}

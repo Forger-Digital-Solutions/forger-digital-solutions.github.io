@@ -67,7 +67,8 @@ describe('Diagnostics never carry visitor content', () => {
     );
     const allowed = new Set([
       'routeMode', 'intent', 'entity', 'providerAttempted', 'providerOutcome', 'providerFailure',
-      'upstreamStatus', 'verificationOutcome', 'verificationKinds', 'fallbackReason', 'sourceCount', 'actionCount'
+      'upstreamStatus', 'verificationOutcome', 'verificationKinds', 'fallbackReason', 'sourceCount', 'actionCount',
+      'goal', 'plannedEntityCount'
     ]);
     for (const key of Object.keys(captured[0])) {
       expect(allowed.has(key), `unexpected diagnostics field: ${key}`).toBe(true);

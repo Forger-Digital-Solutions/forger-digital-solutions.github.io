@@ -89,6 +89,9 @@ const RULES: IntentRule[] = [
       /\b(write|build|create|generate|code|refactor|debug|fix)\s+(me\s+)?(a|an|my|this|some)\s+(python|javascript|typescript|java|c\+\+|rust|go|php|ruby|swift|kotlin|sql|html|css|bash|powershell|script|program|app|application|website|function|class|game)\b/,
       /\b(edit|proofread|rewrite|revise|publish|format|translate)\s+(my|this|the)\s+(manuscript|book|novel|chapter|story|draft|document|essay|paper)\b/,
       /\b(diagnose|fix|repair|troubleshoot)\b.{0,25}\b(my\s+)?(computer|pc|laptop|drive|windows|machine|system)\b/,
+      /\b(download|install|run|execute|launch)\s+.*(on my (device|computer|machine|pc|laptop)|for me now|directly)\b/,
+      /\b(create|make|register|open|set up)\s+(a\s+)?(user\s+)?account\b/,
+      /\b(log\s*in|sign\s*up|sign\s*in)\b/,
       /\bdo my (homework|taxes|assignment)\b/
     ]
   },
@@ -112,6 +115,7 @@ const RULES: IntentRule[] = [
       /\bwhich .{0,20}(is best|works best|fits) for\b/,
       /\bi need (help )?(with|to)\b/,
       /\bwhat do you have for\b/,
+      /\b(what|which)\s+(is|are)\s+(aimed at|for|built for|intended for|designed for)\b/,
       // "a developer"/"someone" is as common a subject here as "I" — the
       // original only matched the first person and missed the third.
       /\bwhere (should|would) (i|a \w+|someone|you) start\b/
@@ -168,7 +172,9 @@ const RULES: IntentRule[] = [
       /\b(what|which)\s+downloads?\b/,
       /\bdownloads?\s+(are|can i|available|here)\b/,
       /\bcan i use it yet\b/,
-      /\bis it out yet\b/
+      /\bis it out yet\b/,
+      /\b(ready to run|ready to use|what can i use|use (now|today)|available (now|today)|can i run)\b/,
+      /\bis (any|there any) (fds )?(software|project|tool|app) (ready|available|downloadable)\b/
     ]
   },
   {
@@ -198,7 +204,8 @@ const RULES: IntentRule[] = [
       /\bhow (can|do) i (support|donate|help|contribute)\b/,
       /\b(cash ?app|ko-?fi|patreon|paypal|venmo|github sponsors)\b/,
       /\bdonate .{0,20}(hardware|computers?|laptops?|gpus?|equipment|tech|pcs?|servers?)\b/,
-      /\b(hardware|equipment|old (tech|computer)) donation\b/,
+      /\b(hardware|equipment|old (tech|computer)) donations?\b/,
+      /\bhardware\s+donations?\b/,
       /\bgive .{0,20}(old|used) (tech|hardware|computers?|laptops?)\b/,
       /\b(donation|donate|donating|support|supporting)\s+(routes?|channels?|links?|methods?|options?|pages?|ways?)\b/,
       /\b(where|how)\s+can\s+i\s+(send|give)\s+(money|donations?|funds?|support)\b/,
@@ -209,7 +216,9 @@ const RULES: IntentRule[] = [
     intent: 'contact',
     patterns: [
       /\b(contact|get in touch|reach (you|fds|out)|email address|send .{0,10}(an )?email)\b/,
-      /\b(discord|community server)\b/
+      /\b(discord|community server)\b/,
+      /\b(follow|find|connect with)\s+(fds|you|forger digital solutions)(\s+(online|social|socials))?\b/,
+      /\b(socials?|social media)\b/
     ]
   },
   {
@@ -238,7 +247,7 @@ const RULES: IntentRule[] = [
       // projects", "which ML tools") is ordinary phrasing the bare form
       // missed, and fell through to keyword retrieval instead of the
       // ecosystem-aware canonical listing.
-      /\b(what|which) (fds |your |the )?(ai |ml |machine learning |research |software |developer )?(projects?|apps?|applications?|products?|software|tools?)\b/,
+      /\b(what|which) (fds |your |the )?(ai |ml |machine learning |research |software |developer |community |civic )?(projects?|apps?|applications?|products?|software|tools?)\b/,
       /\bwhich (ones?|of (them|these))\b.{0,30}\b(public|available|released|research|development|downloadable|use)\b/,
       /\b(show|list|see) (me )?(all |the )?(projects?|apps?|applications?|products?|software|everything)\b/,
       /\bwhat (do|does) (you|fds|they) (build|make|do|offer|work on)\b/,
@@ -258,7 +267,8 @@ const RULES: IntentRule[] = [
       /\bwhere (is|are|can i find) the\b/,
       /\b(link|links|page|url) (to|for)\b/,
       /\btake me to\b/,
-      /\bwhich page\b/
+      /\bwhich page\b/,
+      /\b(where (should|do) i start|start here|best place to start|new (here|to fds)|newcomer|give me a tour)\b/
     ]
   },
   {

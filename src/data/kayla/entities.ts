@@ -94,7 +94,7 @@ export function similarity(a: string, b: string): number {
 /** Extra aliases people actually type. Deliberately distinctive: no generic nouns. */
 const EXTRA_ALIASES: Record<string, string[]> = {
   codeforge: ['code forge', 'codeforge cli', 'forgezero', 'forge zero'],
-  'gems-training-grounds': ['gems', 'gem', 'training grounds', 'training ground', 'gems training'],
+  'gems-training-grounds': ['gems', 'gem', 'training grounds', 'training ground', 'gems training', 'synthetic intelligence', 'ai research', 'model research'],
   kyrablox: ['kyra blox', 'kyrablocks'],
   'kayla-ai-publisher': ['kayla ai publisher', 'kayla publisher', 'ai publisher'],
   'we-the-people': ['we the people', 'wethepeople', 'wtp'],
