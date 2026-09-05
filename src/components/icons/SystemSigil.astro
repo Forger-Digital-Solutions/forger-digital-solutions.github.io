@@ -1,0 +1,199 @@
+---
+/**
+ * FDS SYSTEM SIGILS — the shared identity family for FDS systems.
+ *
+ * One visual language across every sigil: geometric construction, technical
+ * symmetry, bright-silver primary silhouette, darker silver secondary detail,
+ * graphite fills, and a single sparse product accent via --sigil-accent.
+ * Structures are stroke-based and scale cleanly from ~16 px card medallions
+ * to orbital bodies. Designed as a family: "different systems manufactured by
+ * one technical ecosystem."
+ *
+ *   intelligence  GEMS / Training Grounds — faceted gemstone learning core,
+ *                 four lineage nodes, evidence-gate learning ring
+ *   gaming        KyraBlox — interlocking modular world cubes, build nodes
+ *   publishing    Kayla AI Publisher — layered manuscript sheets threaded by
+ *                 one continuous editorial ribbon
+ *   civic         We The People — charter document inside a verification
+ *                 lattice, sourced through a traceable reference chain
+ *   foraging      FarmStand Finder — radial discovery rings over crop-row
+ *                 horizon, seasonal marker on the outer sweep
+ *   maintenance   ForgerEMS — diagnostic reticle, drive hexagon, health pulse
+ *   forged        Forged releases — foundry ingot stack under a release beacon
+ *   applications  Applications — connected impact network
+ *   systems       Systems — foundation strata crossed by the core column
+ *
+ * Accent stays sparse (<= 2 elements per sigil); structure is always silver so
+ * the family reads as one material system regardless of product color.
+ */
+export type SystemSigilKey =
+  | 'intelligence' | 'gaming' | 'publishing' | 'civic' | 'foraging'
+  | 'maintenance' | 'forged' | 'applications' | 'systems';
+
+interface Props {
+  system: SystemSigilKey;
+  class?: string;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+}
+
+const { system, class: className, x, y, width, height } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 100 100"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  class:list={['sigil', `sigil--${system}`, className]}
+  aria-hidden="true"
+  x={x}
+  y={y}
+  width={width}
+  height={height}
+>
+  {system === 'intelligence' && (
+    <>
+      {/* learning ring with evidence gate (bottom opening) */}
+      <path d="M67.3 87.1 A41 41 0 1 0 32.7 87.1" stroke="#8b94a5" stroke-width="1.2" stroke-dasharray="3 7" opacity=".55" />
+      <path d="M35.9 88.6 33.4 81.1 M64.1 88.6 66.6 81.1" stroke="#9aa3b2" stroke-width="1.4" opacity=".7" />
+      {/* four lineage nodes + pathways */}
+      <path d="M28.5 28.5 38 38 M71.5 28.5 62 38 M28.5 71.5 36.5 63.5 M71.5 71.5 63.5 63.5" stroke="#9aa3b2" stroke-width="1.3" opacity=".55" />
+      <circle cx="24" cy="24" r="2.6" stroke="#b6c0cf" stroke-width="1.3" />
+      <circle cx="76" cy="24" r="2.6" stroke="#b6c0cf" stroke-width="1.3" />
+      <circle cx="24" cy="76" r="2.6" stroke="#b6c0cf" stroke-width="1.3" />
+      <circle cx="76" cy="76" r="2.6" stroke="#b6c0cf" stroke-width="1.3" />
+      {/* gemstone: crown, girdle, pavilion */}
+      <path d="M32 34 H68 L84 50 50 82 16 50 Z" fill="rgba(13,18,28,.72)" stroke="#dfe6f0" stroke-width="2.6" stroke-linejoin="round" />
+      <path d="M16 50 H84" stroke="#9aa3b2" stroke-width="1.1" opacity=".45" />
+      <path d="M40 34 H60 L66 44 H34 Z" fill="var(--sigil-accent, #b9c6d8)" fill-opacity=".22" stroke="#b6c0cf" stroke-width="1.3" />
+      <path d="M32 34 34 44 M68 34 66 44" stroke="#9aa3b2" stroke-width="1.1" opacity=".6" />
+      <path d="M34 44 H66 M34 44 50 82 66 44" stroke="#b6c0cf" stroke-width="1.5" stroke-linejoin="round" />
+      <circle cx="50" cy="60" r="2.3" fill="var(--sigil-accent, #b9c6d8)" />
+    </>
+  )}
+
+  {system === 'gaming' && (
+    <>
+      {/* primary build cube */}
+      <path d="M50 22 68 32 50 42 32 32 Z" fill="var(--sigil-accent, #b9c6d8)" fill-opacity=".2" stroke="#dfe6f0" stroke-width="2.2" stroke-linejoin="round" />
+      <path d="M32 32 50 42 V64 L32 54 Z" fill="rgba(13,18,28,.78)" stroke="#b6c0cf" stroke-width="1.8" stroke-linejoin="round" />
+      <path d="M68 32 50 42 V64 L68 54 Z" fill="rgba(30,38,52,.65)" stroke="#9aa3b2" stroke-width="1.8" stroke-linejoin="round" />
+      {/* interlocked companion cube */}
+      <path d="M64 48 78 56 64 64 50 56 Z" fill="rgba(19,26,38,.92)" stroke="#dfe6f0" stroke-width="1.8" stroke-linejoin="round" />
+      <path d="M50 56 64 64 V78 L50 70 Z" fill="rgba(13,18,28,.85)" stroke="#b6c0cf" stroke-width="1.5" stroke-linejoin="round" />
+      <path d="M78 56 64 64 V78 L78 70 Z" fill="rgba(30,38,52,.72)" stroke="#9aa3b2" stroke-width="1.5" stroke-linejoin="round" />
+      {/* floating scout cube */}
+      <path d="M26 30 36 36 26 42 16 36 Z" fill="rgba(19,26,38,.9)" stroke="#b6c0cf" stroke-width="1.4" stroke-linejoin="round" />
+      <path d="M16 36 26 42 V52 L16 46 Z M36 36 26 42 V52 L36 46 Z" stroke="#9aa3b2" stroke-width="1.2" stroke-linejoin="round" />
+      {/* build nodes */}
+      <circle cx="50" cy="22" r="2" fill="var(--sigil-accent, #b9c6d8)" />
+      <circle cx="68" cy="32" r="1.7" fill="#dfe6f0" />
+      <circle cx="78" cy="56" r="1.7" fill="#dfe6f0" />
+    </>
+  )}
+
+  {system === 'publishing' && (
+    <>
+      {/* layered manuscript sheets */}
+      <rect x="26" y="22" width="36" height="50" rx="2" fill="rgba(13,18,28,.5)" stroke="#8b94a5" stroke-width="1.5" />
+      <rect x="33" y="29" width="36" height="50" rx="2" fill="rgba(13,18,28,.72)" stroke="#b6c0cf" stroke-width="1.8" />
+      <rect x="40" y="36" width="36" height="50" rx="2" fill="rgba(9,13,22,.92)" stroke="#dfe6f0" stroke-width="2.2" />
+      {/* continuous editorial ribbon threading the work */}
+      <path d="M60 42 C50 47 50 53 60 58 C70 63 70 69 60 74" stroke="var(--sigil-accent, #b9c6d8)" stroke-width="2.4" stroke-linecap="round" />
+      <circle cx="60" cy="42" r="1.9" fill="var(--sigil-accent, #b9c6d8)" />
+      <circle cx="60" cy="58" r="1.9" fill="var(--sigil-accent, #b9c6d8)" />
+      <circle cx="60" cy="74" r="1.9" fill="var(--sigil-accent, #b9c6d8)" />
+      {/* manuscript margins */}
+      <path d="M46 80 H70 M46 84 H62" stroke="#9aa3b2" stroke-width="1.2" opacity=".38" />
+    </>
+  )}
+
+  {system === 'civic' && (
+    <>
+      {/* verification lattice */}
+      <path d="M34 14 H26 V22 M66 14 H74 V22 M26 70 V78 H34 M74 70 V78 H66" stroke="#9aa3b2" stroke-width="2" />
+      {/* charter document */}
+      <rect x="38" y="24" width="24" height="44" rx="1.5" fill="rgba(9,13,22,.92)" stroke="#dfe6f0" stroke-width="2.2" />
+      <path d="M43 33 H57 M43 40 H57 M43 47 H53" stroke="#b6c0cf" stroke-width="1.5" opacity=".85" />
+      {/* source traceability chain */}
+      <path d="M50 68 V78" stroke="#dfe6f0" stroke-width="1.6" />
+      <circle cx="50" cy="83.5" r="3.4" fill="var(--sigil-accent, #b9c6d8)" />
+      <path d="M46.3 83.5 H42 M53.7 83.5 H58" stroke="#b6c0cf" stroke-width="1.3" opacity=".8" />
+      <circle cx="40" cy="83.5" r="1.8" stroke="#b6c0cf" stroke-width="1.2" />
+      <circle cx="60" cy="83.5" r="1.8" stroke="#b6c0cf" stroke-width="1.2" />
+    </>
+  )}
+
+  {system === 'foraging' && (
+    <>
+      {/* discovery radius rings */}
+      <circle cx="50" cy="52" r="15" stroke="#dfe6f0" stroke-width="2.2" />
+      <circle cx="50" cy="52" r="27" stroke="#8b94a5" stroke-width="1.3" stroke-dasharray="4 6" opacity=".7" />
+      {/* geometric sprout */}
+      <path d="M50 60 V44" stroke="#dfe6f0" stroke-width="2.2" stroke-linecap="round" />
+      <path d="M50 52 C43 50 40 44 42 38 C48 40 51 45 50 52 Z" fill="var(--sigil-accent, #b9c6d8)" fill-opacity=".24" stroke="#dfe6f0" stroke-width="1.6" stroke-linejoin="round" />
+      <path d="M50 52 C57 50 60 44 58 38 C52 40 49 45 50 52 Z" fill="rgba(13,18,28,.6)" stroke="#b6c0cf" stroke-width="1.6" stroke-linejoin="round" />
+      {/* field-row horizon */}
+      <path d="M44 74 H56 M40 80 H60 M36 86 H64" stroke="#b6c0cf" stroke-width="1.5" opacity=".8" />
+      {/* seasonal marker on the sweep */}
+      <circle cx="69.1" cy="32.9" r="3" fill="var(--sigil-accent, #b9c6d8)" />
+      <path d="M69.1 32.9 74 28" stroke="#9aa3b2" stroke-width="1.3" />
+    </>
+  )}
+
+  {system === 'maintenance' && (
+    <>
+      {/* inspection frame + reticle brackets */}
+      <rect x="30" y="30" width="40" height="40" stroke="#9aa3b2" stroke-width="1.8" />
+      <path d="M20 28 V20 H28 M72 20 H80 V28 M20 72 V80 H28 M80 72 V80 H72" stroke="#dfe6f0" stroke-width="2.2" />
+      {/* drive hexagon node */}
+      <path d="M50 33.5 57.4 37.8 V46.3 L50 50.5 42.6 46.3 V37.8 Z" fill="rgba(9,13,22,.92)" stroke="#dfe6f0" stroke-width="2" stroke-linejoin="round" />
+      <circle cx="50" cy="42" r="1.7" fill="var(--sigil-accent, #b9c6d8)" />
+      {/* health pulse */}
+      <path d="M26 62 H38 L43 54 49 68 54 58 57 62 H74" stroke="var(--sigil-accent, #b9c6d8)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      {/* hardware stubs */}
+      <path d="M42 70 V84 M58 70 V84" stroke="#b6c0cf" stroke-width="1.5" />
+      <circle cx="42" cy="84" r="1.5" fill="#b6c0cf" />
+      <circle cx="58" cy="84" r="1.5" fill="#b6c0cf" />
+    </>
+  )}
+
+  {system === 'forged' && (
+    <>
+      {/* release beacon */}
+      <path d="M50 6 V10 M42 12 44.5 14.5 M58 12 55.5 14.5" stroke="#9aa3b2" stroke-width="1.3" />
+      <path d="M50 14 55 20 50 26 45 20 Z" fill="var(--sigil-accent, #b9c6d8)" fill-opacity=".85" />
+      {/* foundry ingot stack */}
+      <rect x="36" y="32" width="28" height="9" rx="2" fill="rgba(19,26,38,.9)" stroke="#dfe6f0" stroke-width="2.2" />
+      <rect x="31" y="46" width="38" height="9" rx="2" fill="rgba(13,18,28,.85)" stroke="#b6c0cf" stroke-width="2" />
+      <rect x="26" y="60" width="48" height="9" rx="2" fill="rgba(9,13,22,.9)" stroke="#b6c0cf" stroke-width="2" />
+      <path d="M32 76 H68" stroke="#9aa3b2" stroke-width="1.2" opacity=".5" />
+    </>
+  )}
+
+  {system === 'applications' && (
+    <>
+      {/* impact network */}
+      <path d="M50 31 34.5 65.5 M50 31 65.5 65.5 M36.5 70 H63.5" stroke="#b6c0cf" stroke-width="2" stroke-linecap="round" />
+      <circle cx="50" cy="26" r="5" fill="var(--sigil-accent, #b9c6d8)" />
+      <circle cx="50" cy="26" r="8" stroke="#9aa3b2" stroke-width="1.2" opacity=".55" />
+      <circle cx="32" cy="70" r="4.5" fill="rgba(13,18,28,.85)" stroke="#dfe6f0" stroke-width="2" />
+      <circle cx="68" cy="70" r="4.5" fill="rgba(13,18,28,.85)" stroke="#dfe6f0" stroke-width="2" />
+      <path d="M50 12 V16" stroke="var(--sigil-accent, #b9c6d8)" stroke-width="2" stroke-linecap="round" />
+    </>
+  )}
+
+  {system === 'systems' && (
+    <>
+      {/* foundation strata + core column */}
+      <path d="M26 36 H74 M22 50 H78 M26 64 H74" stroke="#dfe6f0" stroke-width="2.2" stroke-linecap="round" />
+      <path d="M50 24 V76" stroke="var(--sigil-accent, #b9c6d8)" stroke-width="2.2" stroke-linecap="round" />
+      <circle cx="50" cy="36" r="2.4" fill="rgba(9,13,22,.95)" stroke="#dfe6f0" stroke-width="1.4" />
+      <circle cx="50" cy="50" r="2.4" fill="rgba(9,13,22,.95)" stroke="#dfe6f0" stroke-width="1.4" />
+      <circle cx="50" cy="64" r="2.4" fill="rgba(9,13,22,.95)" stroke="#dfe6f0" stroke-width="1.4" />
+      <path d="M38 82 H62" stroke="#9aa3b2" stroke-width="1.2" opacity=".5" />
+    </>
+  )}
+</svg>

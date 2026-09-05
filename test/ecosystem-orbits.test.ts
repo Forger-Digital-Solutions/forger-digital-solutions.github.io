@@ -45,11 +45,21 @@ describe('FDS ecosystem orbital model', () => {
     expect(component).toContain('.orbit-path { stroke: var(--planet-color)');
   });
 
-  it('uses a native code-forging emblem in the redesigned Core', () => {
-    expect(component).toContain('class="core__forge-mark"');
-    expect(component).toContain('class="core__code-bracket"');
-    expect(component).toContain('class="core__anvil"');
-    expect(component).toContain('class="core__aperture"');
+  it('uses the recovered CodeForge orbital-crystal emblem in the Core', () => {
+    expect(component).toContain('<CodeForgeEmblem');
+    expect(component).toContain('class="core__emblem"');
+    expect(component).toContain('class="core__emblem-halo"');
+    // The retired generic anvil/brackets mark must not return.
+    expect(component).not.toContain('core__anvil');
+    expect(component).not.toContain('core__code-bracket');
+  });
+
+  it('renders the FDS system sigil family instead of generic line icons', () => {
+    expect(component).toContain('<SystemSigil');
+    expect(component).toContain('system={planet.icon}');
+    // The old placeholder icon switch is gone.
+    expect(component).not.toContain("planet.icon === 'brain'");
+    expect(component).not.toContain("planet.icon === 'gaming'");
   });
 
   it('freezes path movement at configured positions for reduced motion', () => {

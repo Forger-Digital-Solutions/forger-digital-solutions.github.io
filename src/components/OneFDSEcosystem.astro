@@ -3,7 +3,12 @@
  * ONE FDS ECOSYSTEM
  * Explains how CodeForge (build foundation), GEMS (intelligence research), and the
  * specialized FDS domains fit together — a system-architecture view, not a solar system.
+ * Each node carries its FDS system sigil (src/components/icons/SystemSigil.astro);
+ * CodeForge carries the recovered CodeForge emblem.
  */
+import CodeForgeEmblem from './icons/CodeForgeEmblem.astro';
+import SystemSigil from './icons/SystemSigil.astro';
+
 const domains = [
   {
     key: 'gaming',
@@ -82,9 +87,14 @@ const domains = [
     <!-- FOUNDATION -->
     <div class="eco-tier eco-tier--core">
       <a class="eco-node eco-node--foundation" href="/projects/codeforge" aria-label="Explore CodeForge, public engineering product and FDS engineering foundation">
-        <p class="eco-node__micro">CORE // DEVELOPMENT</p>
-        <h3 class="eco-node__name">CodeForge</h3>
-        <p class="eco-node__verb">BUILD SYSTEMS</p>
+        <div class="eco-node__ident">
+          <span class="eco-node__sigil eco-node__sigil--core" aria-hidden="true"><CodeForgeEmblem uid="oneeco-codeforge" /></span>
+          <div>
+            <p class="eco-node__micro">CORE // DEVELOPMENT</p>
+            <h3 class="eco-node__name">CodeForge</h3>
+            <p class="eco-node__verb">BUILD SYSTEMS</p>
+          </div>
+        </div>
         <p class="eco-node__role">CodeForge is a released autonomous engineering platform that plans repository work, uses tools, runs verification, and coordinates specialized agents. FDS also uses its engineering foundations across product development.</p>
         <p class="eco-node__note">Public product + shared engineering foundation.</p>
       </a>
@@ -95,10 +105,15 @@ const domains = [
     <!-- INTELLIGENCE -->
     <div class="eco-tier">
       <article class="eco-node eco-node--intelligence" tabindex="0" aria-label="GEMS / Training Grounds, intelligence and research layer">
-        <p class="eco-node__micro">DOMAIN // INTELLIGENCE</p>
-        <h3 class="eco-node__name">GEMS / Training Grounds</h3>
-        <p class="eco-node__verb">LEARN</p>
-        <p class="eco-node__role">GEMS develops and specializes model intelligence. Training Grounds supplies curriculum, trials, evaluation, and advancement checkpoints.</p>
+        <div class="eco-node__ident">
+          <span class="eco-node__sigil eco-node__sigil--gems" aria-hidden="true"><SystemSigil system="intelligence" /></span>
+          <div>
+            <p class="eco-node__micro">DOMAIN // INTELLIGENCE</p>
+            <h3 class="eco-node__name">GEMS / Training Grounds</h3>
+            <p class="eco-node__verb">LEARN</p>
+          </div>
+        </div>
+        <p class="eco-node__role">GEMS develops FDS-specific model intelligence through from-scratch research. Training Grounds supplies curriculum, trials, evaluation, and advancement checkpoints.</p>
         <p class="eco-node__note">Its research can inform other products without defining their entire architecture.</p>
       </article>
     </div>
@@ -118,7 +133,10 @@ const domains = [
             tabindex="0"
             aria-label={`${domain.name} domain — ${domain.product}. ${domain.verb}.`}
           >
-            <p class="eco-node__micro">{domain.micro}</p>
+            <div class="eco-node__ident">
+              <span class="eco-node__sigil" aria-hidden="true"><SystemSigil system={domain.key} /></span>
+              <p class="eco-node__micro">{domain.micro}</p>
+            </div>
             <h3 class="eco-domain__name">{domain.name}</h3>
             <p class="eco-domain__product">{domain.product}</p>
             <p class="eco-node__verb">{domain.verb}</p>
@@ -162,6 +180,20 @@ const domains = [
   .eco-tier--core { margin-bottom: .25rem; }
 
   .eco-node { position: relative; width: min(100%, 44rem); padding: 1.05rem 1.2rem; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); background: linear-gradient(150deg, rgba(13,20,32,.96), rgba(6,11,19,.96)); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 16px 40px rgba(0,0,0,.28); outline: none; transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+
+  /* ---- System identity medallions ---- */
+  .eco-node__ident { display: flex; gap: .85rem; align-items: flex-start; }
+  .eco-node__sigil { --sigil-accent: var(--domain-color, #b9c6d8); flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; margin-top: .1rem; border: 1px solid color-mix(in srgb, var(--sigil-accent) 42%, var(--color-border)); border-radius: 50%; background: radial-gradient(circle at 36% 30%, #242c3a, #0a0f18 74%); box-shadow: inset 0 0 10px rgba(0,0,0,.55), 0 0 12px color-mix(in srgb, var(--sigil-accent) 18%, transparent); transition: border-color .25s ease, box-shadow .25s ease; }
+  .eco-node__sigil :global(svg) { width: 72%; height: 72%; }
+  .eco-node__sigil--core { width: 3.1rem; height: 3.1rem; }
+  .eco-node__sigil--gems { --sigil-accent: #4f8fff; }
+  .eco-domain .eco-node__ident { align-items: center; gap: .6rem; }
+  .eco-domain .eco-node__sigil { width: 2.2rem; height: 2.2rem; margin-top: 0; }
+  .eco-domain:hover .eco-node__sigil, .eco-domain:focus-visible .eco-node__sigil { border-color: color-mix(in srgb, var(--sigil-accent) 80%, transparent); box-shadow: inset 0 0 10px rgba(0,0,0,.55), 0 0 20px color-mix(in srgb, var(--sigil-accent) 30%, transparent); }
+  .eco-node--foundation:hover .eco-node__sigil, .eco-node--foundation:focus-visible .eco-node__sigil { border-color: rgba(127,176,255,.85); box-shadow: inset 0 0 10px rgba(0,0,0,.55), 0 0 22px rgba(34,108,241,.4); }
+  .eco-node--intelligence:hover .eco-node__sigil, .eco-node--intelligence:focus-visible .eco-node__sigil { border-color: rgba(111,163,255,.8); box-shadow: inset 0 0 10px rgba(0,0,0,.55), 0 0 20px rgba(59,112,255,.35); }
+  @media (forced-colors: active) { .eco-node__sigil { border-color: CanvasText; } }
+
   .eco-node--foundation { border-color: rgba(91,131,232,.5); box-shadow: 0 0 46px rgba(27,91,230,.22), inset 0 0 26px rgba(117,174,255,.08), inset 0 1px rgba(255,255,255,.05); }
   .eco-node--intelligence { border-color: rgba(79,143,255,.4); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 16px 40px rgba(0,0,0,.28); }
   .eco-node__micro { margin: 0 0 .55rem; color: var(--color-accent-bright); font: 700 .6rem/1 var(--font-mono); letter-spacing: .14em; }
@@ -217,6 +249,8 @@ const domains = [
   }
   @media (max-width: 560px) {
     .one-eco__diagram { padding: 1.2rem .9rem 1.2rem; }
+    .eco-node__sigil { width: 2rem; height: 2rem; }
+    .eco-node__sigil--core { width: 2.6rem; height: 2.6rem; }
     .eco-rail__inner { grid-template-columns: 1fr; gap: 1.1rem; }
     .eco-rail__spine { top: 0; bottom: 0; left: 1.1rem; right: auto; width: 1px; height: auto; background: linear-gradient(180deg, transparent, rgba(91,159,255,.5) 6%, rgba(91,159,255,.5) 94%, transparent); }
     .eco-domain { padding-left: 2.2rem; }
@@ -227,7 +261,7 @@ const domains = [
   }
   @media (prefers-reduced-motion: reduce) {
     .eco-pulse { animation: none; opacity: .8; }
-    .eco-domain, .eco-node { transition: none; }
+    .eco-domain, .eco-node, .eco-node__sigil { transition: none; }
     .eco-domain:hover, .eco-domain:focus-visible { transform: none; }
   }
 </style>

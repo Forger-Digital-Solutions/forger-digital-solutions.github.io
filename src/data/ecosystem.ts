@@ -1,4 +1,8 @@
-export type EcosystemIcon = 'brain' | 'forge' | 'publishing' | 'apps' | 'gaming' | 'foraging' | 'civic' | 'systems';
+/**
+ * Icon keys map 1:1 onto the FDS system sigil family
+ * (src/components/icons/SystemSigil.astro).
+ */
+export type EcosystemIcon = 'intelligence' | 'forged' | 'publishing' | 'applications' | 'gaming' | 'foraging' | 'civic' | 'systems';
 export type LabelSide = 'left' | 'right';
 
 export interface EcosystemOrbit {
@@ -81,7 +85,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     name: 'INTELLIGENCE', 
     subtitle: 'AI-DRIVEN INSIGHT', 
     href: '/projects/gems-training-grounds', 
-    icon: 'brain', 
+    icon: 'intelligence',
     color: '#4f8fff', 
     glow: '#1f63ff', 
     size: 42, 
@@ -94,7 +98,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     name: 'FORGED', 
     subtitle: 'PUBLIC SOFTWARE',
     href: '/forged', 
-    icon: 'forge', 
+    icon: 'forged',
     color: '#c2d5f4', 
     glow: '#77a8e9', 
     size: 40, 
@@ -122,7 +126,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     name: 'APPLICATIONS', 
     subtitle: 'REAL-WORLD IMPACT', 
     href: '/projects', 
-    icon: 'apps', 
+    icon: 'applications',
     color: '#61d7a1', 
     glow: '#24a971', 
     size: 45, 
