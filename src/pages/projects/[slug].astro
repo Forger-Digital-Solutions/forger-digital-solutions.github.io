@@ -1,21 +1,26 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { projects } from '../../data/projects';
-import ProjectCard from '../../components/ProjectCard.astro';
 import ProjectStatus from '../../components/ProjectStatus.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
 import NoteCard from '../../components/NoteCard.astro';
 import GemsDeep from '../../components/GemsDeep.astro';
+import ExploreNext from '../../components/ExploreNext.astro';
 import { statusMeta } from '../../data/status';
 import { getPublishedNotes } from '../../lib/notes';
 import VisualEvidence from '../../components/VisualEvidence.astro';
+import { products } from '../../data/products';
 
 export function getStaticPaths() {
   return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
 }
 
 const { project } = Astro.props;
-const relatedProjects = projects.filter((item) => item.slug !== project.slug).sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99)).slice(0, 3);
+const relatedProjects = projects.filter((item) => item.slug !== project.slug).sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99)).slice(0, 2);
+const exploreLinks = [
+  ...relatedProjects.map((item) => ({ label: item.shortName || item.name, href: `/projects/${item.slug}`, note: item.category })),
+  { label: 'All Projects', href: '/projects', note: 'Full directory' }
+];
 const isGems = project.slug === 'gems-training-grounds';
 const heroEvidenceState = project.slug === 'codeforge'
   ? 'release'
@@ -23,6 +28,9 @@ const heroEvidenceState = project.slug === 'codeforge'
     ? 'research'
     : 'development';
 const status = statusMeta[project.status];
+// Released products get a canonical release strip (version, platform, download)
+// straight from the product record — the page must lead with "you can get this".
+const releaseProduct = products.find((p) => p.projectSlug === project.slug && p.downloadUrl);
 const projectNotes = (await getPublishedNotes())
   .filter((note) => note.data.projectSlug === project.slug)
   .slice(0, 3);
@@ -74,6 +82,27 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
         {project.tags.slice(0, 5).map((tag) => <span class="tag">{tag}</span>)}
       </div>
     </header>
+
+    {releaseProduct && (
+      <section class="release-strip" aria-label={`Get ${releaseProduct.name}`}>
+        <p class="release-strip__meta">
+          <span class="release-strip__state">{releaseProduct.status === 'released' ? 'RELEASED' : releaseProduct.status === 'public-beta' ? 'PUBLIC PREVIEW' : 'AVAILABLE'}</span>
+          {releaseProduct.version && <span class="release-strip__version">{releaseProduct.version}</span>}
+          <span class="release-strip__platform">{releaseProduct.platform.join(' · ')}</span>
+        </p>
+        <div class="release-strip__ctas">
+          <a href={releaseProduct.downloadUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Get {releaseProduct.name}<span aria-hidden="true">→</span>
+          </a>
+          {releaseProduct.docsUrl && (
+            <a href={releaseProduct.docsUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Documentation</a>
+          )}
+          {releaseProduct.releaseNotesUrl && (
+            <a href={releaseProduct.releaseNotesUrl} target="_blank" rel="noopener noreferrer" class="release-strip__notes">Release notes</a>
+          )}
+        </div>
+      </section>
+    )}
 
     <!-- Visual -->
     {project.heroImage ? (
@@ -211,7 +240,7 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
                   Repository
                 </a>
               )}
-              {project.websiteUrl && (
+              {project.websiteUrl && !releaseProduct && (
                 <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
                   Live Project
                 </a>
@@ -267,13 +296,7 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     )}
   </article>
 
-  <!-- Related Projects -->
-  <section class="related-projects" aria-labelledby="related">
-    <h2 id="related" class="related-title">Explore More FDS Projects</h2>
-    <div class="related-grid">
-      {relatedProjects.map((item) => <ProjectCard project={item} />)}
-    </div>
-  </section>
+  <ExploreNext links={exploreLinks} />
 </BaseLayout>
 
 <style>
@@ -359,6 +382,75 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     flex-wrap: wrap;
     gap: .4rem;
     margin-top: 1.25rem;
+  }
+
+  /* Release strip: canonical download row for projects with a released product. */
+  .release-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding: .9rem 1.2rem;
+    border: 1px solid color-mix(in srgb, var(--project-accent) 34%, var(--color-border));
+    border-left: 3px solid var(--project-accent);
+    border-radius: var(--radius-md);
+    background: rgba(8,14,25,.7);
+  }
+  .release-strip__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .4rem 1rem;
+    margin: 0;
+  }
+  .release-strip__state {
+    color: var(--project-accent);
+    font: 800 .72rem/1 var(--font-mono);
+    letter-spacing: .14em;
+  }
+  .release-strip__version {
+    color: var(--color-text);
+    font: 700 .78rem/1 var(--font-mono);
+  }
+  .release-strip__platform {
+    color: var(--color-text-subtle);
+    font: 650 .68rem/1 var(--font-mono);
+    letter-spacing: .05em;
+  }
+  .release-strip__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem;
+    align-items: center;
+  }
+  .release-strip__ctas .btn {
+    min-height: 2.6rem;
+    padding: .6rem .95rem;
+  }
+  .release-strip__notes {
+    color: var(--color-text-muted);
+    font-size: .85rem;
+    font-weight: 600;
+  }
+  .release-strip__notes:hover {
+    color: var(--color-text);
+  }
+  .release-strip__notes:focus-visible {
+    outline: 2px solid var(--project-accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (max-width: 640px) {
+    .release-strip {
+      align-items: stretch;
+      flex-direction: column;
+    }
+    .release-strip__ctas .btn {
+      flex: 1;
+    }
   }
 
   /* Visual */
@@ -678,24 +770,6 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     margin-top: 1rem;
   }
 
-  /* Related Projects */
-  .related-projects {
-    padding: var(--space-6) 0;
-  }
-  
-  .related-title {
-    margin: 0 0 1rem;
-    font-size: clamp(1.3rem, 2.5vw, 1.5rem);
-    font-weight: 750;
-    letter-spacing: -.025em;
-  }
-  
-  .related-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-  }
-
   /* Responsive */
   @media (max-width: 900px) {
     .project-layout {
@@ -724,9 +798,6 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
       grid-template-columns: 1fr;
     }
     .gems-grid {
-      grid-template-columns: 1fr;
-    }
-    .related-grid {
       grid-template-columns: 1fr;
     }
   }

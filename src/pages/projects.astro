@@ -1,10 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { projects } from '../data/projects';
-import ProjectCard from '../components/ProjectCard.astro';
+import { products } from '../data/products';
+import ProjectSpotlight from '../components/ProjectSpotlight.astro';
+import ProjectIndexItem from '../components/ProjectIndexItem.astro';
 
 // Sort by sortOrder to maintain deliberate ecosystem narrative
 const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
+const codeForge = ordered.find((p) => p.slug === 'codeforge')!;
+const gems = ordered.find((p) => p.slug === 'gems-training-grounds')!;
+const privateDev = ordered.filter((p) => p.slug !== 'codeforge' && p.slug !== 'gems-training-grounds');
+const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
 ---
 <BaseLayout
   title="Projects"
@@ -83,11 +89,28 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
   </section>
 
   <section class="projects-section" aria-labelledby="projects-list">
-    <h2 id="projects-list" class="sr-only">Project List</h2>
-    <div class="projects-grid">
-      {ordered.map((project) => (
-        <ProjectCard project={project} featured={project.featured} />
-      ))}
+    <h2 id="projects-list" class="sr-only">Project Directory</h2>
+
+    <div class="directory-tier">
+      <p class="directory-tier__label">Featured / Released</p>
+      <ProjectSpotlight
+        project={codeForge}
+        tier="Public product and FDS engineering foundation"
+        secondaryCta={codeForgeProduct ? { label: 'Get CodeForge', href: '/forged' } : undefined}
+      />
+    </div>
+
+    <div class="directory-tier">
+      <p class="directory-tier__label">Active Research</p>
+      <ProjectSpotlight project={gems} tier="Flagship AI research program" />
+    </div>
+
+    <div class="directory-tier">
+      <p class="directory-tier__label">Private Development</p>
+      <p class="directory-tier__note">Earlier-stage work, not yet public. Status labels below reflect where each project actually is.</p>
+      <ul class="directory-list">
+        {privateDev.map((project) => <ProjectIndexItem project={project} />)}
+      </ul>
     </div>
   </section>
 </BaseLayout>
@@ -235,10 +258,40 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
     line-height: 1.3;
   }
 
-  .projects-grid {
+  .directory-tier {
+    margin-bottom: 2.5rem;
+  }
+
+  .directory-tier__label {
+    margin: 0 0 .9rem;
+    color: var(--color-text-subtle);
+    font: 700 .68rem/1 var(--font-mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .directory-tier__note {
+    max-width: 42rem;
+    margin: -.5rem 0 1rem;
+    color: var(--color-text-subtle);
+    font-size: .85rem;
+    line-height: 1.6;
+  }
+
+  .directory-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-border);
+    box-shadow: var(--shadow-sm);
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .projects-section {
     padding-bottom: 4rem;
   }
 
@@ -260,10 +313,6 @@ const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder 
   @media (max-width: 480px) {
     .projects-hero {
       padding: 2rem 0 1.5rem;
-    }
-    .projects-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
     }
   }
 </style>

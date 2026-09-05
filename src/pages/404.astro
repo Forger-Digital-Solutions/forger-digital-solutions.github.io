@@ -12,6 +12,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <a href="/" class="btn btn-primary">Return Home</a>
       <a href="/projects" class="btn btn-outline">Explore Projects</a>
     </div>
+    <p class="notfound-alt">
+      Looking for released software? <a href="/forged">Forged</a> ·
+      Engineering journal: <a href="/notes">Notes</a>
+    </p>
   </div>
 </BaseLayout>
 
@@ -54,6 +58,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .notfound-alt {
+    margin: 2.25rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: .88rem;
+  }
+
+  .notfound-alt a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .notfound-alt a:hover,
+  .notfound-alt a:focus-visible {
+    color: var(--color-text);
   }
 
   @media (max-width: 767px) {

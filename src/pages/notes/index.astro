@@ -1,15 +1,20 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import NoteCard from '../../components/NoteCard.astro';
-import { getPublishedNotes } from '../../lib/notes';
+import { getPublishedNotes, formatNoteDate, type Note } from '../../lib/notes';
+import { projects } from '../../data/projects';
 
 const notes = await getPublishedNotes();
+const [latest, ...rest] = notes;
+
+const relatedProject = (note: Note) =>
+  note.data.projectSlug ? projects.find((p) => p.slug === note.data.projectSlug) : undefined;
 ---
 <BaseLayout
   title="Notes"
   description="A public engineering log from Forger Digital Solutions: build logs, research notes, and writing tied to active projects."
 >
   <div class="page-head">
+    <p class="page-eyebrow">FDS // Engineering Journal</p>
     <h1 class="page-title">Notes</h1>
     <p class="page-description">
       Public field notes on product releases, engineering decisions, model research, findings,
@@ -22,18 +27,85 @@ const notes = await getPublishedNotes();
       <p>No notes have been published yet. Check back soon.</p>
     </div>
   ) : (
-    <ul class="notes-grid">
-      {notes.map((note) => (
-        <li><NoteCard note={note} /></li>
-      ))}
-    </ul>
+    <div class="journal">
+      {latest && (
+        <article class="journal-featured">
+          <p class="journal-featured__meta">
+            <span>{formatNoteDate(latest.data.date)}</span>
+            {latest.data.category && <span class="journal-featured__cat">{latest.data.category}</span>}
+            {relatedProject(latest) && <span>· {relatedProject(latest)!.name}</span>}
+          </p>
+          <h2 class="journal-featured__title">
+            <a href={`/notes/${latest.id}`}>{latest.data.title}</a>
+          </h2>
+          <p class="journal-featured__desc">{latest.data.description}</p>
+          <a class="journal-featured__more" href={`/notes/${latest.id}`}>
+            Read note <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      )}
+
+      {rest.length > 0 && (
+        <section class="journal-archive" aria-label="Recent notes">
+          <h2 class="journal-archive__title">Recent notes</h2>
+          <ul class="journal-list" role="list">
+            {rest.map((note) => {
+              const project = relatedProject(note);
+              return (
+                <li class="journal-row">
+                  <p class="journal-row__meta">
+                    <span>{formatNoteDate(note.data.date)}</span>
+                    {note.data.category && <span>{note.data.category}</span>}
+                  </p>
+                  <div class="journal-row__body">
+                    <h3 class="journal-row__title"><a href={`/notes/${note.id}`}>{note.data.title}</a></h3>
+                    <p class="journal-row__desc">{note.data.description}</p>
+                    <p class="journal-row__foot">
+                      {project && <span>{project.name}</span>}
+                      {note.data.tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+    </div>
   )}
 </BaseLayout>
 
 <style>
-  .page-head { max-width: 46rem; padding: 3rem 0 2rem; }
-  .page-title { font-size: clamp(2rem, 5vw, 2.75rem); margin-bottom: 1rem; letter-spacing: -.03em; }
-  .page-description { color: var(--color-text-muted); font-size: 1.05rem; line-height: 1.7; }
   .notes-empty { padding: 3rem 0 6rem; color: var(--color-text-muted); }
-  .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem; margin: 0 0 5rem; padding: 0; list-style: none; }
+
+  .journal { max-width: 52rem; margin: 0 0 5rem; }
+
+  /* Latest note leads the page unboxed: the title is the hierarchy. */
+  .journal-featured { padding: 0 0 2.5rem; }
+  .journal-featured__meta { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: center; margin: 0; color: var(--color-text-subtle); font: 700 .68rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .journal-featured__cat { padding: .25rem .55rem; border: 1px solid var(--color-border-strong); border-radius: 999px; color: var(--color-accent-secondary); }
+  .journal-featured__title { margin: 1rem 0 0; font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.08; letter-spacing: -.035em; }
+  .journal-featured__title a { color: var(--color-text); }
+  .journal-featured__title a:hover { color: var(--color-accent-bright); }
+  .journal-featured__desc { max-width: 44rem; margin: .9rem 0 0; color: var(--color-text-muted); font-size: 1.05rem; line-height: 1.7; }
+  .journal-featured__more { display: inline-block; margin-top: 1.1rem; color: var(--color-text); font: 700 .74rem/1 var(--font-mono); letter-spacing: .07em; text-transform: uppercase; }
+  .journal-featured__more span { color: var(--color-accent); }
+  .journal-featured__more:hover { color: var(--color-accent-bright); }
+
+  .journal-archive__title { margin: 0 0 .4rem; color: var(--color-text-subtle); font: 700 .68rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .journal-list { margin: 0; padding: 0; list-style: none; }
+
+  /* Recent notes are rows, not cards: hairlines separate entries. */
+  .journal-row { display: grid; grid-template-columns: 9.5rem 1fr; gap: 1.4rem; padding: 1.4rem 0; border-top: 1px solid var(--color-border); }
+  .journal-row__meta { display: grid; gap: .35rem; align-content: start; margin: .2rem 0 0; color: var(--color-text-subtle); font: 700 .66rem/1.4 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .journal-row__title { margin: 0; font-size: 1.18rem; line-height: 1.25; letter-spacing: -.02em; }
+  .journal-row__title a { color: var(--color-text); }
+  .journal-row__title a:hover { color: var(--color-accent-bright); }
+  .journal-row__desc { margin: .45rem 0 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.6; }
+  .journal-row__foot { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin: .6rem 0 0; color: var(--color-text-subtle); font: 650 .64rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }
+
+  @media (max-width: 640px) {
+    .journal-row { grid-template-columns: 1fr; gap: .6rem; }
+    .journal-row__meta { grid-auto-flow: column; gap: .9rem; margin: 0; }
+  }
 </style>

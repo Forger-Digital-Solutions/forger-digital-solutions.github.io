@@ -1,0 +1,90 @@
+---
+/**
+ * Editorial spotlight row for a single prominent project on the Projects
+ * directory. Used for the two flagship entries (CodeForge, GEMS) — each gets
+ * one, not a card grid, because they are not the same kind of thing (a
+ * released product vs. an active research program) and shouldn't look alike.
+ */
+import type { Project } from '../types';
+import ProjectStatus from './ProjectStatus.astro';
+
+interface Props {
+  project: Project;
+  tier: string;
+  secondaryCta?: { label: string; href: string };
+}
+
+const { project, tier, secondaryCta } = Astro.props;
+---
+
+<article class="spotlight" id={project.id} style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
+  <p class="spotlight__tier">{tier}</p>
+  <div class="spotlight__head">
+    <h3 class="spotlight__name"><a href={`/projects/${project.slug}`}>{project.name}</a></h3>
+    <div class="spotlight__statuses">
+      <ProjectStatus status={project.status} />
+      {project.secondaryStatus && <ProjectStatus status={project.secondaryStatus} />}
+    </div>
+  </div>
+
+  <p class="spotlight__summary">{project.summary}</p>
+
+  {project.audience && (
+    <p class="spotlight__audience"><span>Built for</span> {project.audience.split(',')[0]}</p>
+  )}
+
+  <div class="spotlight__foot">
+    <div class="spotlight__tags">
+      {project.tags.slice(0, 4).map((tag) => <span class="tag">{tag}</span>)}
+    </div>
+    <div class="spotlight__ctas">
+      {secondaryCta && <a href={secondaryCta.href} class="btn btn-outline">{secondaryCta.label}</a>}
+      <a href={`/projects/${project.slug}`} class="spotlight__link">
+        <span>Explore {project.shortName || project.name}</span>
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+          <path d="M4 2.5L9.5 7L4 11.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .spotlight {
+    position: relative;
+    padding: 1.75rem 2rem;
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--project-accent);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(120deg, color-mix(in srgb, var(--project-accent) 8%, rgba(13,20,32,.96)), rgba(7,12,20,.96) 65%);
+    box-shadow: var(--shadow-sm);
+    scroll-margin-top: 4.5rem;
+  }
+  .spotlight__tier { margin: 0 0 .7rem; color: var(--project-accent); font: 700 .66rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .spotlight__head { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.1rem; }
+  .spotlight__name { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 750; letter-spacing: -.03em; }
+  .spotlight__name a { color: var(--color-text); }
+  .spotlight__name a:hover { color: var(--project-accent); }
+  .spotlight__statuses { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .spotlight__summary { max-width: 46rem; margin: .9rem 0 0; color: var(--color-text-muted); font-size: 1rem; line-height: 1.7; }
+  .spotlight__audience { margin: .7rem 0 0; color: var(--color-text-muted); font-size: .85rem; }
+  .spotlight__audience span { margin-right: .4rem; color: var(--color-text-subtle); font: 650 .68rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+  .spotlight__foot { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; justify-content: space-between; margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid rgba(255,255,255,.05); }
+  .spotlight__tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .spotlight__ctas { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+  .spotlight__link { display: inline-flex; align-items: center; gap: .4rem; color: var(--color-text); font: 700 .76rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }
+  .spotlight__link svg { color: var(--project-accent); transition: transform .2s ease; }
+  .spotlight__link:hover { color: var(--project-accent); }
+  .spotlight__link:hover svg { transform: translateX(2px); }
+  .spotlight__link:focus-visible { outline: 2px solid var(--project-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+  @media (max-width: 600px) {
+    .spotlight { padding: 1.4rem 1.3rem; }
+    .spotlight__foot { flex-direction: column; align-items: stretch; }
+    .spotlight__ctas { justify-content: space-between; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spotlight__link, .spotlight__link svg { transition: none; }
+  }
+</style>

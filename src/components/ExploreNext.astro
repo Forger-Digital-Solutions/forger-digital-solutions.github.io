@@ -1,0 +1,64 @@
+---
+/**
+ * Compact end-of-page navigation. Replaces the old "Related Projects" block,
+ * which rendered three full ProjectCards (~13 elements each) at the bottom of
+ * every project page — a second card grid after the reader already finished
+ * the page. This is text + one line of context + an arrow, not a card wall.
+ */
+interface ExploreLink {
+  label: string;
+  href: string;
+  note?: string;
+}
+
+interface Props {
+  links: ExploreLink[];
+  title?: string;
+}
+
+const { links, title = 'Explore Next' } = Astro.props;
+---
+
+<nav class="explore-next" aria-label={title}>
+  <p class="explore-next__label">{title}</p>
+  <ul class="explore-next__list">
+    {links.map((link) => (
+      <li>
+        <a href={link.href} class="explore-next__link">
+          <span class="explore-next__text">
+            <span class="explore-next__name">{link.label}</span>
+            {link.note && <span class="explore-next__note">{link.note}</span>}
+          </span>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M4 2.5L9.5 7L4 11.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .explore-next { padding: var(--space-5) 0 var(--space-6); border-top: 1px solid var(--color-border); }
+  .explore-next__label { margin: 0 0 .9rem; color: var(--color-text-subtle); font: 700 .68rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .explore-next__list { display: flex; flex-wrap: wrap; gap: .6rem; margin: 0; padding: 0; list-style: none; }
+  .explore-next__link { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1rem; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); transition: border-color .2s ease, transform .2s ease; }
+  .explore-next__link:hover { border-color: var(--color-accent-secondary); transform: translateY(-1px); opacity: 1; }
+  .explore-next__link:focus-visible { outline: 2px solid var(--color-accent-bright); outline-offset: 2px; }
+  .explore-next__text { display: flex; align-items: baseline; gap: .5rem; }
+  .explore-next__name { color: var(--color-text); font-size: .92rem; font-weight: 700; letter-spacing: -.01em; }
+  .explore-next__note { color: var(--color-text-subtle); font-size: .78rem; }
+  .explore-next__link svg { flex-shrink: 0; color: var(--color-accent-secondary); transition: transform .2s ease; }
+  .explore-next__link:hover svg { transform: translateX(2px); }
+
+  @media (max-width: 480px) {
+    .explore-next__list { flex-direction: column; align-items: stretch; }
+    .explore-next__link { justify-content: space-between; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .explore-next__link, .explore-next__link svg { transition: none; }
+    .explore-next__link:hover { transform: none; }
+    .explore-next__link:hover svg { transform: none; }
+  }
+</style>

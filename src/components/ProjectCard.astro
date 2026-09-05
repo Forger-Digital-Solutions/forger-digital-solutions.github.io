@@ -20,6 +20,19 @@ const ecosystemConfig: Record<string, { display: string; color: string }> = {
 
 const eco = project.ecosystem ? ecosystemConfig[project.ecosystem] : null;
 const isFlagship = project.flagship || featured;
+
+// Flagship badge must reflect this project's actual maturity, not a fixed
+// string — CodeForge (RELEASED) and GEMS (RESEARCH) are both flagship
+// projects but are not the same kind of thing.
+const flagshipBadge: Record<string, string> = {
+  RELEASED: 'Flagship Release',
+  RESEARCH: 'Flagship Research',
+  'ACTIVE DEVELOPMENT': 'Flagship Product',
+  'PRIVATE DEVELOPMENT': 'Flagship Product',
+  'PREVIEW / BETA': 'Flagship Preview',
+  CONCEPT: 'Flagship Concept'
+};
+const badgeLabel = flagshipBadge[project.status] ?? 'Flagship';
 ---
 
 <article 
@@ -42,7 +55,7 @@ const isFlagship = project.flagship || featured;
   
   <div class="project-card__body">
     <div class="project-card__identity">
-      {isFlagship && <span class="project-card__badge">Research Platform</span>}
+      {isFlagship && <span class="project-card__badge">{badgeLabel}</span>}
       <h3 class="project-card__title">
         <a href={`/projects/${project.slug}`}>{project.name}</a>
       </h3>

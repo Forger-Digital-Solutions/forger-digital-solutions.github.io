@@ -22,44 +22,46 @@ import { siteConfig } from '../config/site';
       Shared research and engineering connect them without turning them into one application.
     </p>
 
-    <div class="founder">
-      {siteConfig.authorImage
-        ? <img class="founder__photo" src={siteConfig.authorImage} alt={`${siteConfig.author}, founder of Forger Digital Solutions`} width="112" height="112" loading="lazy" />
-        : <div class="founder__photo founder__photo--monogram" aria-hidden="true">ES</div>}
-      <div class="founder__meta">
-        <p class="founder__name">{siteConfig.author}</p>
-        <p class="founder__role">Founder &amp; Developer</p>
-        <p class="founder__statement">Building FDS independently so ambitious software, AI research, creative tools, and useful community applications can grow from direct engineering work rather than a corporate product formula.</p>
-        <a class="founder__link" href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">Connect on LinkedIn <span aria-hidden="true">&#8599;</span></a>
+    <div class="about-who">
+      <div class="founder">
+        {siteConfig.authorImage
+          ? <img class="founder__photo" src={siteConfig.authorImage} alt={`${siteConfig.author}, founder of Forger Digital Solutions`} width="112" height="112" loading="lazy" />
+          : <div class="founder__photo founder__photo--monogram" aria-hidden="true">ES</div>}
+        <div class="founder__meta">
+          <p class="founder__name">{siteConfig.author}</p>
+          <p class="founder__role">Founder &amp; Developer</p>
+          <p class="founder__statement">Building FDS independently so ambitious software, AI research, creative tools, and useful community applications can grow from direct engineering work rather than a corporate product formula.</p>
+          <a class="founder__link" href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">Connect on LinkedIn <span aria-hidden="true">&#8599;</span></a>
+        </div>
       </div>
-    </div>
 
-    <dl class="about-details">
-      <div class="about-detail">
-        <dt>Founded by</dt>
-        <dd>{siteConfig.author}</dd>
-      </div>
-      <div class="about-detail">
-        <dt>Location</dt>
-        <dd>New Jersey, United States</dd>
-      </div>
-      <div class="about-detail">
-        <dt>Contact</dt>
-        <dd><a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a></dd>
-      </div>
-      <div class="about-detail">
-        <dt>Community</dt>
-        <dd>
-          <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
-          <span aria-hidden="true"> · </span>
-          <a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube</a>
-          <span aria-hidden="true"> · </span>
-          <a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Discord</a>
-          <span aria-hidden="true"> · </span>
-          <a href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        </dd>
-      </div>
-    </dl>
+      <dl class="about-details">
+        <div class="about-detail">
+          <dt>Founded by</dt>
+          <dd>{siteConfig.author}</dd>
+        </div>
+        <div class="about-detail">
+          <dt>Location</dt>
+          <dd>New Jersey, United States</dd>
+        </div>
+        <div class="about-detail">
+          <dt>Contact</dt>
+          <dd><a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a></dd>
+        </div>
+        <div class="about-detail">
+          <dt>Community</dt>
+          <dd>
+            <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+            <span aria-hidden="true"> · </span>
+            <a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube</a>
+            <span aria-hidden="true"> · </span>
+            <a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Discord</a>
+            <span aria-hidden="true"> · </span>
+            <a href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
 
     <section class="about-approach" aria-labelledby="approach-heading">
       <h2 id="approach-heading">Why independent development</h2>
@@ -111,11 +113,20 @@ import { siteConfig } from '../config/site';
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 0;
     padding: 1.25rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: var(--color-surface);
+  }
+
+  /* Founder card and contact facts form one band instead of two floating blocks. */
+  .about-who {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
+    margin-bottom: 3rem;
   }
 
   .founder {
@@ -169,6 +180,12 @@ import { siteConfig } from '../config/site';
     letter-spacing: 0.04em;
   }
 
+  @media (max-width: 820px) {
+    .about-who {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 480px) {
     .founder {
       flex-direction: column;
@@ -179,10 +196,13 @@ import { siteConfig } from '../config/site';
   .about-details {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 0.75rem;
+    padding: 1.25rem 1.25rem 1.25rem 1.5rem;
+    border: 1px solid var(--color-border);
     border-left: 3px solid var(--color-accent);
-    padding-left: 1.25rem;
-    margin-bottom: 3rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
   }
 
   .about-detail dt {

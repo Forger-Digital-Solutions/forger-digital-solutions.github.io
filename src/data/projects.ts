@@ -61,8 +61,9 @@ export const projects: Project[] = [
     ],
     roadmap: 'Post-training, specialization, controlled capability advancement, and increasingly FDS-developed foundations over time.',
     accentColor: '#2f6bff', visualStyle: 'gem', sortOrder: 2,
-    heroImage: visualAssets.gemsFamily,
-    gallery: [visualAssets.trainingGrounds]
+    heroImage: visualAssets.gemsFamily
+    // trainingGrounds visual now lives inside the Training Grounds subsection
+    // of GemsDeep, not a generic end-of-page gallery.
   },
   {
     id: 'kyrablox', slug: 'kyrablox', name: 'KyraBlox',

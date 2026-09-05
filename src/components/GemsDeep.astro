@@ -1,6 +1,8 @@
 ---
 import { gems, learningStages, capabilityRoadmap, affordability } from '../data/gems';
 import type { CapabilityStatus } from '../data/gems';
+import VisualEvidence from './VisualEvidence.astro';
+import { visualAssets } from '../data/visuals';
 
 const groups: { status: CapabilityStatus; label: string; note: string }[] = [
   { status: 'in-development', label: 'In Development', note: 'Actively being researched and built, not yet shipped as finished standalone capabilities.' },
@@ -11,6 +13,14 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
 ---
 
 <section class="gems-deep" aria-labelledby="gems-family-title">
+  <nav class="gems-deep__nav" aria-label="GEMS page sections">
+    <a href="#gems-family-title">Family</a>
+    <a href="#gems-journey-title">Learning</a>
+    <a href="#gems-tg-title">Training Grounds</a>
+    <a href="#gems-cap-title">Capabilities</a>
+    <a href="#gems-afford-title">Affordability</a>
+  </nav>
+
   <h2 id="gems-family-title" class="gems-deep__h2">The GEMS family</h2>
   <p class="gems-deep__intro">
     GEMS is not one model wearing different hats. It is a family of independent research lineages: Topaz is the broad generalist and orchestrator,
@@ -24,25 +34,28 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
         <h3 class="gdeep-card__name">{gem.name}</h3>
         <p class="gdeep-card__role">{gem.role}</p>
         <p class="gdeep-card__state">STATE // {gem.state}</p>
-        <dl class="gdeep-card__meta">
-          <div><dt>Learning direction</dt><dd>{gem.direction}</dd></div>
-          <div><dt>Current foundation strategy</dt><dd>{gem.foundationStrategy}</dd></div>
-          <div><dt>May eventually help with</dt><dd>{gem.future}</dd></div>
-          <div><dt>Where it fits</dt><dd>{gem.fit}</dd></div>
-          <div><dt>Not claimed yet</dt><dd>{gem.notClaimed}</dd></div>
-        </dl>
+        <p class="gdeep-card__direction">{gem.direction}</p>
+        <details class="gdeep-card__more">
+          <summary>More about {gem.name}</summary>
+          <dl class="gdeep-card__meta">
+            <div><dt>Current foundation strategy</dt><dd>{gem.foundationStrategy}</dd></div>
+            <div><dt>May eventually help with</dt><dd>{gem.future}</dd></div>
+            <div><dt>Where it fits</dt><dd>{gem.fit}</dd></div>
+            <div><dt>Not claimed yet</dt><dd>{gem.notClaimed}</dd></div>
+          </dl>
+        </details>
       </article>
     ))}
   </div>
 
   <h2 id="gems-journey-title" class="gems-deep__h2">How a GEM advances</h2>
   <p class="gems-deep__intro">
-    Development is treated as a loop, not a launch. Each rung is proven with evidence before the next is attempted.
+    Development is treated as one loop, not a launch. Each rung is proven with evidence before the next is attempted.
   </p>
   <ol class="gems-deep__journey">
     {learningStages.map((stage) => (
       <li class="gjourney-step">
-        <span class="gjourney-step__num">{stage.num}</span>
+        <span class="gjourney-step__num" aria-hidden="true">{stage.num}</span>
         <div>
           <p class="gjourney-step__title">{stage.title}</p>
           <p class="gjourney-step__desc">{stage.desc}</p>
@@ -50,6 +63,22 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
       </li>
     ))}
   </ol>
+
+  <h2 id="gems-tg-title" class="gems-deep__h2">Training Grounds</h2>
+  <p class="gems-deep__intro">
+    Training Grounds is where the family learns and is measured. It is a governed space for experimentation: GEMS models encounter controlled
+    challenges, are evaluated against prepared tasks, fail safely, and are measured before anything advances. Advancement follows evidence, not activity —
+    a GEM moves to the next rung only when results support it. Public descriptions stay high-level on purpose; the underlying research, datasets, and
+    methods are not exposed.
+  </p>
+  <ul class="gems-deep__tg-facets" role="list">
+    <li>Controlled trials</li>
+    <li>Held-out evaluation</li>
+    <li>Failure analysis</li>
+    <li>Checkpoint gating</li>
+    <li>Model lineage boundaries</li>
+  </ul>
+  <VisualEvidence {...visualAssets.trainingGrounds} />
 
   <h2 id="gems-cap-title" class="gems-deep__h2">Capability direction</h2>
   <p class="gems-deep__intro">
@@ -68,14 +97,6 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
     </div>
   ))}
 
-  <h2 id="gems-tg-title" class="gems-deep__h2">Training Grounds</h2>
-  <p class="gems-deep__intro">
-    Training Grounds is where the family learns and is measured. It is a governed space for experimentation: GEMS models encounter controlled
-    challenges, are evaluated against prepared tasks, fail safely, and are measured before anything advances. Advancement follows evidence, not activity —
-    a GEM moves to the next rung only when results support it. Public descriptions stay high-level on purpose; the underlying research, datasets, and
-    methods are not exposed.
-  </p>
-
   <div class="gems-deep__afford">
     <h2 id="gems-afford-title" class="gems-deep__h2 gems-deep__h2--inline">Affordable by design</h2>
     <p class="gems-deep__afford-lead">{affordability.lead}</p>
@@ -86,9 +107,15 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
 
 <style>
   .gems-deep { margin-top: 2.5rem; }
-  .gems-deep__h2 { margin: 2.5rem 0 .8rem; font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 750; letter-spacing: -.025em; color: var(--color-text); }
+  .gems-deep__h2 { margin: 2.5rem 0 .8rem; font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 750; letter-spacing: -.025em; color: var(--color-text); scroll-margin-top: 5.5rem; }
   .gems-deep__h2--inline { margin-top: 0; }
   .gems-deep__intro { max-width: 46rem; margin: 0 0 1.2rem; color: var(--color-text-muted); font-size: 1rem; line-height: 1.72; }
+
+  /* In-page nav: a slim sticky strip, useful only because this page runs long. */
+  .gems-deep__nav { position: sticky; top: 3.75rem; z-index: 5; display: flex; gap: .4rem; overflow-x: auto; margin-bottom: 2rem; padding: .5rem; border: 1px solid var(--color-border); border-radius: 999px; background: rgba(7,12,20,.88); backdrop-filter: blur(6px); scrollbar-width: none; }
+  .gems-deep__nav::-webkit-scrollbar { display: none; }
+  .gems-deep__nav a { flex-shrink: 0; padding: .45rem .8rem; border-radius: 999px; color: var(--color-text-muted); font: 700 .68rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; transition: color .2s ease, background .2s ease; }
+  .gems-deep__nav a:hover, .gems-deep__nav a:focus-visible { color: var(--color-text); background: rgba(79,143,255,.12); }
 
   .gems-deep__family { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
   .gdeep-card { padding: 1.2rem 1.3rem; border: 1px solid color-mix(in srgb, var(--gem-color) 34%, var(--color-border)); border-radius: var(--radius-md); background: rgba(8,14,25,.7); }
@@ -96,16 +123,28 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
   .gdeep-card__name { margin: 0; color: var(--color-text); font-size: 1.3rem; letter-spacing: -.01em; }
   .gdeep-card__role { margin: .25rem 0 0; color: var(--color-silver); font-size: .95rem; font-weight: 600; }
   .gdeep-card__state { margin: .55rem 0 0; color: var(--color-text-subtle); font: 700 .62rem/1 var(--font-mono); letter-spacing: .12em; }
+  .gdeep-card__direction { margin: .6rem 0 0; color: var(--color-text-muted); font-size: .88rem; line-height: 1.6; }
+
+  .gdeep-card__more { margin-top: .8rem; border-top: 1px solid var(--color-border); padding-top: .6rem; }
+  .gdeep-card__more summary { color: var(--gem-color); font: 700 .72rem/1 var(--font-mono); letter-spacing: .04em; cursor: pointer; list-style: none; }
+  .gdeep-card__more summary::-webkit-details-marker { display: none; }
+  .gdeep-card__more summary::before { display: inline-block; margin-right: .4rem; color: var(--gem-color); content: '+'; font-weight: 700; transition: transform .2s ease; }
+  .gdeep-card__more[open] summary::before { transform: rotate(45deg); }
   .gdeep-card__meta { margin: .8rem 0 0; display: grid; gap: .6rem; }
   .gdeep-card__meta div { margin: 0; }
   .gdeep-card__meta dt { color: var(--color-text-subtle); font: 700 .62rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
   .gdeep-card__meta dd { margin: .25rem 0 0; color: var(--color-text-muted); font-size: .88rem; line-height: 1.55; }
 
-  .gems-deep__journey { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
-  .gjourney-step { display: grid; grid-template-columns: auto 1fr; gap: .9rem; padding: 1rem 1.1rem; border: 1px solid var(--color-border); border-left: 3px solid var(--eco-color, #4f8fff); border-radius: var(--radius-sm); background: rgba(8,14,25,.55); }
-  .gjourney-step__num { color: var(--eco-color, #4f8fff); font: 800 1.1rem/1 var(--font-mono); }
+  /* One connected process, not seven separate cards: a single rail with nodes. */
+  .gems-deep__journey { position: relative; list-style: none; margin: 0; padding: 0 0 0 2.5rem; display: grid; gap: 1.4rem; }
+  .gems-deep__journey::before { position: absolute; top: .3rem; bottom: .3rem; left: .95rem; width: 1px; background: linear-gradient(180deg, var(--eco-color, #4f8fff), color-mix(in srgb, var(--eco-color, #4f8fff) 25%, transparent)); content: ''; }
+  .gjourney-step { position: relative; display: grid; gap: .2rem; }
+  .gjourney-step__num { position: absolute; top: -.15rem; left: -2.5rem; display: flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border: 1px solid var(--eco-color, #4f8fff); border-radius: 50%; background: var(--color-bg); color: var(--eco-color, #4f8fff); font: 800 .78rem/1 var(--font-mono); }
   .gjourney-step__title { margin: 0; color: var(--color-text); font-size: 1.02rem; font-weight: 700; }
   .gjourney-step__desc { margin: .3rem 0 0; color: var(--color-text-muted); font-size: .9rem; line-height: 1.6; }
+
+  .gems-deep__tg-facets { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.2rem; padding: 0; list-style: none; }
+  .gems-deep__tg-facets li { padding: .4rem .7rem; border: 1px solid var(--color-border); border-radius: 999px; color: var(--color-text-muted); font: 650 .68rem/1 var(--font-mono); letter-spacing: .03em; }
 
   .gems-deep__capgroup { margin-top: 1.2rem; }
   .gems-deep__capheading { margin: 0; }
@@ -125,5 +164,10 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
 
   @media (max-width: 640px) {
     .gems-deep__family { grid-template-columns: 1fr; }
+    .gems-deep__nav { top: 3.25rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gdeep-card__more summary::before { transition: none; }
   }
 </style>

@@ -1,0 +1,38 @@
+---
+/**
+ * One row in a text-first project directory list: name, one-line purpose,
+ * status, arrow. For projects that don't need a full card — the maturity is
+ * "private development," so the presentation shouldn't outweigh the content.
+ */
+import type { Project } from '../types';
+import ProjectStatus from './ProjectStatus.astro';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<li class="index-item" id={project.id} style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
+  <a href={`/projects/${project.slug}`} class="index-item__link">
+    <div class="index-item__head">
+      <span class="index-item__name">{project.name}</span>
+      <ProjectStatus status={project.status} />
+    </div>
+    <p class="index-item__summary">{project.summary}</p>
+    <span class="index-item__category">{project.category}</span>
+  </a>
+</li>
+
+<style>
+  .index-item { position: relative; padding: 1.1rem 1.35rem; border-left: 3px solid var(--project-accent); background: rgba(6,11,19,.93); transition: background .2s ease; scroll-margin-top: 4.5rem; }
+  .index-item:hover { background: color-mix(in srgb, var(--project-accent) 6%, rgba(9,15,25,.96)); }
+  .index-item__link { display: block; }
+  .index-item__link:hover { opacity: 1; }
+  .index-item__head { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }
+  .index-item__name { color: var(--color-text); font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; }
+  .index-item__link:hover .index-item__name { color: var(--project-accent); }
+  .index-item__summary { max-width: 44rem; margin: .5rem 0 0; color: var(--color-text-muted); font-size: .9rem; line-height: 1.6; }
+  .index-item__category { display: block; margin-top: .55rem; color: var(--color-text-subtle); font: 700 .64rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+</style>
