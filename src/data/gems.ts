@@ -11,6 +11,19 @@ export interface GemEntry {
 }
 
 /**
+ * Canonical "where are we now" snapshot for the GEMS program. Values mirror the
+ * Phase 158 Generation 0 records referenced across the site; update them here
+ * (not in page copy) when the research state changes.
+ */
+export const gemsCurrentStatus = {
+  generation: 'Generation 0',
+  phase: 'Phase 158 — foundation selection & governed acquisition',
+  publicModel: 'Not released',
+  trainingStatus: 'Research in progress',
+  lineages: 'Topaz · Sapphire · Peridot · Garnet'
+} as const;
+
+/**
  * Public-facing GEM family, aligned with the Phase 158 Generation 0
  * specialization and foundation-selection records.
  */

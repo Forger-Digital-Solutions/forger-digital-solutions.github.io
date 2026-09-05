@@ -2,7 +2,7 @@
 import { siteConfig } from '../config/site';
 const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.visitorCounterKey}`;
 ---
-<span class="visitor-counter" id="fds-visitor-counter" data-counter-url={COUNTER_URL} aria-label="Visitor count">
+<span class="visitor-counter" id="fds-visitor-counter" data-counter-url={COUNTER_URL} data-state="pending" aria-label="Visitor count">
   <span class="visitor-counter__dot" aria-hidden="true"></span>
   <span class="visitor-counter__label">Visitors</span>
   <span class="visitor-counter__value" id="fds-visitor-count">--</span>
@@ -15,8 +15,16 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
     const DEDUP_MS = 24 * 60 * 60 * 1000;
     const url = document.getElementById('fds-visitor-counter')?.dataset.counterUrl;
 
+    const counterEl = document.getElementById('fds-visitor-counter');
     const valueEl = document.getElementById('fds-visitor-count');
-    if (!valueEl || !url) return;
+    if (!counterEl || !valueEl || !url) return;
+
+    // The counter stays invisible until a real value exists, so a failed or
+    // blocked fetch never leaves a bare placeholder next to the hero status.
+    const setValue = (value: string) => {
+      valueEl.textContent = value;
+      counterEl.dataset.state = 'ready';
+    };
 
     const generateId = () => {
       const arr = new Uint8Array(16);
@@ -55,7 +63,7 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
       bc.addEventListener('message', (ev) => {
         if (ev.data && ev.data.type === 'fds_counted') {
           counted = true;
-          valueEl.textContent = String(ev.data.value ?? '0');
+          setValue(String(ev.data.value ?? '0'));
         }
       });
     } catch {
@@ -70,11 +78,13 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
         if (!res.ok) throw new Error('Counter request failed');
         const data = await res.json();
         const value = data.value != null ? Number(data.value).toLocaleString() : '0';
-        valueEl.textContent = value;
+        setValue(value);
         bc?.postMessage({ type: 'fds_counted', value: data.value });
         try { window.localStorage.setItem(COUNTED_KEY, String(Date.now())); } catch {}
       } catch {
-        valueEl.textContent = '0';
+        // Backend unreachable or blocked: leave the counter hidden rather than
+        // showing a misleading 0. A real value from another tab can still
+        // reveal it via BroadcastChannel.
       }
     };
 
@@ -110,6 +120,9 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
     letter-spacing: .06em;
     text-transform: uppercase;
     white-space: nowrap;
+  }
+  .visitor-counter[data-state='pending'] {
+    visibility: hidden;
   }
   .visitor-counter__dot {
     width: .45rem;

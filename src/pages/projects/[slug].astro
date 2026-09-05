@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { projects } from '../../data/projects';
+import { projects, exploreNextBySlug } from '../../data/projects';
 import ProjectStatus from '../../components/ProjectStatus.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
 import NoteCard from '../../components/NoteCard.astro';
@@ -16,9 +16,11 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const relatedProjects = projects.filter((item) => item.slug !== project.slug).sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99)).slice(0, 2);
-const exploreLinks = [
-  ...relatedProjects.map((item) => ({ label: item.shortName || item.name, href: `/projects/${item.slug}`, note: item.category })),
+// End-of-page links are contextual per project (see exploreNextBySlug in the
+// project data); the sortOrder fallback only covers projects without a mapping.
+const exploreLinks = exploreNextBySlug[project.slug] ?? [
+  ...projects.filter((item) => item.slug !== project.slug).sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99)).slice(0, 2)
+    .map((item) => ({ label: item.shortName || item.name, href: `/projects/${item.slug}`, note: item.category })),
   { label: 'All Projects', href: '/projects', note: 'Full directory' }
 ];
 const isGems = project.slug === 'gems-training-grounds';
@@ -67,7 +69,9 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
           </a>
         )}
         <ProjectStatus status={project.status} />
-        {project.secondaryStatus && <ProjectStatus status={project.secondaryStatus} />}
+        {project.secondaryStatus && (
+          <span class="project-hero__maint">{statusMeta[project.secondaryStatus].short}</span>
+        )}
       </div>
       
       <h1 class="project-hero__title">{project.name}</h1>
@@ -375,6 +379,14 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     color: var(--color-text-muted);
     font-size: 1.05rem;
     line-height: 1.7;
+  }
+
+  /* A released project is still developed; say it as a note, not a second
+     lifecycle pill competing with the primary status. */
+  .project-hero__maint {
+    color: var(--color-text-subtle);
+    font: 650 .72rem/1 var(--font-mono);
+    letter-spacing: .04em;
   }
   
   .project-hero__tags {

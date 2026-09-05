@@ -40,7 +40,8 @@ import { projectTechnologies, technologyCategories } from '../data/technology';
   </section>
 
   <section class="broader" aria-labelledby="broader-title">
-    <h2 id="broader-title">Broader technical landscape</h2>
+    <h2 id="broader-title">Active foundations</h2>
+    <p class="broader__lead">The grouped technical areas behind the systems above — context, not an inventory to rank.</p>
     <div class="tech-grid">
       {technologyCategories.map((category) => (
         <article class="tech-category">
@@ -58,7 +59,7 @@ import { projectTechnologies, technologyCategories } from '../data/technology';
 <style>
   .page-head { max-width: 52rem; padding: 3.5rem 0 2.5rem; }.eyebrow { margin: 0 0 .75rem; color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .15em; }.page-title { margin: 0; font-size: clamp(2.4rem, 6vw, 4.2rem); letter-spacing: -.05em; }.page-description { margin: 1rem 0 0; color: var(--color-text-muted); font-size: 1.08rem; line-height: 1.75; }
   .project-tech, .broader { margin-bottom: 3.5rem; }.project-tech h2, .broader h2 { margin: 0 0 1rem; font-size: clamp(1.5rem, 3vw, 2rem); }.table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: rgba(7,12,20,.92); }table { width: 100%; min-width: 48rem; border-collapse: collapse; }th, td { padding: 1rem; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; line-height: 1.55; }thead th { color: var(--color-accent-bright); font: 700 .68rem/1.3 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; }tbody th { width: 15%; color: var(--color-text); }tbody td { color: var(--color-text-muted); font-size: .9rem; }tbody tr:last-child > * { border-bottom: 0; }
-  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(15rem,1fr)); gap: 1rem; }.tech-category { padding: 1.35rem; border: 1px solid var(--color-border); border-top: 3px solid var(--color-accent); border-radius: var(--radius-md); background: linear-gradient(145deg,rgba(13,20,32,.96),rgba(7,12,20,.96)); }.tech-category h3 { margin: 0; font-size: 1.1rem; }.tech-category p { color: var(--color-text-muted); font-size: .84rem; line-height: 1.55; }.tech-category ul { margin: 1rem 0 0; padding: 0; list-style: none; }.tech-category li { padding: .45rem 0; border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: .86rem; }.tech-disclaimer { max-width: 54rem; margin: 0 0 5rem; color: var(--color-text-subtle); font-size: .8rem; line-height: 1.65; }
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(15rem,1fr)); gap: 1px; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-border); }.tech-category { padding: 1.1rem 1.2rem; background: rgba(7,12,20,.92); }.tech-category h3 { margin: 0; font: 700 .78rem/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--color-text); }.tech-category p { color: var(--color-text-subtle); font-size: .8rem; line-height: 1.55; }.tech-category ul { margin: .7rem 0 0; padding: 0; list-style: none; }.tech-category li { padding: .35rem 0; border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: .84rem; }.broader__lead { margin: -.4rem 0 1rem; color: var(--color-text-subtle); font-size: .88rem; line-height: 1.6; }.tech-disclaimer { max-width: 54rem; margin: 0 0 5rem; color: var(--color-text-subtle); font-size: .8rem; line-height: 1.65; }
   .tech-stack { display: none; }
   @media (max-width: 767px) {
     .table-wrap { display: none; }

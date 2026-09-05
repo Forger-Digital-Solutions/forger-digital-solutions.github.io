@@ -160,3 +160,42 @@ export const projects: Project[] = [
     accentColor: '#76b77d', visualStyle: 'map', sortOrder: 6
   }
 ];
+
+/**
+ * Contextual end-of-page navigation per project. These are editorial choices,
+ * not sortOrder defaults: each link should be a real conceptual continuation
+ * of the page the visitor just finished. Projects not listed here fall back to
+ * the two nearest projects by sortOrder plus the full directory.
+ */
+export const exploreNextBySlug: Record<string, { label: string; href: string; note: string }[]> = {
+  codeforge: [
+    { label: 'GEMS', href: '/projects/gems-training-grounds', note: 'AI model research the engineering supports' },
+    { label: 'Forged', href: '/forged', note: 'The FDS release shelf' },
+    { label: 'All Projects', href: '/projects', note: 'Full directory' }
+  ],
+  'gems-training-grounds': [
+    { label: 'CodeForge', href: '/projects/codeforge', note: 'Released FDS engineering software' },
+    { label: 'Lab', href: '/lab', note: 'How FDS establishes what is true' },
+    { label: 'All Projects', href: '/projects', note: 'Full directory' }
+  ],
+  kyrablox: [
+    { label: 'CodeForge', href: '/projects/codeforge', note: 'Engineering foundation behind FDS tooling' },
+    { label: 'GEMS', href: '/projects/gems-training-grounds', note: 'Model research behind game intelligence' },
+    { label: 'All Projects', href: '/projects', note: 'Full directory' }
+  ],
+  'kayla-ai-publisher': [
+    { label: 'GEMS', href: '/projects/gems-training-grounds', note: 'Publishing-intelligence research lineage' },
+    { label: 'Notes', href: '/notes', note: 'Build and research field notes' },
+    { label: 'All Projects', href: '/projects', note: 'Full directory' }
+  ],
+  'we-the-people': [
+    { label: 'Technology', href: '/technology', note: 'How the stack maps to projects' },
+    { label: 'FarmStand Finder', href: '/projects/farmstand-finder', note: 'Fellow practical-application product' },
+    { label: 'All Projects', href: '/projects', note: 'Full directory' }
+  ],
+  'farmstand-finder': [
+    { label: 'Community Impact', href: '/community-impact', note: 'Local-food and community concepts' },
+    { label: 'We The People', href: '/projects/we-the-people', note: 'Fellow practical-information product' },
+    { label: 'All Projects', href: '/projects', note: 'Full directory' }
+  ]
+};
