@@ -25,6 +25,23 @@ let isOpen = false;
 let isProcessing = false;
 let abortController: AbortController | null = null;
 
+/**
+ * Phase 12: stale-response guard. Every send captures its own sequence number;
+ * any completion whose number is no longer current belongs to a superseded
+ * request (Stop then re-ask, or a send that raced a close) and must not touch
+ * the transcript, the starters, the status badge, or the processing flag —
+ * those all belong to the newer request now.
+ */
+let requestSeq = 0;
+
+/**
+ * Phase 12: the server only ever receives the last MAX_HISTORY turns, but the
+ * browser DOM grew without limit — a long session appended bubbles forever.
+ * Retain far more than the server window so no recent context is ever lost,
+ * while keeping layout, scroll, and memory bounded.
+ */
+export const MAX_VISIBLE_MESSAGES = 50;
+
 const MAX_HISTORY = 10;
 export function buildKaylaApiEndpoints(configuredUrl: string | undefined): { chat: string; health: string } {
   const value = (configuredUrl || '').trim().replace(/\/+$/, '');
@@ -152,7 +169,22 @@ function addMessage(role: 'user' | 'kayla', text: string, actions?: KaylaSafeAct
   messages.push(msg);
   const c = conversation();
   if (c) c.appendChild(buildBubble(msg));
+  enforceTranscriptBounds();
   scrollToBottom();
+}
+
+/** Drop the oldest bubbles once the transcript exceeds its visible bound. */
+function enforceTranscriptBounds(): void {
+  const c = conversation();
+  while (messages.length > MAX_VISIBLE_MESSAGES) {
+    messages.shift();
+    if (c?.firstChild) c.firstChild.remove();
+  }
+  // The streaming placeholder is DOM-only (it enters `messages` only on
+  // finalize), so trim stray DOM nodes independently to the same bound.
+  while (c && c.children.length > MAX_VISIBLE_MESSAGES + 1) {
+    c.firstChild?.remove();
+  }
 }
 
 function getStopButton(): HTMLButtonElement | null {
@@ -377,6 +409,14 @@ function updateStarters(): void {
 async function handleQuery(query: string): Promise<void> {
   if (!query.trim() || isProcessing) return;
 
+  // A previous request may still be settling after a Stop (its abort is
+  // delivered asynchronously). Retire it explicitly so its late completion
+  // cannot overwrite this turn, and claim the new sequence number first.
+  abortController?.abort();
+  abortController = null;
+  const mySeq = ++requestSeq;
+  const isCurrent = (): boolean => mySeq === requestSeq;
+
   addMessage('user', query);
   setProcessing(true);
 
@@ -386,8 +426,14 @@ async function handleQuery(query: string): Promise<void> {
   const starters = starterPrompts();
   if (starters) (starters as HTMLElement).style.display = 'none';
 
-  abortController = new AbortController();
+  const controller = new AbortController();
+  abortController = controller;
   let streamingActions: KaylaSafeAction[] | undefined;
+
+  // The placeholder is created before the network settles so a slow
+  // connection still shows an explicit loading state (plus the Stop control)
+  // instead of a silently disabled composer.
+  const placeholder = addStreamingMessage();
 
   try {
     const response = await fetch(`${API_ENDPOINTS.chat}?stream=true`, {
@@ -398,7 +444,7 @@ async function handleQuery(query: string): Promise<void> {
         history: getConversationHistory(),
         context: getPageContext()
       }),
-      signal: abortController.signal
+      signal: controller.signal
     });
 
     if (!response.ok) {
@@ -416,9 +462,14 @@ async function handleQuery(query: string): Promise<void> {
     let streamingSources: KaylaSource[] | undefined;
     let responseMode: KaylaMode = 'local';
 
-    const placeholder = addStreamingMessage();
-
     while (true) {
+      if (!isCurrent()) {
+        // A newer turn has started: stop consuming this stream so its late
+        // chunks can never overwrite the newer answer, and release the reader.
+        try { await reader.cancel(); } catch { /* already settled */ }
+        placeholder?.remove();
+        return;
+      }
       const { done, value } = await reader.read();
       if (done) break;
 
@@ -480,20 +531,28 @@ async function handleQuery(query: string): Promise<void> {
       }
     }
 
+    if (!isCurrent()) { placeholder?.remove(); return; }
     finalizeStreamingMessage(placeholder, streamingText, streamingActions, responseMode, streamingSources);
   } catch (error) {
+    // A superseded request must stay silent: the newer turn owns the
+    // transcript, the starters, the status badge, and the processing flag.
+    if (!isCurrent()) { placeholder?.remove(); return; }
+    // The placeholder already holds this turn's bubble: settle the error into
+    // it so a failed request leaves exactly one message, not a stuck
+    // "Thinking..." plus a second error bubble.
     if ((error as Error).name === 'AbortError') {
-      addMessage('kayla', 'Response cancelled.');
+      finalizeStreamingMessage(placeholder, 'Response cancelled.', undefined, 'local', undefined);
     } else if ((error as Error).message === 'RATE_LIMITED') {
       updateStatus('local');
-      addMessage('kayla', 'Kayla has received several requests recently. Please try again a little later.');
+      finalizeStreamingMessage(placeholder, 'Kayla has received several requests recently. Please try again a little later.', undefined, 'local', undefined);
     } else {
       updateStatus('unavailable');
-      addMessage('kayla', "Kayla's live service is temporarily unavailable. Please try again later.");
+      finalizeStreamingMessage(placeholder, "Kayla's live service is temporarily unavailable. Please try again later.", undefined, 'unavailable', undefined);
     }
   } finally {
+    if (!isCurrent()) return;
     setProcessing(false);
-    abortController = null;
+    if (abortController === controller) abortController = null;
     showFollowUpStarters(query, streamingActions);
     // Focus is lost when the send button is disabled mid-request; hand it back
     // so a keyboard or screen-reader user can type the next question.
@@ -562,6 +621,7 @@ function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, a
   }
 
   messages.push({ role: 'kayla', text: text || "I couldn't find that in the current public FDS knowledge base.", actions, sources });
+  enforceTranscriptBounds();
 }
 
 function toggle(): void {

@@ -30,7 +30,9 @@
     "kayla:golden": "node scripts/kayla-golden-check.mjs",
     "kayla:routing-eval": "node scripts/kayla-routing-eval.mjs",
     "kayla:retrieval-eval": "node scripts/kayla-retrieval-eval.mjs",
-    "kayla:task-eval": "node scripts/kayla-task-eval.mjs"
+    "kayla:task-eval": "node scripts/kayla-task-eval.mjs",
+    "kayla:perf": "node scripts/kayla-perf.mjs",
+    "kayla:load-test": "node scripts/kayla-load-test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
