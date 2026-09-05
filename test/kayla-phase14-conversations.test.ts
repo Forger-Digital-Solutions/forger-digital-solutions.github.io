@@ -74,6 +74,32 @@ describe('context bounds and isolation', () => {
   });
 });
 
+describe('comparison stays within the resolved subjects', () => {
+  // Production canary: "Which one should I start with?" over CodeForge and
+  // GEMS opened with a Peridot comparison, because the relationship lookup
+  // matched a neighbouring record by query text rather than by subject.
+  it('never introduces an entity the visitor did not raise', async () => {
+    const history: KaylaConversationMessage[] = [
+      { role: 'user', content: "I'm a developer. What should I look at?" },
+      { role: 'assistant', content: 'CodeForge — a free-first autonomous software-engineering platform.' },
+      { role: 'user', content: 'What about GEMS?' },
+      { role: 'assistant', content: 'GEMS / Training Grounds — four independent AI research lineages.' }
+    ];
+    const resolved = resolveConversation('Which one should I start with?', history);
+    expect(resolved.entities).toEqual(['gems-training-grounds', 'codeforge']);
+    const result = await handleKaylaChat({ message: 'Which one should I start with?', history }, endpoint());
+    const answer = (result.response as KaylaChatResponse).answer;
+    expect(answer).toContain('CodeForge');
+    expect(answer).toContain('GEMS');
+    // A lineage may still be named inside a canonical GEMS answer; what must
+    // never happen is the response being framed as a comparison of a pair the
+    // visitor never raised.
+    for (const uninvited of ['Peridot', 'Topaz', 'Garnet', 'KyraBlox', 'FarmStand Finder']) {
+      expect(answer, `${uninvited} was never raised as a subject`).not.toMatch(new RegExp(`${uninvited} vs|vs ${uninvited}`, 'i'));
+    }
+  });
+});
+
 describe('grounded slot guard', () => {
   const packet = buildGroundingPacket([{
     id: 'codeforge',

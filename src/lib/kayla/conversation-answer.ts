@@ -17,6 +17,21 @@ function local(text: string, intent: CanonicalAnswer['intent'] = 'identity', id?
   return result({ text, intent, sources: id ? [id] : [], settled: true }, id);
 }
 
+/**
+ * A relationship answer may only speak for the entities actually in play.
+ * Looking one up by the resolved query text can drift to a neighbouring
+ * record — "Which one should I start with?" over CodeForge and GEMS returned
+ * a Peridot comparison in production — so any entity it names must already
+ * be one of the subjects the conversation resolved.
+ */
+function relationshipCovers(answer: CanonicalAnswer | undefined, ids: string[]): boolean {
+  if (!answer) return false;
+  return (answer.sources || [])
+    .map(source => source.replace(/^app-/, ''))
+    .filter(source => Boolean(getKaylaEntity(source)))
+    .every(id => ids.includes(id));
+}
+
 /** Compose only public canonical records. History contributes relevance, never answer text. */
 export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult[] | undefined {
   if (c.needsClarification) return [local(c.candidates.length
@@ -86,7 +101,8 @@ export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult
     // than a generic side-by-side description, whatever intent label it
     // carries — it already answered the actual question.
     const settledRelationship = canonicalAnswer(q);
-    if (settledRelationship?.settled) return [{ ...result(settledRelationship, comparable[0]), settled: true }];
+    const relationshipInScope = relationshipCovers(settledRelationship, comparable);
+    if (settledRelationship?.settled && relationshipInScope) return [{ ...result(settledRelationship, comparable[0]), settled: true }];
     const availability = /\b(use|try|download|available|released|start with|public)\b/i.test(raw);
     const parts = comparable.slice(0, 3).map(entityId => {
       const entityName = getKaylaEntity(entityId)!.name;
@@ -97,7 +113,7 @@ export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult
     }).filter((r): r is KaylaKnowledgeResult => Boolean(r));
     if (!parts.length) return undefined;
     // Canonical relationship answer adds distinctions which entity descriptions alone cannot express.
-    const relationText = settledRelationship?.intent === 'comparison' ? settledRelationship.text : '';
+    const relationText = settledRelationship?.intent === 'comparison' && relationshipInScope ? settledRelationship.text : '';
     const text = [...new Set([relationText, ...parts.map(r => r.snippet)].filter(Boolean))].join('\n\n').slice(0, 7800);
     // Choosing a usable tool is settled by availability, not the provider.
     return [{ ...parts[0], snippet: text, settled: availability, actions: parts.flatMap(r => r.actions || []) }, ...parts.slice(1)];
