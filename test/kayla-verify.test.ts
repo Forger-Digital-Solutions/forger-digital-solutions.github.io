@@ -75,7 +75,7 @@ describe('verifier accepts everything the site itself says', () => {
       ...projects.flatMap((p) => p.highlights || []),
       ...projects.flatMap((p) => (p.sections || []).map((s) => `${s.title}: ${s.body || (s.items || []).join('. ')}`)),
       ...products.map((p) => `${p.name} ${p.version}: ${p.description} ${p.downloadUrl}`),
-      ...gems.map((g) => `${g.name}: ${g.role}. ${g.direction} ${g.foundationStrategy} ${g.notClaimed}`)
+      ...gems.map((g) => `${g.name}: ${g.role}. ${g.direction} ${g.researchStatus} ${g.notClaimed}`)
     ];
     const failures = prose
       .map((text) => ({ text, verdict: verifyAgainstCanon(text) }))
@@ -89,7 +89,7 @@ describe('verifier accepts everything the site itself says', () => {
   });
 
   it('accepts real platform and model names that look like versions', () => {
-    const text = 'CodeForge runs on Windows 10/11 x64. Generation 0 research references Qwen2.5-Coder, OLMo 2, Mathstral, and SmolVLM2 checkpoints.';
+    const text = 'CodeForge runs on Windows 10/11 x64. Superseded Phase 158 research once referenced Qwen2.5-Coder, OLMo 2, Mathstral, and SmolVLM2 as candidate checkpoints.';
     expect(verifyAgainstCanon(text).ok).toBe(true);
   });
 

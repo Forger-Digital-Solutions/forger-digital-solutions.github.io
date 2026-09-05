@@ -1,14 +1,16 @@
 ---
 /**
- * Homepage GEMS teaser: a concise statement, the four lineage identifiers, one
- * research artifact, and a route into the full page. The learning journey and
- * affordability sections deliberately live only in GemsDeep on the GEMS project
- * page — reproducing them here made the homepage carry the project page twice.
+ * Homepage GEMS teaser: a concise statement, one visual that already identifies
+ * all four lineages plus Training Grounds, a compact status strip, and a route
+ * into the full page. Per-GEM depth (state, learning journey, affordability)
+ * deliberately lives only in GemsDeep on the GEMS project page — repeating the
+ * four lineages again as cards here duplicated what the visual already shows.
  */
-import { gems } from '../data/gems';
 import SectionHeader from './SectionHeader.astro';
 import VisualEvidence from './VisualEvidence.astro';
 import { visualAssets } from '../data/visuals';
+
+const statusStrip = ['From-Scratch Research', 'Training Grounds', 'Held-Out Evaluation', 'Advancement by Evidence'];
 ---
 
 <section class="gems-story page-section" aria-labelledby="gems-story-title">
@@ -19,29 +21,21 @@ import { visualAssets } from '../data/visuals';
   />
 
   <p class="gems-story__why">
-    Current work can start from strong open foundations and produce increasingly FDS-specific intelligence through post-training,
-    specialization, agentic tool-use work, and held-out evaluation. Full foundation-model development remains a longer-term direction.
+    GEMS remains the original, longer-horizon effort to develop FDS-specific model intelligence through its own from-scratch research
+    and learning process. Every lineage advances rung by rung inside Training Grounds, and no capability is claimed until evidence supports it.
   </p>
 
   <div class="gems-story__evidence">
     <VisualEvidence {...visualAssets.gemsFamily} />
   </div>
 
-  <div class="gem-family" role="list">
-    {gems.map((gem) => (
-      <article class="gem-card" role="listitem" style={`--gem-color: var(--color-accent-bright)`}>
-        <p class="gem-card__micro">GEM // {gem.name.toUpperCase()}</p>
-        <h3 class="gem-card__name">{gem.name}</h3>
-        <p class="gem-card__role">{gem.role}</p>
-        <p class="gem-card__state">STATE // {gem.state}</p>
-        <p class="gem-card__direction">{gem.direction}</p>
-      </article>
-    ))}
-  </div>
+  <ul class="gems-story__status" role="list">
+    {statusStrip.map((item) => <li>{item}</li>)}
+  </ul>
 
   <div class="gems-story__cta">
     <a class="btn btn-primary" href="/projects/gems-training-grounds">Explore GEMS / Training Grounds <span aria-hidden="true">→</span></a>
-    <p class="gems-story__more">The full page covers the learning journey, capability direction, and what is not yet claimed.</p>
+    <p class="gems-story__more">The full page covers each lineage's research status, the learning journey, and what is not yet claimed.</p>
   </div>
 </section>
 
@@ -49,25 +43,13 @@ import { visualAssets } from '../data/visuals';
   .gems-story { position: relative; }
   .gems-story__why { max-width: 48rem; margin: 0 0 1.6rem; color: var(--color-text-muted); font-size: 1.02rem; line-height: 1.7; }
 
-  .gem-family { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-border); box-shadow: var(--shadow-sm); }
-  .gem-card { padding: 1.15rem 1.2rem 1.25rem; background: linear-gradient(150deg, rgba(13,20,32,.96), rgba(6,11,19,.96)); }
-  .gem-card__micro { margin: 0 0 .5rem; color: var(--color-accent-bright); font: 700 .58rem/1 var(--font-mono); letter-spacing: .14em; }
-  .gem-card__name { margin: 0; color: var(--color-text); font-size: 1.2rem; letter-spacing: -.01em; }
-  .gem-card__role { margin: .25rem 0 0; color: var(--color-silver); font-size: .9rem; font-weight: 600; }
-  .gem-card__state { margin: .55rem 0 0; color: var(--color-text-subtle); font: 700 .6rem/1 var(--font-mono); letter-spacing: .12em; }
-  .gem-card__direction { margin: .6rem 0 0; color: var(--color-text-muted); font-size: .86rem; line-height: 1.55; }
+  .gems-story__status { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.4rem 0 0; padding: 0; list-style: none; }
+  .gems-story__status li { padding: .45rem .75rem; border: 1px solid var(--color-border); border-radius: 999px; color: var(--color-text-muted); font: 700 .68rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
 
   .gems-story__cta { display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; align-items: center; margin-top: 1.6rem; }
   .gems-story__more { max-width: 26rem; margin: 0; color: var(--color-text-subtle); font-size: .88rem; line-height: 1.6; }
 
-  @media (max-width: 900px) {
-    .gem-family { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
   @media (max-width: 520px) {
-    .gem-family { grid-template-columns: 1fr; }
     .gems-story__why { font-size: .98rem; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .gem-card { transition: none; }
   }
 </style>

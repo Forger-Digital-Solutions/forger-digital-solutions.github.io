@@ -72,7 +72,7 @@ export function buildTaskPlan(
     (/\b(ai|gems|model)\b/i.test(query) && /\b(download|run|use|install)\b/i.test(query) && !/codeforge/i.test(query)) ||
     (match.isMultiGoal && match.primaryGoal === 'FIND_RELEASED_SOFTWARE' && match.secondaryGoals?.includes('EXPLORE_AI_RESEARCH'))
   ) {
-    tradeoffExplanation = 'FDS AI research (GEMS) is foundation research and evaluation; there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS.';
+    tradeoffExplanation = 'FDS AI research (GEMS) is from-scratch model research and evaluation; there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS.';
     requiredFacts = ['GEMS has no public downloads', 'CodeForge is released and free on Forged'];
     recommendedSources = [
       { label: 'Forged', kind: 'page', route: '/forged' },
@@ -229,7 +229,7 @@ export function buildTaskPlan(
       ];
       guidanceSteps = [
         'Open the GEMS Training Grounds project page.',
-        'Learn about the 4 specialized GEM lineages and foundation strategy.',
+        'Learn about the 4 specialized GEM lineages and Training Grounds.',
         'Explore technical research notes in the FDS Notes section.'
       ];
       break;

@@ -4,28 +4,31 @@ export interface GemEntry {
   role: string;
   state: string;
   direction: string;
-  foundationStrategy: string;
+  researchStatus: string;
   future: string;
   fit: string;
   notClaimed: string;
 }
 
 /**
- * Canonical "where are we now" snapshot for the GEMS program. Values mirror the
- * Phase 158 Generation 0 records referenced across the site; update them here
- * (not in page copy) when the research state changes.
+ * Canonical "where are we now" snapshot for the GEMS program. GEMS is the
+ * original, longer-horizon from-scratch model research effort; a separate,
+ * not-yet-publicly-named project covers pretrained-foundation specialization
+ * and is intentionally not represented here. Update these values here (not in
+ * page copy) when the research state changes.
  */
 export const gemsCurrentStatus = {
-  generation: 'Generation 0',
-  phase: 'Phase 158 — foundation selection & governed acquisition',
+  generation: 'Research program',
+  phase: 'From-scratch model research — Training Grounds active',
   publicModel: 'Not released',
   trainingStatus: 'Research in progress',
   lineages: 'Topaz · Sapphire · Peridot · Garnet'
 } as const;
 
 /**
- * Public-facing GEM family, aligned with the Phase 158 Generation 0
- * specialization and foundation-selection records.
+ * Public-facing GEM family. Each lineage is developed from scratch through
+ * Training Grounds curriculum, training, and evaluation — no lineage begins
+ * from an acquired pretrained checkpoint.
  */
 export const gems: GemEntry[] = [
   {
@@ -35,12 +38,12 @@ export const gems: GemEntry[] = [
     state: 'RESEARCH',
     direction:
       'Broad language, reasoning, planning, instruction following, and coordination across specialist systems.',
-    foundationStrategy:
-      'Generation 0 recommends an OLMo 2 base checkpoint for its transparent research lineage and broad language foundation. The candidate has not been acquired, trained, or evaluated as a GEMS model.',
+    researchStatus:
+      'No checkpoint has been trained or evaluated for Topaz. Curriculum and evaluation design for its generalist, orchestration-focused role is in early Training Grounds research.',
     future:
       'Become the broadest GEMS generalist and orchestrate specialists where focused expertise is more useful than one model doing everything.',
     fit: 'The broad generalist in a family of independent lineages—not a shared base that every other GEM inherits.',
-    notClaimed: 'No released Topaz model, frontier parity, or validated Generation 0 capability is claimed.'
+    notClaimed: 'No released Topaz model, frontier parity, or validated capability is claimed.'
   },
   {
     key: 'sapphire',
@@ -49,11 +52,11 @@ export const gems: GemEntry[] = [
     state: 'RESEARCH',
     direction:
       'Code generation, repair, repository reasoning, navigation, testing, and structured engineering tool use.',
-    foundationStrategy:
-      'Generation 0 recommends a Qwen2.5-Coder base checkpoint. Its long-context and repository-level behavior still require independent GEMS preflight and evaluation.',
+    researchStatus:
+      'No checkpoint has been trained or evaluated for Sapphire. Its software-engineering curriculum, repository-reasoning tasks, and evaluation design are in early Training Grounds research.',
     future: 'Develop into the software-engineering specialist intended to support CodeForge-oriented research and other repository work.',
     fit: 'The coding specialist; its role is distinct from CodeForge, which is already a public engineering product.',
-    notClaimed: 'The upstream candidate is not a trained Sapphire model, and no Sapphire capability is presented as shipping in CodeForge.'
+    notClaimed: 'No trained Sapphire model exists, and no Sapphire capability is presented as shipping in CodeForge.'
   },
   {
     key: 'peridot',
@@ -62,11 +65,11 @@ export const gems: GemEntry[] = [
     state: 'RESEARCH',
     direction:
       'Mathematics, formal and quantitative reasoning, science, structured problem solving, and verifiable technical work.',
-    foundationStrategy:
-      'Generation 0 recommends a Mathstral base checkpoint for math and scientific specialization. Its upstream benchmark claims remain subject to independent GEMS evaluation.',
+    researchStatus:
+      'No checkpoint has been trained or evaluated for Peridot. Its mathematics and technical-reasoning curriculum, with programmatic and formal verification, is in early Training Grounds research.',
     future: 'Pursue correctness-first reasoning with programmatic, symbolic, and formal verification where appropriate.',
     fit: 'The quantitative specialist. Training Grounds—not Peridot itself—owns the shared evaluation and advancement discipline.',
-    notClaimed: 'No acquired or trained Peridot Generation 0 model, independently verified benchmark result, or production capability is claimed.'
+    notClaimed: 'No trained Peridot model, independently verified benchmark result, or production capability is claimed.'
   },
   {
     key: 'garnet',
@@ -75,11 +78,11 @@ export const gems: GemEntry[] = [
     state: 'RESEARCH',
     direction:
       'Document and visual understanding, publishing workflows, and multimodal production with separately evaluated components.',
-    foundationStrategy:
-      'Generation 0 is researching a SmolVLM2 base checkpoint for vision-language work. Its acquisition is partial and paused. FLUX.1-schnell is registered separately as a gated, unacquired image-generation candidate.',
+    researchStatus:
+      'No checkpoint has been trained or evaluated for Garnet. Its document, vision, and publishing-oriented curriculum is in early Training Grounds research; image generation remains a separate, longer-term module direction with no committed approach yet.',
     future: 'Develop a multimodal system that can support document, vision, publishing, and image-generation workflows without conflating unlike model components.',
     fit: 'The multimodal specialist, with potential relevance to Kayla Publisher while remaining a separate research lineage and system.',
-    notClaimed: 'SmolVLM2 is not credited with image generation, FLUX is not a Garnet capability yet, and no trained Garnet model is available.'
+    notClaimed: 'No trained Garnet model exists, and image generation is not claimed as a current Garnet capability.'
   }
 ];
 
@@ -90,7 +93,7 @@ export interface LearningStage {
 }
 
 export const learningStages: LearningStage[] = [
-  { num: '01', title: 'Select the Foundation', desc: 'Choose an open foundation suited to the target role, license, compute, and evaluation plan.' },
+  { num: '01', title: 'Set the Curriculum', desc: 'Define the curriculum, tasks, and evaluation plan suited to the target role and its research stage.' },
   { num: '02', title: 'Teach', desc: 'Train the GEM on carefully prepared material and tasks appropriate to its developing role.' },
   { num: '03', title: 'Test', desc: 'Evaluate whether the model actually learned the intended skill instead of memorizing patterns or succeeding by accident.' },
   { num: '04', title: 'Diagnose', desc: 'Study failures, weak generalization, repetition, reasoning mistakes, context limits, and other measurable problems.' },
@@ -117,8 +120,8 @@ export const capabilityRoadmap: Capability[] = [
   { area: 'Knowledge retrieval', status: 'in-development', note: 'Grounded answers from provided sources.' },
   { area: 'Long-context understanding', status: 'long-term', note: 'Working across longer documents and sessions as models develop.' },
   { area: 'Game & world development', status: 'long-term', note: 'Assistance for interactive experiences, explored with KyraBlox.' },
-  { area: 'Document & visual understanding', status: 'in-development', note: 'Garnet foundation research across text, images, video, and documents; capability is not yet validated.' },
-  { area: 'Image generation', status: 'long-term', note: 'A separate Garnet module direction, currently represented only by a gated, unacquired FLUX candidate.' },
+  { area: 'Document & visual understanding', status: 'in-development', note: "Garnet's from-scratch research across text, images, video, and documents; capability is not yet validated." },
+  { area: 'Image generation', status: 'long-term', note: 'A separate, longer-term Garnet module direction, with no committed approach yet.' },
   {
     area: 'Structured professional tasks',
     status: 'long-term',

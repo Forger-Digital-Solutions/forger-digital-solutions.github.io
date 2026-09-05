@@ -237,7 +237,7 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   if (q.includes('research') || q.includes('training') || q.includes('evaluation') || q.includes('ai model') || q.includes('adaptive compute')) {
     const app = apps.find(a => a.id === 'gems-training-grounds');
     return {
-      text: `For model learning and evaluation, ${app?.name || 'GEMS / Training Grounds'} develops specialized intelligences through open foundations, post-training, curriculum, trials, and checkpoints.`,
+      text: `For model learning and evaluation, ${app?.name || 'GEMS / Training Grounds'} develops specialized intelligences from scratch through curriculum, controlled training, trials, and checkpoints.`,
       actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
       sources: ['app-gems-training-grounds']
     };

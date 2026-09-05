@@ -26,8 +26,8 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
     The short version before the research detail: what generation the program is in, what is actually happening now, and what does not exist yet.
   </p>
   <dl class="gems-state">
-    <div class="gems-state__item"><dt>Current generation</dt><dd>{gemsCurrentStatus.generation}</dd></div>
-    <div class="gems-state__item"><dt>Current phase</dt><dd>{gemsCurrentStatus.phase}</dd></div>
+    <div class="gems-state__item"><dt>Program stage</dt><dd>{gemsCurrentStatus.generation}</dd></div>
+    <div class="gems-state__item"><dt>Active focus</dt><dd>{gemsCurrentStatus.phase}</dd></div>
     <div class="gems-state__item"><dt>Public model</dt><dd>{gemsCurrentStatus.publicModel}</dd></div>
     <div class="gems-state__item"><dt>Training status</dt><dd>{gemsCurrentStatus.trainingStatus}</dd></div>
     <div class="gems-state__item"><dt>Primary lineages</dt><dd>{gemsCurrentStatus.lineages}</dd></div>
@@ -51,7 +51,7 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
         <details class="gdeep-card__more">
           <summary>More about {gem.name}</summary>
           <dl class="gdeep-card__meta">
-            <div><dt>Current foundation strategy</dt><dd>{gem.foundationStrategy}</dd></div>
+            <div><dt>Current research status</dt><dd>{gem.researchStatus}</dd></div>
             <div><dt>May eventually help with</dt><dd>{gem.future}</dd></div>
             <div><dt>Where it fits</dt><dd>{gem.fit}</dd></div>
           </dl>

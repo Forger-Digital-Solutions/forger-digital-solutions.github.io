@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" role="img" aria-labelledby="title desc">
+  <title id="title">GEMS learning architecture</title>
+  <desc id="desc">Training Grounds is the shared learning and evaluation program at the center of four independent GEMS research lineages: Topaz, Sapphire, Peridot, and Garnet.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1424"/><stop offset="1" stop-color="#050910"/></linearGradient>
+  </defs>
+  <style>
+    .hub-pulse { animation: gemsPulse 3.6s ease-in-out infinite; transform-origin: 380px 320px; }
+    @keyframes gemsPulse { 0%, 100% { stroke-opacity: .55; } 50% { stroke-opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .hub-pulse { animation: none; stroke-opacity: .85; }
+    }
+  </style>
+  <rect width="760" height="640" rx="28" fill="url(#bg)"/>
+  <text x="40" y="42" fill="#89aef9" font-family="monospace" font-size="14" letter-spacing="3">GEMS // TRAINING GROUNDS // LEARNING PROGRAM</text>
+
+  <!-- Connectors: hub to each lineage, drawn first so nodes sit above them -->
+  <g fill="none" stroke="#5e7fc9" stroke-width="2.5" stroke-opacity=".85">
+    <path d="M380 160 V266"/>
+    <path d="m372 254 8 12 8-12" fill="none"/>
+    <path d="M380 480 V374"/>
+    <path d="m372 386 8-12 8 12" fill="none"/>
+    <path d="M240 320 H266"/>
+    <path d="m254 312 12 8-12 8" fill="none"/>
+    <path d="M520 320 H494"/>
+    <path d="m506 312 -12 8 12 8" fill="none"/>
+  </g>
+
+  <!-- Training Grounds hub -->
+  <g>
+    <rect class="hub-pulse" x="270" y="270" width="220" height="100" rx="16" fill="#141f36" stroke="#7fa3ff" stroke-width="2"/>
+    <text x="380" y="315" text-anchor="middle" fill="#eaf1ff" font-family="Inter,Arial,sans-serif" font-size="19" font-weight="700">TRAINING GROUNDS</text>
+    <text x="380" y="340" text-anchor="middle" fill="#9db3d9" font-family="monospace" font-size="10.5">learning &amp; evaluation program</text>
+  </g>
+
+  <!-- Topaz -->
+  <g>
+    <rect x="270" y="60" width="220" height="100" rx="16" fill="#151e32" stroke="#e0b84f" stroke-width="1.5"/>
+    <text x="380" y="100" text-anchor="middle" fill="#f2ca60" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700">TOPAZ</text>
+    <text x="380" y="123" text-anchor="middle" fill="#e8efff" font-family="Inter,Arial,sans-serif" font-size="13">General intelligence</text>
+    <text x="380" y="141" text-anchor="middle" fill="#7f91ad" font-family="monospace" font-size="11">research lineage</text>
+  </g>
+
+  <!-- Sapphire -->
+  <g>
+    <rect x="40" y="270" width="200" height="100" rx="16" fill="#151e32" stroke="#5b8fff" stroke-width="1.5"/>
+    <text x="140" y="310" text-anchor="middle" fill="#79a8ff" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700">SAPPHIRE</text>
+    <text x="140" y="333" text-anchor="middle" fill="#e8efff" font-family="Inter,Arial,sans-serif" font-size="13">Software engineering</text>
+    <text x="140" y="351" text-anchor="middle" fill="#7f91ad" font-family="monospace" font-size="11">research lineage</text>
+  </g>
+
+  <!-- Peridot -->
+  <g>
+    <rect x="520" y="270" width="200" height="100" rx="16" fill="#151e32" stroke="#68c9ad" stroke-width="1.5"/>
+    <text x="620" y="310" text-anchor="middle" fill="#79d8bc" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700">PERIDOT</text>
+    <text x="620" y="333" text-anchor="middle" fill="#e8efff" font-family="Inter,Arial,sans-serif" font-size="13">Math &amp; reasoning</text>
+    <text x="620" y="351" text-anchor="middle" fill="#7f91ad" font-family="monospace" font-size="11">research lineage</text>
+  </g>
+
+  <!-- Garnet -->
+  <g>
+    <rect x="270" y="480" width="220" height="100" rx="16" fill="#151e32" stroke="#c18cff" stroke-width="1.5"/>
+    <text x="380" y="520" text-anchor="middle" fill="#d2a8ff" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700">GARNET</text>
+    <text x="380" y="543" text-anchor="middle" fill="#e8efff" font-family="Inter,Arial,sans-serif" font-size="13">Multimodal &amp; publishing</text>
+    <text x="380" y="561" text-anchor="middle" fill="#7f91ad" font-family="monospace" font-size="11">research lineage</text>
+  </g>
+
+  <text x="40" y="612" fill="#9aabc5" font-family="monospace" font-size="12.5">STATUS: from-scratch research — no GEM has a trained or released model.</text>
+</svg>

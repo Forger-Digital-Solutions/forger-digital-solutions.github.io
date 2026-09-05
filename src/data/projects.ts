@@ -42,24 +42,22 @@ export const projects: Project[] = [
     category: 'AI Model Research & Capability Development', ecosystem: 'Intelligence',
     audience: 'People following practical AI model specialization, evaluation, curriculum design, agentic learning, and affordable intelligence research.',
     problem: 'Useful intelligence requires more than a capable foundation model. It needs deliberate curriculum, trustworthy evaluation, controlled advancement, and a path from research checkpoints to specialized real-world performance.',
-    differentiation: 'GEMS is a family of developing intelligences, while Training Grounds is the environment that teaches, challenges, evaluates, and advances them. The near-term strategy can begin from strong open foundations and produce increasingly FDS-specific models through post-training and specialization.',
+    differentiation: 'GEMS is a family of developing intelligences, while Training Grounds is the environment that teaches, challenges, evaluates, and advances them. This is the original, longer-horizon GEMS effort to develop FDS-specific model intelligence through its own from-scratch research and learning process.',
     summary: 'Four independent AI research lineages—generalist, software engineering, quantitative reasoning, and multimodal—plus the Training Grounds used to teach, evaluate, and advance them.',
-    description: 'GEMS combines four developing model identities with a governed learning environment. Phase 158 Generation 0 has selected distinct upstream foundation candidates for Topaz, Sapphire, Peridot, and Garnet, but those untouched or partially acquired artifacts are not GEMS models. Training Grounds organizes curriculum, specialization, trials, checkpoints, and evaluation so advancement depends on demonstrated learning.',
+    description: 'GEMS combines four developing model identities with a governed learning environment. Each lineage is pursued as from-scratch model research; none begins from an acquired pretrained checkpoint. Training Grounds organizes curriculum, controlled training, trials, checkpoints, and evaluation so advancement depends on demonstrated learning, not activity.',
     status: 'RESEARCH', featured: true, flagship: true, stageLabel: 'Flagship AI research',
-    tags: ['Model Specialization', 'Post-Training', 'Curriculum', 'Evaluation', 'Agentic Learning', 'Affordable AI'],
-    focusAreas: ['Distinct open foundation candidates', 'Post-training and specialization', 'Curriculum design', 'Agentic and tool-use learning', 'Evaluation checkpoints', 'Multimodal systems'],
+    tags: ['From-Scratch Research', 'Curriculum', 'Evaluation', 'Agentic Learning', 'Model Lineages', 'Affordable AI'],
+    focusAreas: ['From-scratch model research', 'Training Grounds evaluation discipline', 'Curriculum design', 'Agentic and tool-use learning', 'Evaluation checkpoints', 'Multimodal systems'],
     highlights: [
-      'Frontier-scale pretraining is not a prerequisite for distinctive FDS model work.',
+      'GEMS is a family of four independent research lineages, not one model wearing different hats.',
       'Training Grounds separates activity from demonstrated learning through held-out evaluation and checkpoints.',
       'Affordable frontier-like usefulness is a long-term target, not a claim of current parity.'
     ],
     sections: [
-      { title: 'What GEMS Is', body: 'GEMS is a developing family of specialized intelligences. Topaz pursues broad reasoning and orchestration; Sapphire software engineering; Peridot mathematics and technical reasoning; and Garnet multimodal and publishing intelligence. Training Grounds owns the shared teaching, evaluation, and advancement discipline.' },
-      { title: 'Foundation Strategy', body: 'Phase 158 Generation 0 recommends distinct OLMo 2, Qwen2.5-Coder, Mathstral, and SmolVLM2 base checkpoints for the four lineages. A candidate foundation is not a GEMS model: each lineage still requires governed acquisition, training, independent evaluation, and registration before it can earn that name.' },
       { title: 'Current Research', items: ['Topaz: broad language, reasoning, planning, and orchestration', 'Sapphire: coding, repair, repository reasoning, and engineering tools', 'Peridot: mathematics, science, formal reasoning, and verification', 'Garnet: document and visual understanding, with image generation kept as a separate module', 'Curriculum design, held-out evaluation, and learning-versus-memorization checks', 'Hardware-aware training and evaluation'] },
-      { title: 'Long-Term Direction', body: 'As datasets, compute, funding, and research capacity expand, GEMS may move toward deeper FDS-developed foundations and eventually full foundation-model work. Those are research directions—not shipped capability claims.' }
+      { title: 'Long-Term Direction', body: 'As datasets, compute, funding, and research capacity expand, GEMS continues toward deeper FDS-developed, from-scratch foundations. Those are research directions—not shipped capability claims.' }
     ],
-    roadmap: 'Post-training, specialization, controlled capability advancement, and increasingly FDS-developed foundations over time.',
+    roadmap: 'From-scratch curriculum research, controlled capability advancement, and Training Grounds evaluation discipline as the program matures.',
     accentColor: '#2f6bff', visualStyle: 'gem', sortOrder: 2,
     heroImage: visualAssets.gemsFamily
     // trainingGrounds visual now lives inside the Training Grounds subsection

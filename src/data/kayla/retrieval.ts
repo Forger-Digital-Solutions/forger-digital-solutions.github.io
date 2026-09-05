@@ -435,7 +435,7 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
       id: `gem-${gem.key}`,
       type: 'app',
       title: gem.name,
-      text: `${gem.name} is the GEMS lineage for ${gem.role}. ${gem.direction} State: ${gem.state}. ${gem.fit} ${gem.foundationStrategy} Not claimed: ${gem.notClaimed}`,
+      text: `${gem.name} is the GEMS lineage for ${gem.role}. ${gem.direction} State: ${gem.state}. ${gem.fit} ${gem.researchStatus} Not claimed: ${gem.notClaimed}`,
       route: '/projects/gems-training-grounds',
       entityId: `gem-${gem.key}`,
       tags: [gem.key, gem.name.toLowerCase(), 'gem', 'gems', 'model', 'lineage', gem.state.toLowerCase()],

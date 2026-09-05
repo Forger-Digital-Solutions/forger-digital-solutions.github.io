@@ -1,11 +1,17 @@
 ---
 title: "GEMS can specialize before frontier-scale pretraining"
-description: "Why strong open foundations, post-training, curriculum, and evaluation are the practical next step for GEMS."
+description: "Historical record: Phase 158 Generation 0 research into starting GEMS from open foundations. This strategy has since been superseded — see the editorial note below."
 date: 2026-09-02
 category: "Research"
 projectSlug: "gems-training-grounds"
-tags: ["GEMS", "Training Grounds", "Post-Training", "Evaluation"]
+tags: ["GEMS", "Training Grounds", "Historical", "Evaluation"]
 draft: false
+---
+
+**Historical note (2026-09-05):** This entry documents Phase 158 Generation 0 research, which explored starting GEMS from strong open pretrained foundations. That foundation-selection strategy has since been superseded: GEMS / Training Grounds is now pursued as a from-scratch model research program, and pretrained-foundation specialization work has moved to a separate, not-yet-publicly-named project. The research below is preserved as a historical record and no longer describes current GEMS architecture.
+
+![Archived Phase 158 Generation 0 foundation-strategy diagram — a superseded research record, not the current GEMS architecture.](/images/gems/gems-phase158-generation0-family.svg)
+
 ---
 
 GEMS does not need to wait for the compute required to pretrain a frontier-scale foundation model before developing distinctive FDS intelligence.

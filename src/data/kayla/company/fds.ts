@@ -9,7 +9,7 @@ export const fds: KaylaCompany = {
   vision: {
     current: 'Shipping and testing focused products: autonomous repository engineering, model specialization research, project-aware game development, long-form publishing, civic information, local-food discovery, and Windows technician workflows.',
     activeDevelopment: 'Active work spans CodeForge, GEMS / Training Grounds, KyraBlox, Kayla AI Publisher, FarmStand Finder, private civic technology, and the ForgerEMS public preview.',
-    research: 'GEMS / Training Grounds studies how strong open models can be specialized through post-training, curriculum design, evaluation, tool use, governance, and compute-aware execution.',
+    research: 'GEMS / Training Grounds studies how specialized model intelligence can be developed from scratch through curriculum design, controlled training, evaluation, tool use, governance, and compute-aware execution.',
     planned: 'Near-term product work covers CodeForge verification and routing, KyraBlox project integrations, multilingual publishing workflows, official-source civic navigation, and better local-food discovery. Community programs remain concepts.',
     aspirational: 'Exploring affordable-community concepts, community gardens, technology reuse programs, and open planning tools that help people understand and manage shared infrastructure.',
     longTerm: 'Let lessons from shipped engineering tools, model experiments, creative products, and community-facing software improve one another while each product keeps its own purpose and technical boundaries.'

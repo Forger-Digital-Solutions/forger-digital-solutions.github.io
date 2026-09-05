@@ -180,7 +180,7 @@ function statusAnswer(entityId: string): CanonicalAnswer | undefined {
   const gem = gemFor(entityId);
   if (gem) {
     return {
-      text: `${gem.name} is in ${gem.state} inside the GEMS program. ${gem.foundationStrategy} ${gem.notClaimed}`,
+      text: `${gem.name} is in ${gem.state} inside the GEMS program. ${gem.researchStatus} ${gem.notClaimed}`,
       actions: [{ type: 'OPEN_APP', label: 'View GEMS research', href: '/projects/gems-training-grounds' }],
       sources: [`gem-${gem.key}`],
       intent: 'status',
@@ -1118,7 +1118,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   const hasSpecificNonGemProject = entityIds.some((id) => !id.startsWith(GEM_PREFIX) && id !== 'gems-training-grounds' && Boolean(project(id)));
   if (!hasSpecificNonGemProject && /\b(ai|gems|model)\b/i.test(text) && /\b(download|run|install)\b/i.test(text) && !/codeforge/i.test(text)) {
     return {
-      text: 'FDS AI research (GEMS) is foundation research and evaluation — there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS. Projects still in development or research are not presented as downloads.',
+      text: 'FDS AI research (GEMS) is from-scratch model research and evaluation — there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS. Projects still in development or research are not presented as downloads.',
       actions: [
         { type: 'OPEN_FORGED', label: 'See Released Software', href: '/forged' },
         { type: 'OPEN_APP', label: 'Explore GEMS Research', href: '/projects/gems-training-grounds' }
@@ -1177,7 +1177,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
     const gem = gemFor(primary);
     if (gem) {
       return {
-        text: `${gem.name} has not been cancelled. It is an active ${gem.state.toLowerCase()} lineage in GEMS for ${gem.role.toLowerCase()}. ${gem.foundationStrategy}`,
+        text: `${gem.name} has not been cancelled. It is an active ${gem.state.toLowerCase()} lineage in GEMS for ${gem.role.toLowerCase()}. ${gem.researchStatus}`,
         actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
         sources: [`gem-${gem.key}`],
         intent: 'status',

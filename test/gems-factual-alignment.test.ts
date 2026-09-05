@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { gems } from '../src/data/gems';
 
-describe('GEMS Phase 158 public alignment', () => {
-  it('keeps each research identity distinct from its foundation candidate', () => {
+describe('GEMS public alignment', () => {
+  it('keeps each research identity distinct and from-scratch', () => {
     expect(gems.map((gem) => [gem.name, gem.role])).toEqual([
       ['Topaz', 'General intelligence and orchestration'],
       ['Sapphire', 'Software engineering and coding'],
@@ -11,7 +11,10 @@ describe('GEMS Phase 158 public alignment', () => {
     ]);
 
     expect(gems.every((gem) => gem.state === 'RESEARCH')).toBe(true);
-    expect(gems.every((gem) => /not|no |paused|candidate/i.test(`${gem.foundationStrategy} ${gem.notClaimed}`))).toBe(true);
+    expect(gems.every((gem) => /not|no /i.test(`${gem.researchStatus} ${gem.notClaimed}`))).toBe(true);
+    // GEMS is from-scratch research; no lineage should describe itself as beginning
+    // from an acquired pretrained checkpoint.
+    expect(gems.every((gem) => !/OLMo|Qwen|Mathstral|SmolVLM|FLUX/i.test(gem.researchStatus))).toBe(true);
   });
 
   it('does not restore the superseded website taxonomy', () => {
@@ -21,10 +24,9 @@ describe('GEMS Phase 158 public alignment', () => {
     expect(publicCopy).not.toContain('garnet = automation');
   });
 
-  it('keeps Garnet vision-language and image-generation candidates separate', () => {
+  it('keeps Garnet image generation a separate, unclaimed module direction', () => {
     const garnet = gems.find((gem) => gem.key === 'garnet');
-    expect(garnet?.foundationStrategy).toContain('SmolVLM2');
-    expect(garnet?.foundationStrategy).toContain('FLUX.1-schnell');
-    expect(garnet?.notClaimed).toContain('SmolVLM2 is not credited with image generation');
+    expect(garnet?.researchStatus).toContain('separate');
+    expect(garnet?.notClaimed).toContain('image generation is not claimed');
   });
 });
