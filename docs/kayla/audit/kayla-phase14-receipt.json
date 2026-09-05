@@ -1,20 +1,33 @@
 {
   "phase": 14,
   "verdict": "KAYLA_PHASE14_CERTIFIED",
-  "verdictScope": "implementation and full regression; deployment/canary deliberately deferred",
+  "verdictScope": "implementation, full regression, and live production verification",
   "startingCommit": "76c860a03b2d2b1a293f010cdaae7fae32485741",
-  "endingCommit": "face72f8a9739fa0fecabb597f25b71429dea14d",
-  "workerVersion": "7128796f-39d2-4b5d-ad6b-d170802c70a5 (unchanged, not redeployed)",
+  "endingCommit": "908384a (implementation fix); closeout receipt commit recorded below",
+  "workerVersion": "11543754-23a7-4b38-84c7-3c673751da92",
   "knowledgeVersion": "be8d05ff146c8c98",
   "deployment": {
-    "performed": false,
-    "reason": "user selected commit-and-certify-locally; deploy/push/canary deferred to a separate decision",
-    "workerDryRunBuild": "322.79 KiB / gzip 84.42 KiB, bindings unchanged (timeout 9000ms, daily AI limit 150)"
+    "performed": true,
+    "workerDeploys": 2,
+    "justification": "first shipped Phase 14; second shipped the defect the canary itself found. Neither was a version-ID churn.",
+    "bundleContainsPhase14": "verified before deploy - resolveConversation, conversationAnswer, rankConversationActions, verifyGroundedSlots all present in built worker bundle",
+    "workerBuild": "322.79 KiB / gzip 84.42 KiB",
+    "bindingsUnchanged": {
+      "providerTimeoutMs": 9000,
+      "retries": 0,
+      "aiDailyLimit": 150,
+      "rateLimitPerMinute": 5,
+      "rateLimitPerHour": 60
+    }
   },
   "conversationArchitecture": {
     "stateless": true,
     "historyBound": "last 10 messages, 2000 chars each",
-    "entityTracking": ["active", "recentEntities (max 4)", "candidates (pending clarification)"],
+    "entityTracking": [
+      "active",
+      "recentEntities (max 4)",
+      "candidates (pending clarification)"
+    ],
     "clarificationRecovery": "re-parsed from the assistant's own bounded \"Do you mean X or Y?\" reply in history",
     "correctionScope": "clause-scoped via positiveClause(), not a bag-of-words strip"
   },
@@ -60,10 +73,20 @@
       "problem": "REFERENTIAL regex matched bare \"that\"/\"this\" as a demonstrative reference even when used as a relative pronoun",
       "fix": "negative lookahead excluding \"that\"/\"this\" immediately followed by a common relative-clause verb (have, is, can, does, ...)",
       "exampleFailure": "\"Show me projects that have no download today\" wrongly triggered a clarification prompt"
+    },
+    {
+      "id": "comparison-subject-drift",
+      "file": "src/lib/kayla/conversation-answer.ts",
+      "foundBy": "production canary (no local suite caught it)",
+      "commit": "908384a",
+      "problem": "multi-entity composer looked the relationship up by resolved query text, matched a neighbouring canonical record, and prepended it - \"Which one should I start with?\" over CodeForge and GEMS opened by comparing Peridot with GEMS",
+      "fix": "a relationship answer is used only when every entity it names is already one of the resolved subjects",
+      "note": "entity resolution itself was correct ([gems-training-grounds, codeforge]); the golden suite passed because it asserted substring presence and action href, not subject scope",
+      "regressionTest": "comparison stays within the resolved subjects"
     }
   ],
   "tests": {
-    "vitest": "901/901 (50 files, +90 tests / +1 file vs Phase 13's 811/49)",
+    "vitest": "902/902 (50 files) after adding the production-canary regression test",
     "golden": "322/322 (100%)",
     "taskEval": "38/38 goal classification + 42/42 task-plan/safety, 0 forbidden actions",
     "retrieval": "25/25",
@@ -126,9 +149,17 @@
     ],
     "response": "fixed public-scope answer, no internal data exposure"
   },
-  "promptInjectionSurfacesVerified": ["user injection", "history poisoning", "retrieval-sourced injection"],
+  "promptInjectionSurfacesVerified": [
+    "user injection",
+    "history poisoning",
+    "retrieval-sourced injection"
+  ],
   "concurrentSessionIsolation": {
-    "counts": [10, 25, 50],
+    "counts": [
+      10,
+      25,
+      50
+    ],
     "result": "each conversation resolves its own entity/action with no cross-talk",
     "mechanism": "architectural (stateless per-request resolution), not lock-based"
   },
@@ -158,17 +189,80 @@
     ]
   },
   "productionCanary": {
-    "performed": false,
-    "reason": "user selected commit-and-certify-locally; not run this phase"
+    "performed": true,
+    "paced": "16s spacing, under the 5/min rate limit",
+    "requests": 12,
+    "http200": 12,
+    "providerCalls": 2,
+    "localTurns": 10,
+    "mandatoryAmbiguityProof": "PASS - \"Can I download it?\" after \"Tell me about CodeForge and GEMS.\" returned \"Do you mean CodeForge or GEMS / Training Grounds?\"; \"CodeForge.\" then resolved to the correct availability answer with /forged primary, no second clarification loop",
+    "factBoundaryProof": "PASS - \"When exactly will GEMS launch?\" returned no date and stated none is published",
+    "outOfScopeProof": "PASS - weather question got an FDS-scoped redirect with no provider call",
+    "correctionProof": "PASS - \"Actually, I meant GEMS.\" made GEMS authoritative, resolved locally",
+    "defectFound": "comparison-subject-drift (see rootCauseFixesThisPhase); fixed, redeployed, and re-verified against production - answer now covers only GEMS and CodeForge, /forged primary, deterministic, 290ms, zero AI spend"
   },
   "liveBrowserJourney": {
-    "performed": false,
-    "reason": "targets the production Worker, which has not been redeployed with this change set"
+    "performed": true,
+    "browser": "Chromium against production site and Worker",
+    "result": "PASS",
+    "steps": {
+      "openPanel": "focus moves to #kayla-input",
+      "continuity": "pronoun follow-up resolved to CodeForge with Download / Try CodeForge primary",
+      "entitySwitch": "What about GEMS? switched cleanly - no stale CodeForge action",
+      "availabilityFollowUp": "correct none-released answer for GEMS",
+      "primaryAction": "navigated to /projects/gems-training-grounds/",
+      "back": "exactly 1 launcher, one fresh greeting, no replay",
+      "ambiguity": "Do you mean CodeForge or GEMS / Training Grounds?",
+      "clarificationResolved": "CodeForge. -> correct availability answer, no second loop, no stale GEMS action",
+      "mobile390": "no horizontal overflow, panel fits viewport, composer and send reachable",
+      "escape": "panel closed and focus restored to launcher"
+    },
+    "consoleErrors": 0,
+    "failedRequests": 0,
+    "harnessArtifact": "Enter on the focused launcher did not open the panel through the browser-automation harness while Escape did. The launcher is a native button with a click listener (KaylaCopilot.ts:692) so Enter/Space activation is browser-native, and the Playwright keyboard-only journey asserts exactly this and passed twice this session. Raw CDP key dispatch fires listeners but does not synthesize native button activation. Documented, not a product defect."
   },
   "remainingLimitations": [
-    "Nothing in this receipt has been observed live — deployment was not performed",
-    "Conversational provider-avoidance (183/183) is a scripted-corpus measurement, not a production-traffic statistic",
+    "Provider-avoidance figures (183/183 scripted, 10/12 live canary) are corpus measurements, not production-traffic statistics",
     "No dedicated adversarial red-team pass beyond the injection/fact-guard cases in this suite",
-    "Company-entity exclusion from comparison is a targeted fix for the one failure mode found; not re-verified exhaustively beyond existing identity-boundary tests"
-  ]
+    "Company-entity exclusion from comparison is a targeted fix for the failure mode found",
+    "Multi-entity answers remain a verbose concatenation of canonical parts - correct and on-subject after the fix, but a candidate for a future summarisation pass; deliberately not redesigned during a production closeout",
+    "Canary C1 (\"Tell me about the coding one.\") returned Sapphire-centred prose with CodeForge actions; entity resolution was correct and the answer factually accurate (it stated no Sapphire capability ships in CodeForge), so this is provider phrasing on a genuinely ambiguous request, not a grounding failure",
+    "The keyboard-open harness artifact is mitigated by native button semantics plus the passing Playwright assertion, but not independently re-proven inside the automation harness"
+  ],
+  "workerVersionHistory": {
+    "before": "7128796f-39d2-4b5d-ad6b-d170802c70a5",
+    "phase14Deploy": "d8289cb0-3ea8-4e63-a28c-fd4136fdbbb9",
+    "canaryFixDeploy": "11543754-23a7-4b38-84c7-3c673751da92"
+  },
+  "pagesDeployment": {
+    "workflowRunId": "33970013241",
+    "status": "success",
+    "durationSeconds": 55,
+    "deployedCommit": "35f0429",
+    "siteHttpStatus": 200
+  },
+  "knowledgeAlignment": {
+    "repo": "be8d05ff146c8c98",
+    "worker": "be8d05ff146c8c98",
+    "live": "be8d05ff146c8c98",
+    "aligned": true,
+    "note": "deliberately unchanged - Phase 14 altered reasoning, not canonical knowledge data"
+  },
+  "productionAiBudget": {
+    "limit": 150,
+    "beforeDeployment": {
+      "used": 13,
+      "remaining": 137
+    },
+    "afterCanary": {
+      "used": 15,
+      "remaining": 135
+    },
+    "afterBrowserJourney": {
+      "used": 16,
+      "remaining": 134
+    },
+    "totalConsumed": 3,
+    "note": "every deterministic turn spent zero"
+  }
 }

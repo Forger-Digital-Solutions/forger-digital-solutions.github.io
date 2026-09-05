@@ -2,7 +2,7 @@
 
 ## 1. Verdict
 
-**KAYLA_PHASE14_CERTIFIED — implementation & full regression; deployment deferred**
+**KAYLA_PHASE14_CERTIFIED — live in production**
 
 Kayla now maintains bounded conversational context, resolves clear
 follow-ups, switches entities when visitors do, clarifies genuinely
@@ -10,22 +10,25 @@ ambiguous references instead of guessing, handles corrections and minimal
 replies, selects context-appropriate actions, and rejects unsupported
 high-risk provider claims — while every Phase 13 guarantee (reliability,
 accessibility, privacy, security, cost, deterministic-first routing)
-reverified at its original baseline. Production deploy, push, and the live
-canary/browser journey were **deliberately not run this phase** — the user
-chose "commit and certify locally, decide on deploy separately." The Worker
-still serves the Phase 13 build; nothing described below is live yet.
+reverified at its original baseline. The Worker and site are deployed, and
+the behaviour above was verified against production by a paced canary and a
+real multi-turn browser journey (§33/§34), which also surfaced and closed
+one real defect (§17.6).
 
 ## 2. Repository State
 
 - Branch: `main`; starting HEAD `76c860a` (dirty tree inherited from an
   interrupted prior session, verified file-by-file before any edit)
-- Ending commit: `face72f` (see `kayla-phase14-receipt.json`)
-- Worker: **not redeployed** — `worker/index.ts` imports `handleKaylaChat`/
-  `streamKaylaChat` directly from `src/lib/kayla/handler`, so this change set
-  is already worker-bundlable; production remains on the prior build until a
-  deploy is explicitly requested
+- Commits: `face72f` (implementation), `35f0429` (certification),
+  `908384a` (production-canary defect fix), plus this closeout update
+- Worker: **deployed twice, both justified** — `worker/index.ts` imports
+  `handleKaylaChat`/`streamKaylaChat` from `src/lib/kayla/handler`, and all
+  four Phase 14 entry points (`resolveConversation`, `conversationAnswer`,
+  `rankConversationActions`, `verifyGroundedSlots`) were confirmed present in
+  the built bundle before deploying, so this was never a site-only change
 - knowledgeVersion: **unchanged** (`be8d05ff146c8c98`) — this phase changed
-  reasoning/routing code only, no canonical knowledge data
+  reasoning/routing code only, no canonical knowledge data, so the version
+  was deliberately not bumped
 - No new runtime dependency added (conversation resolution and the fact
   guard are hand-written regex/lookup logic, no NLP library)
 
@@ -199,6 +202,16 @@ and after):
 4. `rankConversationActions` narrowed to a non-project entity's own route
    (§15).
 5. The referential-pronoun regex matched relative-clause "that" (§13).
+6. **Found by the production canary, not by any local suite** (`908384a`):
+   "Which one should I start with?" after a CodeForge/GEMS conversation
+   opened with a comparison of *Peridot* and GEMS. Entity resolution was
+   correct (`['gems-training-grounds', 'codeforge']`); the multi-entity
+   composer then looked the relationship up by resolved query text, matched a
+   neighbouring canonical record, and prepended it. A relationship answer is
+   now used only when every entity it names is already one of the resolved
+   subjects. The local golden suite had passed this case because it asserted
+   substring presence and the action href, not that the answer stays on the
+   subjects the visitor raised — the canary case is now a regression test.
 
 Each was isolated with a minimal reproduction (a scratch vitest file per
 case, discarded after use), fixed at its root cause, and reverified against
@@ -331,7 +344,7 @@ harness 190/190 PASS. DO race: 3 rounds × 15 fired → exactly 5 admitted /
 
 | Gate | Result | Phase 13 baseline |
 |---|---|---|
-| vitest | **901 / 901** (50 files) | 811/811 (49 files) |
+| vitest | **902 / 902** (50 files) | 811/811 (49 files) |
 | golden | **322 / 322 (100%)** | 322/322 |
 | task | **38/38 + 42/42** (0 forbidden) | 38/38 + 42/42 |
 | retrieval | **25 / 25** | 25/25 |
@@ -345,24 +358,99 @@ harness 190/190 PASS. DO race: 3 rounds × 15 fired → exactly 5 admitted /
 
 ## 33. Live Production Canary
 
-**Not run this phase.** The user chose to commit and certify locally without
-spending shared AI budget or touching production; this section is
-intentionally empty pending that decision. Current known production state
-(unverified this session beyond a plain HTTP 200 health check): Worker
-`7128796f-39d2-4b5d-ad6b-d170802c70a5`, knowledgeVersion `be8d05ff146c8c98`.
+Paced at 16s (under the 5/min limit), 12 requests across 5 journeys, real
+accumulated history, **12/12 HTTP 200**:
+
+| # | Turn | Route | Provider | Latency | Primary action | Result |
+|---|---|---|---|---:|---|---|
+| A1 | "I'm a developer. What should I look at?" | deterministic | no | 182ms | /projects/codeforge | CodeForge PASS |
+| A2 | "Can I download it?" | deterministic | no | 170ms | /forged | pronoun → CodeForge PASS |
+| A3 | "What about GEMS?" | deterministic | no | 140ms | /projects/gems-training-grounds | switch PASS |
+| A4 | "Can I use that yet?" | deterministic | no | 199ms | /projects/gems-training-grounds | correct "none released" PASS |
+| A5 | "Which one should I start with?" | deterministic | no | 177ms | /forged | **defect found** → §17.6 |
+| B1 | "Tell me about CodeForge and GEMS." | provider_accepted | yes | 7649ms | /projects/codeforge | grounded synthesis PASS |
+| B2 | "Can I download it?" | deterministic | no | 140ms | (none) | **"Do you mean CodeForge or GEMS / Training Grounds?"** PASS |
+| B3 | "CodeForge." | deterministic | no | 185ms | /forged | clarification resolved PASS |
+| C1 | "Tell me about the coding one." | provider_accepted | yes | 2094ms | /projects/codeforge | see limitation 5 |
+| C2 | "Actually, I meant GEMS." | deterministic | no | 186ms | /projects/gems-training-grounds | correction PASS |
+| D1 | "When exactly will GEMS launch?" | deterministic | no | 245ms | /projects/gems-training-grounds | **no date invented** PASS |
+| E1 | "What's the weather?" | deterministic | no | 117ms | /forged | scoped redirect, no provider PASS |
+
+**10 of 12 turns resolved locally; 2 provider calls.** Every simple
+conversational follow-up (A2, A4, B2, B3, C2) stayed local — the specific
+efficiency outcome Phase 14 targeted. D1 returned "GEMS / Training Grounds
+has not launched publicly and no launch date is published… FDS does not
+announce dates before work is ready" with no fabricated date.
+
+A5 was re-verified against production after the §17.6 fix was deployed:
+the answer now covers only GEMS and CodeForge, `/forged` primary,
+deterministic, 290ms, zero AI spend.
 
 ## 34. Live Multi-Turn Browser Journey
 
-**Not run this phase**, for the same reason as §33 — it targets the
-production Worker, which has not been redeployed with this change set.
+Real Chromium against the production site and Worker:
+
+| Step | Result |
+|---|---|
+| Open panel | focus moves to `#kayla-input` PASS |
+| "I'm a developer. What should I look at?" | CodeForge + Explore/Forged actions PASS |
+| "Can I download it?" | CodeForge availability, "Download / Try CodeForge" primary PASS |
+| "What about GEMS?" | switches to GEMS; **no stale CodeForge action** PASS |
+| "Can I use that yet?" | correct "none has been trained to release" PASS |
+| Click primary action | navigated to `/projects/gems-training-grounds/` PASS |
+| Browser Back | exactly 1 launcher, one fresh greeting, no replay PASS |
+| "Tell me about CodeForge and GEMS." | grounded synthesis of both PASS |
+| "Can I download it?" | **"Do you mean CodeForge or GEMS / Training Grounds?"** PASS |
+| "CodeForge." | resolves; no second clarification loop; no stale GEMS action PASS |
+| 390×844 | no horizontal overflow, panel 390px wide fits viewport, composer + send reachable PASS |
+| Escape | panel closes, **focus restored to launcher** PASS |
+| Console / network | **0 console errors, 0 failed requests** (all 200) PASS |
+
+Transcript reset after Back is the documented Phase 13 page-lifetime
+in-memory behaviour, not a regression.
+
+One harness artifact, not a product defect: pressing Enter on the focused
+launcher through the browser-automation harness did not open the panel,
+while Escape did. The launcher is a native `<button type="button">` with a
+`click` listener (`KaylaCopilot.ts:692`), so Enter/Space activation is
+browser-native, and the Playwright keyboard-only journey asserts exactly
+this (`focus()` → `press('Enter')` → panel visible) and passed twice this
+session. Raw CDP key dispatch fires listeners but does not synthesize a
+native button activation; documented rather than papered over.
 
 ## 35. Production Deployment
 
-**Not performed.** Worker dry-run build is clean and byte-identical in
-shape to the current production bindings (§3); no code path requires a
-canonical-knowledge change, so `knowledgeVersion` would remain
-`be8d05ff146c8c98` on deploy. Deploying, pushing `main`, and running a
-canary are separate, explicit follow-up decisions.
+- Worker before: `7128796f-39d2-4b5d-ad6b-d170802c70a5`
+- Worker after Phase 14 deploy: `d8289cb0-3ea8-4e63-a28c-fd4136fdbbb9`
+- Worker after §17.6 canary fix: **`11543754-23a7-4b38-84c7-3c673751da92`**
+- Upload 322.79 KiB / gzip 84.42 KiB; bindings unchanged — provider timeout
+  **9000ms**, retries **0**, daily AI budget **150**, rate limits 5/min + 60/hr
+- Pages: workflow run `33970013241` **success in 55s**, deployed `35f0429`;
+  site HTTP 200
+- Two Worker deploys total: the first shipped Phase 14, the second shipped a
+  defect the canary itself found. No deploy was made to churn a version ID.
+
+## 35a. Version / Knowledge Alignment
+
+| Surface | knowledgeVersion |
+|---|---|
+| repo (`kayla:knowledge-check`) | `be8d05ff146c8c98` |
+| Worker (health endpoint) | `be8d05ff146c8c98` |
+| live (production health) | `be8d05ff146c8c98` |
+
+Aligned. Deliberately unchanged: Phase 14 altered reasoning, not canonical
+knowledge data.
+
+## 35b. Production AI Budget
+
+| Point | Used | Remaining |
+|---|---:|---:|
+| Before deployment | 13 | 137 |
+| After 12-request canary | 15 | 135 |
+| After live browser journey | 16 | 134 |
+
+**3 AI calls consumed for the entire production closeout** (2 canary + 1
+browser). Every deterministic turn spent zero.
 
 ## 36. Files Changed
 
@@ -395,26 +483,39 @@ perf|load-test|do-race|knowledge-check`, `npx vitest run`,
 
 ## 38. Remaining Limitations
 
-1. Not deployed — nothing in this document has been observed live.
-2. Provider-avoidance conversational figure (183/183) is a scripted-corpus
-   measurement; real visitor phrasing will include genuinely provider-
-   eligible turns.
-3. No adversarial red-team pass beyond the injection/fact-guard cases in
-   this suite (§18/§21) — a dedicated adversarial review was out of scope
-   for this session.
-4. Company-entity exclusion from comparison (§9/§17) is a targeted fix for
-   the one failure mode found; a genuine "is FDS the same as X" identity
-   question is handled elsewhere (assistant-identity boundary), not by this
-   path — not re-verified exhaustively beyond the existing identity-boundary
-   tests.
+1. Provider-avoidance conversational figure (183/183 scripted; 10/12 in the
+   live canary) is a corpus measurement; real visitor phrasing will include
+   genuinely provider-eligible turns.
+2. No adversarial red-team pass beyond the injection/fact-guard cases in
+   this suite (§18/§21) — a dedicated adversarial review remains out of
+   scope.
+3. Company-entity exclusion from comparison (§9/§17) is a targeted fix for
+   the failure mode found; a genuine "is FDS the same as X" identity
+   question is handled elsewhere (assistant-identity boundary).
+4. Multi-entity answers are a concatenation of canonical parts. After the
+   §17.6 fix they stay on the resolved subjects, but they remain verbose —
+   A5 still returns four stacked canonical paragraphs. Correct and grounded,
+   but a candidate for a future summarisation pass; deliberately not
+   redesigned during a production closeout.
+5. Canary C1 ("Tell me about the coding one.") returned Sapphire-centred
+   prose while its actions pointed at CodeForge. Entity resolution was
+   correct (`codeforge`) and the answer was factually accurate — it
+   explicitly stated no Sapphire capability ships in CodeForge — so this is
+   a provider phrasing choice on a genuinely ambiguous request, not a
+   grounding failure. Noted, not fixed.
+6. The keyboard-open harness artifact in §34 — mitigated by native button
+   semantics plus the passing Playwright assertion, but not independently
+   re-proven inside the browser-automation harness itself.
 
 ## 39. Final Certification Statement
 
 Kayla's multi-turn intelligence — context resolution, entity continuity and
 switching, ambiguity handling, corrections, action planning, and grounded
-high-risk fact verification — is implemented, integrated, and reverified
-clean against the complete Phase 13 regression matrix plus this phase's own
-conversation golden suite, with zero known certification blockers from
-§55 of the task brief. **KAYLA_PHASE14_CERTIFIED at the implementation and
-regression level.** Deployment, the production canary, and the live browser
-journey are deliberately deferred to a separate, explicit decision.
+high-risk fact verification — is implemented, integrated, reverified clean
+against the complete Phase 13 regression matrix plus this phase's own
+conversation golden suite, and **now verified live in production** by a
+paced canary and a real multi-turn browser journey. Production proved one
+defect that no local suite caught (§17.6); it was root-caused, fixed,
+regression-tested, redeployed, and re-verified against production. Worker,
+site, and knowledge version are aligned; the shared AI budget moved 13 → 16.
+**KAYLA_PHASE14_CERTIFIED.**
