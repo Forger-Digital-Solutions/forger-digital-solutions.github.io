@@ -10,6 +10,11 @@ import { statusMeta } from '../../data/status';
 import { getPublishedNotes } from '../../lib/notes';
 import VisualEvidence from '../../components/VisualEvidence.astro';
 import { products } from '../../data/products';
+import { signatureKindFor } from '../../lib/signature';
+import KyraBloxLoop from '../../components/signatures/KyraBloxLoop.astro';
+import KaylaThread from '../../components/signatures/KaylaThread.astro';
+import WtpTrace from '../../components/signatures/WtpTrace.astro';
+import FarmStandRadius from '../../components/signatures/FarmStandRadius.astro';
 
 export function getStaticPaths() {
   return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
@@ -24,6 +29,11 @@ const exploreLinks = exploreNextBySlug[project.slug] ?? [
   { label: 'All Projects', href: '/projects', note: 'Full directory' }
 ];
 const isGems = project.slug === 'gems-training-grounds';
+// The four private-development projects render a signature composition
+// (project-intelligence loop, creative thread, source trace, discovery
+// radius) instead of the generic section loop. Copy still comes from the
+// project record via the signature components.
+const signatureKind = signatureKindFor(project.slug);
 const heroEvidenceState = project.slug === 'codeforge'
   ? 'release'
   : project.heroImage?.src.endsWith('.svg')
@@ -61,6 +71,56 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
   <article class="project-page" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'};--eco-color: ${ecoColor}`}>
     <!-- Hero Section -->
     <header class="project-hero" class:list={[isGems ? 'project-hero--flagship' : '']}>
+      {signatureKind === 'loop' && (
+        <svg class="project-hero__motif" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+          <g class="hero-motif-stroke" opacity=".4">
+            <path d="M150 84 L250 84 L320 160 L430 160 L500 236" />
+            <path d="M150 236 L250 236 L320 160" />
+          </g>
+          <g class="hero-motif-dot" opacity=".45">
+            <circle cx="150" cy="84" r="4.5" /><circle cx="150" cy="236" r="4.5" />
+            <circle cx="250" cy="84" r="6.5" /><circle cx="250" cy="236" r="6.5" />
+            <circle cx="320" cy="160" r="8" /><circle cx="430" cy="160" r="6.5" />
+            <circle cx="500" cy="236" r="4.5" />
+          </g>
+        </svg>
+      )}
+      {signatureKind === 'thread' && (
+        <svg class="project-hero__motif" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+          <g class="hero-motif-stroke" opacity=".38">
+            <path d="M430 0 L430 320" />
+            <path d="M170 66 L360 66 M170 126 L330 126 M170 186 L350 186 M170 246 L290 246" />
+          </g>
+          <g class="hero-motif-dot" opacity=".45">
+            <circle cx="430" cy="66" r="4.5" /><circle cx="430" cy="160" r="5.5" /><circle cx="430" cy="254" r="4.5" />
+          </g>
+        </svg>
+      )}
+      {signatureKind === 'trace' && (
+        <svg class="project-hero__motif" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+          <g class="hero-motif-stroke hero-motif-stroke--dashed" opacity=".4">
+            <path d="M180 84 L400 84 L400 160 L500 160" />
+            <path d="M400 160 L400 236 L500 236" />
+          </g>
+          <g class="hero-motif-dot" opacity=".45">
+            <circle cx="180" cy="84" r="4.5" /><circle cx="400" cy="160" r="6" />
+            <circle cx="500" cy="160" r="4.5" /><circle cx="500" cy="236" r="4.5" />
+          </g>
+        </svg>
+      )}
+      {signatureKind === 'radius' && (
+        <svg class="project-hero__motif" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+          <g class="hero-motif-stroke" opacity=".34">
+            <circle cx="470" cy="160" r="56" />
+            <circle cx="470" cy="160" r="112" />
+            <circle cx="470" cy="160" r="168" opacity=".55" />
+          </g>
+          <g class="hero-motif-dot" opacity=".45">
+            <circle cx="470" cy="160" r="6" />
+            <circle cx="470" cy="48" r="4" /><circle cx="520" cy="248" r="4" /><circle cx="390" cy="238" r="4" />
+          </g>
+        </svg>
+      )}
       <div class="project-hero__badge-row">
         {project.ecosystem && ecosystemStyle && (
           <a href="/projects" class="project-hero__ecosystem">
@@ -117,13 +177,68 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
         state={heroEvidenceState}
         eager
       />
-    ) : (
+    ) : !signatureKind && (
       <figure class="project-visual">
         <ProjectVisual project={project} variant="hero" />
       </figure>
     )}
 
-    <!-- Main Content -->
+    <!-- Signature composition: the private-development projects replace the
+         generic section loop with their own page identity. -->
+    {signatureKind ? (
+      <div class="project-flow">
+        {signatureKind === 'loop' && <KyraBloxLoop project={project} />}
+        {signatureKind === 'thread' && <KaylaThread project={project} />}
+        {signatureKind === 'trace' && <WtpTrace project={project} />}
+        {signatureKind === 'radius' && <FarmStandRadius project={project} />}
+
+        {project.privacyNotice && (
+          <aside class="privacy-block">
+            <span class="privacy-icon" aria-hidden="true">◇</span>
+            <p class="privacy-text">{project.privacyNotice}</p>
+          </aside>
+        )}
+
+        <aside class="project-sidebar project-sidebar--flow" aria-label="Project information">
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Public Status</h3>
+            <ProjectStatus status={project.status} />
+            {project.secondaryStatus && <div class="sidebar-secondary"><ProjectStatus status={project.secondaryStatus} /></div>}
+            <p class="sidebar-desc">{status.description}</p>
+          </div>
+
+          {project.audience && (
+            <div class="sidebar-card">
+              <h3 class="sidebar-title">Built For</h3>
+              <p class="sidebar-desc sidebar-desc--audience">{project.audience}</p>
+            </div>
+          )}
+
+          {(project.githubUrl || project.websiteUrl || project.documentationUrl) && (
+            <div class="sidebar-card sidebar-links">
+              <h3 class="sidebar-title">Links</h3>
+              <div class="sidebar-buttons">
+                {project.githubUrl && (
+                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                    Repository
+                  </a>
+                )}
+                {project.websiteUrl && !releaseProduct && (
+                  <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                    Live Project
+                  </a>
+                )}
+                {project.documentationUrl && (
+                  <a href={project.documentationUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                    Documentation
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+        </aside>
+      </div>
+    ) : (
     <div class="project-layout">
       <div class="project-content">
         {project.sections && project.sections.map((section, index) => (
@@ -259,8 +374,9 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
         )}
       </aside>
     </div>
+    )}
 
-     <!-- GEMS Special Section -->
+    <!-- GEMS Special Section -->
     {isGems && (
       <section class="gems-section" aria-labelledby="gems-systems">
         <p class="gems-kicker">The Model Family</p>
@@ -490,6 +606,63 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
     gap: 4rem;
     padding: 3rem 0;
   }
+
+  /* Signature pages flow single-column: the composition gets the full content
+     width and the status/audience cards close the page as a row. */
+  .project-flow {
+    padding: 0 0 1.5rem;
+  }
+  .project-flow .privacy-block { margin-top: 2.25rem; }
+  .project-sidebar.project-sidebar--flow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .project-sidebar.project-sidebar--flow .sidebar-card {
+    flex: 1 1 13rem;
+  }
+  @media (max-width: 600px) {
+    .project-sidebar.project-sidebar--flow {
+      flex-direction: column;
+    }
+    .project-sidebar.project-sidebar--flow .sidebar-card {
+      flex: none;
+      width: 100%;
+    }
+  }
+
+  /* Hero identity motifs — decorative background geometry per signature kind. */
+  .project-hero__motif {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(46vw, 620px);
+    height: 100%;
+    pointer-events: none;
+  }
+  :where(.project-hero__badge-row, .project-hero__title, .project-hero__stage, .project-hero__summary, .project-hero__tags) {
+    position: relative;
+    z-index: 1;
+  }
+  .hero-motif-stroke {
+    fill: none;
+    stroke: var(--eco-color);
+    stroke-width: 1;
+    stroke-linecap: round;
+  }
+  .hero-motif-stroke--dashed {
+    stroke-dasharray: 4 6;
+  }
+  .hero-motif-dot circle {
+    fill: var(--eco-color);
+    stroke: none;
+  }
+  @media (max-width: 720px) {
+    .project-hero__motif { display: none; }
+  }
+
 
   /* Sections */
   .project-section + .project-section {

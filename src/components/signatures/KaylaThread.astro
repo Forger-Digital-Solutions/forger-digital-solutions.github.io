@@ -1,0 +1,236 @@
+---
+/**
+ * Kayla signature composition: the continuous creative thread.
+ *
+ * One manuscript thread runs from first idea to publication, carrying the
+ * same canonical copy that used to render as five isolated H2 sections.
+ * Editorial motifs (part numbering, margin rules, revision states) stay
+ * inside the FDS monochrome system. Copy is pulled from the project record
+ * so claims stay single-sourced in projects.ts (which also feeds Kayla —
+ * the assistant — its own knowledge corpus).
+ */
+import type { Project } from '../../types';
+import { getSection } from '../../lib/signature';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const arcSection = getSection(project, 'From Idea to Published Work');
+const continuitySection = getSection(project, 'Project Continuity');
+const revisionSection = getSection(project, 'Writing & Revision');
+const visualSection = getSection(project, 'Visual Storytelling');
+const publishingSection = getSection(project, 'Publishing Pipeline');
+
+const items = revisionSection.items ?? [];
+const stages = [
+  { num: '01', part: 'Idea', state: null, text: 'The project opens as early notes and story organization — before chapters exist.' },
+  { num: '02', part: 'Manuscript', state: null, text: items[1] ?? 'Draft and chapter development.' },
+  { num: '03', part: 'Continuity', state: 'Tracked', text: items[2] ?? 'Character and continuity tracking.' },
+  { num: '04', part: 'Revision', state: 'Revised in place', text: items[3] ?? 'Editing and revision support.' },
+  { num: '05', part: 'Visual storytelling', state: null, text: visualSection.body ?? '' },
+  { num: '06', part: 'Publishing', state: null, text: publishingSection.body ?? '' },
+];
+---
+
+<section class="sig-thread" aria-labelledby="kayla-thread-title">
+  <p class="sig-kicker">SYSTEM // CONTINUOUS CREATIVE PROJECT</p>
+  <h2 id="kayla-thread-title" class="sig-title">One thread carries the whole work</h2>
+  <p class="sig-intro">{arcSection.body}</p>
+
+  <ol class="sig-thread__rail">
+    {stages.map((stage) => (
+      <li class="sig-thread__stage">
+        <div class="sig-thread__card">
+          <p class="sig-thread__part">
+            <span class="sig-thread__num" aria-hidden="true">{stage.num}</span>
+            <span class="sig-thread__rule" aria-hidden="true"></span>
+            {stage.state && <span class="sig-thread__state">{stage.state}</span>}
+          </p>
+          <h3 class="sig-thread__name">{stage.part}</h3>
+          <p class="sig-thread__text">{stage.text}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <aside class="sig-thread__thesis" aria-label="The central thesis">
+    <p class="sig-thread__thesis-label">The central thesis</p>
+    <p class="sig-thread__thesis-text">{continuitySection.body}</p>
+  </aside>
+</section>
+
+<style>
+  .sig-thread {
+    padding-top: 2.75rem;
+    scroll-margin-top: 4.5rem;
+  }
+  .sig-kicker {
+    margin: 0 0 .4rem;
+    color: var(--color-text-subtle);
+    font: 700 .68rem/1.3 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .sig-title {
+    margin: 0 0 .8rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+    font-weight: 750;
+    letter-spacing: -.025em;
+    color: var(--color-text);
+  }
+  .sig-intro {
+    max-width: 46rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  /* The thread: a center rail with stages alternating around it. */
+  .sig-thread__rail {
+    position: relative;
+    margin: 2.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-thread__rail::before {
+    content: '';
+    position: absolute;
+    top: .2rem;
+    bottom: .2rem;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--eco-color) 55%, transparent) 6%, color-mix(in srgb, var(--eco-color) 55%, transparent) 94%, transparent);
+  }
+  .sig-thread__stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 3.25rem;
+    padding: .55rem 0;
+  }
+  /* Rail node */
+  .sig-thread__stage::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: .58rem;
+    height: .58rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 70%, transparent);
+    border-radius: 50%;
+    background: var(--color-bg-secondary);
+    box-shadow: 0 0 .55rem color-mix(in srgb, var(--eco-color) 35%, transparent);
+    transform: translate(-50%, -50%);
+  }
+  .sig-thread__stage:nth-child(odd) .sig-thread__card { grid-column: 1; justify-self: end; }
+  .sig-thread__stage:nth-child(even) .sig-thread__card { grid-column: 2; justify-self: start; }
+  .sig-thread__card {
+    position: relative;
+    width: min(100%, 25rem);
+    padding: .85rem 1rem .95rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+  }
+  /* Margin rule connecting the card to the rail */
+  .sig-thread__stage .sig-thread__card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 1.25rem;
+    height: 1px;
+    background: color-mix(in srgb, var(--eco-color) 40%, transparent);
+  }
+  .sig-thread__stage:nth-child(odd) .sig-thread__card::after { right: -1.25rem; }
+  .sig-thread__stage:nth-child(even) .sig-thread__card::after { left: -1.25rem; }
+
+  .sig-thread__part {
+    display: flex;
+    gap: .55rem;
+    align-items: center;
+    margin: 0 0 .45rem;
+  }
+  .sig-thread__num {
+    color: var(--eco-color);
+    font: 800 .72rem/1 var(--font-mono);
+    letter-spacing: .1em;
+  }
+  .sig-thread__rule {
+    flex: 1;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, var(--color-border) 0 6px, transparent 6px 12px);
+  }
+  .sig-thread__state {
+    padding: .2rem .45rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 40%, var(--color-border));
+    border-radius: 999px;
+    color: var(--eco-color);
+    font: 700 .58rem/1 var(--font-mono);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .sig-thread__name {
+    margin: 0 0 .35rem;
+    font-size: 1.02rem;
+    font-weight: 750;
+    letter-spacing: -.01em;
+    color: var(--color-text);
+  }
+  .sig-thread__text {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .84rem;
+    line-height: 1.6;
+  }
+
+  /* The thesis the whole thread exists to keep true. */
+  .sig-thread__thesis {
+    position: relative;
+    max-width: 46rem;
+    margin: 2rem 0 0;
+    padding: 1rem 1.15rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 30%, var(--color-border));
+    border-left: 3px solid var(--eco-color);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    background: color-mix(in srgb, var(--eco-color) 6%, transparent);
+  }
+  .sig-thread__thesis-label {
+    margin: 0 0 .35rem;
+    color: var(--eco-color);
+    font: 700 .64rem/1 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .sig-thread__thesis-text {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .92rem;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 760px) {
+    .sig-thread__rail::before { left: .3rem; }
+    .sig-thread__stage {
+      grid-template-columns: 1fr;
+      column-gap: 0;
+      padding: .5rem 0 .5rem 1.35rem;
+    }
+    .sig-thread__stage::before { left: .3rem; }
+    .sig-thread__stage:nth-child(odd) .sig-thread__card,
+    .sig-thread__stage:nth-child(even) .sig-thread__card {
+      grid-column: 1;
+      justify-self: stretch;
+      width: 100%;
+    }
+    .sig-thread__stage .sig-thread__card::after {
+      top: 50%;
+      width: 1.05rem;
+      right: auto;
+      left: -1.05rem;
+    }
+  }
+</style>

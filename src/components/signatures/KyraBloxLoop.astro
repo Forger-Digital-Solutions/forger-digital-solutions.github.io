@@ -1,0 +1,354 @@
+---
+/**
+ * KyraBlox signature composition: the project-intelligence loop.
+ *
+ * Renders the same canonical section copy that used to flow through the
+ * generic H2/paragraph template as one governed loop — ATTACH → UNDERSTAND →
+ * PLAN → CHANGE → VERIFY → ENGINE ADAPT — plus the engine-maturity ladder and
+ * the current-boundaries list. Copy is pulled from the project record so the
+ * claims stay single-sourced in projects.ts (which also feeds Kayla).
+ */
+import type { Project } from '../../types';
+import { getSection } from '../../lib/signature';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const buildSection = getSection(project, 'Build With Project Context');
+const awareSection = getSection(project, 'Game-Aware Intelligence');
+const robloxSection = getSection(project, 'Roblox First');
+const multiEngineSection = getSection(project, 'Multi-Engine Direction');
+
+// "Multi-Engine Direction" leads with the Unreal sentence; the ladder row for
+// the planning paths carries only the rest.
+const multiEngineSentences = multiEngineSection.body?.split('. ') ?? [];
+const planningPathsText = multiEngineSentences.slice(1).join('. ').replace(/\.$/, '');
+
+const [attachText] = buildSection.body?.split('. ') ?? [];
+const beginText = buildSection.body?.split('. ').slice(1).join('. ').replace(/\.$/, '') ?? '';
+
+const stages = [
+  { index: '01', stage: 'Attach', text: attachText ?? '' },
+  { index: '02', stage: 'Understand', text: beginText },
+  { index: '03', stage: 'Plan', text: 'Gameplay and system planning; bounded script proposals.' },
+  { index: '04', stage: 'Change', text: 'Exact diff review and approval; guarded file transactions.' },
+  { index: '05', stage: 'Verify', text: 'Testing and validation, with rollback and recovery state.' },
+  { index: '06', stage: 'Adapt', text: 'The engine adapter carries the guarded change — Roblox has the deepest current integration.' },
+];
+
+const ladder = [
+  {
+    engine: 'Roblox',
+    level: 'Deepest integration',
+    segments: 3,
+    note: robloxSection.body ?? '',
+  },
+  {
+    engine: 'Unreal',
+    level: 'Bridge validated',
+    segments: 2,
+    note: 'A fixture-validated bridge and plugin, without certified live editor mutation.',
+  },
+  {
+    engine: 'Unity · Godot · Desktop/Web/2D · Custom',
+    level: 'Planning paths',
+    segments: 1,
+    note: planningPathsText,
+  },
+];
+---
+
+<section class="sig-loop" aria-labelledby="kyra-loop-title">
+  <p class="sig-kicker">SYSTEM // PROJECT INTELLIGENCE</p>
+  <h2 id="kyra-loop-title" class="sig-title">One governed loop around the game project</h2>
+  <p class="sig-intro">{awareSection.body}</p>
+
+  <ol class="sig-loop__chain">
+    {stages.map((item) => (
+      <li class="sig-loop__node">
+        <span class="sig-loop__index" aria-hidden="true">{item.index}</span>
+        <h3 class="sig-loop__stage">{item.stage}</h3>
+        <p class="sig-loop__text">{item.text}</p>
+      </li>
+    ))}
+  </ol>
+  <p class="sig-loop__return">
+    <span class="sig-loop__return-label" aria-hidden="true">↺</span>
+    Mission history, approvals, validation, and recovery stay attached to the project.
+  </p>
+
+  <div class="sig-loop__ladder">
+    <h3 class="sig-loop__ladder-title">Engine pathways at their actual maturity</h3>
+    <ul class="sig-loop__rows">
+      {ladder.map((row) => (
+        <li class="sig-loop__row">
+          <span class="sig-loop__engine">{row.engine}</span>
+          <span class="sig-loop__level">{row.level}</span>
+          <span class="sig-loop__meter" aria-hidden="true" data-level={row.segments}>
+            <i></i><i></i><i></i>
+          </span>
+          <span class="sig-loop__note">{row.note}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<section class="sig-loop sig-loop--limits" aria-labelledby="kyra-limits-title">
+  <p class="sig-kicker">STATE // CURRENT BOUNDARIES</p>
+  <h2 id="kyra-limits-title" class="sig-title">What is still limited</h2>
+  <ul class="sig-loop__limits">
+    {(project.highlights ?? []).map((item) => (
+      <li><span class="sig-loop__limit-marker" aria-hidden="true">□</span>{item}</li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .sig-loop {
+    padding-top: 2.75rem;
+    scroll-margin-top: 4.5rem;
+  }
+  .sig-kicker {
+    margin: 0 0 .4rem;
+    color: var(--color-text-subtle);
+    font: 700 .68rem/1.3 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .sig-title {
+    margin: 0 0 .8rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+    font-weight: 750;
+    letter-spacing: -.025em;
+    color: var(--color-text);
+  }
+  .sig-intro {
+    max-width: 46rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  /* Loop chain — horizontal node graph on wide screens, vertical stack below. */
+  .sig-loop__chain {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.4rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-loop__node {
+    position: relative;
+    padding: .85rem .9rem .95rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+  }
+  .sig-loop__node::after {
+    content: '';
+    position: absolute;
+    top: 1.45rem;
+    right: -1.4rem;
+    width: 1.4rem;
+    height: 1px;
+    background: color-mix(in srgb, var(--eco-color) 55%, transparent);
+  }
+  .sig-loop__node::before {
+    content: '';
+    position: absolute;
+    top: 1.31rem;
+    right: -.28rem;
+    width: .42rem;
+    height: .42rem;
+    border-top: 1px solid color-mix(in srgb, var(--eco-color) 75%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--eco-color) 75%, transparent);
+    transform: rotate(45deg);
+  }
+  .sig-loop__node:last-child::after,
+  .sig-loop__node:last-child::before { content: none; }
+  .sig-loop__index {
+    display: inline-block;
+    margin-bottom: .5rem;
+    padding: .18rem .38rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 38%, var(--color-border));
+    border-radius: 3px;
+    color: var(--eco-color);
+    font: 700 .6rem/1 var(--font-mono);
+    letter-spacing: .08em;
+  }
+  .sig-loop__stage {
+    margin: 0 0 .35rem;
+    font-size: .95rem;
+    font-weight: 750;
+    letter-spacing: -.01em;
+    color: var(--color-text);
+  }
+  .sig-loop__text {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .78rem;
+    line-height: 1.5;
+  }
+
+  /* Return edge: the loop closes back into the project. */
+  .sig-loop__return {
+    position: relative;
+    max-width: 46rem;
+    margin: 1.9rem auto 0;
+    padding: .55rem .9rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 30%, var(--color-border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--eco-color) 6%, transparent);
+    color: var(--color-text-muted);
+    font: 600 .74rem/1.4 var(--font-mono);
+    text-align: center;
+  }
+  .sig-loop__return-label {
+    margin-right: .45rem;
+    color: var(--eco-color);
+    font-weight: 800;
+  }
+
+  /* Engine maturity ladder */
+  .sig-loop__ladder {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .sig-loop__ladder-title {
+    margin: 0 0 1rem;
+    font-size: 1.02rem;
+    font-weight: 750;
+    letter-spacing: -.01em;
+    color: var(--color-text);
+  }
+  .sig-loop__rows {
+    display: grid;
+    gap: .55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-loop__row {
+    display: grid;
+    grid-template-columns: 15rem 9.5rem 4.5rem 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    padding: .7rem .9rem;
+    border: 1px solid var(--color-border);
+    border-left: 3px solid color-mix(in srgb, var(--eco-color) 45%, var(--color-border));
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+  }
+  .sig-loop__engine {
+    color: var(--color-text);
+    font: 700 .78rem/1.4 var(--font-mono);
+    letter-spacing: .02em;
+  }
+  .sig-loop__level {
+    color: var(--eco-color);
+    font: 700 .66rem/1.4 var(--font-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .sig-loop__meter {
+    display: inline-flex;
+    gap: .25rem;
+    align-self: center;
+  }
+  .sig-loop__meter i {
+    width: 1.05rem;
+    height: .32rem;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--eco-color) 22%, var(--color-border));
+  }
+  .sig-loop__meter[data-level='3'] i { background: color-mix(in srgb, var(--eco-color) 78%, transparent); }
+  .sig-loop__meter[data-level='2'] i:nth-child(-n + 2) { background: color-mix(in srgb, var(--eco-color) 62%, transparent); }
+  .sig-loop__meter[data-level='1'] i:nth-child(1) { background: color-mix(in srgb, var(--eco-color) 45%, transparent); }
+  .sig-loop__note {
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    line-height: 1.55;
+  }
+  .sig-loop__ladder-note {
+    margin: .8rem 0 0;
+    color: var(--color-text-subtle);
+    font: 600 .7rem/1.5 var(--font-mono);
+    letter-spacing: .03em;
+  }
+
+  /* Boundaries */
+  .sig-loop--limits { padding-top: 2.25rem; }
+  .sig-loop__limits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-loop__limits li {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    padding: .7rem .85rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: .85rem;
+    line-height: 1.55;
+  }
+  .sig-loop__limit-marker {
+    flex-shrink: 0;
+    color: var(--eco-color);
+    font-size: .8rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1080px) {
+    .sig-loop__chain {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-left: 1.35rem;
+    }
+    .sig-loop__node {
+      margin: 0 0 .35rem;
+    }
+    /* Vertical chain: arrows become downward connectors on the left rail. */
+    .sig-loop__node::after {
+      top: auto;
+      right: auto;
+      bottom: -1.15rem;
+      left: -0.93rem;
+      width: 1px;
+      height: 1.1rem;
+    }
+    .sig-loop__node::before {
+      top: auto;
+      right: auto;
+      bottom: -1.02rem;
+      left: -1.09rem;
+      transform: rotate(135deg);
+    }
+    .sig-loop__return {
+      margin-top: 1.5rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .sig-loop__row {
+      grid-template-columns: 1fr;
+      gap: .35rem;
+    }
+    .sig-loop__meter { order: 3; }
+    .sig-loop__limits {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

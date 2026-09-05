@@ -1,0 +1,352 @@
+---
+/**
+ * FarmStand Finder signature composition: the discovery radius.
+ *
+ * A conceptual radius geometry (rings, bearings, distance ticks — explicitly
+ * NOT a map of real listings) paired with the concrete questions the product
+ * answers and the current/seasonal state strip. Renders the same canonical
+ * copy that used to flow through the generic H2/paragraph template; claims
+ * stay single-sourced in projects.ts (which also feeds Kayla's corpus).
+ */
+import type { Project } from '../../types';
+import { getSection } from '../../lib/signature';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const nearbySection = getSection(project, "Find What's Nearby");
+const growersSection = getSection(project, 'Farms & Growers');
+const marketsSection = getSection(project, 'Markets & Stands');
+const seasonalSection = getSection(project, 'Seasonal Discovery');
+const communitySection = getSection(project, 'Community Listings');
+
+/** Direct enumeration of project.differentiation — kept in step with it. */
+const radiusQuestions = [
+  'What is near me?',
+  'What kind of place is it?',
+  'When is it open?',
+  'What may be available?',
+  'Who grows or sells it?',
+  'How far away is it?',
+];
+const listingTypes = marketsSection.items ?? [];
+const currentCells = ['Hours', 'Open status', 'Seasonal availability', 'Listing freshness'];
+---
+
+<section class="sig-radius" aria-labelledby="fs-radius-title">
+  <p class="sig-kicker">SYSTEM // NEARBY DISCOVERY</p>
+  <h2 id="fs-radius-title" class="sig-title">What is nearby, and what is current</h2>
+  <p class="sig-intro">{nearbySection.body}</p>
+
+  <div class="sig-radius__grid">
+    <figure class="sig-radius__geo">
+      <svg viewBox="0 0 420 420" role="img" aria-label="Conceptual discovery-radius diagram: farms, roadside stands, markets, and gardens at different distances from your area. A diagram of the questions, not a map of listings.">
+        <g class="sig-radius__ticks" aria-hidden="true">
+          {Array.from({ length: 24 }).map((_, i) => {
+            const angle = (i * Math.PI) / 12;
+            const x1 = 210 + Math.cos(angle) * 186;
+            const y1 = 210 + Math.sin(angle) * 186;
+            const x2 = 210 + Math.cos(angle) * (i % 6 === 0 ? 174 : 180);
+            const y2 = 210 + Math.sin(angle) * (i % 6 === 0 ? 174 : 180);
+            return <line x1={x1} y1={y1} x2={x2} y2={y2} />;
+          })}
+        </g>
+        <g class="sig-radius__rings" aria-hidden="true">
+          <circle cx="210" cy="210" r="62" />
+          <circle cx="210" cy="210" r="124" />
+          <circle cx="210" cy="210" r="186" />
+        </g>
+        <g class="sig-radius__spoke" aria-hidden="true">
+          <line x1="210" y1="210" x2="363" y2="105" />
+        </g>
+        <g class="sig-radius__center" aria-hidden="true">
+          <circle cx="210" cy="210" r="7" />
+          <circle cx="210" cy="210" r="14" class="sig-radius__halo" />
+          <text x="210" y="242" text-anchor="middle">YOUR AREA</text>
+        </g>
+        <g class="sig-radius__pins" aria-hidden="true">
+          <g class="sig-radius__pin">
+            <circle cx="252" cy="182" r="5" />
+            <text x="264" y="186">FARM</text>
+          </g>
+          <g class="sig-radius__pin">
+            <circle cx="128" cy="130" r="5" />
+            <text x="88" y="112">STAND</text>
+          </g>
+          <g class="sig-radius__pin">
+            <circle cx="296" cy="288" r="5" />
+            <text x="308" y="292">MARKET</text>
+          </g>
+          <g class="sig-radius__pin">
+            <circle cx="120" cy="286" r="5" />
+            <text x="60" y="308">GARDEN</text>
+          </g>
+          <g class="sig-radius__pin sig-radius__pin--far">
+            <circle cx="352" cy="118" r="5" />
+            <text x="330" y="98">CSA</text>
+          </g>
+          <g class="sig-radius__pin sig-radius__pin--far">
+            <circle cx="96" cy="206" r="5" />
+            <text x="34" y="192">GROWER</text>
+          </g>
+        </g>
+        <g class="sig-radius__ring-labels" aria-hidden="true">
+          <text x="218" y="158">NEAR</text>
+          <text x="218" y="98">FARTHER</text>
+        </g>
+      </svg>
+      <figcaption class="sig-radius__caption">Conceptual geometry — a diagram of the questions, not a map of listings.</figcaption>
+    </figure>
+
+    <div class="sig-radius__answer">
+      <p class="sig-radius__answer-title">The radius answers</p>
+      <ol class="sig-radius__questions">
+        {radiusQuestions.map((question, index) => (
+          <li>
+            <span class="sig-radius__qnum" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            {question}
+          </li>
+        ))}
+      </ol>
+
+      <p class="sig-radius__answer-title sig-radius__answer-title--sub">Listing types</p>
+      <ul class="sig-radius__types">
+        {listingTypes.map((type) => <li>{type}</li>)}
+      </ul>
+
+      <p class="sig-radius__note">{growersSection.body}</p>
+      <p class="sig-radius__note">{communitySection.body}</p>
+    </div>
+  </div>
+
+  <div class="sig-radius__current">
+    <p class="sig-radius__answer-title sig-radius__answer-title--sub">Current &amp; seasonal</p>
+    <ul class="sig-radius__cells">
+      {currentCells.map((cell) => (
+        <li><span class="sig-radius__cell-tick" aria-hidden="true">◈</span>{cell}</li>
+      ))}
+    </ul>
+    <p class="sig-radius__note sig-radius__note--current">{seasonalSection.body}</p>
+  </div>
+</section>
+
+<style>
+  .sig-radius {
+    padding-top: 2.75rem;
+    scroll-margin-top: 4.5rem;
+  }
+  .sig-kicker {
+    margin: 0 0 .4rem;
+    color: var(--color-text-subtle);
+    font: 700 .68rem/1.3 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .sig-title {
+    margin: 0 0 .8rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+    font-weight: 750;
+    letter-spacing: -.025em;
+    color: var(--color-text);
+  }
+  .sig-intro {
+    max-width: 46rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .sig-radius__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 26rem) 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+
+  /* Conceptual radius geometry */
+  .sig-radius__geo {
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(70% 70% at 50% 50%, color-mix(in srgb, var(--eco-color) 7%, transparent), transparent 78%),
+      var(--color-bg-secondary);
+  }
+  .sig-radius__geo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .sig-radius__ticks line {
+    stroke: color-mix(in srgb, var(--color-text-subtle) 40%, transparent);
+    stroke-width: 1;
+  }
+  .sig-radius__rings circle {
+    fill: none;
+    stroke: color-mix(in srgb, var(--eco-color) 34%, transparent);
+    stroke-width: 1;
+  }
+  .sig-radius__spoke line {
+    stroke: color-mix(in srgb, var(--eco-color) 28%, transparent);
+    stroke-width: 1;
+    stroke-dasharray: 3 5;
+  }
+  .sig-radius__center circle {
+    fill: var(--eco-color);
+  }
+  .sig-radius__center .sig-radius__halo {
+    fill: none;
+    stroke: color-mix(in srgb, var(--eco-color) 45%, transparent);
+    stroke-width: 1;
+  }
+  .sig-radius__center text,
+  .sig-radius__ring-labels text {
+    fill: var(--color-text-subtle);
+    font: 600 9px var(--font-mono);
+    letter-spacing: .12em;
+  }
+  .sig-radius__pin circle {
+    fill: color-mix(in srgb, var(--eco-color) 75%, transparent);
+    stroke: color-mix(in srgb, var(--eco-color) 90%, var(--color-text));
+    stroke-width: 1;
+  }
+  .sig-radius__pin text {
+    fill: var(--color-text-muted);
+    font: 700 9.5px var(--font-mono);
+    letter-spacing: .1em;
+  }
+  .sig-radius__pin--far circle {
+    fill: color-mix(in srgb, var(--eco-color) 38%, transparent);
+  }
+  .sig-radius__pin--far text {
+    fill: var(--color-text-subtle);
+  }
+  .sig-radius__caption {
+    margin: .7rem 0 0;
+    color: var(--color-text-subtle);
+    font: .68rem/1.5 var(--font-mono);
+    letter-spacing: .02em;
+  }
+
+  /* What the radius answers */
+  .sig-radius__answer-title {
+    margin: 0 0 .7rem;
+    color: var(--color-text-subtle);
+    font: 700 .64rem/1 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .sig-radius__answer-title--sub {
+    margin-top: 1.4rem;
+  }
+  .sig-radius__questions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-radius__questions li {
+    display: flex;
+    gap: .55rem;
+    align-items: baseline;
+    padding: .55rem .7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: .82rem;
+    line-height: 1.4;
+  }
+  .sig-radius__qnum {
+    color: var(--eco-color);
+    font: 700 .62rem/1 var(--font-mono);
+  }
+  .sig-radius__types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-radius__types li {
+    padding: .3rem .55rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 26%, var(--color-border));
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    font: 650 .68rem/1 var(--font-mono);
+    letter-spacing: .03em;
+  }
+  .sig-radius__note {
+    max-width: 38rem;
+    margin: .8rem 0 0;
+    color: var(--color-text-muted);
+    font-size: .86rem;
+    line-height: 1.6;
+  }
+
+  /* Current & seasonal strip */
+  .sig-radius__current {
+    margin-top: 2rem;
+    padding: 1.1rem 1.15rem 1.2rem;
+    border: 1px solid color-mix(in srgb, var(--eco-color) 26%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--eco-color) 5%, transparent);
+  }
+  .sig-radius__current .sig-radius__answer-title--sub { margin-top: 0; }
+  .sig-radius__cells {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sig-radius__cells li {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    padding: .6rem .7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: 700 .72rem/1.3 var(--font-mono);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .sig-radius__cell-tick {
+    color: var(--eco-color);
+    font-size: .75rem;
+  }
+  .sig-radius__note--current {
+    max-width: none;
+  }
+
+  @media (max-width: 900px) {
+    .sig-radius__grid {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+    .sig-radius__geo {
+      max-width: 26rem;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .sig-radius__questions {
+      grid-template-columns: 1fr;
+    }
+    .sig-radius__cells {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
