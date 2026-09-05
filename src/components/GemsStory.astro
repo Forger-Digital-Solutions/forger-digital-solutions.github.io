@@ -1,5 +1,11 @@
 ---
-import { gems, learningStages, affordability } from '../data/gems';
+/**
+ * Homepage GEMS teaser: a concise statement, the four lineage identifiers, one
+ * research artifact, and a route into the full page. The learning journey and
+ * affordability sections deliberately live only in GemsDeep on the GEMS project
+ * page — reproducing them here made the homepage carry the project page twice.
+ */
+import { gems } from '../data/gems';
 import SectionHeader from './SectionHeader.astro';
 import VisualEvidence from './VisualEvidence.astro';
 import { visualAssets } from '../data/visuals';
@@ -33,27 +39,9 @@ import { visualAssets } from '../data/visuals';
     ))}
   </div>
 
-  <div class="gem-journey" aria-labelledby="gem-journey-title">
-    <p class="gem-journey__label" id="gem-journey-title">THE GEMS LEARNING JOURNEY</p>
-    <ol class="gem-journey__steps">
-      {learningStages.map((stage) => (
-        <li class="gem-step">
-          <span class="gem-step__num">{stage.num}</span>
-          <span class="gem-step__title">{stage.title}</span>
-          <span class="gem-step__desc">{stage.desc}</span>
-        </li>
-      ))}
-    </ol>
-  </div>
-
-  <div class="gems-afford">
-    <p class="gems-afford__lead">{affordability.lead}</p>
-    <p class="gems-afford__body">{affordability.body}</p>
-    <p class="gems-afford__target">{affordability.target}</p>
-  </div>
-
   <div class="gems-story__cta">
     <a class="btn btn-primary" href="/projects/gems-training-grounds">Explore GEMS / Training Grounds <span aria-hidden="true">→</span></a>
+    <p class="gems-story__more">The full page covers the learning journey, capability direction, and what is not yet claimed.</p>
   </div>
 </section>
 
@@ -69,20 +57,8 @@ import { visualAssets } from '../data/visuals';
   .gem-card__state { margin: .55rem 0 0; color: var(--color-text-subtle); font: 700 .6rem/1 var(--font-mono); letter-spacing: .12em; }
   .gem-card__direction { margin: .6rem 0 0; color: var(--color-text-muted); font-size: .86rem; line-height: 1.55; }
 
-  .gem-journey { margin-top: 1.6rem; padding: 1.2rem 1.3rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: linear-gradient(150deg, rgba(24,71,199,.06), rgba(6,11,19,.9)); }
-  .gem-journey__label { margin: 0 0 .9rem; color: var(--color-accent-bright); font: 700 .64rem/1 var(--font-mono); letter-spacing: .16em; }
-  .gem-journey__steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: .7rem; margin: 0; padding: 0; list-style: none; counter-reset: step; }
-  .gem-step { display: grid; gap: .25rem; padding: .8rem .85rem; border: 1px solid var(--color-border); border-left: 3px solid var(--color-accent); border-radius: var(--radius-sm); background: rgba(8,14,25,.7); }
-  .gem-step__num { color: var(--color-accent-bright); font: 800 .7rem/1 var(--font-mono); letter-spacing: .08em; }
-  .gem-step__title { color: var(--color-text); font-size: .95rem; font-weight: 700; letter-spacing: -.01em; }
-  .gem-step__desc { color: var(--color-text-muted); font-size: .8rem; line-height: 1.5; }
-
-  .gems-afford { margin-top: 1.6rem; padding: 1.3rem 1.4rem; border: 1px solid var(--color-border-blue); border-left: 3px solid var(--color-accent); border-radius: var(--radius-md); background: linear-gradient(120deg, rgba(24,71,199,.1), rgba(9,14,23,.6)); }
-  .gems-afford__lead { margin: 0 0 .6rem; color: var(--color-text); font-size: 1.08rem; font-weight: 700; letter-spacing: -.01em; }
-  .gems-afford__body { margin: 0; color: var(--color-text-muted); font-size: .98rem; line-height: 1.72; }
-  .gems-afford__target { margin: .8rem 0 0; color: var(--color-text-subtle); font: 600 .8rem/1.55 var(--font-sans); }
-
-  .gems-story__cta { margin-top: 1.6rem; }
+  .gems-story__cta { display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; align-items: center; margin-top: 1.6rem; }
+  .gems-story__more { max-width: 26rem; margin: 0; color: var(--color-text-subtle); font-size: .88rem; line-height: 1.6; }
 
   @media (max-width: 900px) {
     .gem-family { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -92,6 +68,6 @@ import { visualAssets } from '../data/visuals';
     .gems-story__why { font-size: .98rem; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .gem-card, .gem-step { transition: none; }
+    .gem-card { transition: none; }
   }
 </style>
