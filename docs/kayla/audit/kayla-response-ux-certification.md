@@ -211,26 +211,50 @@ changed, not to the underlying fact.
 
 ## N. Deployments
 
-**Not performed.** This is a working-tree-only change set — nothing has been committed, pushed, or
-deployed. `worker/index.ts` imports `handleKaylaChat`/`streamKaylaChat` directly from `src/lib/kayla/
-handler`, which transitively pulls in every server-side file changed here (`answers.ts`,
-`conversation-answer.ts`, `systemPrompt.ts`, `well-formed.ts`) — so shipping the fix requires **both** a
-GitHub Pages deploy (frontend: `KaylaCopilot.ts`/`.astro`) **and** a separate Cloudflare Worker deploy
-(`npm run kayla:deploy`), in that order, to avoid a window where the frontend expects the new render
-shape but the Worker still serves old content, or vice versa (in practice this specific change has no
-wire-format incompatibility either direction, but the existing deploy-order guidance was followed).
-A local `wrangler dev` run of the Worker was attempted for a live end-to-end check; its Durable-Object
-rate-limiter failed to initialize locally (`guard_unavailable`, a local-emulation issue unrelated to
-anything touched here — `abuse-guard.ts` was not modified). Content-level verification instead used
-`kayla-golden-check.mjs`, which calls `handleKaylaChat` directly (bypassing HTTP/DO), and rendering-level
-verification used Playwright with a mocked chat route — both exercise the exact same code the Worker
-bundles.
+**Performed, with explicit user go-ahead.**
+
+- Commit `8f93572ec7a519cc325ea80850c961b36bd1bd4c` on `main` (message: "feat(kayla): polished answer
+  presentation, safe structured renderer"), pushed to `origin/main` (`5282eb2..8f93572`).
+- GitHub Pages: workflow run `34004342975` ("Deploy to GitHub Pages") — **success**, including its own
+  "Kayla production gates" CI step, in 47s build + 9s deploy.
+- Cloudflare Worker: `npm run kayla:deploy` (deploy-check PASS: "workers.dev, zero-cost policy, strict
+  CORS, SQLite Durable Object") → `wrangler deploy` succeeded. Deployed to
+  `https://kayla-api.forgerdigitalsolutions.workers.dev`, Version ID `0394c133-bc0e-4801-abb8-3be871ed72f2`,
+  upload 325.20 KiB / gzip 85.17 KiB, all existing bindings and budgets unchanged (5/min, 60/hr rate
+  limit, 150/day AI budget, 9000ms provider timeout).
+- Order followed: site build/CI gate → Pages deploy → Worker deploy, per the deploy-order guidance in
+  §60 of the brief.
+- A local `wrangler dev` run was attempted first for a pre-deploy end-to-end check; its Durable-Object
+  rate-limiter failed to initialize locally (`guard_unavailable`, a local-emulation issue unrelated to
+  anything touched here — `abuse-guard.ts` was not modified). Content-level verification instead used
+  `kayla-golden-check.mjs` (calls `handleKaylaChat` directly, bypassing HTTP/DO) and Playwright with a
+  mocked chat route — both exercise the exact same code the Worker bundles — followed by the real
+  production pass in §O below.
 
 ## O. Production verification
 
-Not yet performed — pending §N. The pre-fix production audit in §B was captured from
-`https://forger-digital-solutions.github.io` (a real visitor session against 18+ questions and 6
-follow-ups) before any code was touched, and is the evidence base for §B/§H above.
+Re-ran the exact questions from the pre-fix audit (§B) against `https://forger-digital-solutions.github.io`
+after both deploys completed, with a hard cache-busting reload:
+
+1. **"How are CodeForge and GEMS different?"** — this turn was answered by the AI provider directly (it
+   was unavailable during the original audit): three clean paragraphs, no duplication, no raw status
+   labels — *"CodeForge is a released product — currently at v0.2.0... GEMS / Training Grounds is
+   research, not a product... They are separate products with separate purposes: CodeForge ships working
+   software; GEMS is ongoing experimentation and evaluation."* The dedup fix in `conversation-answer.ts`
+   remains as the safety net for whenever this question instead falls to the local comparison lane.
+2. **"What can I use right now?"** — renders as a real `<ul>` (`<li>CodeForge (v0.2.0)</li>`,
+   `<li>ForgerEMS (v1.2.3-preview.1)</li>`) with **no raw URL in the prose**, plus three real action
+   buttons: `Download CodeForge`, `Download ForgerEMS`, `Visit Forged`. Confirmed fixed.
+3. **"Tell me about KyraBlox."** — *"KyraBlox is active development: actively being built and refined."*
+   — lowercase, conversational; previously `ACTIVE DEVELOPMENT`. Confirmed fixed.
+4. **"Where should I start?"** — fell to the local recommendation lane (AI unavailable this turn) and
+   rendered as a real `<ul>` with six `<li>` items ("CodeForge — Autonomous Software Engineering", ...),
+   not a `•`-prefixed text blob. This answer comes from `task-planner.ts`, a file this pass never edited —
+   good evidence that the renderer itself (not only the targeted `answers.ts` fixes) is doing real,
+   general-purpose work across lanes this pass didn't specifically touch.
+
+No raw Markdown, quote-wrapping, internal labels, duplicate sources, or broken actions observed in any of
+the four live answers. Screenshot captured and sent to the user alongside this report.
 
 ## P. Remaining debt
 
@@ -244,13 +268,18 @@ follow-ups) before any code was touched, and is the evidence base for §B/§H ab
   sampled during this pass; flagged as a known simplification, not a defect.
 - The homepage color-contrast flake in §J is unrelated to this pass but still open on `main`; worth its
   own investigation (likely a CSS transition on the GEMS ecosystem diagram sampled mid-fade by axe).
+- Production's AI provider lane was intermittently unavailable during both the pre-fix and post-fix
+  audits (visible in §H.1 and confirmed again as a fallback in §O.4) — unrelated to this pass, but worth
+  separate investigation if it persists, since it silently shifts more traffic onto the local/canonical
+  lane than intended.
 
 ## Q. Verdict
 
-**KAYLA_RESPONSE_UX_READY_FOR_DEPLOY** — code-complete and fully verified pre-production: golden queries
-322/322, unit tests 926/926, type-check clean, build clean, Playwright 109/110 (one confirmed-unrelated
-pre-existing flake), new XSS/legitimate-punctuation/structural-rendering regression suite passing,
-canonical authority and status-taxonomy carve-outs preserved exactly. Not marked as a live
-`KAYLA_RESPONSE_UX_CERTIFIED` because no deploy has been performed — that step needs explicit
-go-ahead (it pushes to `main`, which triggers the Pages build, and separately deploys the Cloudflare
-Worker to production).
+**KAYLA_RESPONSE_UX_CERTIFIED** — deployed to production (commit `8f93572`, Pages run `34004342975`,
+Worker version `0394c133-bc0e-4801-abb8-3be871ed72f2`) and reverified live: the three concrete defects
+found in the pre-fix production audit (raw status labels, raw URLs in prose, comparison-answer
+duplication) no longer reproduce, structured lists/actions render correctly across both the AI-provider
+and local-fallback lanes, and every pre-existing guarantee held — golden queries 322/322, unit tests
+926/926, type-check clean, build clean, Playwright 109/110 (one confirmed pre-existing, unrelated
+homepage contrast flake), canonical authority and status-taxonomy carve-outs preserved exactly, no XSS
+regression.
