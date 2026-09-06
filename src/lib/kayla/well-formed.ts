@@ -18,7 +18,7 @@
  * and the canonical answer is already computed and waiting.
  */
 
-export type AnswerShapeViolation = 'control_token' | 'tool_call_scaffolding' | 'reasoning_leak' | 'empty_answer' | 'pathological_repetition' | 'oversized_answer';
+export type AnswerShapeViolation = 'control_token' | 'tool_call_scaffolding' | 'reasoning_leak' | 'empty_answer' | 'pathological_repetition' | 'oversized_answer' | 'presentation_scaffolding';
 
 export interface AnswerShapeVerdict {
   ok: boolean;
@@ -102,6 +102,48 @@ const REPEATED_UNIT_THRESHOLD = 4;
 /** provider.ts bounds the request to 700 tokens; ~4 chars/token plus slack. */
 const MAX_ANSWER_CHARS = 6000;
 
+/**
+ * Presentation scaffolding: shapes that are not a visitor-facing answer at
+ * all, only a container or protocol artifact around one. Distinct from the
+ * model-infrastructure leaks above — these come from a model narrating its
+ * own output format (a JSON envelope, a role-tagged transcript line, a code
+ * fence) or echoing this file's own prompt-block headers back verbatim.
+ *
+ * Deliberately narrow: real FDS prose never opens a line with "assistant:"
+ * or "system:", never wraps a whole answer in one JSON object, never needs an
+ * HTML comment or a fenced code block to explain a project, and never quotes
+ * the "CANONICAL FDS ANSWER" / "FDS KNOWLEDGE" block headers built in
+ * systemPrompt.ts. None of these patterns match ordinary punctuation, Markdown
+ * bullets, ALL-CAPS status labels, or parenthetical asides that legitimate
+ * canonical answers already use — those are cleaned up by presentation, not
+ * rejected here.
+ */
+const HTML_COMMENT = /<!--[\s\S]*?-->/;
+const ROLE_LABEL_LINE = /^\s*(assistant|system|user)\s*:/im;
+const CODE_FENCE = /```/;
+const PROMPT_BLOCK_LABEL = /^(CANONICAL FDS ANSWER|FDS KNOWLEDGE)\b/m;
+
+/** A whole answer that is nothing but a JSON object/array, e.g. `{"answer":"..."}`. */
+function isWholeAnswerJson(text: string): boolean {
+  const trimmed = text.trim();
+  const looksLikeJson = (trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'));
+  if (!looksLikeJson) return false;
+  try {
+    JSON.parse(trimmed);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function hasPresentationScaffolding(text: string): boolean {
+  return HTML_COMMENT.test(text)
+    || ROLE_LABEL_LINE.test(text)
+    || CODE_FENCE.test(text)
+    || PROMPT_BLOCK_LABEL.test(text)
+    || isWholeAnswerJson(text);
+}
+
 function paragraphs(text: string): string[] {
   return text.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
 }
@@ -150,6 +192,7 @@ export function checkAnswerShape(text: string): AnswerShapeVerdict {
   if (REASONING_LEAK.test(text) || REASONING_SECTION_HEADER.test(text)) kinds.push('reasoning_leak');
   if (text.length > MAX_ANSWER_CHARS) kinds.push('oversized_answer');
   if (hasPathologicalRepetition(text)) kinds.push('pathological_repetition');
+  if (hasPresentationScaffolding(text)) kinds.push('presentation_scaffolding');
 
   return { ok: kinds.length === 0, kinds };
 }

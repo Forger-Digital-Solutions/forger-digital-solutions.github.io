@@ -67,7 +67,9 @@ describe('availability-grouping canonical answers', () => {
     const answer = canonicalAnswer('Which FDS projects are in private development?', ctx, []);
     expect(answer).toBeDefined();
     expect(answer!.intent).toBe('availability');
-    expect(answer!.text).toMatch(/PRIVATE DEVELOPMENT/);
+    // Kayla speaks the status conversationally (lowercase prose), not as the
+    // raw ALL-CAPS taxonomy label.
+    expect(answer!.text).toMatch(/private development/i);
   });
 });
 

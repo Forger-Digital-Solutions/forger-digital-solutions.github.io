@@ -112,9 +112,13 @@ export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult
       return result({ ...identity, text: `${identity.text}${available ? `\n${available.text}` : ''}`, intent: 'comparison', settled: false }, entityId);
     }).filter((r): r is KaylaKnowledgeResult => Boolean(r));
     if (!parts.length) return undefined;
-    // Canonical relationship answer adds distinctions which entity descriptions alone cannot express.
+    // A settled relationship answer (comparisonAnswer) already names and
+    // describes every entity in play — appending the same entities' standalone
+    // identity snippets on top of it repeated each description a second time.
+    // Only fall back to the identity snippets when no purpose-built comparison
+    // covers this pair.
     const relationText = settledRelationship?.intent === 'comparison' && relationshipInScope ? settledRelationship.text : '';
-    const text = [...new Set([relationText, ...parts.map(r => r.snippet)].filter(Boolean))].join('\n\n').slice(0, 7800);
+    const text = relationText || [...new Set(parts.map(r => r.snippet))].join('\n\n').slice(0, 7800);
     // Choosing a usable tool is settled by availability, not the provider.
     return [{ ...parts[0], snippet: text, settled: availability, actions: parts.flatMap(r => r.actions || []) }, ...parts.slice(1)];
   }

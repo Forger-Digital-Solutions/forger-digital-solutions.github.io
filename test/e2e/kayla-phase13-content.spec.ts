@@ -65,8 +65,11 @@ test.describe('large valid answers', () => {
       await sendAndSettle(page, 'Tell me everything about CodeForge.');
       const last = page.locator('.kayla-msg--kayla').last();
       await expect(last).toContainText('🚀');
-      // Markdown-like markers are plain text: no strong/em/code elements created.
-      expect(await last.locator('strong, em, code').count()).toBe(0);
+      // The safe renderer supports **bold** and `code` as real elements;
+      // underscore-emphasis is not a supported syntax and stays plain text.
+      expect(await last.locator('strong').count()).toBe(1);
+      expect(await last.locator('code').count()).toBe(1);
+      expect(await last.locator('em').count()).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
       const panelOverflow = await page.evaluate(() => {
         const panel = document.getElementById('kayla-panel')!;

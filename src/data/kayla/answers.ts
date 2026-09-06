@@ -53,12 +53,23 @@ function displayName(entityId: string): string {
   return getKaylaEntity(entityId)?.name || entityId;
 }
 
+/**
+ * Kayla speaks a status as a conversational word, not a shouting taxonomy
+ * label — `statusMeta`'s ALL-CAPS keys (RESEARCH, ACTIVE DEVELOPMENT, ...)
+ * exist for site badges, not chat prose. The one place the raw label belongs
+ * verbatim is `statusTaxonomyAnswer`, where a visitor asked what the label
+ * itself means.
+ */
+function naturalStatus(status: string): string {
+  return status.toLowerCase();
+}
+
 function statusSentence(slug: string): string {
   const record = project(slug);
   if (!record) return '';
   const meta = statusMeta[record.status];
   const secondary = record.secondaryStatus ? ` It also remains in ${record.secondaryStatus.toLowerCase()}.` : '';
-  return `${record.name} is ${record.status}: ${meta.short.charAt(0).toLowerCase()}${meta.short.slice(1)}${secondary}`;
+  return `${record.name} is ${naturalStatus(record.status)}: ${meta.short.charAt(0).toLowerCase()}${meta.short.slice(1)}${secondary}`;
 }
 
 function projectPageAction(slug: string): KaylaSafeAction {
@@ -208,7 +219,7 @@ function identityAnswer(entityId: string): CanonicalAnswer | undefined {
   const gem = gemFor(entityId);
   if (gem) {
     return {
-      text: `${gem.name} is the GEMS lineage for ${gem.role.toLowerCase()}. ${gem.direction} It is currently in ${gem.state} — ${gem.notClaimed.charAt(0).toLowerCase()}${gem.notClaimed.slice(1)}`,
+      text: `${gem.name} is the GEMS lineage for ${gem.role.toLowerCase()}. ${gem.direction} It is currently in ${naturalStatus(gem.state)} — ${gem.notClaimed.charAt(0).toLowerCase()}${gem.notClaimed.slice(1)}`,
       title: gem.name,
       actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
       sources: [`gem-${gem.key}`],
@@ -254,7 +265,7 @@ function capabilityAnswer(entityId: string, query: string): CanonicalAnswer | un
   const gem = gemFor(entityId);
   if (gem) {
     return {
-      text: `${gem.name} is the ${gem.role.toLowerCase()} lineage. ${gem.direction} Nothing is shipping yet: it is in ${gem.state}, and ${gem.notClaimed.charAt(0).toLowerCase()}${gem.notClaimed.slice(1)} I have no benchmark scores, capability comparisons, or release claims for it.`,
+      text: `${gem.name} is the ${gem.role.toLowerCase()} lineage. ${gem.direction} Nothing is shipping yet: it is in ${naturalStatus(gem.state)}, and ${gem.notClaimed.charAt(0).toLowerCase()}${gem.notClaimed.slice(1)} I have no benchmark scores, capability comparisons, or release claims for it.`,
       sources: [`gem-${gem.key}`],
       intent: 'capability',
       entityId
@@ -462,7 +473,7 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
     );
     const lines = notReleased
       .sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99))
-      .map((entry) => `• ${entry.name} (${entry.status}): ${entry.summary}`)
+      .map((entry) => `• ${entry.name} (${naturalStatus(entry.status)}): ${entry.summary}`)
       .join('\n');
     return {
       text: `Every FDS project has a public page, but a page is not a release. These projects are publicly listed but have no download today:\n\n${lines}\n\nOnly software on Forged has a public build you can actually run.`,
@@ -476,8 +487,13 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
   if (/\b(download|downloadable|installer|get the (software|app)|ready to run|ready to use|can i use|use (now|today)|available (now|today)|ready)\b/.test(text)) {
     const downloads = downloadableNow();
     return {
-      text: `${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''} — ${entry.route}`).join('\n')}\n\nThose are the only FDS builds with a public download right now. Everything else is in development or research with no public build. Forged is where released software is listed.`,
-      actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+      // The download link for each build lives on its own action button, not
+      // pasted into the prose — the visitor already has a one-tap route to it.
+      text: `${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''}`).join('\n')}\n\nThose are the only FDS builds with a public download right now. Everything else is in development or research with no public build. Forged is where released software is listed.`,
+      actions: [
+        ...downloads.slice(0, 2).map((entry) => ({ type: 'OPEN_DOWNLOAD' as const, label: `Download ${entry.name}`, href: entry.route })),
+        { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }
+      ],
       sources: ['availability-matrix'],
       intent: 'availability',
       settled: true
@@ -488,7 +504,7 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
     const privateProjects = byStatus('PRIVATE DEVELOPMENT');
     return {
       text: privateProjects.length
-        ? `${privateProjects.map((entry) => `• ${entry.name}`).join('\n')}\n\n${privateProjects.length === 1 ? 'That project is' : 'Those projects are'} in PRIVATE DEVELOPMENT: active work with portions intentionally kept private. FDS does not publish a more specific reason than that.`
+        ? `${privateProjects.map((entry) => `• ${entry.name}`).join('\n')}\n\n${privateProjects.length === 1 ? 'That project is' : 'Those projects are'} in private development: active work with portions intentionally kept private. FDS does not publish a more specific reason than that.`
         : 'No FDS project is currently in private development.',
       actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
       sources: ['availability-matrix'],
@@ -526,7 +542,7 @@ function roadmapAnswer(entityId?: string): CanonicalAnswer {
   }
   const lines = projects
     .filter((entry) => entry.roadmap)
-    .map((entry) => `• ${entry.name} (${entry.status}): ${entry.roadmap}`)
+    .map((entry) => `• ${entry.name} (${naturalStatus(entry.status)}): ${entry.roadmap}`)
     .join('\n');
   return {
     text: `Current direction across FDS projects:\n\n${lines}\n\nThese are directions rather than dated promises.`,
@@ -597,9 +613,9 @@ function filteredListAnswer(query: string): CanonicalAnswer | undefined {
   const lines = [
     ...matching.map((entry) => {
       const productRecord = productFor(entry.slug);
-      return `• ${entry.name} (${entry.status})${productRecord?.version ? ` — ${productRecord.version}` : ''}: ${entry.summary}`;
+      return `• ${entry.name} (${naturalStatus(entry.status)})${productRecord?.version ? ` — ${productRecord.version}` : ''}: ${entry.summary}`;
     }),
-    ...standalone.map((entry) => `• ${entry.name} (${entry.status})${entry.version ? ` — ${entry.version}` : ''}: ${entry.tagline}`)
+    ...standalone.map((entry) => `• ${entry.name} (${naturalStatus(entry.status)})${entry.version ? ` — ${entry.version}` : ''}: ${entry.tagline}`)
   ].join('\n');
 
   const heading = filter.label === 'available to use today'
@@ -624,12 +640,12 @@ function listAnswer(): CanonicalAnswer {
     .map((entry) => {
       const productRecord = productFor(entry.slug);
       const suffix = productRecord?.downloadUrl ? ` — available now (${productRecord.version})` : '';
-      return `• ${entry.name} (${entry.status})${suffix}: ${entry.summary}`;
+      return `• ${entry.name} (${naturalStatus(entry.status)})${suffix}: ${entry.summary}`;
     })
     .join('\n');
   const standalone = products
     .filter((entry) => !projects.some((p) => p.slug === (entry.projectSlug || entry.slug)))
-    .map((entry) => `• ${entry.name} (${entry.status})${entry.version ? ` — ${entry.version}` : ''}: ${entry.tagline}`)
+    .map((entry) => `• ${entry.name} (${naturalStatus(entry.status)})${entry.version ? ` — ${entry.version}` : ''}: ${entry.tagline}`)
     .join('\n');
   return {
     text: `Forger Digital Solutions is currently building:\n\n${lines}${standalone ? `\n${standalone}` : ''}\n\nForged is the shelf for software you can download and use today.`,
@@ -660,14 +676,14 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
 
   const describe = (id: string): string | undefined => {
     const gem = gemFor(id);
-    if (gem) return `• ${gem.name} — ${gem.role} (${gem.state}).`;
+    if (gem) return `• ${gem.name} — ${gem.role} (${naturalStatus(gem.state)}).`;
     const record = project(id);
     if (record) {
       const productRecord = productFor(id);
-      return `• ${record.name} (${record.status})${productRecord?.downloadUrl ? `, available now at ${productRecord.version}` : ''} — ${record.summary}`;
+      return `• ${record.name} (${naturalStatus(record.status)})${productRecord?.downloadUrl ? `, available now at ${productRecord.version}` : ''} — ${record.summary}`;
     }
     const productRecord = productFor(id);
-    if (productRecord) return `• ${productRecord.name} (${productRecord.status}) — ${productRecord.tagline}`;
+    if (productRecord) return `• ${productRecord.name} (${naturalStatus(productRecord.status)}) — ${productRecord.tagline}`;
     if (id === 'forged') return `• Forged — ${fds.forged}`;
     if (id === 'fds') return `• Forger Digital Solutions — ${fds.mission}`;
     return undefined;

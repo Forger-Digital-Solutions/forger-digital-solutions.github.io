@@ -113,7 +113,9 @@ describe('A hostile model cannot rewrite canonical FDS facts', () => {
       'What is We The People?'
     );
     expect(response.answer.toLowerCase()).not.toContain('cancelled');
-    expect(response.answer).toContain(projects.find((p) => p.slug === 'we-the-people')!.status);
+    // Kayla speaks the status conversationally (lowercase prose), not as the
+    // raw ALL-CAPS taxonomy label, so match case-insensitively.
+    expect(response.answer.toLowerCase()).toContain(projects.find((p) => p.slug === 'we-the-people')!.status.toLowerCase());
   });
 
   it('rejects an invented founder', async () => {

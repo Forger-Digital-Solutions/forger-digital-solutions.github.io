@@ -1,6 +1,7 @@
 import { isActionAllowed, executeAction } from '../lib/kayla/actions';
 import type { KaylaSafeAction, KaylaPageContext, KaylaSource } from '../data/kayla/types';
 import { getPageType, getEntity } from '../lib/kayla/context';
+import { renderKaylaAnswer } from '../lib/kayla/render-answer';
 
 interface KaylaMessage {
   role: 'user' | 'kayla';
@@ -132,7 +133,10 @@ function buildBubble(msg: KaylaMessage): HTMLDivElement {
 
   const textEl = document.createElement('div');
   textEl.className = 'kayla-msg__text';
-  textEl.textContent = msg.text;
+  // The visitor's own words are never parsed — only Kayla's answers pass
+  // through the structured renderer.
+  if (msg.role === 'kayla') renderKaylaAnswer(textEl, msg.text);
+  else textEl.textContent = msg.text;
   bubble.appendChild(textEl);
 
   if (msg.actions && msg.actions.length > 0) {
@@ -580,7 +584,7 @@ function addStreamingMessage(): HTMLDivElement | null {
 function updateStreamingMessage(bubble: HTMLDivElement | null, text: string, actions?: KaylaSafeAction[]): void {
   if (!bubble) return;
   const textEl = bubble.querySelector('.kayla-msg__text');
-  if (textEl) textEl.textContent = text;
+  if (textEl) renderKaylaAnswer(textEl as HTMLElement, text);
 
   if (actions && actions.length > 0) {
     let actionsEl = bubble.querySelector('.kayla-msg__actions') as HTMLDivElement | null;
@@ -613,7 +617,7 @@ function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, a
 
   bubble.classList.remove('kayla-msg--streaming');
   const textEl = bubble.querySelector('.kayla-msg__text');
-  if (textEl) textEl.textContent = text || "I couldn't find that in the current public FDS knowledge base.";
+  if (textEl) renderKaylaAnswer(textEl as HTMLElement, text || "I couldn't find that in the current public FDS knowledge base.");
 
   if (sources && sources.length > 0) {
     const sourcesEl = buildSourcesRow(sources);

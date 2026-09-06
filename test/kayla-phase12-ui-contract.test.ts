@@ -36,10 +36,22 @@ describe('Phase 12 UI reliability contract', () => {
     expect(controller).toContain("e.key === 'Enter' && !e.shiftKey");
   });
 
-  it('renders every message as text, never executable HTML', () => {
+  it('renders every message as text or safe structured DOM, never executable HTML', () => {
+    // The visitor's own words are always plain text — never parsed.
     expect(controller).toContain('textEl.textContent = msg.text');
-    expect(controller).toContain('textEl.textContent = text');
+    // Kayla's answers go through the safe structured renderer (paragraphs,
+    // lists, inline **bold**/`code` via createElement + textContent) instead
+    // of a flat text assignment.
+    expect(controller).toContain('renderKaylaAnswer(textEl, msg.text)');
+    expect(controller).toContain("renderKaylaAnswer(textEl as HTMLElement, text");
     expect(controller).not.toMatch(/\.innerHTML\s*=\s*(msg\.text|text|streamingText)/);
+
+    const renderer = readFileSync(new URL('../src/lib/kayla/render-answer.ts', import.meta.url), 'utf8');
+    // The renderer itself must never assign HTML, even to clear its own
+    // previously-rendered nodes — it stays safe by construction.
+    expect(renderer).not.toMatch(/\.innerHTML\s*=/);
+    expect(renderer).not.toMatch(/\.outerHTML\s*=/);
+    expect(renderer).not.toContain('insertAdjacentHTML');
   });
 
   it('keeps the stop control, focus recovery, and accessible state announcements', () => {

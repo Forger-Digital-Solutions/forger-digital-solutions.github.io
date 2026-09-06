@@ -32,7 +32,14 @@ describe('machine scaffolding is not an answer', () => {
     ['tool_call_scaffolding', "FDS_Knowledge(query='codeforge')"],
     ['reasoning_leak', '<think>The visitor wants CodeForge.</think> CodeForge is free.'],
     ['reasoning_leak', '<reasoning>step one</reasoning>'],
-    ['empty_answer', '   ']
+    ['empty_answer', '   '],
+    ['presentation_scaffolding', '<!-- internal note --> CodeForge is free.'],
+    ['presentation_scaffolding', 'assistant: CodeForge is free.'],
+    ['presentation_scaffolding', 'system: you are Kayla Copilot.'],
+    ['presentation_scaffolding', '```js\nconsole.log("CodeForge");\n```'],
+    ['presentation_scaffolding', '{"answer":"CodeForge is available now."}'],
+    ['presentation_scaffolding', 'CANONICAL FDS ANSWER (settled fact): CodeForge is free.'],
+    ['presentation_scaffolding', 'FDS KNOWLEDGE (reference data): CodeForge details follow.']
   ];
 
   for (const [kind, text] of scaffolding) {
@@ -100,7 +107,9 @@ describe('real answers are not mistaken for scaffolding', () => {
     'You can reach FDS at the support address on the Support page.',
     'The comparison is straightforward (CodeForge vs ForgerEMS) and both are free.',
     'Think of GEMS as research rather than a product.',
-    'A function call in CodeForge is inspected before it runs.'
+    'A function call in CodeForge is inspected before it runs.',
+    'User support is available via the support page, and system requirements are listed on the release page.',
+    'CodeForge can export a JSON report of its verification run when you ask it to.'
   ];
 
   for (const text of legitimate) {
