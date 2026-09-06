@@ -192,15 +192,39 @@ reduced motion), `kayla-phase11-task.spec.ts` (390px/320px). All passed in the f
 
 ## N. Deployment
 
-Not yet performed — pending the user's go-ahead (see chat). `worker/index.ts` imports
-`handleKaylaChat`/`streamKaylaChat` from `src/lib/kayla/handler`, which transitively includes every
-server-side file changed here (`conversation-answer.ts`, `answers.ts`, `well-formed.ts`) — shipping the
-conversation-polish fixes requires a Cloudflare Worker deploy, not just a Pages deploy. The a11y-harness
-fix (`test/e2e/kayla-phase13-a11y.spec.ts`) affects CI only and needs no production deploy at all.
+**Performed, with explicit user go-ahead.**
+
+- Commit `a7b9781` on `main` ("fix: polish Kayla conversation UX and stabilize accessibility gate"),
+  pushed to `origin/main` (`75cba5c..a7b9781`).
+- GitHub Pages: workflow run `34012247949` — success (46s build including its own "Kayla production
+  gates" CI step, 11s deploy).
+- Cloudflare Worker: `npm run kayla:deploy` (deploy-check PASS) → `wrangler deploy` succeeded. New
+  Version ID `0a9d543a-999d-467a-a3ec-12f2e3b2d9e4` (previous: `0394c133-...`), upload 325.68 KiB / gzip
+  85.30 KiB, bindings and budgets unchanged. The a11y-harness fix needed no deploy at all (CI-only); it
+  shipped in the same commit for repository hygiene.
 
 ## O. Live production certification
 
-Not yet performed — pending §N.
+Re-ran the three directly-reproducible defects from §B against `https://forger-digital-solutions.github.io`
+after both deploys completed, with a hard cache-busting reload:
+
+1. **"Can I download ForgerEMS?"** — action buttons now read "Download / Try ForgerEMS" and "Download
+   ForgerEMS" (previously "Download / Try CodeForge"); prose no longer carries a raw URL. Confirmed fixed.
+2. **"What version of CodeForge is public?"** — *"CodeForge is at v0.2.0. Canonical packages and version
+   history live on GitHub Releases."* — no "Yes." non-sequitur, no pasted URL, correctly the version
+   answer. Confirmed fixed.
+3. **"How is Kayla AI Publisher different from Kayla Copilot?"** — *"...It is in active development and
+   has no public release yet."* — lowercase, conversational. Confirmed fixed.
+4. **"How is ForgerEMS different from CodeForge?"** — the AI provider was unavailable for this turn (an
+   external, unrelated intermittency — see §P), so it exercised the local comparison fallback: clean,
+   no duplication, natural lowercase statuses ("released", "public-beta"). Confirms the prior pass's
+   fixes still hold under live conditions.
+
+The safety-classifier-leak (finding #1) could not be re-triggered on demand live — it depends on the
+free router's moderation wrapper, which is outside this site's control and was intermittently unavailable
+during this verification pass. Its fix is verified deterministically instead: `checkAnswerShape` rejects
+the exact string observed in production (unit-tested in `kayla-answer-shape.test.ts`), so any future
+recurrence is caught before it reaches a visitor regardless of when the provider produces it again.
 
 ## P. Remaining debt
 
@@ -219,14 +243,16 @@ Not yet performed — pending §N.
 
 ## Q. Verdict
 
-**KAYLA_CONVERSATION_UX_CERTIFIED** for the code and test changes in this pass: a real, demonstrated
+**KAYLA_CONVERSATION_UX_CERTIFIED** — deployed to production (commit `a7b9781`, Pages run `34012247949`,
+Worker version `0a9d543a-999d-467a-a3ec-12f2e3b2d9e4`) and reverified live. A real, demonstrated
 multi-turn production audit found four genuine defects (a critical safety-classifier leak, a wrong
-product name in an action label, a misrouted version question, and one missed status label) and all four
-are fixed and covered by new regression tests reproducing the exact original condition; canonical
-correctness (golden 322/322) and security posture are unchanged; the one previously-flaky accessibility
-gate has a rigorously evidenced root cause (a transient axe-core internal false positive under CPU
-contention, proven not to be a page defect) and a precise, non-weakening fix, proven with 40/40 repeated
-passes under the exact contention that used to fail it plus a dedicated test proving a real defect still
-fails. Full suite: vitest 937/937, golden 322/322, Playwright 111/111, `astro check` 0 errors, build
-clean. Held back from a live "certified in production" claim only because deployment has not yet been
-authorized/performed (§N–O).
+product name in an action label, a misrouted version question, and one missed status label); three were
+directly reconfirmed fixed live and the fourth (the safety-classifier leak, dependent on an external,
+intermittently-unavailable moderation wrapper) is verified deterministically via a unit test rejecting
+the exact observed string. All four are covered by new regression tests reproducing the exact original
+condition. Canonical correctness (golden 322/322) and security posture are unchanged. The one
+previously-flaky accessibility gate has a rigorously evidenced root cause (a transient axe-core internal
+false positive under CPU contention, proven not to be a page defect) and a precise, non-weakening fix,
+proven with 40/40 repeated passes under the exact contention that used to fail it plus a dedicated test
+proving a real defect still fails. Full suite: vitest 937/937, golden 322/322, Playwright 111/111,
+`astro check` 0 errors, build clean.
