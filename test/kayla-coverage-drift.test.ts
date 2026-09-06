@@ -55,11 +55,15 @@ describe('every project answers the core intents from its own record', () => {
 
   it.each(projects.map((p) => [p.name, p.slug]))('%s reports availability that matches its product record', async (name, slug) => {
     const product = products.find((p) => (p.projectSlug || p.slug) === slug && p.downloadUrl);
-    const answer = await answerFor(`Can I download ${name}?`);
+    const result = (await provider.search(`Can I download ${name}?`))[0];
+    const answer = result?.snippet || '';
     if (product) {
       expect(has(answer, 'yes'), answer).toBe(true);
       expect(has(answer, product.version!), answer).toBe(true);
-      expect(has(answer, product.downloadUrl!), answer).toBe(true);
+      // The download link lives on the action button, not pasted into the
+      // prose (a visitor already has a one-tap route to it there).
+      const actionHref = result?.actions?.[0]?.href || result?.action?.href;
+      expect(actionHref, answer).toBe(product.downloadUrl);
     } else {
       expect(has(answer, 'no'), answer).toBe(true);
       expect(answer).not.toMatch(/https?:\/\/github\.com\/[^\s]*releases/i);

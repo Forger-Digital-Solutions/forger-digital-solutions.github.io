@@ -39,7 +39,14 @@ describe('machine scaffolding is not an answer', () => {
     ['presentation_scaffolding', '```js\nconsole.log("CodeForge");\n```'],
     ['presentation_scaffolding', '{"answer":"CodeForge is available now."}'],
     ['presentation_scaffolding', 'CANONICAL FDS ANSWER (settled fact): CodeForge is free.'],
-    ['presentation_scaffolding', 'FDS KNOWLEDGE (reference data): CodeForge details follow.']
+    ['presentation_scaffolding', 'FDS KNOWLEDGE (reference data): CodeForge details follow.'],
+    // The exact string observed live in production, for "What's the
+    // difference between CodeForge and GEMS?": a moderation classifier's own
+    // verdict, served whole as if it were the answer. It makes no claim about
+    // FDS, so canonical verification alone let it straight through.
+    ['safety_classifier_leak', 'User Safety: safe\nResponse Safety: safe'],
+    ['safety_classifier_leak', 'Response Safety: unsafe'],
+    ['safety_classifier_leak', 'Content Safety: flagged']
   ];
 
   for (const [kind, text] of scaffolding) {
@@ -109,7 +116,9 @@ describe('real answers are not mistaken for scaffolding', () => {
     'Think of GEMS as research rather than a product.',
     'A function call in CodeForge is inspected before it runs.',
     'User support is available via the support page, and system requirements are listed on the release page.',
-    'CodeForge can export a JSON report of its verification run when you ask it to.'
+    'CodeForge can export a JSON report of its verification run when you ask it to.',
+    'ForgerEMS includes drive validation and safety checks for USB devices.',
+    'FDS takes engineering safety seriously across its automated tooling.'
   ];
 
   for (const text of legitimate) {

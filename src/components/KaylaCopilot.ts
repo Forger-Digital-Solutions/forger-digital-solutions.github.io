@@ -343,8 +343,20 @@ export function getStartersForContext(): string[] {
   return pageStarters;
 }
 
+/** Whether the question just answered was itself a comparison. */
+function wasComparisonQuery(q: string): boolean {
+  return /\b(difference|compare|versus|vs\.?|different from)\b/.test(q);
+}
+
 export function getFollowUpSuggestions(lastQuery: string, actions?: KaylaSafeAction[]): string[] {
   const q = lastQuery.toLowerCase();
+  const suggestions = computeFollowUpSuggestions(q, actions);
+  // A comparison question was just answered — suggesting "how does it
+  // compare?" again would ask the visitor to repeat themselves.
+  return wasComparisonQuery(q) ? suggestions.filter((s) => !/compare/i.test(s)) : suggestions;
+}
+
+function computeFollowUpSuggestions(q: string, actions?: KaylaSafeAction[]): string[] {
   if (q.includes('codeforge')) {
     return ['See the release', 'How does it compare?', 'Explore other projects'];
   }

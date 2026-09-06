@@ -18,7 +18,7 @@
  * and the canonical answer is already computed and waiting.
  */
 
-export type AnswerShapeViolation = 'control_token' | 'tool_call_scaffolding' | 'reasoning_leak' | 'empty_answer' | 'pathological_repetition' | 'oversized_answer' | 'presentation_scaffolding';
+export type AnswerShapeViolation = 'control_token' | 'tool_call_scaffolding' | 'reasoning_leak' | 'empty_answer' | 'pathological_repetition' | 'oversized_answer' | 'presentation_scaffolding' | 'safety_classifier_leak';
 
 export interface AnswerShapeVerdict {
   ok: boolean;
@@ -144,6 +144,19 @@ function hasPresentationScaffolding(text: string): boolean {
     || isWholeAnswerJson(text);
 }
 
+/**
+ * A moderation/safety-classifier's own verdict, leaked as if it were the
+ * answer. Observed live in production from the free router: a whole answer
+ * consisting of nothing but "User Safety: safe\nResponse Safety: safe" for a
+ * real visitor question. This makes no claim about FDS, so canonical
+ * verification had nothing to contradict and let it straight through to a
+ * visitor as a complete non-answer — the same class of gap that motivated
+ * this file, just a different shape than the tool-call/control-token cases
+ * above. No legitimate FDS answer states "<word(s)> Safety: safe/unsafe/..."
+ * about itself.
+ */
+const SAFETY_CLASSIFIER_LEAK = /^\s*[A-Za-z][A-Za-z ]{0,24}\bsafety\s*:\s*(safe|unsafe|flagged|blocked|allowed|denied)\b/im;
+
 function paragraphs(text: string): string[] {
   return text.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
 }
@@ -193,6 +206,7 @@ export function checkAnswerShape(text: string): AnswerShapeVerdict {
   if (text.length > MAX_ANSWER_CHARS) kinds.push('oversized_answer');
   if (hasPathologicalRepetition(text)) kinds.push('pathological_repetition');
   if (hasPresentationScaffolding(text)) kinds.push('presentation_scaffolding');
+  if (SAFETY_CLASSIFIER_LEAK.test(text)) kinds.push('safety_classifier_leak');
 
   return { ok: kinds.length === 0, kinds };
 }

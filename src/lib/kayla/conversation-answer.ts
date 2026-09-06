@@ -140,8 +140,15 @@ export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult
       return [local(`${p.name}: ${detail}`, 'capability', id)];
     }
     const pricing = /\b(cost|free|price|pricing|pay|money)\b/i.test(raw);
-    const availability = !pricing && /\b(download|get it|where .*get|use|try|available|public|released|demo)\b/i.test(raw);
-    const request = pricing ? `What does ${name} cost?` : availability ? `Can I download ${name}?` : q;
+    // "What version of CodeForge is public?" contains "public", which the
+    // availability regex below also matches — that used to discard the
+    // visitor's actual version question and re-ask "Can I download X?"
+    // instead, producing an availability answer (with its own URL-in-prose)
+    // for a question that was never about availability. Version must win
+    // over the broader availability/pricing keywords, not the reverse.
+    const isVersionQuestion = !pricing && /\b(version|release number)\b/i.test(raw);
+    const availability = !pricing && !isVersionQuestion && /\b(download|get it|where .*get|use|try|available|public|released|demo)\b/i.test(raw);
+    const request = pricing ? `What does ${name} cost?` : isVersionQuestion ? `What version is ${name}?` : availability ? `Can I download ${name}?` : q;
     const answer = canonicalAnswer(request, undefined, []);
     if (answer) {
       const asksIdentityToo = /\bwhat is\b/i.test(raw) && availability;
@@ -165,7 +172,10 @@ export function rankConversationActions(c: ConversationContext, candidates: Kayl
   // answer (support, community, navigation...) already recommended.
   if (entity && ['project', 'product', 'gem'].includes(entity.kind) && !['private_info', 'external_current', 'unsupported_task'].includes(c.intent)) {
     if (wantsDownload && (entity.downloadable || c.entities.some(id => getCanonicalEntity(id)?.downloadable))) {
-      output.push({ type: 'OPEN_FORGED', label: 'Download / Try CodeForge', href: '/forged' });
+      // Previously hardcoded to "CodeForge" regardless of which product was
+      // actually being discussed — live production showed this exact label
+      // on a ForgerEMS answer.
+      output.push({ type: 'OPEN_FORGED', label: `Download / Try ${entity.name}`, href: '/forged' });
     }
     if (entity.route) output.push({ type: 'OPEN_PAGE', label: `Explore ${entity.name}`, href: entity.route });
     // Limit candidate actions to the current subjects; stale task-planner recommendations cannot win.

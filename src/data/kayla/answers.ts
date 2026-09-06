@@ -96,7 +96,9 @@ function availabilityAnswer(entityId: string): CanonicalAnswer | undefined {
     const version = productRecord.version ? ` The current public version is ${productRecord.version}.` : '';
     const platform = productRecord.platform.length ? ` It runs on ${productRecord.platform.join(', ')}.` : '';
     return {
-      text: `Yes. ${productRecord.name} is publicly available and free.${version}${platform} Downloads and version history are on GitHub Releases: ${productRecord.downloadUrl}`,
+      // The download link lives on the action button, not pasted into the
+      // prose — the visitor already has a one-tap route to it.
+      text: `Yes. ${productRecord.name} is publicly available and free.${version}${platform} Downloads and version history are on GitHub Releases.`,
       actions: [{ type: 'OPEN_DOWNLOAD', label: `Download ${productRecord.name}`, href: productRecord.downloadUrl }],
       sources: [`product-${productRecord.slug}`],
       intent: 'availability',
@@ -667,7 +669,7 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
 
   if ([first, second].includes('kayla-copilot') && [first, second].includes('kayla-ai-publisher')) {
     return {
-      text: `We share a name and nothing else. I am Kayla Copilot — the guide built into this website. I answer questions about FDS, its projects, statuses, releases, downloads, and support routes.\n\nKayla AI Publisher is a separate FDS product: a creative-project workspace for manuscripts, chapters, characters, revision, visual storytelling, and publishing preparation. It is in ${project('kayla-ai-publisher')?.status || 'active development'} and has no public release yet.`,
+      text: `We share a name and nothing else. I am Kayla Copilot — the guide built into this website. I answer questions about FDS, its projects, statuses, releases, downloads, and support routes.\n\nKayla AI Publisher is a separate FDS product: a creative-project workspace for manuscripts, chapters, characters, revision, visual storytelling, and publishing preparation. It is in ${naturalStatus(project('kayla-ai-publisher')?.status || 'active development')} and has no public release yet.`,
       actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
       sources: ['kayla-copilot', 'app-kayla-ai-publisher'],
       intent: 'comparison'
