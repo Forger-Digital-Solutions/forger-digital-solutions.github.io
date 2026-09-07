@@ -30,15 +30,6 @@ export type SystemSigilKey =
   | 'intelligence' | 'gaming' | 'publishing' | 'civic' | 'foraging'
   | 'maintenance' | 'forged' | 'applications' | 'systems';
 
-interface Props {
-  system: SystemSigilKey;
-  class?: string;
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-}
-
 const { system, class: className, x, y, width, height } = Astro.props;
 ---
 

@@ -27,6 +27,8 @@ describe('homepage ecosystem UI contract', () => {
     expect(ecosystem).not.toContain('fds-logo.png');
     expect(ecosystem).toContain('ecosystemPlanets.map');
     expect(ecosystem).toContain('class="planet-motion"');
+    expect(ecosystem).toContain('class="planet__character"');
+    expect(ecosystem).toContain('planet.character');
   });
 
   it('keeps motion optional and the cosmic environment decorative', () => {

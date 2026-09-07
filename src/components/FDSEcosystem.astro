@@ -1,7 +1,6 @@
 ---
 import { ecosystemPlanets } from '../data/ecosystem';
 import CodeForgeEmblem from './icons/CodeForgeEmblem.astro';
-import SystemSigil from './icons/SystemSigil.astro';
 
 const labelTransform = (side: 'left' | 'right', size: number) => side === 'right'
   ? `translate(${size / 2 + 12} -23)`
@@ -81,13 +80,15 @@ const ringTicks = (size: number) => {
               <path class="planet__ticks" d={ringTicks(planet.size)} />
               <circle class="planet__shell" r={planet.size / 2} />
               <circle class="planet__rim" r={planet.size / 2} />
-              <SystemSigil
-                system={planet.icon}
-                class="planet__sigil"
-                x={-planet.size * 0.33}
-                y={-planet.size * 0.33}
-                width={planet.size * 0.66}
-                height={planet.size * 0.66}
+              <image
+                href={planet.character}
+                class="planet__character"
+                x={-planet.size * 0.51}
+                y={-planet.size * 0.53}
+                width={planet.size * 1.02}
+                height={planet.size * 1.02}
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
               />
               <text class="planet__tag" y={planet.size / 2 + 15} text-anchor="middle">{planet.name}</text>
               <g class="planet__label" transform={labelTransform(planet.labelSide, planet.size)}>
@@ -147,7 +148,8 @@ const ringTicks = (size: number) => {
   .planet__ticks { fill: none; stroke: currentColor; stroke-width: 1.2; opacity: .65; }
   .planet__shell { fill: url(#body-face); filter: drop-shadow(0 0 9px var(--planet-glow)); }
   .planet__rim { fill: none; stroke: url(#body-rim); stroke-width: 1.25; opacity: .92; }
-  .planet__sigil { overflow: visible; }
+  .planet__character { pointer-events: none; transform-origin: center; filter: drop-shadow(0 2px 4px rgba(0,0,0,.65)) drop-shadow(0 0 5px var(--planet-glow)); transition: transform .22s cubic-bezier(.2,.8,.2,1), filter .22s ease; }
+  .planet-link:hover .planet__character, .planet-link:focus-visible .planet__character { filter: drop-shadow(0 3px 8px rgba(0,0,0,.85)) drop-shadow(0 0 10px var(--planet-glow)) brightness(1.18); transform: scale(1.06); }
   .planet-link:hover .planet__signal, .planet-link:focus-visible .planet__signal { opacity: .9; }
   .planet-link:hover .planet__atmosphere, .planet-link:focus-visible .planet__atmosphere { opacity: .12; }
   .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:hover .planet__label, .planet-link:focus-visible .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
@@ -174,5 +176,5 @@ const ringTicks = (size: number) => {
   @container (max-width: 28rem) { .planet__label { display: none; }.orbit-segment { opacity: .25; }.ecosystem-grid circle:first-child { display: none; } }
   @media (max-width: 960px) { .fds-ecosystem { width: min(100%, 32rem); } }
   @media (max-width: 560px) { .fds-ecosystem { width: min(100%, 23rem); }.ecosystem-grid { opacity: .65; }.planet__tag { font-size: 8px; }.core__title { font-size: 12px; letter-spacing: 2px; }.core__subtitle { font-size: 7px; } }
-  @media (prefers-reduced-motion: reduce) { .planet-motion { animation: none; offset-distance: var(--orbit-start); will-change: auto; }.orbit-pulse, .core__ring, .core__particles, .ecosystem-stars__calm, .core__emblem-halo { animation: none; }.core__emblem-halo { opacity: .8; } }
+  @media (prefers-reduced-motion: reduce) { .planet-motion { animation: none; offset-distance: var(--orbit-start); will-change: auto; }.orbit-pulse, .core__ring, .core__particles, .ecosystem-stars__calm, .core__emblem-halo { animation: none; }.core__emblem-halo { opacity: .8; }.planet__character { transition: none; transform: none; } }
 </style>

@@ -22,12 +22,25 @@ export interface EcosystemPlanet {
   subtitle: string;
   href: string;
   icon: EcosystemIcon;
+  character: string;
   color: string;
   glow: string;
   size: number;
   labelSide: LabelSide;
   orbit: EcosystemOrbit;
 }
+
+export const ecosystemCharacterMap: Record<string, string> = {
+  intelligence: '/images/ecosystem/8bit/intelligence-8bit.webp',
+  forged: '/images/ecosystem/8bit/forged-8bit.webp',
+  publishing: '/images/ecosystem/8bit/publishing-8bit.webp',
+  applications: '/images/ecosystem/8bit/applications-8bit.webp',
+  gaming: '/images/ecosystem/8bit/gaming-8bit.webp',
+  foraging: '/images/ecosystem/8bit/foraging-8bit.webp',
+  civic: '/images/ecosystem/8bit/civic-8bit.webp',
+  systems: '/images/ecosystem/8bit/systems-8bit.webp',
+  forgerems: '/images/ecosystem/8bit/forgerems-8bit.webp',
+};
 
 const CENTER = 340;
 const KAPPA = 0.5522847498;
@@ -86,6 +99,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'AI-DRIVEN INSIGHT', 
     href: '/projects/gems-training-grounds', 
     icon: 'intelligence',
+    character: '/images/ecosystem/8bit/intelligence-8bit.webp',
     color: '#4f8fff', 
     glow: '#1f63ff', 
     size: 42, 
@@ -99,6 +113,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'PUBLIC SOFTWARE',
     href: '/forged', 
     icon: 'forged',
+    character: '/images/ecosystem/8bit/forged-8bit.webp',
     color: '#c2d5f4', 
     glow: '#77a8e9', 
     size: 40, 
@@ -114,6 +129,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'CREATIVE MEDIA', 
     href: '/projects/kayla-ai-publisher', 
     icon: 'publishing', 
+    character: '/images/ecosystem/8bit/publishing-8bit.webp',
     color: '#b473ff', 
     glow: '#7b3df0', 
     size: 44, 
@@ -127,6 +143,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'REAL-WORLD IMPACT', 
     href: '/projects', 
     icon: 'applications',
+    character: '/images/ecosystem/8bit/applications-8bit.webp',
     color: '#61d7a1', 
     glow: '#24a971', 
     size: 45, 
@@ -142,6 +159,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'GAME ENGINES', 
     href: '/projects/kyrablox', 
     icon: 'gaming', 
+    character: '/images/ecosystem/8bit/gaming-8bit.webp',
     color: '#48c9f2', 
     glow: '#1594c6', 
     size: 43, 
@@ -155,6 +173,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'LOCAL DISCOVERY', 
     href: '/projects/farmstand-finder', 
     icon: 'foraging', 
+    character: '/images/ecosystem/8bit/foraging-8bit.webp',
     color: '#a8df64', 
     glow: '#62a833', 
     size: 45, 
@@ -168,6 +187,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'COMMUNITY FIRST', 
     href: '/projects/we-the-people', 
     icon: 'civic', 
+    character: '/images/ecosystem/8bit/civic-8bit.webp',
     color: '#f0a052', 
     glow: '#d06b24', 
     size: 43, 
@@ -181,6 +201,7 @@ export const ecosystemPlanets: EcosystemPlanet[] = [
     subtitle: 'FOUNDATION LAYER', 
     href: '/technology', 
     icon: 'systems', 
+    character: '/images/ecosystem/8bit/systems-8bit.webp',
     color: '#8faee5', 
     glow: '#5178bd', 
     size: 40, 
