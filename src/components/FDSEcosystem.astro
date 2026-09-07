@@ -1,6 +1,5 @@
 ---
 import { ecosystemPlanets } from '../data/ecosystem';
-import CodeForgeEmblem from './icons/CodeForgeEmblem.astro';
 
 const labelTransform = (side: 'left' | 'right', size: number) => side === 'right'
   ? `translate(${size / 2 + 12} -23)`
@@ -113,7 +112,19 @@ const ringTicks = (size: number) => {
       <g class="core__ring core__ring--inner"><circle cx="340" cy="340" r="72" /><circle cx="340" cy="340" r="66" /></g>
 
       <circle class="core__emblem-halo" cx="340" cy="340" r="52" />
-      <CodeForgeEmblem uid="core" class="core__emblem" x={292} y={292} width={96} height={96} />
+      <!-- Use the canonical static emblem at this nested scale. The inline animated
+           reconstruction produced a lower-left fragment when its plane/node layers
+           were composited at device-pixel-ratio sizes. -->
+      <image
+        href="/images/codeforge/codeforge-icon.svg?v=codeforge-r1"
+        class="core__emblem"
+        x="292"
+        y="292"
+        width="96"
+        height="96"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      />
 
       <g class="core__particles"><circle cx="340" cy="270" r="2" /><circle cx="401" cy="318" r="1.5" /><circle cx="288" cy="381" r="1.5" /><circle cx="376" cy="396" r="2" /></g>
 

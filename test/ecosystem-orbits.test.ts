@@ -45,9 +45,11 @@ describe('FDS ecosystem orbital model', () => {
     expect(component).toContain('.orbit-path { stroke: var(--planet-color)');
   });
 
-  it('uses the recovered CodeForge orbital-crystal emblem in the Core', () => {
-    expect(component).toContain('<CodeForgeEmblem');
+  it('uses the canonical static CodeForge emblem in the Core', () => {
+    expect(component).toContain('href="/images/codeforge/codeforge-icon.svg?v=codeforge-r1"');
     expect(component).toContain('class="core__emblem"');
+    expect(component).toContain('preserveAspectRatio="xMidYMid meet"');
+    expect(component).not.toContain('<CodeForgeEmblem');
     expect(component).toContain('class="core__emblem-halo"');
     // The retired generic anvil/brackets mark must not return.
     expect(component).not.toContain('core__anvil');
