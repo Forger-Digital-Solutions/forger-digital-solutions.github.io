@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CodeForgeEmblem from '../../components/icons/CodeForgeEmblem.astro';
 import { siteConfig } from '../../config/site';
 
-const authBaseUrl = (import.meta.env.PUBLIC_CODEFORGE_AUTH_URL || (import.meta.env.DEV ? 'http://127.0.0.1:3220' : 'https://cloud.codeforge.dev')).replace(/\/+$/, '');
+const authBaseUrl = (import.meta.env.PUBLIC_CODEFORGE_AUTH_URL || (import.meta.env.DEV ? 'http://127.0.0.1:3220' : 'https://cloud.forgerdigitalsolutions.com')).replace(/\/+$/, '');
 const returnOrigin = import.meta.env.DEV ? Astro.url.origin : siteConfig.siteUrl;
 const returnTarget = new URL('/codeforge/sign-in', `${returnOrigin}/`).href;
 const authStartUrl = `${authBaseUrl}/v1/auth/browser/start?return=${encodeURIComponent(returnTarget)}`;
