@@ -158,6 +158,9 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
           <a href={releaseProduct.downloadUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
             Get {releaseProduct.name}<span aria-hidden="true">→</span>
           </a>
+          {project.slug === 'codeforge' && (
+            <a href="/codeforge/sign-in" class="btn btn-outline">Sign in to CodeForge</a>
+          )}
           {releaseProduct.docsUrl && (
             <a href={releaseProduct.docsUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Documentation</a>
           )}

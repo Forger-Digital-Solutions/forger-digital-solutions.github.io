@@ -4,7 +4,7 @@ The official public website for **Forger Digital Solutions** (FDS).
 
 ## What this repository is
 
-This is the source code for the FDS public website hosted at https://forger-digital-solutions.github.io
+This is the source code for the FDS public website hosted at https://forgerdigitalsolutions.com
 
 ## Local development
 
@@ -22,6 +22,17 @@ npm run build
 ```
 
 This creates a production-ready site in the `dist/` directory.
+
+### CodeForge identity entry point
+
+`/codeforge/sign-in` is a static, GitHub-only entry point for CodeForge Cloud. It sends the browser
+to the public Cloud start endpoint with an exact return URL; it never contains OAuth client secrets,
+access tokens, or repository credentials. Set `PUBLIC_CODEFORGE_AUTH_URL` at build time only when
+the Cloud API is not `https://cloud.codeforge.dev`.
+
+After building, run `npm run codeforge:secret-scan` to audit generated output for privileged OAuth
+configuration and credential-like values. Browser identity login and GitHub App repository access
+are intentionally separate authorities.
 
 ## Validation
 

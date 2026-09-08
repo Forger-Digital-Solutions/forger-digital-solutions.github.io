@@ -23,9 +23,11 @@ const effective = 'August 22, 2026';
     <div class="doc__body">
       <h2>The short version</h2>
       <p>
-        This website is a static, informational site. It does not use cookies or analytics,
-        does not run advertising or trackers, and does not ask you to create an account or
-        submit personal information to browse it.
+        This website is a static, informational site. It does not use analytics, advertising, or
+        trackers, and browsing it does not require an account. The optional
+        <a href="/codeforge/sign-in">CodeForge sign-in</a> sends you to CodeForge Cloud and may
+        return an opaque, HttpOnly browser session cookie there; the FDS page never receives a GitHub
+        access token.
       </p>
 
       <h2>Information collected automatically</h2>
@@ -51,6 +53,12 @@ const effective = 'August 22, 2026';
         policies apply — we do not control them and are not responsible for their practices.
       </p>
       <p>
+        CodeForge sign-in uses GitHub OAuth. GitHub confirms your identity to the server-brokered
+        CodeForge Cloud flow; the static FDS site does not handle GitHub credentials. CodeForge
+        Cloud stores the immutable GitHub user ID needed to keep one internal account stable, plus
+        limited profile metadata such as the public login and avatar URL.
+      </p>
+      <p>
         Support contributions for FDS development and hardware are handled entirely by Ko-fi and
         Cash App. FDS does not receive or store your payment card details; any payment information
         is processed by those services and their providers. If you email FDS about a hardware
@@ -65,8 +73,10 @@ const effective = 'August 22, 2026';
 
       <h2>Your choices</h2>
       <p>
-        Because we don't maintain accounts or a marketing database, there's little for you to
-        manage. If you've emailed us and would like your message deleted, just ask.
+        FDS does not maintain a marketing database. If you use CodeForge, you can sign out through
+        CodeForge Cloud; questions about that account or a request to remove account data can be
+        sent to <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>. If
+        you've emailed us and would like your message deleted, just ask.
       </p>
 
       <h2>Changes to this policy</h2>

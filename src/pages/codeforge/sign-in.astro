@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CodeForgeEmblem from '../../components/icons/CodeForgeEmblem.astro';
+import { siteConfig } from '../../config/site';
+
+const authBaseUrl = (import.meta.env.PUBLIC_CODEFORGE_AUTH_URL || (import.meta.env.DEV ? 'http://127.0.0.1:3220' : 'https://cloud.codeforge.dev')).replace(/\/+$/, '');
+const returnOrigin = import.meta.env.DEV ? Astro.url.origin : siteConfig.siteUrl;
+const returnTarget = new URL('/codeforge/sign-in', `${returnOrigin}/`).href;
+const authStartUrl = `${authBaseUrl}/v1/auth/browser/start?return=${encodeURIComponent(returnTarget)}`;
+---
+
+<BaseLayout
+  title="Sign in to CodeForge"
+  description="Connect your GitHub identity to CodeForge Cloud through the secure Forger Digital Solutions sign-in path."
+>
+  <section class="codeforge-auth" aria-labelledby="codeforge-auth-title">
+    <div class="codeforge-auth__shell">
+      <div class="codeforge-auth__hero">
+        <div class="codeforge-auth__mark" aria-hidden="true">
+          <CodeForgeEmblem uid="codeforge-sign-in" />
+        </div>
+        <p class="page-eyebrow">CodeForge / GitHub identity</p>
+        <h1 id="codeforge-auth-title">Continue to CodeForge.</h1>
+        <p class="codeforge-auth__lead">
+          Connect your GitHub identity to CodeForge Cloud. GitHub confirms who you are; the CodeForge
+          Cloud service keeps the session secure.
+        </p>
+
+        <div class="codeforge-auth__status" id="codeforge-auth-status" role="status" aria-live="polite">
+          <span class="codeforge-auth__status-dot" aria-hidden="true"></span>
+          <span data-codeforge-auth-message>Ready for a secure GitHub sign-in.</span>
+        </div>
+
+        <a
+          class="btn btn-primary codeforge-auth__button"
+          href={authStartUrl}
+          data-codeforge-auth-start
+          aria-label="Continue to CodeForge with GitHub"
+        >
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" /></svg>
+          <span data-codeforge-auth-label>Continue with GitHub</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <p class="codeforge-auth__fine-print">
+          GitHub-only authentication. This page never receives or stores a GitHub access token.
+        </p>
+      </div>
+
+      <aside class="codeforge-auth__rail" aria-label="CodeForge sign-in details">
+        <p class="codeforge-auth__rail-kicker">Session boundary</p>
+        <h2>One identity. Clear authority.</h2>
+        <p>
+          CodeForge uses your immutable GitHub user identity to find or create one internal account.
+          Repository access remains a separate GitHub App authorization when a project needs it.
+        </p>
+        <dl>
+          <div><dt>Authentication</dt><dd>GitHub OAuth</dd></div>
+          <div><dt>Credential handling</dt><dd>Server-side only</dd></div>
+          <div><dt>Browser session</dt><dd>HttpOnly cookie</dd></div>
+        </dl>
+        <a href="/privacy">Read the privacy policy <span aria-hidden="true">→</span></a>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const authMessages = {
+    success: 'GitHub account connected. Your CodeForge browser session is active.',
+    denied: 'GitHub authorization was canceled. Nothing was changed.',
+    invalid: 'That sign-in link is no longer valid. Start again.',
+    error: 'CodeForge could not complete the connection. No credential was placed in this page.'
+  };
+  const authStatus = document.querySelector('[data-codeforge-auth-message]');
+  const authStart = document.querySelector('[data-codeforge-auth-start]');
+  const authLabel = document.querySelector('[data-codeforge-auth-label]');
+  const status = new URLSearchParams(window.location.search).get('auth');
+  if (authStatus && status && Object.prototype.hasOwnProperty.call(authMessages, status)) {
+    authStatus.textContent = authMessages[status];
+    document.querySelector('#codeforge-auth-status')?.setAttribute('data-auth-state', status);
+  }
+  authStart?.addEventListener('click', () => {
+    authStart.setAttribute('aria-busy', 'true');
+    authStart.setAttribute('data-auth-loading', 'true');
+    authLabel && (authLabel.textContent = 'Connecting…');
+  });
+</script>
+
+<style>
+  .codeforge-auth { padding: clamp(3.5rem, 9vw, 7rem) 0 6rem; }
+  .codeforge-auth__shell { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(16rem, .65fr); gap: clamp(2rem, 7vw, 6rem); align-items: center; }
+  .codeforge-auth__hero { position: relative; max-width: 42rem; }
+  .codeforge-auth__mark { width: clamp(5rem, 12vw, 7.5rem); margin-bottom: 1.7rem; filter: drop-shadow(0 12px 35px rgba(55,112,239,.18)); }
+  .codeforge-auth__hero h1 { max-width: 34rem; margin: 0; font-size: clamp(2.7rem, 7vw, 5.6rem); line-height: .96; letter-spacing: -.06em; }
+  .codeforge-auth__lead { max-width: 37rem; margin: 1.4rem 0 0; color: var(--color-text-muted); font-size: clamp(1rem, 2vw, 1.16rem); line-height: 1.75; }
+  .codeforge-auth__status { display: flex; gap: .65rem; align-items: center; max-width: 36rem; margin: 2rem 0 1rem; padding: .75rem .9rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: rgba(18,30,53,.45); color: var(--color-text-muted); font: .75rem/1.45 var(--font-mono); }
+  .codeforge-auth__status-dot { width: .5rem; height: .5rem; flex: 0 0 auto; border-radius: 50%; background: var(--color-accent-bright); box-shadow: 0 0 0 .22rem rgba(78,139,255,.12), 0 0 1rem rgba(78,139,255,.65); }
+  .codeforge-auth__status[data-auth-state='success'] { border-color: rgba(91,194,139,.45); }
+  .codeforge-auth__status[data-auth-state='success'] .codeforge-auth__status-dot { background: #65d69b; box-shadow: 0 0 0 .22rem rgba(101,214,155,.12); }
+  .codeforge-auth__status[data-auth-state='denied'], .codeforge-auth__status[data-auth-state='invalid'], .codeforge-auth__status[data-auth-state='error'] { border-color: rgba(224,155,93,.45); }
+  .codeforge-auth__status[data-auth-state='denied'] .codeforge-auth__status-dot, .codeforge-auth__status[data-auth-state='invalid'] .codeforge-auth__status-dot, .codeforge-auth__status[data-auth-state='error'] .codeforge-auth__status-dot { background: #e0a05f; box-shadow: 0 0 0 .22rem rgba(224,160,95,.12); }
+  .codeforge-auth__button { gap: .65rem; width: min(100%, 22rem); }
+  .codeforge-auth__button svg { width: 1.1rem; height: 1.1rem; fill: currentColor; }
+  .codeforge-auth__button[data-auth-loading] { cursor: progress; }
+  .codeforge-auth__fine-print { max-width: 34rem; margin: .85rem 0 0; color: var(--color-text-subtle); font-size: .76rem; line-height: 1.6; }
+  .codeforge-auth__rail { padding: 1.3rem; border: 1px solid var(--color-border-strong); border-top: 3px solid #5d8fff; border-radius: var(--radius-md); background: linear-gradient(150deg, rgba(22,45,94,.38), rgba(8,14,24,.72)); box-shadow: var(--shadow-md); }
+  .codeforge-auth__rail-kicker { margin: 0 0 .75rem; color: var(--color-accent-bright); font: 700 .66rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+  .codeforge-auth__rail h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.025em; }
+  .codeforge-auth__rail > p:not(.codeforge-auth__rail-kicker) { margin: .8rem 0 1.25rem; color: var(--color-text-muted); font-size: .87rem; line-height: 1.7; }
+  .codeforge-auth__rail dl { display: grid; gap: .7rem; margin: 0; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .codeforge-auth__rail dl div { display: flex; justify-content: space-between; gap: 1rem; }
+  .codeforge-auth__rail dt { color: var(--color-text-subtle); font: .67rem/1.3 var(--font-mono); text-transform: uppercase; }
+  .codeforge-auth__rail dd { margin: 0; color: var(--color-text); font-size: .78rem; font-weight: 700; text-align: right; }
+  .codeforge-auth__rail > a { display: inline-block; margin-top: 1.35rem; color: var(--color-accent-secondary); font-size: .8rem; font-weight: 700; }
+  @media (max-width: 760px) { .codeforge-auth { padding-top: 3rem; } .codeforge-auth__shell { grid-template-columns: 1fr; gap: 2.5rem; } .codeforge-auth__rail { max-width: 42rem; } }
+  @media (prefers-reduced-motion: reduce) { .codeforge-auth__button:hover { transform: none; } }
+</style>

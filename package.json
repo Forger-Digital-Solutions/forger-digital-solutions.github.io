@@ -23,6 +23,7 @@
     "kayla:deploy": "npm run kayla:deploy:check && npm --prefix worker run deploy",
     "kayla:verify:live": "node scripts/kayla-live-verify.mjs",
     "kayla:secret-scan": "node scripts/kayla-secret-scan.mjs",
+    "codeforge:secret-scan": "node scripts/codeforge-auth-secret-scan.mjs",
     "worker:build": "npm --prefix worker run build",
     "astro": "astro",
     "worker:dev": "cd worker && npm run dev",
