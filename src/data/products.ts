@@ -22,6 +22,7 @@ export interface Product {
   visual?: ProductVisual;
   projectSlug?: string;
   downloadUrl?: string;
+  upgradeUrl?: string;
   purchaseUrl?: string;
   docsUrl?: string;
   releaseNotesUrl?: string;
@@ -43,6 +44,7 @@ export const products: Product[] = [
     pricingModel: "free",
     projectSlug: "codeforge",
     downloadUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest",
+    upgradeUrl: "/codeforge/upgrade",
     docsUrl: "https://github.com/Forger-Digital-Solutions/CodeForge",
     releaseNotesUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0",
     visual: visualAssets.codeforgeWorkspace,

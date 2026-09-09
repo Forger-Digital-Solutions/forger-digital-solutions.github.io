@@ -5,5 +5,9 @@ import { siteConfig } from './src/config/site';
 export default defineConfig({
   site: siteConfig.siteUrl,
   base: '/',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/codeforge/upgrade'),
+    }),
+  ],
 });

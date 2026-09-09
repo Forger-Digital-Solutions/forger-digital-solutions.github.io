@@ -45,6 +45,10 @@ export default defineConfig({
     command: `"${process.execPath}" ./node_modules/astro/bin/astro.mjs dev --port 4321`,
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000
+    timeout: 120_000,
+    env: {
+      ...process.env,
+      ASTRO_DEV_BACKGROUND: '1',
+    },
   }
 });

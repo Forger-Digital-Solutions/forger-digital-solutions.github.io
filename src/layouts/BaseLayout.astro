@@ -13,9 +13,12 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  noindex?: boolean;
+  robots?: string;
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, noindex, robots } = Astro.props;
+const robotsDirective = robots || (noindex ? 'noindex, nofollow' : undefined);
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
 const pageDesc =
   description ||
@@ -32,16 +35,17 @@ const isHomepage = Astro.url.pathname === '/';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDesc} />
+    {robotsDirective && <meta name="robots" content={robotsDirective} />}
     <link rel="canonical" href={canonicalUrl} />
     <meta name="author" content={siteConfig.author} />
     <meta name="theme-color" content="#090a0c" />
-    <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=fds-r1" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=fds-r1" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=fds-r1" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=fds-r1" />
-    <link rel="icon" type="image/x-icon" sizes="any" href="/favicon.ico?v=fds-r1" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=fds-r1" />
-    <link rel="manifest" href="/site.webmanifest?v=fds-r1" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=fds-r2" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=fds-r2" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=fds-r2" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=fds-r2" />
+    <link rel="icon" type="image/x-icon" sizes="any" href="/favicon.ico?v=fds-r2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=fds-r2" />
+    <link rel="manifest" href="/site.webmanifest?v=fds-r2" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={pageTitle} />

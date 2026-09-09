@@ -60,7 +60,16 @@ const statusLabel = {
     {displayVersion && <span class="product-card__version">{displayVersion}</span>}
   </div>
   <div class="product-card__actions">
-    {product.downloadUrl && <a href={product.downloadUrl} class="btn btn-primary">Get App</a>}
+    {product.downloadUrl && (
+      <a href={product.downloadUrl} class="btn btn-primary">
+        Download {product.name}
+      </a>
+    )}
+    {product.upgradeUrl && (
+      <a href={product.upgradeUrl} class="btn btn-outline">
+        Upgrade & Licensing <span aria-hidden="true">→</span>
+      </a>
+    )}
     {product.purchaseUrl && <a href={product.purchaseUrl} class="btn btn-outline">Purchase</a>}
     {product.docsUrl && <a href={product.docsUrl} class="text-link">Documentation <span aria-hidden="true">→</span></a>}
     {product.releaseNotesUrl && <a href={product.releaseNotesUrl} class="text-link">Release Notes <span aria-hidden="true">→</span></a>}

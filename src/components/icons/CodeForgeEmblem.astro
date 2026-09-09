@@ -72,51 +72,55 @@ const url = (name: string) => `url(#${uid}-${name})`;
   <circle cx="128" cy="128" r="98" fill="none" stroke="#3a3d44" stroke-width="0.7" stroke-dasharray="1 7" opacity="0.35" />
   <circle cx="128" cy="128" r="56" fill="none" stroke="#3a3d44" stroke-width="0.6" stroke-dasharray="1 8" opacity="0.28" />
 
-  <!-- orbital plane A: steep diagonal (-18deg) with two attached nodes -->
+  <!-- orbital plane A: steep diagonal (-18deg) with canonical attached nodes -->
   <g class="cf-plane cf-plane--a">
     <ellipse cx="128" cy="128" rx="108" ry="46" transform="rotate(-18 128 128)" stroke={url('orbit')} stroke-width="4.2" opacity="0.98" />
     <ellipse cx="128" cy="128" rx="108" ry="46" transform="rotate(-18 128 128)" stroke="#0a0b0d" stroke-width="1" opacity="0.35" />
     <g>
-      <circle cx="183.2" cy="73" r="20" fill="#07080a" opacity="0.45" />
-      <circle cx="183.2" cy="73" r="20" fill={url('sphere')} stroke="#d6dae0" stroke-width="0.7" />
-      <ellipse cx="177.2" cy="66" rx="6.5" ry="4.2" fill="#ffffff" opacity="0.42" />
+      <circle cx="192.5" cy="57.5" r="21.5" fill="#07080a" opacity="0.45" />
+      <circle cx="192.5" cy="57.5" r="20" fill={url('sphere')} stroke="#d6dae0" stroke-width="0.7" />
+      <circle cx="192.5" cy="57.5" r="20" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.22" />
+      <ellipse cx="186.5" cy="50.5" rx="6.5" ry="4.2" fill="#ffffff" opacity="0.42" />
     </g>
     <g>
-      <circle cx="72.8" cy="183" r="13" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.5" />
-      <circle cx="70.8" cy="180" r="2.4" fill="#ffffff" opacity="0.38" />
+      <circle cx="42.5" cy="130.5" r="21" fill="#07080a" opacity="0.45" />
+      <circle cx="42.5" cy="130.5" r="19.2" fill={url('sphere')} stroke="#d6dae0" stroke-width="0.7" />
+      <ellipse cx="36.2" cy="123.2" rx="6.2" ry="4" fill="#ffffff" opacity="0.42" />
     </g>
   </g>
 
-  <!-- orbital plane B: opposite diagonal (42deg) with two attached nodes -->
+  <!-- orbital plane B: opposite diagonal (42deg) with canonical attached nodes -->
   <g class="cf-plane cf-plane--b">
     <ellipse cx="128" cy="128" rx="108" ry="40" transform="rotate(42 128 128)" stroke={url('orbit')} stroke-width="3.8" opacity="0.95" />
     <g>
-      <circle cx="208.2" cy="200.3" r="15.8" fill="#07080a" opacity="0.42" />
-      <circle cx="208.2" cy="200.3" r="15.8" fill={url('sphere')} stroke="#d6dae0" stroke-width="0.6" />
-      <ellipse cx="202.8" cy="193.9" rx="5.2" ry="3.4" fill="#ffffff" opacity="0.40" />
+      <circle cx="196.2" cy="194.2" r="17.2" fill="#07080a" opacity="0.42" />
+      <circle cx="196.2" cy="194.2" r="15.8" fill={url('sphere')} stroke="#d6dae0" stroke-width="0.6" />
+      <ellipse cx="190.8" cy="187.8" rx="5.2" ry="3.4" fill="#ffffff" opacity="0.40" />
     </g>
     <g>
-      <circle cx="47.8" cy="56" r="7.8" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.5" />
-      <circle cx="46.2" cy="54" r="2" fill="#ffffff" opacity="0.38" />
+      <circle cx="77.8" cy="76.2" r="7.8" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.5" />
+      <circle cx="76.2" cy="74.2" r="2" fill="#ffffff" opacity="0.38" />
     </g>
   </g>
 
-  <!-- orbital plane C: shallow third axis (78deg) with two attached nodes -->
+  <!-- orbital plane C: shallow third axis (78deg) with canonical attached nodes -->
   <g class="cf-plane cf-plane--c">
     <ellipse cx="128" cy="128" rx="102" ry="36" transform="rotate(78 128 128)" stroke="#a8adb5" stroke-width="3.2" opacity="0.9" />
     <ellipse cx="128" cy="128" rx="102" ry="36" transform="rotate(78 128 128)" stroke="#d6dae0" stroke-width="0.7" opacity="0.45" />
     <g>
-      <circle cx="163.2" cy="120.5" r="6.2" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.45" />
-      <circle cx="162" cy="118.7" r="1.5" fill="#ffffff" opacity="0.36" />
+      <circle cx="222.8" cy="139.2" r="6.2" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.45" />
+      <circle cx="221.6" cy="137.4" r="1.5" fill="#ffffff" opacity="0.36" />
     </g>
     <g>
-      <circle cx="92.8" cy="135.5" r="6.5" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.45" />
-      <circle cx="91.2" cy="133.3" r="1.6" fill="#ffffff" opacity="0.36" />
+      <circle cx="66.8" cy="206.2" r="6.5" fill={url('sphere-dark')} stroke="#c2c6cd" stroke-width="0.45" />
+      <circle cx="65.2" cy="204.0" r="1.6" fill="#ffffff" opacity="0.36" />
     </g>
   </g>
 
-  <!-- faceted crystal core (stable) -->
+  <!-- diamond base shadow -->
   <path d="M 128 204 L 102 152 L 78 106 L 128 56 L 178 106 L 154 152 Z" fill="#06070a" opacity="0.42" />
+
+  <!-- faceted crystal core (stable) -->
   <g class="cf-diamond">
     <path d="M 128 56 L 178 106 L 128 118 L 78 106 Z" fill={url('diamond-top')} stroke="rgba(255,255,255,0.55)" stroke-width="0.6" />
     <path d="M 78 106 L 128 118 L 102 152 L 78 106" fill="#8f99ab" stroke="rgba(255,255,255,0.22)" stroke-width="0.5" />
@@ -127,12 +131,16 @@ const url = (name: string) => `url(#${uid}-${name})`;
     <path d="M 128 118 L 154 152 L 128 204 Z" fill="#e8ecf2" opacity="0.96" />
     <path d="M 128 118 L 102 152 L 128 162 Z" fill="#d4dae6" opacity="0.85" />
     <path d="M 128 118 L 128 162 L 154 152 Z" fill="#f7f8fa" opacity="0.98" />
-    <ellipse cx="128" cy="204" rx="26" ry="6" fill="#000000" opacity="0.28" />
   </g>
+
+  <!-- ground shadow -->
+  <ellipse cx="128" cy="204" rx="26" ry="6" fill="#000000" opacity="0.28" />
+
   <!-- crystal illumination: slow top-edge shine breathe -->
   <g class="cf-shine">
     <path d="M 78 106 L 128 118 L 178 106" fill="none" stroke="#ffffff" stroke-width="0.9" opacity="0.55" />
     <circle cx="128" cy="118.5" r="1.6" fill="#ffffff" opacity="0.95" />
+    <path d="M 128 116 L 128 121 M 125.5 118.5 L 130.5 118.5" stroke="#ffffff" stroke-width="0.6" stroke-linecap="round" opacity="0.9" />
   </g>
 </svg>
 

@@ -21,6 +21,18 @@ const hasFeatured = featuredProducts.length > 0;
       headingLevel="h1"
     />
 
+    <div class="distribution-badges" aria-label="Distribution standards">
+      <span class="distribution-badge">
+        <span class="distribution-badge__check" aria-hidden="true">✓</span> Verified Public Builds
+      </span>
+      <span class="distribution-badge">
+        <span class="distribution-badge__check" aria-hidden="true">✓</span> Free-First Architecture
+      </span>
+      <span class="distribution-badge">
+        <span class="distribution-badge__check" aria-hidden="true">✓</span> Standalone Windows Binaries
+      </span>
+    </div>
+
     {hasFeatured && (
       <div class="forged-featured">
         {featuredProducts.map((product) => (
@@ -54,6 +66,29 @@ const hasFeatured = featuredProducts.length > 0;
 </BaseLayout>
 
 <style>
+  .distribution-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem 1.2rem;
+    justify-content: center;
+    margin: -0.5rem auto 2.5rem;
+    max-width: 48rem;
+  }
+  .distribution-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem .75rem;
+    border: 1px solid rgba(78,122,222,.25);
+    border-radius: 999px;
+    background: rgba(13,20,32,.6);
+    color: var(--color-text-muted);
+    font: 600 .75rem/1 var(--font-mono);
+  }
+  .distribution-badge__check {
+    color: var(--color-accent-bright);
+    font-weight: 700;
+  }
   .forged-featured {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));

@@ -1,3 +1,7 @@
+import { emailConfig, getActiveEmail } from './email';
+export { emailConfig, getActiveEmail };
+export type { EmailRole, EmailRoutingEntry, FdsEmailConfig } from './email';
+
 export const siteConfig = {
   name: "Forger Digital Solutions",
   shortName: "FDS",

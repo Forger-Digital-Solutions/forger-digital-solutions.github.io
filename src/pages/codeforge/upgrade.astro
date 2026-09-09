@@ -1,0 +1,515 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { codeForgePlans } from '../../data/codeforge-plans';
+import { siteConfig } from '../../config/site';
+---
+
+<BaseLayout
+  title="CodeForge Upgrade & Commercial Preview"
+  description="Explore CodeForge commercial licensing, enterprise plans, and multi-engine capabilities."
+  noindex={true}
+>
+  <div class="upgrade-page">
+    <section class="page-section" aria-labelledby="upgrade-title">
+      <SectionHeader
+        eyebrow="CodeForge // Commercial Portal"
+        title="Upgrade & Commercial Licensing"
+        description="CodeForge is free-first autonomous software engineering. Commercial tiers provide high-concurrency routing, team policy guardrails, and enterprise deployment rights."
+        align="center"
+        headingLevel="h1"
+      />
+
+      <aside id="status-banner-success" class="status-banner status-banner--success" role="status" aria-live="polite" hidden>
+        <div class="status-banner__icon" aria-hidden="true">✓</div>
+        <div class="status-banner__content">
+          <p class="status-banner__title">Checkout Session Received — Verification In Progress</p>
+          <p class="status-banner__body">
+            FDS operates a cryptographically signed desktop entitlement architecture. In accordance with our security model, desktop entitlements are never self-asserted or granted client-side in the browser.
+          </p>
+          <p class="status-banner__body">
+            Your session is being verified by our fulfillment worker. Once confirmed, your signed license key file and installation instructions will be delivered to your registered billing email.
+          </p>
+          <p class="status-banner__note">
+            Need immediate assistance? Contact <a href={`mailto:${siteConfig.supportEmail}?subject=CodeForge%20License%20Verification`}>{siteConfig.supportEmail}</a>.
+          </p>
+        </div>
+      </aside>
+
+      <aside id="status-banner-canceled" class="status-banner status-banner--canceled" role="status" aria-live="polite" hidden>
+        <div class="status-banner__icon" aria-hidden="true">✕</div>
+        <div class="status-banner__content">
+          <p class="status-banner__title">Checkout Session Canceled</p>
+          <p class="status-banner__body">
+            The checkout process was canceled or timed out. No charges were made and no subscription was initiated.
+          </p>
+          <p class="status-banner__body">
+            You can continue using <strong>CodeForge Free</strong> without interruption. If you have questions regarding commercial licensing, reach out to our team at any time.
+          </p>
+        </div>
+      </aside>
+
+      <div class="architecture-notice">
+        <div class="architecture-notice__tag">Zero-Cost Guarantee</div>
+        <p class="architecture-notice__text">
+          <strong>ForgeZero Assurance:</strong> CodeForge Free is engineered to operate at zero cost using your verified cloud routing, free tier API keys, or local models. Upgrading is purely optional for teams requiring commercial licensing, priority concurrent task execution, or custom organizational policies.
+        </p>
+      </div>
+
+      <div class="plans-grid">
+        {codeForgePlans.map((plan) => (
+          <article class={`plan-card ${plan.highlight ? 'plan-card--highlighted' : ''}`} id={`plan-${plan.id}`}>
+            <header class="plan-card__header">
+              {plan.badge && <span class="plan-card__badge">{plan.badge}</span>}
+              <h2 class="plan-card__name">{plan.name}</h2>
+              <p class="plan-card__tagline">{plan.tagline}</p>
+            </header>
+
+            <div class="plan-card__pricing">
+              <span class="plan-card__price">{plan.displayPrice}</span>
+              <span class="plan-card__period">/ {plan.period}</span>
+            </div>
+
+            <p class="plan-card__audience"><strong>Ideal for:</strong> {plan.targetAudience}</p>
+
+            <ul class="plan-card__features" aria-label={`${plan.name} features`}>
+              {plan.features.map((feature) => (
+                <li class="plan-card__feature">
+                  <span class="plan-card__check" aria-hidden="true">✓</span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <footer class="plan-card__footer">
+              {plan.ctaAction === 'download' && plan.ctaHref ? (
+                <a href={plan.ctaHref} class="btn btn-primary plan-card__btn">
+                  {plan.ctaText} <span aria-hidden="true">↓</span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  class="btn btn-outline plan-card__btn plan-preview-trigger"
+                  data-plan-id={plan.id}
+                  data-plan-name={plan.name}
+                  aria-haspopup="dialog"
+                >
+                  {plan.ctaText}
+                </button>
+              )}
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      <!-- Private Verification Modal -->
+      <dialog id="preview-dialog" class="preview-dialog" aria-labelledby="dialog-title">
+        <form method="dialog" class="preview-dialog__form">
+          <div class="preview-dialog__header">
+            <span class="preview-dialog__status">Commercial Verification</span>
+            <button type="submit" class="preview-dialog__close" aria-label="Close dialog">✕</button>
+          </div>
+          <h3 id="dialog-title" class="preview-dialog__title">Private Verification in Progress</h3>
+          <p class="preview-dialog__body">
+            Public subscription activations for <strong id="selected-plan-name">CodeForge Commercial</strong> are currently undergoing private staging and release certification.
+          </p>
+          <p class="preview-dialog__body">
+            FDS does not accept live commercial payments until the accompanying desktop release binary with cryptographically signed entitlement validation is publicly deployed.
+          </p>
+          <div class="preview-dialog__actions">
+            <a
+              id="commercial-inquiry-link"
+              href={`mailto:${siteConfig.supportEmail}?subject=CodeForge%20Commercial%20Inquiry`}
+              class="btn btn-primary"
+            >
+              Inquire via Email <span aria-hidden="true">→</span>
+            </a>
+            <button type="submit" class="btn btn-outline">Close</button>
+          </div>
+        </form>
+      </dialog>
+
+      <section class="entitlement-faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading" class="entitlement-faq__heading">Licensing & Entitlement Architecture FAQ</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3 class="faq-item__q">How are CodeForge commercial licenses delivered?</h3>
+            <p class="faq-item__a">
+              Commercial licenses are delivered as cryptographically signed entitlement files (Ed25519 signature). You import the key file into CodeForge Desktop. No account login, persistent phone-home DRM, or intrusive background monitoring is used.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-item__q">What happens if a license expires or is invalid?</h3>
+            <p class="faq-item__a">
+              CodeForge operates on a fail-closed, safe-fallback architecture. If an entitlement cannot be verified, CodeForge automatically falls back to CodeForge Free (ForgeZero mode). Your work is never locked or deleted.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-item__q">Where can I download the current public release?</h3>
+            <p class="faq-item__a">
+              The current public release is available directly on our <a href="/forged">Forged distribution shelf</a> and via GitHub Releases.
+            </p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Process redirect status parameters (e.g. Stripe checkout callbacks)
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    if (status === 'success') {
+      const banner = document.getElementById('status-banner-success');
+      if (banner) banner.removeAttribute('hidden');
+    } else if (status === 'canceled') {
+      const banner = document.getElementById('status-banner-canceled');
+      if (banner) banner.removeAttribute('hidden');
+    }
+
+    const dialog = document.getElementById('preview-dialog');
+    const selectedPlanSpan = document.getElementById('selected-plan-name');
+    const inquiryLink = document.getElementById('commercial-inquiry-link');
+    const triggers = document.querySelectorAll('.plan-preview-trigger');
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const planName = trigger.getAttribute('data-plan-name') || 'CodeForge Commercial';
+        if (selectedPlanSpan) selectedPlanSpan.textContent = planName;
+        if (inquiryLink) {
+          inquiryLink.href = `mailto:forgerdigisolsupport@gmail.com?subject=${encodeURIComponent(
+            'CodeForge Inquiry: ' + planName
+          )}`;
+        }
+        if (dialog && typeof dialog.showModal === 'function') {
+          dialog.showModal();
+        }
+      });
+    });
+
+    if (dialog) {
+      const getFocusableElements = () =>
+        Array.from(
+          dialog.querySelectorAll(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((element) => !element.hasAttribute('hidden') && element.getClientRects().length > 0);
+
+      document.addEventListener('keydown', (event) => {
+        if (!dialog.open || event.key !== 'Tab') return;
+
+        const focusable = getFocusableElements();
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (!dialog.contains(document.activeElement)) {
+          event.preventDefault();
+          first.focus();
+        } else if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+
+      dialog.addEventListener('click', (event) => {
+        const rect = dialog.getBoundingClientRect();
+        const isInDialog =
+          rect.top <= event.clientY &&
+          event.clientY <= rect.top + rect.height &&
+          rect.left <= event.clientX &&
+          event.clientX <= rect.left + rect.width;
+        if (!isInDialog) {
+          dialog.close();
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .upgrade-page {
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+
+  .status-banner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    margin: 1.5rem 0 2rem;
+    padding: 1.4rem 1.6rem;
+    border-radius: var(--radius-lg);
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .status-banner--success {
+    border: 1px solid rgba(120,206,154,.35);
+    background: linear-gradient(135deg, rgba(120,206,154,.08), rgba(7,12,20,.95));
+    box-shadow: 0 0 20px rgba(120,206,154,.08);
+  }
+  .status-banner--canceled {
+    border: 1px solid rgba(235,100,100,.35);
+    background: linear-gradient(135deg, rgba(235,100,100,.08), rgba(7,12,20,.95));
+    box-shadow: 0 0 20px rgba(235,100,100,.08);
+  }
+  .status-banner__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .status-banner--success .status-banner__icon {
+    background: rgba(120,206,154,.2);
+    color: #78ce9a;
+  }
+  .status-banner--canceled .status-banner__icon {
+    background: rgba(235,100,100,.2);
+    color: #eb6464;
+  }
+  .status-banner__title {
+    margin: 0 0 .4rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .status-banner__body {
+    margin: 0 0 .5rem;
+    color: var(--color-text-muted);
+  }
+  .status-banner__note {
+    margin: .6rem 0 0;
+    font-size: .88rem;
+    color: var(--color-text-subtle);
+  }
+
+  .architecture-notice {
+    margin: 1.5rem 0 2.5rem;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid rgba(49,116,255,.25);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    background: rgba(13,20,32,.7);
+  }
+  .architecture-notice__tag {
+    margin-bottom: .35rem;
+    color: var(--color-accent-bright);
+    font: 700 .68rem/1 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .architecture-notice__text {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .92rem;
+    line-height: 1.6;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+    margin-bottom: 3.5rem;
+  }
+  .plan-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.8rem 1.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(150deg, rgba(14,22,35,.96), rgba(8,13,22,.96));
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .plan-card--highlighted {
+    border-color: rgba(78,122,222,.5);
+    box-shadow: 0 0 30px rgba(49,116,255,.12);
+  }
+  .plan-card__badge {
+    display: inline-block;
+    padding: .3rem .6rem;
+    margin-bottom: .8rem;
+    border-radius: 999px;
+    font: 700 .65rem/1 var(--font-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--color-accent-bright);
+    border: 1px solid rgba(78,122,222,.3);
+    background: rgba(78,122,222,.1);
+  }
+  .plan-card__name {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -.02em;
+    color: var(--color-text);
+  }
+  .plan-card__tagline {
+    margin: .4rem 0 1.2rem;
+    color: var(--color-text-muted);
+    font-size: .88rem;
+    line-height: 1.5;
+    min-height: 2.6rem;
+  }
+  .plan-card__pricing {
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    padding: .8rem 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1.2rem;
+  }
+  .plan-card__price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    color: var(--color-text);
+  }
+  .plan-card__period {
+    color: var(--color-text-subtle);
+    font: 600 .78rem/1 var(--font-mono);
+  }
+  .plan-card__audience {
+    margin: 0 0 1.2rem;
+    font-size: .85rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  .plan-card__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    flex-grow: 1;
+  }
+  .plan-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    font-size: .88rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+  }
+  .plan-card__check {
+    color: var(--color-accent-bright);
+    font-weight: 700;
+  }
+  .plan-card__footer {
+    margin-top: auto;
+  }
+  .plan-card__btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .preview-dialog {
+    padding: 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: #0d1420;
+    color: var(--color-text);
+    box-shadow: 0 20px 50px rgba(0,0,0,.75);
+    max-width: 32rem;
+    margin: auto;
+  }
+  .preview-dialog::backdrop {
+    background: rgba(0,0,0,.7);
+    backdrop-filter: blur(4px);
+  }
+  .preview-dialog__form {
+    padding: 1.8rem;
+  }
+  .preview-dialog__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .preview-dialog__status {
+    color: var(--color-accent-bright);
+    font: 700 .68rem/1 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .preview-dialog__close {
+    background: none;
+    border: none;
+    color: var(--color-text-subtle);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: .2rem .4rem;
+  }
+  .preview-dialog__close:hover {
+    color: var(--color-text);
+  }
+  .preview-dialog__title {
+    margin: 0 0 .8rem;
+    font-size: 1.3rem;
+  }
+  .preview-dialog__body {
+    margin: 0 0 .8rem;
+    color: var(--color-text-muted);
+    font-size: .92rem;
+    line-height: 1.6;
+  }
+  .preview-dialog__actions {
+    display: flex;
+    gap: .8rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
+
+  .entitlement-faq {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .entitlement-faq__heading {
+    margin: 0 0 1.5rem;
+    font-size: 1.35rem;
+    letter-spacing: -.02em;
+  }
+  .faq-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.5rem;
+  }
+  .faq-item {
+    padding: 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(13,20,32,.5);
+  }
+  .faq-item__q {
+    margin: 0 0 .5rem;
+    font-size: 1rem;
+    color: var(--color-text);
+  }
+  .faq-item__a {
+    margin: 0;
+    font-size: .88rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 960px) {
+    .plans-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
