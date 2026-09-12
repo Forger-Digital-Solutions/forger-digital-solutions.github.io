@@ -105,37 +105,35 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
     await expect(freeCard.locator('.plan-card__price')).toHaveText('$0');
     await expect(freeCard.locator('a.plan-card__btn')).toContainText('Download Free Build');
 
-    // Verify Pro tier is preview and displays "Not yet published"
-    const proCard = page.locator('#plan-pro');
-    await expect(proCard).toBeVisible();
-    await expect(proCard.locator('.plan-card__price')).toHaveText('Not yet published');
-    const proBtn = proCard.locator('button.plan-preview-trigger');
-    await expect(proBtn).toBeVisible();
+    // Verify the expanded tier is in development and displays "Not yet published"
+    const expandedCard = page.locator('#plan-expanded');
+    await expect(expandedCard).toBeVisible();
+    await expect(expandedCard.locator('.plan-card__price')).toHaveText('Not yet published');
+    const expandedBtn = expandedCard.locator('button.plan-preview-trigger');
+    await expect(expandedBtn).toBeVisible();
 
-    // Trigger modal and verify fail-closed message
-    await proBtn.click();
+    // Trigger the informational dialog: no checkout exists, no payment accepted
+    await expandedBtn.click();
     const dialog = page.locator('#preview-dialog');
     await expect(dialog).toBeVisible();
-    await expect(dialog).toContainText('Private Verification in Progress');
-    await expect(dialog).toContainText('FDS does not accept live commercial payments');
+    await expect(dialog).toContainText('Expanded plans are in development');
+    await expect(dialog).toContainText('no checkout or');
+    await expect(dialog).toContainText('FDS has not');
 
     const dialogClose = dialog.locator('button.preview-dialog__close');
     await dialogClose.click();
   });
 
-  test('F. Upgrade Portal Redirect Statuses (Success & Canceled)', async ({ page }) => {
-    // Test ?status=success
+  test('F. No checkout states exist anywhere on the plans portal', async ({ page }) => {
+    // The obsolete pretend-checkout flow ("?status=success" entitlement banners)
+    // was removed: no payment is accepted on this site.
     await page.goto('/codeforge/upgrade?status=success');
-    const successBanner = page.locator('.status-banner--success');
-    await expect(successBanner).toBeVisible();
-    await expect(successBanner).toContainText('Verification In Progress');
-    await expect(successBanner).toContainText('desktop entitlements are never self-asserted');
-
-    // Test ?status=canceled
-    await page.goto('/codeforge/upgrade?status=canceled');
-    const cancelBanner = page.locator('.status-banner--canceled');
-    await expect(cancelBanner).toBeVisible();
-    await expect(cancelBanner).toContainText('Checkout Session Canceled');
+    await expect(page.locator('.status-banner--success')).toHaveCount(0);
+    await expect(page.locator('.status-banner--canceled')).toHaveCount(0);
+    const body = await page.locator('body').innerText();
+    expect(body).not.toContain('Checkout Session Received');
+    expect(body).not.toContain('Checkout Session Canceled');
+    expect(body).not.toContain('entitlement');
   });
 
   test('G. Accessibility (Axe Core) Audit', async ({ page }) => {
@@ -167,6 +165,9 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
   });
 
   test('H. Responsive Layout Across Viewports', async ({ page }) => {
+    // 15 full page navigations across five viewports: the default 30s budget
+    // only holds on an idle dev server, which parallel runs do not guarantee.
+    test.setTimeout(90_000);
     const viewports = [
       { width: 375, height: 667, name: 'mobile-portrait' },
       { width: 430, height: 932, name: 'large-mobile' },

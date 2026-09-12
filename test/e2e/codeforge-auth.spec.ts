@@ -11,7 +11,11 @@ test.describe('CodeForge GitHub identity entry point', () => {
     await expect(start).toBeVisible();
     const startUrl = new URL(await start.getAttribute('href')!);
     expect(startUrl.pathname).toBe('/v1/auth/browser/start');
-    expect(startUrl.searchParams.get('return')).toBe('https://forgerdigitalsolutions.com/codeforge/sign-in');
+    // The return target must always be same-origin with the page serving the
+    // button (production in prod, the dev server in dev) — the security
+    // property is that the cloud service can never redirect elsewhere.
+    const pageOrigin = new URL(page.url()).origin;
+    expect(startUrl.searchParams.get('return')).toBe(new URL('/codeforge/sign-in', pageOrigin).href);
     expect(await page.locator('body').textContent()).not.toMatch(/client_secret|access_token|gho_|ghp_/i);
 
     for (const [state, message] of [
