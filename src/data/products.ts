@@ -30,6 +30,8 @@ export interface Product {
   featured?: boolean;
   comingSoon?: boolean;
   videoUrl?: string;
+  /** Locally hosted poster frame shown before the visitor opts into the embed. */
+  videoPoster?: string;
 }
 
 /**
@@ -84,7 +86,8 @@ export const products: Product[] = [
     description:
       'Forger Engineering Maintenance Suite brings USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance into one technician application.',
     platform: ['Windows'],
-    videoUrl: 'https://www.youtube.com/embed/ILKWS2dNIrg',
+    videoUrl: 'https://www.youtube-nocookie.com/embed/ILKWS2dNIrg',
+    videoPoster: '/images/forgerems/forgerems-preview-poster.jpg',
     featured: true,
   }),
 ];

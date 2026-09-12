@@ -40,16 +40,42 @@ const statusLabel = {
 
   {product.videoUrl && (
     <>
-      <div class="product-card__video">
-        <iframe
-          src={product.videoUrl}
-          title={`${product.name} public preview video`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          loading="lazy"
-        ></iframe>
+      <div class="product-card__video" data-video-facade data-video-src={product.videoUrl}>
+        {product.videoPoster ? (
+          <button
+            type="button"
+            class="video-facade"
+            aria-label={`Play video: ${product.name} public preview`}
+            data-video-title={`${product.name} public preview video`}
+          >
+            <img
+              src={product.videoPoster}
+              alt=""
+              width="1280"
+              height="720"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="video-facade__scrim" aria-hidden="true"></span>
+            <span class="video-facade__play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"></path></svg>
+            </span>
+            <span class="video-facade__meta" aria-hidden="true">
+              <span class="video-facade__title">{product.name} — public preview</span>
+              <span class="video-facade__source">Video · loads from YouTube on play</span>
+            </span>
+          </button>
+        ) : (
+          <iframe
+            src={product.videoUrl}
+            title={`${product.name} public preview video`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        )}
       </div>
-      <p class="product-card__visual-note">Public preview video; this is the current product evidence for the prerelease build.</p>
+      <p class="product-card__visual-note">Public preview video; this is the current product evidence for the prerelease build. The embed loads only after you choose to play it.</p>
     </>
   )}
 
@@ -74,7 +100,31 @@ const statusLabel = {
     {product.docsUrl && <a href={product.docsUrl} class="text-link">Documentation <span aria-hidden="true">→</span></a>}
     {product.releaseNotesUrl && <a href={product.releaseNotesUrl} class="text-link">Release Notes <span aria-hidden="true">→</span></a>}
   </div>
-</article>
+  </article>
+
+<script>
+  // Video facade: the third-party embed loads only when the visitor presses
+  // play — better first paint, and no Google requests before that choice.
+  // The click is the play gesture, so the loaded player starts with the video
+  // the visitor asked for; nothing plays on its own.
+  const installFacades = (root: Document | Element) => {
+    root.querySelectorAll('[data-video-facade]').forEach((wrapper) => {
+      const button = wrapper.querySelector('button');
+      if (!button) return;
+      button.addEventListener('click', () => {
+        const src = wrapper.getAttribute('data-video-src');
+        if (!src) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+        iframe.title = button.getAttribute('data-video-title') || 'Product video';
+        iframe.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute('allowfullscreen', '');
+        wrapper.replaceChildren(iframe);
+      }, { once: true });
+    });
+  };
+  installFacades(document);
+</script>
 
 <style>
   .product-card {
@@ -196,11 +246,83 @@ const statusLabel = {
     background: #000;
     box-shadow: var(--shadow-sm);
   }
-  .product-card__video iframe {
+  /* The play-time iframe is created at runtime, so it never carries Astro's
+     scoped attribute — style it through a global selector. */
+  .product-card__video :global(iframe) {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
     border: 0;
+  }
+  .video-facade {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: #000;
+    cursor: pointer;
+  }
+  .video-facade img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .video-facade__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(4,8,16,.06) 40%, rgba(4,8,16,.72));
+    transition: background .2s ease;
+  }
+  .video-facade:hover .video-facade__scrim,
+  .video-facade:focus-visible .video-facade__scrim { background: linear-gradient(180deg, rgba(4,8,16,.02) 30%, rgba(4,8,16,.8)); }
+  .video-facade__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(214,233,255,.85);
+    border-radius: 50%;
+    background: rgba(12,26,54,.78);
+    color: #eaf2ff;
+    box-shadow: 0 0 22px rgba(47,107,255,.55);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .video-facade:hover .video-facade__play,
+  .video-facade:focus-visible .video-facade__play { transform: translate(-50%, -50%) scale(1.07); background: rgba(23,52,110,.9); }
+  .video-facade__play svg { margin-left: .14rem; }
+  .video-facade__meta {
+    position: absolute;
+    left: .8rem;
+    bottom: .7rem;
+    display: grid;
+    gap: .18rem;
+    text-align: left;
+  }
+  .video-facade__title {
+    color: #f2f6fc;
+    font: 800 .82rem/1.25 var(--font-sans);
+    letter-spacing: .01em;
+    text-shadow: 0 1px 6px rgba(0,0,0,.7);
+  }
+  .video-facade__source {
+    color: rgba(226,236,250,.82);
+    font: 650 .62rem/1.3 var(--font-mono);
+    letter-spacing: .05em;
+  }
+  .video-facade:focus-visible {
+    outline: 2px solid var(--color-accent-bright);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .video-facade__scrim, .video-facade__play { transition: none; }
+    .video-facade:hover .video-facade__play { transform: translate(-50%, -50%); }
   }
   .product-card__visual-note {
     margin: -.2rem 0 0;
