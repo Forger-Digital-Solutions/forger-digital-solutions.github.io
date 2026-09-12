@@ -48,16 +48,16 @@ const latestNotes = (await getPublishedNotes()).slice(0, 3);
     </ul>
   </section>
 
-  <section class="page-section page-section--surface ecosystem-section">
-    <OneFDSEcosystem />
-  </section>
-
   <section class="page-section" aria-labelledby="codeforge-title">
     <SectionHeader eyebrow="Flagship Product" title="CodeForge engineers software" description="A released free-first autonomous engineering platform: it inspects repositories, plans work, edits code through controlled tools, runs checks, and reviews the result — while active development continues on the next generation of its routing and efficiency systems." />
     {codeForge && <ProjectCard project={codeForge} featured={true} />}
   </section>
 
   <GemsStory />
+
+  <section class="page-section page-section--surface ecosystem-section">
+    <OneFDSEcosystem />
+  </section>
 
   <section class="page-section page-section--surface" aria-labelledby="forge-title">
     <SectionHeader eyebrow="In Development" title="Specialized products in development" description="Each project has a concrete job; status labels separate research, private work, prerelease software, and released products." />
