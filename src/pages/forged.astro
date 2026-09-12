@@ -1,22 +1,64 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { products, featuredProducts } from '../data/products';
+import { productManifest } from '../data/manifest';
 import ProductCard from '../components/ProductCard.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 
 const hasProducts = products.length > 0;
 const hasFeatured = featuredProducts.length > 0;
+
+const formatSize = (bytes: number): string => {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes >= 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${bytes} B`;
+};
+
+/** Published project archives: only entries whose real artifact exists. */
+const publishedArchives = productManifest
+  .filter((entry) => entry.archive.available && entry.archive.url && entry.archive.sha256)
+  .map((entry) => ({
+    project: entry.name,
+    filename: entry.archive.filename!,
+    url: entry.archive.url!,
+    sha256: entry.archive.sha256!,
+    sizeBytes: entry.archive.sizeBytes!,
+    sourceCommit: entry.archive.sourceCommit,
+    sourceRef: entry.archive.sourceRef,
+    packageVersion: entry.version,
+  }));
+const hasArchives = publishedArchives.length > 0;
+
+/**
+ * Projects without a public source archive. No fake disabled download cards:
+ * each unpublished project is listed once with the policy reason it is not
+ * distributed.
+ */
+const archiveStatusLabels: Record<string, string> = {
+  'not-published': 'Not Published',
+  private: 'Private',
+  'not-applicable': 'Not Applicable',
+};
+const unpublishedArchives = productManifest
+  .filter((entry) => !entry.archive.available)
+  .map((entry) => ({
+    project: entry.name,
+    projectUrl: entry.projectUrl,
+    status: entry.archive.status,
+    statusLabel: archiveStatusLabels[entry.archive.status] ?? 'Not Published',
+    policy: entry.archive.policy ?? 'Source archive not publicly distributed.',
+  }));
 ---
 
 <BaseLayout
-  title="Forged"
-  description="Forged is the public shelf for FDS software that can be downloaded, tested, or used now."
+  title="Forged — Releases & Downloads"
+  description="Public FDS software, project packages, and verified release artifacts, with SHA-256 checksums for every project archive."
 >
   <section class="page-section" aria-labelledby="forged-title">
     <SectionHeader
       eyebrow="Forged"
-      title="Software you can use now"
-      description="Forged is the public shelf for FDS software that has reached a downloadable or usable release. A product can appear here and still remain under active development."
+      title="Releases & Downloads"
+      description="Public FDS software, project packages, and verified release artifacts. A product can appear here and still remain under active development."
       align="center"
       headingLevel="h1"
     />
@@ -31,8 +73,13 @@ const hasFeatured = featuredProducts.length > 0;
       <span class="distribution-badge">
         <span class="distribution-badge__check" aria-hidden="true">✓</span> Standalone Windows Binaries
       </span>
+      <span class="distribution-badge">
+        <span class="distribution-badge__check" aria-hidden="true">✓</span> SHA-256 Checksums Published
+      </span>
     </div>
 
+    <h2 class="forged-shelf-title">Application downloads</h2>
+    <p class="forged-shelf-note">Ready-to-run software for end users. Installers and portable builds are published through GitHub Releases.</p>
     {hasFeatured && (
       <div class="forged-featured">
         {featuredProducts.map((product) => (
@@ -57,13 +104,143 @@ const hasFeatured = featuredProducts.length > 0;
           In the meantime, explore the projects in the Forge or read the latest engineering notes.
         </p>
         <div class="forged-empty__actions">
-          <a href="/projects" class="btn btn-primary">Explore Projects</a>
+          <a href="/projects" class="btn btn-primary">Explore Products</a>
           <a href="/notes" class="btn btn-outline">Read Notes</a>
         </div>
       </div>
     )}
+
+    <h2 class="forged-shelf-title forged-shelf-title--archives">Project archives</h2>
+    <p class="forged-shelf-note">
+      Source/project snapshots are published as <code>.zip</code> archives only. Each archive's
+      <strong>Archive SHA-256</strong> is computed from the exact downloadable file; the source commit is listed
+      separately. Project archives are not installers — use the application downloads above for ready-to-run builds.
+    </p>
+
+    {hasArchives ? (
+      <div class="archive-grid">
+        {publishedArchives.map((archive) => (
+          <article class="archive-card" data-archive-filename={archive.filename}>
+            <header class="archive-card__head">
+              <p class="archive-card__eyebrow">PROJECT ARCHIVE</p>
+              <h3 class="archive-card__name">{archive.project}</h3>
+              <p class="archive-card__kind">Source/project snapshot (.zip)</p>
+            </header>
+            <dl class="archive-card__meta">
+              {archive.packageVersion && (
+                <div class="archive-card__row"><dt>Package version</dt><dd>{archive.packageVersion}</dd></div>
+              )}
+              {archive.sourceCommit && (
+                <div class="archive-card__row">
+                  <dt>Source commit</dt>
+                  <dd><code class="archive-card__commit">{archive.sourceCommit}</code></dd>
+                </div>
+              )}
+              <div class="archive-card__row"><dt>File</dt><dd>{archive.filename}</dd></div>
+              <div class="archive-card__row"><dt>Size</dt><dd>{formatSize(archive.sizeBytes)}</dd></div>
+            </dl>
+            <div class="archive-card__checksum">
+              <p class="archive-card__checksum-label">Archive SHA-256</p>
+              <code class="archive-card__sha" id={`sha-${archive.filename}`}>{archive.sha256}</code>
+            </div>
+            <div class="archive-card__actions">
+              <a href={archive.url} class="btn btn-primary" download>Download ZIP</a>
+              <button
+                type="button"
+                class="btn btn-outline archive-copy"
+                data-copy-sha={archive.sha256}
+                aria-label={`Copy SHA-256 checksum for ${archive.project} source archive`}
+              >Copy SHA-256</button>
+            </div>
+            <p class="archive-card__verify">
+              Verify after download: <code>certutil -hashfile {archive.filename} SHA256</code> (Windows) or
+              <code>shasum -a 256 {archive.filename}</code> (macOS/Linux) and compare with the checksum above.
+            </p>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <div class="forged-empty">
+        <p class="forged-empty__title">No project archives published yet</p>
+        <p class="forged-empty__desc">
+          Source archives are published per project as they are prepared and verified. Application downloads above
+          remain available now.
+        </p>
+      </div>
+    )}
+
+    <p class="forged-archive-note">
+      Private projects are never packaged for download, and no archive is published until its checksum has been
+      verified against the actual artifact.
+    </p>
+
+    <section class="archive-status" aria-labelledby="archive-status-title">
+      <h3 class="archive-status__title" id="archive-status-title">Archive status by project</h3>
+      <table class="archive-status__table">
+        <caption class="sr-only">
+          Projects without a public source archive and the reason each archive is not distributed
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Project</th>
+            <th scope="col">Archive status</th>
+            <th scope="col">Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          {unpublishedArchives.map((item) => (
+            <tr>
+              <td data-label="Project">
+                {item.projectUrl ? <a href={item.projectUrl}>{item.project}</a> : item.project}
+              </td>
+              <td data-label="Archive status">
+                <span class={`archive-status__pill archive-status__pill--${item.status}`}>{item.statusLabel}</span>
+              </td>
+              <td data-label="Reason">{item.policy}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.archive-copy').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const sha = button.getAttribute('data-copy-sha') || '';
+        let copied = false;
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(sha);
+            copied = true;
+          } catch {
+            copied = false;
+          }
+        }
+        if (!copied) {
+          const helper = document.createElement('textarea');
+          helper.value = sha;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'absolute';
+          helper.style.left = '-9999px';
+          document.body.appendChild(helper);
+          helper.select();
+          try { copied = document.execCommand('copy'); } catch { copied = false; }
+          document.body.removeChild(helper);
+        }
+        const original = button.textContent;
+        button.textContent = copied ? 'Copied ✓' : 'Copy failed';
+        button.disabled = true;
+        setTimeout(() => {
+          button.textContent = original;
+          button.disabled = false;
+        }, 2000);
+      });
+    });
+  });
+</script>
 
 <style>
   .distribution-badges {
@@ -89,15 +266,42 @@ const hasFeatured = featuredProducts.length > 0;
     color: var(--color-accent-bright);
     font-weight: 700;
   }
+
+  .forged-shelf-title {
+    margin: 2.5rem 0 .4rem;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    letter-spacing: -.02em;
+  }
+  .forged-shelf-title--archives {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .forged-shelf-note {
+    max-width: 46rem;
+    margin: 0 0 1.4rem;
+    color: var(--color-text-muted);
+    font-size: .93rem;
+    line-height: 1.7;
+  }
+  .forged-shelf-note code {
+    padding: .05rem .35rem;
+    border: 1px solid var(--color-border);
+    border-radius: .3rem;
+    background: rgba(4,8,15,.8);
+    font-size: .84em;
+  }
+
   .forged-featured {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
   }
   .forged-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
     gap: 1rem;
   }
   .forged-empty {
@@ -127,10 +331,242 @@ const hasFeatured = featuredProducts.length > 0;
     gap: .8rem;
     justify-content: center;
   }
+
+  /* Project archive cards: .zip only, full checksum always readable. */
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+    gap: 1rem;
+  }
+  .archive-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.4rem;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(150deg, rgba(14,22,35,.96), rgba(8,13,22,.96));
+    box-shadow: var(--shadow-sm);
+  }
+  .archive-card__eyebrow {
+    margin: 0 0 .5rem;
+    color: var(--color-accent-bright);
+    font: 700 .64rem/1 var(--font-mono);
+    letter-spacing: .16em;
+  }
+  .archive-card__name {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1.25rem;
+    letter-spacing: -.02em;
+  }
+  .archive-card__kind {
+    margin: .25rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: .84rem;
+  }
+  .archive-card__meta {
+    display: grid;
+    gap: .35rem;
+    margin: 1rem 0 0;
+  }
+  .archive-card__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem .8rem;
+    align-items: baseline;
+  }
+  .archive-card__row dt {
+    flex: 0 0 8.5rem;
+    color: var(--color-text-subtle);
+    font: 650 .66rem/1.5 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .archive-card__row dd {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .88rem;
+    overflow-wrap: anywhere;
+  }
+  .archive-card__commit {
+    padding: .05rem .35rem;
+    border: 1px solid var(--color-border);
+    border-radius: .3rem;
+    background: rgba(4,8,15,.8);
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    overflow-wrap: anywhere;
+  }
+  .archive-card__checksum {
+    margin-top: 1.1rem;
+    padding: .8rem .9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(4,8,15,.85);
+  }
+  .archive-card__checksum-label {
+    margin: 0 0 .35rem;
+    color: var(--color-text-subtle);
+    font: 700 .62rem/1 var(--font-mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .archive-card__sha {
+    display: block;
+    color: #a8ccff;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    line-height: 1.6;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+  .archive-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem;
+    margin-top: 1.1rem;
+  }
+  .archive-card__actions .btn {
+    flex: 1 1 9rem;
+    justify-content: center;
+    text-align: center;
+  }
+  .archive-card__verify {
+    margin: 1rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: .78rem;
+    line-height: 1.7;
+  }
+  .archive-card__verify code {
+    padding: .05rem .3rem;
+    border: 1px solid var(--color-border);
+    border-radius: .3rem;
+    background: rgba(4,8,15,.8);
+    font-size: .92em;
+    overflow-wrap: anywhere;
+  }
+  .forged-archive-note {
+    max-width: 46rem;
+    margin: 1.6rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: .82rem;
+    line-height: 1.7;
+  }
+
+  /* Explanatory status table for projects without a public source archive. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .archive-status {
+    max-width: 52rem;
+    margin: 2.6rem auto 0;
+    padding: 1.4rem 1.4rem 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: rgba(7,12,20,.72);
+  }
+  .archive-status__title {
+    margin: 0 0 .9rem;
+    color: var(--color-text-muted);
+    font-size: .95rem;
+    letter-spacing: -.01em;
+  }
+  .archive-status__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  .archive-status__table th {
+    padding: .45rem .7rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font: 700 .64rem/1.4 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .archive-status__table td {
+    padding: .55rem .7rem;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    color: var(--color-text-muted);
+    font-size: .84rem;
+    line-height: 1.55;
+    vertical-align: top;
+  }
+  .archive-status__table tr:last-child td {
+    border-bottom: none;
+  }
+  .archive-status__table a {
+    color: var(--color-text);
+    text-decoration-color: rgba(120,160,255,.5);
+  }
+  .archive-status__pill {
+    display: inline-block;
+    padding: .18rem .55rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font: 650 .66rem/1.3 var(--font-mono);
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+  .archive-status__pill--private {
+    border-color: rgba(255,120,120,.35);
+    color: #ffb3b3;
+  }
+  .archive-status__pill--not-published {
+    border-color: rgba(255,205,110,.35);
+    color: #ffdda6;
+  }
+  .archive-status__pill--not-applicable {
+    color: var(--color-text-subtle);
+  }
+
   @media (max-width: 760px) {
     .forged-featured,
-    .forged-grid {
+    .forged-grid,
+    .archive-grid {
       grid-template-columns: 1fr;
+    }
+    .archive-status {
+      padding: 1.1rem .9rem;
+    }
+    .archive-status__table,
+    .archive-status__table tbody,
+    .archive-status__table tr,
+    .archive-status__table td {
+      display: block;
+    }
+    .archive-status__table thead {
+      display: none;
+    }
+    .archive-status__table tr {
+      padding: .6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .archive-status__table tr:last-child {
+      border-bottom: none;
+    }
+    .archive-status__table td {
+      padding: .15rem 0;
+    }
+    .archive-status__table td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: .1rem;
+      color: var(--color-text-subtle);
+      font: 700 .6rem/1.4 var(--font-mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
     }
   }
 </style>

@@ -16,8 +16,8 @@ describe('FDS Software Distribution Architecture', () => {
     // New distribution portal section should guide users to /forged
     expect(homepage).toContain('class="distribution-portal"');
     expect(homepage).toContain('href="/forged"');
-    expect(homepage).toContain('Public Releases // Distribution');
-    expect(homepage).toContain('Open Forged Releases');
+    expect(homepage).toContain('Releases // Distribution');
+    expect(homepage).toContain('Open Releases');
   });
 
   it('validates truthful allowlisted products metadata', () => {
@@ -44,6 +44,9 @@ describe('FDS Software Distribution Architecture', () => {
     expect(forgedPage).toContain('Free-First Architecture');
     expect(forgedPage).toContain('Standalone Windows Binaries');
     expect(forgedPage).toContain('<ProductCard');
+    expect(forgedPage).toContain('Application downloads');
+    expect(forgedPage).toContain('Project archives');
+    expect(forgedPage).toContain('SHA-256 Checksums Published');
   });
 
   it('separates download action from commercial upgrade action in ProductCard', () => {
