@@ -1298,15 +1298,8 @@ function systemsConceptAnswer(query: string): CanonicalAnswer | undefined {
     };
   }
 
-  if (/\bsha[\s-]?256\b|\bchecksum/.test(q)) {
-    return {
-      text: 'Every project archive on the Releases page displays its full Archive SHA-256, and the source commit is listed separately from the file checksum. After downloading, run certutil -hashfile FILENAME SHA256 on Windows or shasum -a 256 FILENAME on macOS and Linux, then compare the value with the checksum shown on the site before trusting the archive. A Copy SHA-256 button gives you the exact value to compare.',
-      actions: [{ type: 'OPEN_FORGED', label: 'Open Releases', href: '/forged' }],
-      sources: ['forged-page'],
-      intent: 'navigation',
-      settled: true
-    };
-  }
+  const integrity = archiveIntegrityAnswer(query);
+  if (integrity) return integrity;
 
   if (/\barchives?\b/.test(q)) {
     return {
@@ -1314,6 +1307,38 @@ function systemsConceptAnswer(query: string): CanonicalAnswer | undefined {
       actions: [{ type: 'OPEN_FORGED', label: 'Open Releases', href: '/forged' }],
       sources: ['forged-page'],
       intent: 'availability',
+      settled: true
+    };
+  }
+
+  return undefined;
+}
+
+/**
+ * Archive-integrity intent. Visitors reach for this concept in many words —
+ * "SHA-256", "checksum", "hash", "is this ZIP legit", "did the file change" —
+ * and retrieval resolves several of those shapes to an unrelated project or
+ * company card. Match the verification intent on shape and serve the one
+ * canonical integrity walkthrough. Exported so the conversation layer can
+ * claim the turn before clarification ("…this ZIP is legit?" names no
+ * project) or an entity card ("hash for the CodeForge ZIP?") intercepts it.
+ * The changed/modified family requires a concrete download artifact so
+ * changelog questions ("what changed in the latest release?") keep routing
+ * to release history.
+ */
+export function archiveIntegrityAnswer(query: string): CanonicalAnswer | undefined {
+  const q = normalize(query);
+  const integrityNoun = /\bsha[\s-]?256\b|\b(checksums?|hash(es)?|digests?|integrity)\b/.test(q);
+  const verification = /\b(verif\w*|validat\w*|confirm\w*|compar\w*|check\w*)\b/.test(q);
+  const suspicion = /\b(legit|authentic\w*|genuine|tamper\w*|altered|unmodified|intact|match\w*)\b/.test(q);
+  const changed = /\b(changed|modified)\b/.test(q);
+  const downloadArtifact = /\b(zips?|archiv\w+|downloads?|files?|installers?)\b/.test(q);
+  if (integrityNoun || ((verification || suspicion || changed) && downloadArtifact)) {
+    return {
+      text: 'Every project archive on the Releases page shows its full Archive SHA-256. To verify a download: get the ZIP, then compute the checksum locally with certutil -hashfile FILENAME SHA256 (Windows) or shasum -a 256 FILENAME (macOS/Linux), and compare the full 64-character digest against the published value — the Copy SHA-256 button gives you the exact bytes to compare. An exact match is an integrity pass: matching the published digest verifies that your downloaded bytes match the archive FDS published. The source commit listed beside the archive is the provenance record — a SHA-256 confirms the bytes, not who authored them.',
+      actions: [{ type: 'OPEN_FORGED', label: 'Open Releases', href: '/forged' }],
+      sources: ['forged-page'],
+      intent: 'navigation',
       settled: true
     };
   }

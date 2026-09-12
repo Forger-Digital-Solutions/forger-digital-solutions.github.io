@@ -5453,6 +5453,331 @@
     "professional",
     "studio"
    ]
+  },
+  {
+   "id": "t2-r4-arc-01",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I check the checksum?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-02",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I verify the CodeForge ZIP?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": [
+    "KyraBlox",
+    "Kayla AI Publisher"
+   ]
+  },
+  {
+   "id": "t2-r4-arc-03",
+   "tier": 2,
+   "category": "archives",
+   "question": "How can I tell if the archive changed?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "compare",
+     "64-character",
+     "exact"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-04",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I validate a downloaded project archive?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-05",
+   "tier": 2,
+   "category": "archives",
+   "question": "Is there a hash for the CodeForge source ZIP?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum",
+     "hash"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": [
+    "KyraBlox"
+   ]
+  },
+  {
+   "id": "t2-r4-arc-06",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I know the ZIP matches what FDS published?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "compare",
+     "64-character",
+     "exact"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-07",
+   "tier": 2,
+   "category": "archives",
+   "question": "What's the checksum for the CodeForge archive?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-08",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I verify a project download?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": [
+    "Kayla AI Publisher"
+   ]
+  },
+  {
+   "id": "t2-r4-arc-09",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I check file integrity?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": [
+    "KyraBlox"
+   ]
+  },
+  {
+   "id": "t2-r4-arc-10",
+   "tier": 2,
+   "category": "archives",
+   "question": "How can I verify the checksum of the project download?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-11",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I check that this ZIP is legit?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "compare",
+     "64-character",
+     "exact"
+    ]
+   ],
+   "forbid": [
+    "I don't have a project in context"
+   ]
+  },
+  {
+   "id": "t2-r4-arc-12",
+   "tier": 2,
+   "category": "archives",
+   "question": "Is this download authentic?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "compare",
+     "64-character",
+     "exact"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-13",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I know the file was not changed?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "compare",
+     "64-character",
+     "exact"
+    ]
+   ],
+   "forbid": [
+    "KyraBlox"
+   ]
+  },
+  {
+   "id": "t2-r4-arc-14",
+   "tier": 2,
+   "category": "archives",
+   "question": "How do I compare the checksum?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-15",
+   "tier": 2,
+   "category": "archives",
+   "question": "How can I verify the source archive?",
+   "require": [
+    [
+     "sha-256",
+     "sha256",
+     "checksum"
+    ],
+    [
+     "certutil",
+     "shasum",
+     "compare",
+     "64-character"
+    ]
+   ],
+   "forbid": []
+  },
+  {
+   "id": "t2-r4-arc-16",
+   "tier": 2,
+   "category": "archives",
+   "question": "Does the SHA-256 tell me who made the file?",
+   "require": [
+    [
+     "bytes",
+     "not who authored",
+     "source commit"
+    ]
+   ],
+   "forbid": [
+    "proves who authored"
+   ]
   }
  ]
 }

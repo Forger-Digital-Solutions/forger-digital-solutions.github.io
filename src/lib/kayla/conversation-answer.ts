@@ -1,4 +1,4 @@
-import { canonicalAnswer, type CanonicalAnswer } from '../../data/kayla/answers';
+import { canonicalAnswer, archiveIntegrityAnswer, type CanonicalAnswer } from '../../data/kayla/answers';
 import { getKaylaEntity } from '../../data/kayla/entities';
 import { getCanonicalEntity } from '../../data/kayla/canonical-registry';
 import { projects } from '../../data/projects';
@@ -34,12 +34,21 @@ function relationshipCovers(answer: CanonicalAnswer | undefined, ids: string[]):
 
 /** Compose only public canonical records. History contributes relevance, never answer text. */
 export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult[] | undefined {
+  if (['private_info', 'external_current', 'unsupported_task', 'privacy', 'assistant_identity'].includes(c.intent)) return undefined;
+  // An archive-integrity question is about download verification, not about
+  // whichever project it happens to name. Claim the turn before clarification
+  // ("how do I check this ZIP is legit?" names no project) or an entity card
+  // ("is there a hash for the CodeForge ZIP?") can misroute it. Boundary
+  // intents above still win, and needsClarification is already false for
+  // them, so this order only moves integrity queries ahead of the ask-which-
+  // project prompt.
+  const integrity = archiveIntegrityAnswer(c.rawQuery);
+  if (integrity) return [{ ...result(integrity), settled: true }];
   if (c.needsClarification) return [local(c.candidates.length
     ? `Do you mean ${c.candidates.map(id => getKaylaEntity(id)?.name).join(' or ')}?`
     : "I don't have a project in context yet. Which FDS project do you mean?")];
   const q = c.resolvedQuery;
   const raw = c.rawQuery;
-  if (['private_info', 'external_current', 'unsupported_task', 'privacy', 'assistant_identity'].includes(c.intent)) return undefined;
   const ids = c.entities;
   const id = ids[0];
   const name = id ? getKaylaEntity(id)?.name : undefined;
