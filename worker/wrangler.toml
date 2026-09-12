@@ -8,7 +8,10 @@ workers_dev = true
 KAYLA_ENABLED = "true"
 KAYLA_PROVIDER = "openrouter"
 KAYLA_MODEL = "openrouter/free"
-KAYLA_ALLOWED_ORIGINS = "https://forger-digital-solutions.github.io"
+# Both production origins of the website: the Pages custom domain and the
+# github.io host. The custom domain must be listed or every Kayla request
+# from https://forgerdigitalsolutions.com is CORS-blocked.
+KAYLA_ALLOWED_ORIGINS = "https://forger-digital-solutions.github.io,https://forgerdigitalsolutions.com"
 KAYLA_RATE_LIMIT_PER_MINUTE = "5"
 KAYLA_RATE_LIMIT_PER_HOUR = "60"
 # Shared daily allowance for the zero-cost model lane. This is an abuse guard,
