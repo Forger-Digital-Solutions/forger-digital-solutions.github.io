@@ -1,13 +1,19 @@
 ---
 interface Props {
   src: string;
+  /**
+   * Optional narrow-viewport composition of the same diagram. Served through
+   * a <picture> source so wide compositions never shrink past readable text
+   * on phones — the mobile variant restructures the layout instead.
+   */
+  mobileSrc?: string;
   alt: string;
   caption: string;
   state?: 'release' | 'development' | 'research' | 'conceptual';
   eager?: boolean;
 }
 
-const { src, alt, caption, state = 'development', eager = false } = Astro.props;
+const { src, mobileSrc, alt, caption, state = 'development', eager = false } = Astro.props;
 const stateLabels = {
   release: 'Release capture',
   development: 'Current development build',
@@ -18,12 +24,15 @@ const stateLabels = {
 
 <figure class="visual-evidence" data-state={state}>
   <div class="visual-evidence__frame">
-    <img
-      src={src}
-      alt={alt}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding="async"
-    />
+    <picture>
+      {mobileSrc && <source srcset={mobileSrc} media="(max-width: 640px)" />}
+      <img
+        src={src}
+        alt={alt}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    </picture>
   </div>
   <figcaption class="visual-evidence__caption">
     <span class="visual-evidence__state">{stateLabels[state]}</span>

@@ -15,6 +15,8 @@ export interface ProjectSection {
 
 export interface ProjectImage {
   src: string;
+  /** Narrow-viewport composition of the same visual (optional). */
+  mobileSrc?: string;
   alt: string;
   caption?: string;
 }

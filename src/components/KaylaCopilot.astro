@@ -470,7 +470,13 @@
     }
     .kayla-launcher {
       right: 1rem;
-      bottom: 1rem;
+      /* env() keeps the launcher clear of the iOS/Android home-indicator bar;
+         the 0px fallback covers browsers without the variable. */
+      bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+      /* Slightly smaller resting footprint so bottom-of-page CTAs stay
+         readable around it; the tooltip is hidden at this width anyway. */
+      padding: .55rem .85rem;
+      font-size: .72rem;
     }
   }
 

@@ -16,6 +16,9 @@ export const visualAssets = {
   },
   gemsFamily: {
     src: '/images/gems/gems-training-grounds-family.svg',
+    // Vertical composition for phones: keeps label text readable instead of
+    // scaling the landscape diagram past legibility below ~640px.
+    mobileSrc: '/images/gems/gems-training-grounds-family-mobile.svg',
     alt: 'Diagram showing Training Grounds as the shared learning and evaluation program at the center, connected to four independent GEMS research lineages: Topaz, Sapphire, Peridot, and Garnet.',
     caption: 'GEMS learning architecture: one shared Training Grounds program, four independent research lineages.',
     state: 'conceptual' as const,

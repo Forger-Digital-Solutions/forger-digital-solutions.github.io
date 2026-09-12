@@ -203,6 +203,7 @@ const softwareSchema = releaseProduct ? {
     {project.heroImage ? (
       <VisualEvidence
         src={project.heroImage.src}
+        mobileSrc={project.heroImage.mobileSrc}
         alt={project.heroImage.alt}
         caption={project.heroImage.caption ?? ''}
         state={heroEvidenceState}
