@@ -1,0 +1,21 @@
+{
+  "archives": [
+    {
+      "id": "codeforge",
+      "label": "CodeForge Source Archive",
+      "filename": "CodeForge-source-6b0770b.zip",
+      "url": "/downloads/codeforge/CodeForge-source-6b0770b.zip",
+      "sha256": "a6e16d0056deebeeb8d8b99f7228f5fed43c380722e97012e45b26d5c6fe3208",
+      "sizeBytes": 2269934,
+      "sourceCommit": "6b0770b11aab9f71e40b5c953e24e68fabc58707",
+      "sourceRef": "HEAD",
+      "entryCount": 894,
+      "excludedEntries": [
+        ".env.example",
+        "certs/",
+        "certs/supabase-prod-ca-2021.crt"
+      ],
+      "generatedAt": "2026-09-12T13:55:04.253Z"
+    }
+  ]
+}

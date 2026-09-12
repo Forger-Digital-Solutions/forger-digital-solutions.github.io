@@ -233,13 +233,19 @@ function identityAnswer(entityId: string): CanonicalAnswer | undefined {
   const record = project(entityId);
   if (record) {
     const productRecord = productFor(entityId);
-    const availability = productRecord?.downloadUrl
-      ? ` It is publicly available${productRecord.version ? ` at ${productRecord.version}` : ''} and free.`
+    const downloadable = Boolean(productRecord?.downloadUrl && !productRecord.comingSoon);
+    const availability = downloadable
+      ? ` It is publicly available${productRecord?.version ? ` at ${productRecord.version}` : ''} and free — downloads and version history are hosted on GitHub Releases.`
       : ` ${statusSentence(entityId)}`;
     return {
       text: `${record.name} — ${record.summary}${availability}`,
       title: record.name,
-      actions: [projectPageAction(entityId)],
+      actions: [
+        ...(downloadable && productRecord?.downloadUrl
+          ? [{ type: 'OPEN_DOWNLOAD' as const, label: `Download ${record.name}`, href: productRecord.downloadUrl }]
+          : []),
+        projectPageAction(entityId),
+      ],
       sources: [`app-${entityId}`],
       intent: 'identity',
       entityId
@@ -709,6 +715,23 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
 const QUESTION_WORDS = new Set(['should', 'would', 'could', 'which', 'recommend', 'need', 'needs', 'help', 'helps', 'want', 'wants', 'project', 'projects', 'product', 'products', 'application', 'applications', 'software', 'tool', 'tools', 'thing', 'things', 'involves', 'involve', 'focused', 'focus', 'about', 'look', 'looking', 'start', 'started', 'best', 'good', 'anything', 'something', 'stuff', 'work', 'works', 'using', 'used', 'fit', 'fits', 'suited']);
 
 function recommendationAnswer(query: string): CanonicalAnswer | undefined {
+  const normalizedQuery = normalize(query);
+  // "Where should a developer start?" is a flagship question: the released
+  // developer product is the honest starting point, not a keyword-scored pick.
+  if (/\bstart\b/.test(normalizedQuery) && /\b(developer|programmer|coder|engineering)\b/.test(normalizedQuery)) {
+    const codeforge = project('codeforge');
+    const codeforgeProduct = productFor('codeforge');
+    return {
+      text: `Start with ${codeforge?.name || 'CodeForge'} — the flagship FDS product: a free-first autonomous software-engineering platform for Windows, CLI, and VS Code.${codeforgeProduct?.version ? ` It is released and free at ${codeforgeProduct.version}.` : ''} Downloads are on the Forged releases page. If you want the research side, GEMS / Training Grounds is the program to follow.`,
+      actions: [
+        ...(codeforgeProduct?.downloadUrl ? [{ type: 'OPEN_DOWNLOAD' as const, label: `Download ${codeforge?.name || 'CodeForge'}`, href: codeforgeProduct.downloadUrl }] : []),
+        { type: 'OPEN_FORGED' as const, label: 'See Released Software', href: '/forged' },
+      ],
+      sources: ['app-codeforge'],
+      intent: 'recommendation'
+    };
+  }
+
   const baseWords = distinctive(normalize(query)).filter((word) => !QUESTION_WORDS.has(word));
   if (baseWords.length === 0) {
     return {
@@ -1136,7 +1159,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   const hasSpecificNonGemProject = entityIds.some((id) => !id.startsWith(GEM_PREFIX) && id !== 'gems-training-grounds' && Boolean(project(id)));
   if (!hasSpecificNonGemProject && /\b(ai|gems|model)\b/i.test(text) && /\b(download|run|install)\b/i.test(text) && !/codeforge/i.test(text)) {
     return {
-      text: 'FDS AI research (GEMS) is from-scratch model research and evaluation — there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS. Projects still in development or research are not presented as downloads.',
+      text: 'FDS AI research (GEMS) is specialized model research and evaluation — there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS, and ForgerEMS has a public preview download. Current GEMS strategy builds on strong open or pretrained foundations where appropriate; fully from-scratch FDS-developed model development remains longer-term research.',
       actions: [
         { type: 'OPEN_FORGED', label: 'See Released Software', href: '/forged' },
         { type: 'OPEN_APP', label: 'Explore GEMS Research', href: '/projects/gems-training-grounds' }
@@ -1245,6 +1268,59 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
  * Deterministic answer for a query, or undefined when nothing canonical
  * applies and retrieval should take over.
  */
+/**
+ * CodeForge model-control systems and the release/archive surface are canonical
+ * concepts with fixed wording. Retrieval would describe them loosely and risk
+ * conflating systems the product documentation keeps deliberately distinct
+ * (ForgeAuto vs 8-Bit vs ForgeZero), or implying archive downloads are
+ * application installers. Matched on query shape, served settled.
+ */
+function systemsConceptAnswer(query: string): CanonicalAnswer | undefined {
+  const q = normalize(query);
+
+  if (/8[\s-]?bit|eight[\s-]?bit/.test(q)) {
+    return {
+      text: '8-Bit is CodeForge\'s dynamic model-routing and failover core, part of active development beyond the released v0.2.0 binary. When the preferred free-model route degrades — availability, quotas, or health change — 8-Bit stops sending it new work, selects a policy-eligible replacement, preserves runtime state, and records why the transition happened. It is routing authority only: it cannot grant filesystem or shell permissions, satisfy an approval, or cross the free/paid boundary. ForgeZero remains the fail-closed zero-cost boundary, and ForgeRouter still ranks the candidates.',
+      actions: [{ type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }],
+      sources: ['app-codeforge'],
+      intent: 'capability',
+      settled: true
+    };
+  }
+
+  if (/forge[\s-]?auto/.test(q)) {
+    return {
+      text: 'ForgeAuto is the automatic selection mode for CodeForge\'s free experience: instead of picking a model by hand, engineering work is routed across verified zero-cost cloud providers. Selection and fallback behavior come from the routing systems under active development — 8-Bit narrowing candidates with ForgeRouter ranking — always inside the ForgeZero boundary that refuses paid, local, and unverified routes.',
+      actions: [{ type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }],
+      sources: ['app-codeforge'],
+      intent: 'capability',
+      settled: true
+    };
+  }
+
+  if (/\bsha[\s-]?256\b|\bchecksum/.test(q)) {
+    return {
+      text: 'Every project archive on the Releases page displays its full Archive SHA-256, and the source commit is listed separately from the file checksum. After downloading, run certutil -hashfile FILENAME SHA256 on Windows or shasum -a 256 FILENAME on macOS and Linux, then compare the value with the checksum shown on the site before trusting the archive. A Copy SHA-256 button gives you the exact value to compare.',
+      actions: [{ type: 'OPEN_FORGED', label: 'Open Releases', href: '/forged' }],
+      sources: ['forged-page'],
+      intent: 'navigation',
+      settled: true
+    };
+  }
+
+  if (/\barchives?\b/.test(q)) {
+    return {
+      text: 'Project archives are published on the Releases page (Forged) as .zip files only. Each archive card shows the file name, size, source commit, and the full Archive SHA-256, with a Download ZIP button and a copy-checksum control. Project archives are source snapshots, not installers — ready-to-run application downloads are listed separately on the same page.',
+      actions: [{ type: 'OPEN_FORGED', label: 'Open Releases', href: '/forged' }],
+      sources: ['forged-page'],
+      intent: 'availability',
+      settled: true
+    };
+  }
+
+  return undefined;
+}
+
 export function canonicalAnswer(
   query: string,
   context?: KaylaPageContext,
@@ -1296,6 +1372,11 @@ export function canonicalAnswer(
   if (has('status_taxonomy')) return statusTaxonomyAnswer(query);
 
   if (has('assistant_identity')) return { ...assistantIdentityAnswer(query), settled: true };
+
+  // CodeForge systems concepts (8-Bit, ForgeAuto, ForgeZero) and the archive
+  // surface have fixed canonical wording — see systemsConceptAnswer above.
+  const systemsConcept = systemsConceptAnswer(query);
+  if (systemsConcept) return systemsConcept;
 
   // "Which GEMS are public?" is a question about the whole family and has one
   // canonical answer. It is matched on shape rather than intent because the

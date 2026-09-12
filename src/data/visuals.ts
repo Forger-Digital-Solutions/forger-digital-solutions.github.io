@@ -17,7 +17,7 @@ export const visualAssets = {
   gemsFamily: {
     src: '/images/gems/gems-training-grounds-family.svg',
     alt: 'Diagram showing Training Grounds as the shared learning and evaluation program at the center, connected to four independent GEMS research lineages: Topaz, Sapphire, Peridot, and Garnet.',
-    caption: 'GEMS learning architecture: one shared Training Grounds program, four independent from-scratch research lineages.',
+    caption: 'GEMS learning architecture: one shared Training Grounds program, four independent research lineages.',
     state: 'conceptual' as const,
   },
   trainingGrounds: {

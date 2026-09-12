@@ -5,10 +5,11 @@ date: 2026-09-02
 category: "Research"
 projectSlug: "gems-training-grounds"
 tags: ["GEMS", "Training Grounds", "Historical", "Evaluation"]
+state: "superseded"
 draft: false
 ---
 
-**Historical note (2026-09-05):** This entry documents Phase 158 Generation 0 research, which explored starting GEMS from strong open pretrained foundations. That foundation-selection strategy has since been superseded: GEMS / Training Grounds is now pursued as a from-scratch model research program, and pretrained-foundation specialization work has moved to a separate, not-yet-publicly-named project. The research below is preserved as a historical record and no longer describes current GEMS architecture.
+**Historical note (2026-09-05, updated 2026-09-12):** This entry documents Phase 158 Generation 0 research, which explored starting GEMS from strong open pretrained foundations. Foundation strategy has continued to evolve since publication: current GEMS work builds on strong open or pretrained foundations where a role benefits from them, while fully from-scratch FDS-developed model development remains longer-term research. The research below is preserved as a historical record and no longer describes current GEMS architecture.
 
 ![Archived Phase 158 Generation 0 foundation-strategy diagram — a superseded research record, not the current GEMS architecture.](/images/gems/gems-phase158-generation0-family.svg)
 

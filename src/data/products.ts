@@ -1,5 +1,6 @@
 import type { ProjectImage } from '../types';
 import { visualAssets } from './visuals';
+import { manifestById, canonicalStatusLabels, type CanonicalStatus } from './manifest';
 
 export type ProductPricingModel = 'released' | 'free' | 'paid' | 'donation' | 'coming-soon' | 'private-beta' | 'public-beta' | 'unavailable';
 
@@ -31,42 +32,63 @@ export interface Product {
   videoUrl?: string;
 }
 
+/**
+ * Shelf products are derived from the canonical product manifest so names,
+ * versions, taglines, and download routes can never drift between pages.
+ */
+const productPricingByStatus: Record<CanonicalStatus, ProductPricingModel> = {
+  'public-release': 'released',
+  'public-preview': 'public-beta',
+  'active-development': 'coming-soon',
+  'active-ai-research': 'unavailable',
+  'private-development': 'private-beta',
+  concept: 'coming-soon',
+};
+
+const buildProduct = (
+  id: string,
+  { description, platform, ...overrides }: Partial<Product> & { description: string; platform: string[] }
+): Product => {
+  const entry = manifestById[id];
+  if (!entry) throw new Error(`manifest entry missing for product: ${id}`);
+  return {
+    name: entry.name,
+    slug: entry.id,
+    tagline: entry.tagline,
+    description,
+    category: entry.category,
+    platform,
+    status: productPricingByStatus[entry.canonicalStatus],
+    version: entry.version,
+    pricingModel: 'free',
+    projectSlug: entry.projectUrl?.replace('/projects/', ''),
+    downloadUrl: entry.releaseUrl,
+    docsUrl: entry.docsUrl,
+    featured: false,
+    comingSoon: false,
+    ...overrides,
+  };
+};
+
 export const products: Product[] = [
-  {
-    name: "CodeForge",
-    slug: "codeforge",
-    tagline: "Free-first autonomous software engineering for Windows.",
-    description: "CodeForge inspects repositories, plans engineering work, edits code through controlled tools, runs checks, and reviews the result. ForgeZero enforces verified zero-cost cloud routing with no silent paid or local-model fallback.",
-    category: "Developer Tool",
-    platform: ["Windows", "CLI", "VS Code"],
-    status: "released",
-    version: "v0.2.0",
-    pricingModel: "free",
-    projectSlug: "codeforge",
-    downloadUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest",
-    upgradeUrl: "/codeforge/upgrade",
-    docsUrl: "https://github.com/Forger-Digital-Solutions/CodeForge",
-    releaseNotesUrl: "https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0",
+  buildProduct('codeforge', {
+    description:
+      'CodeForge inspects repositories, plans engineering work, edits code through controlled tools, runs checks, and reviews the result. Dynamic routing selects only verified zero-cost cloud models, and ForgeZero fails closed instead of silently falling back to paid or local-model inference.',
+    platform: ['Windows', 'CLI', 'VS Code'],
+    upgradeUrl: '/codeforge/upgrade',
+    releaseNotesUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0',
     visual: visualAssets.codeforgeWorkspace,
     featured: true,
-    comingSoon: false,
-  },
-  {
-    name: "ForgerEMS",
-    slug: "forgerems",
-    tagline: "Windows technician workbench for diagnostics, repair, USB systems, and maintenance.",
-    description: "Forger Engineering Maintenance Suite brings USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance into one technician application.",
-    category: "Technician Workbench",
-    platform: ["Windows"],
-    status: "public-beta",
-    version: "v1.2.3-preview.1",
-    pricingModel: "free",
-    downloadUrl: "https://github.com/Forger-Digital-Solutions/ForgerEMS/releases",
-    docsUrl: "https://github.com/Forger-Digital-Solutions/ForgerEMS",
-    videoUrl: "https://www.youtube.com/embed/ILKWS2dNIrg",
+  }),
+  buildProduct('forgerems', {
+    description:
+      'Forger Engineering Maintenance Suite brings USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance into one technician application.',
+    platform: ['Windows'],
+    videoUrl: 'https://www.youtube.com/embed/ILKWS2dNIrg',
     featured: true,
-    comingSoon: false,
-  },
+  }),
 ];
+
+export const statusLabels = canonicalStatusLabels;
 
 export const featuredProducts = products.filter((p) => p.featured);

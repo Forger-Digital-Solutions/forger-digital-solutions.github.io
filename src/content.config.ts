@@ -15,6 +15,10 @@ const notes = defineCollection({
     projectSlug: string().optional(),
     // One of: Research, Development, Milestone, Release, Infrastructure, Website.
     category: string().optional(),
+    // Where the note stands in the current company story: current (default),
+    // research, historical, or superseded. Superseded/historical notes are kept
+    // for the record but must not dominate the current narrative.
+    state: string().default('current'),
   }),
 });
 

@@ -11,24 +11,28 @@ export interface GemEntry {
 }
 
 /**
- * Canonical "where are we now" snapshot for the GEMS program. GEMS is the
- * original, longer-horizon from-scratch model research effort; a separate,
- * not-yet-publicly-named project covers pretrained-foundation specialization
- * and is intentionally not represented here. Update these values here (not in
- * page copy) when the research state changes.
+ * Canonical "where are we now" snapshot for the GEMS program. GEMS is the FDS
+ * specialized-intelligence research program: a family of model lineages advanced
+ * through Training Grounds curriculum, post-training, evaluation, diagnosis,
+ * remediation, and controlled advancement. Current strategy builds on strong
+ * open or pretrained foundations where a role benefits from them; fully
+ * from-scratch FDS-developed model development remains longer-term research.
+ * Update these values here (not in page copy) when the research state changes.
  */
 export const gemsCurrentStatus = {
   generation: 'Research program',
-  phase: 'From-scratch model research — Training Grounds active',
+  phase: 'Specialized model research — Training Grounds active',
   publicModel: 'Not released',
   trainingStatus: 'Research in progress',
   lineages: 'Topaz · Sapphire · Peridot · Garnet'
 } as const;
 
 /**
- * Public-facing GEM family. Each lineage is developed from scratch through
- * Training Grounds curriculum, training, and evaluation — no lineage begins
- * from an acquired pretrained checkpoint.
+ * Public-facing GEM family. Lineages are developed through Training Grounds
+ * curriculum, post-training, and evaluation. Current strategy may begin from
+ * strong open or pretrained foundations where appropriate; fully from-scratch
+ * FDS-developed foundations remain longer-term research. No GEM is presented
+ * as a public production model.
  */
 export const gems: GemEntry[] = [
   {
@@ -39,7 +43,7 @@ export const gems: GemEntry[] = [
     direction:
       'Broad language, reasoning, planning, instruction following, and coordination across specialist systems.',
     researchStatus:
-      'No checkpoint has been trained or evaluated for Topaz. Curriculum and evaluation design for its generalist, orchestration-focused role is in early Training Grounds research.',
+      'Topaz is in early Training Grounds research: curriculum and evaluation design for its generalist, orchestration-focused role. No public release exists.',
     future:
       'Become the broadest GEMS generalist and orchestrate specialists where focused expertise is more useful than one model doing everything.',
     fit: 'The broad generalist in a family of independent lineages—not a shared base that every other GEM inherits.',
@@ -53,10 +57,10 @@ export const gems: GemEntry[] = [
     direction:
       'Code generation, repair, repository reasoning, navigation, testing, and structured engineering tool use.',
     researchStatus:
-      'No checkpoint has been trained or evaluated for Sapphire. Its software-engineering curriculum, repository-reasoning tasks, and evaluation design are in early Training Grounds research.',
+      'Sapphire has produced experimental research checkpoints evaluated through Training Grounds. Its software-engineering curriculum, repository-reasoning tasks, and evaluation design continue to develop.',
     future: 'Develop into the software-engineering specialist intended to support CodeForge-oriented research and other repository work.',
     fit: 'The coding specialist; its role is distinct from CodeForge, which is already a public engineering product.',
-    notClaimed: 'No trained Sapphire model exists, and no Sapphire capability is presented as shipping in CodeForge.'
+    notClaimed: 'Sapphire checkpoints are experimental research artifacts. No Sapphire model is presented as a public production model, and no Sapphire capability is presented as shipping in CodeForge.'
   },
   {
     key: 'peridot',
@@ -66,10 +70,10 @@ export const gems: GemEntry[] = [
     direction:
       'Mathematics, formal and quantitative reasoning, science, structured problem solving, and verifiable technical work.',
     researchStatus:
-      'No checkpoint has been trained or evaluated for Peridot. Its mathematics and technical-reasoning curriculum, with programmatic and formal verification, is in early Training Grounds research.',
+      'Peridot is in early Training Grounds research: mathematics and technical-reasoning curriculum with programmatic and formal verification.',
     future: 'Pursue correctness-first reasoning with programmatic, symbolic, and formal verification where appropriate.',
     fit: 'The quantitative specialist. Training Grounds—not Peridot itself—owns the shared evaluation and advancement discipline.',
-    notClaimed: 'No trained Peridot model, independently verified benchmark result, or production capability is claimed.'
+    notClaimed: 'No released Peridot model, independently verified benchmark result, or production capability is claimed.'
   },
   {
     key: 'garnet',
@@ -79,10 +83,10 @@ export const gems: GemEntry[] = [
     direction:
       'Document and visual understanding, publishing workflows, and multimodal production with separately evaluated components.',
     researchStatus:
-      'No checkpoint has been trained or evaluated for Garnet. Its document, vision, and publishing-oriented curriculum is in early Training Grounds research; image generation remains a separate, longer-term module direction with no committed approach yet.',
+      'Garnet is in early Training Grounds research across document, vision, and publishing-oriented curriculum. Image generation remains a separate, longer-term module direction with no committed approach yet.',
     future: 'Develop a multimodal system that can support document, vision, publishing, and image-generation workflows without conflating unlike model components.',
     fit: 'The multimodal specialist, with potential relevance to Kayla Publisher while remaining a separate research lineage and system.',
-    notClaimed: 'No trained Garnet model exists, and image generation is not claimed as a current Garnet capability.'
+    notClaimed: 'No released Garnet model exists, and image generation is not claimed as a current Garnet capability.'
   }
 ];
 
@@ -120,7 +124,7 @@ export const capabilityRoadmap: Capability[] = [
   { area: 'Knowledge retrieval', status: 'in-development', note: 'Grounded answers from provided sources.' },
   { area: 'Long-context understanding', status: 'long-term', note: 'Working across longer documents and sessions as models develop.' },
   { area: 'Game & world development', status: 'long-term', note: 'Assistance for interactive experiences, explored with KyraBlox.' },
-  { area: 'Document & visual understanding', status: 'in-development', note: "Garnet's from-scratch research across text, images, video, and documents; capability is not yet validated." },
+  { area: 'Document & visual understanding', status: 'in-development', note: "Garnet's research across text, images, video, and documents; capability is not yet validated." },
   { area: 'Image generation', status: 'long-term', note: 'A separate, longer-term Garnet module direction, with no committed approach yet.' },
   {
     area: 'Structured professional tasks',

@@ -410,7 +410,7 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     id: 'forgerems-product',
     type: 'app',
     title: 'ForgerEMS',
-    text: `${forgerems.name} ${forgerems.tagline} ${forgerems.description} Status: ${forgerems.status}`,
+    text: `${forgerems.name} ${forgerems.tagline} ${forgerems.description} Public preview builds are hosted on GitHub Releases. Status: ${forgerems.status}`,
     route: forgerems.url,
     entityId: 'forgerems',
     tags: ['forgerems', 'forger ems', 'ems', 'toolkit', 'ventoy', 'windows', 'download'],

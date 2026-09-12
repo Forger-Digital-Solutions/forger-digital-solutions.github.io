@@ -169,6 +169,9 @@ const RULES: IntentRule[] = [
       /\b(launch|release|availability) date\b/,
       /\b(download|get) (it|this|codeforge|forgerems|kyrablox|gems|topaz|sapphire|peridot|garnet)\b/,
       /\bwhere are the downloads?\b/,
+      // "Where are ForgerEMS downloads hosted?" names the product between the
+      // adverb and the noun — same availability question, same canonical answer.
+      /\bwhere are .{0,40}downloads?( hosted)?\b/,
       /\b(what|which)\s+downloads?\b/,
       /\bdownloads?\s+(are|can i|available|here)\b/,
       /\bcan i use it yet\b/,

@@ -20,13 +20,13 @@ export interface ProjectImage {
 }
 
 /** Maps projects to their corresponding ecosystem in the FDS solar system. */
-export type EcosystemCategory = 
+export type EcosystemCategory =
   | "Engineering"
-  | "Intelligence" 
-  | "Gaming" 
-  | "Publishing" 
-  | "Civic" 
-  | "Foraging";
+  | "Intelligence"
+  | "Gaming"
+  | "Publishing"
+  | "Civic"
+  | "Local Discovery";
 
 export interface Project {
   id: string;

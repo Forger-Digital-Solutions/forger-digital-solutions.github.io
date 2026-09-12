@@ -56,14 +56,21 @@ function authorityFor(id: string): string {
 
 /** Additional slot checks; this is deliberately not a claim of universal semantic verification. */
 export function verifyGroundedSlots(text: string, packet: GroundingPacket): { ok: boolean; kinds: string[] } {
+  const GENERIC_ENTITY_IDS = ['fds', 'projects', 'about', 'forged'];
   const kinds = new Set<string>();
   if (text.length > GROUNDING_BUDGET.answerChars) kinds.add('output_bound');
   if (/\b(grounding packet|system prompt|aiDailyUsed|requestSeq|worker version|daily budget|certification receipt)\b|[A-Z]:\\|sk-or-/i.test(text)) kinds.add('internal');
   if (isPromptInjectionAttempt(text)) kinds.add('instruction');
   let previous: string[] = [];
   for (const sentence of text.split(/(?<=[.!?])\s+|\n+/).filter(Boolean)) {
-    const explicit = matchEntities(sentence).map(m => m.entityId).filter(id => !['fds', 'projects', 'about', 'forged'].includes(id));
-    const ids = explicit.length ? explicit : previous.length ? previous : packet.entities;
+    const matched = matchEntities(sentence).map(m => m.entityId);
+    const explicit = matched.filter(id => !GENERIC_ENTITY_IDS.includes(id));
+    // A sentence that names only site-level pages (e.g. "Forged is the shelf …")
+    // makes a claim about the site itself. It must not inherit the previously
+    // named project's identity, or a page-level availability statement would be
+    // attributed to whatever project bullet happened to precede it.
+    const pageScoped = matched.length > 0 && explicit.length === 0;
+    const ids = explicit.length ? explicit : pageScoped ? [] : previous.length ? previous : packet.entities;
     if (explicit.length) previous = explicit;
     const authority = ids.map(authorityFor).join('\n');
     const negative = /\b(not|no|never|cannot|can't|isn't|aren't|hasn't|doesn't|won't|without|unknown|undocumented|unpublished)\b/i.test(sentence);

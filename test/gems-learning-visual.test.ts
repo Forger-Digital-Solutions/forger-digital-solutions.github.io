@@ -53,7 +53,7 @@ describe('GEMS learning-system visual (homepage)', () => {
   it('homepage section keeps heading, status strip, and CTA without a four-card grid', () => {
     expect(story).toContain('Four roles. One deliberate learning program.');
     expect(story).toContain('<GemsLearningSystem />');
-    expect(story).toContain('From-Scratch Research');
+    expect(story).toContain('Specialized Intelligence');
     expect(story).toContain('Training Grounds');
     expect(story).toContain('Held-Out Evaluation');
     expect(story).toContain('Advancement by Evidence');

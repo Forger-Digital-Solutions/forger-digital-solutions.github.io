@@ -11,7 +11,7 @@ describe('Kayla Canonical Knowledge Drift Detector', () => {
     expect(report.passed).toBe(true);
     expect(report.errors).toHaveLength(0);
     expect(report.inventory.entities).toBeGreaterThanOrEqual(14);
-    expect(report.inventory.projects).toBe(6);
+    expect(report.inventory.projects).toBe(7);
     expect(report.inventory.products).toBe(2);
     expect(report.inventory.gems).toBe(4);
     expect(report.knowledgeVersion).toHaveLength(16);

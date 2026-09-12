@@ -37,3 +37,8 @@ public/images/codeforge/codeforge-v0-2-workspace.png
 docs/kayla/archive/
 test-results/
 playwright-report/
+
+# Certification screenshot captures (scripts/capture-certification-shots.cjs).
+# Evidence artifacts, not website assets — kept local, never committed.
+shots/
+_archive-sources/

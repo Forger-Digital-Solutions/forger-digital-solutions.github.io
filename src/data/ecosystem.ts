@@ -1,8 +1,31 @@
+import { manifestById, canonicalStatusLabels, type CanonicalStatus, type ProductGroup } from './manifest';
+
 /**
- * Icon keys map 1:1 onto the FDS system sigil family
- * (src/components/icons/SystemSigil.astro).
+ * FDS ECOSYSTEM 2.0
+ *
+ * The ecosystem visualizes how FDS works: the FDS core at the center, with the
+ * company's projects arranged in four conceptual layers (build, intelligence,
+ * create, knowledge). Node facts (name, status, one-line purpose, href) are
+ * derived from the canonical product manifest so the map can never contradict
+ * the pages it links to.
+ *
+ * Orbit rules:
+ * - Every node owns one unique, fixed ellipse; nodes never drift or bounce.
+ * - Inner belts (Build) move faster; outer belts (Knowledge) move slower.
+ * - Motion is pure CSS offset-path and freezes at a configured position under
+ *   prefers-reduced-motion.
  */
-export type EcosystemIcon = 'intelligence' | 'forged' | 'publishing' | 'applications' | 'gaming' | 'foraging' | 'civic' | 'systems';
+
+export type EcosystemIcon =
+  | 'intelligence'
+  | 'forged'
+  | 'publishing'
+  | 'applications'
+  | 'gaming'
+  | 'foraging'
+  | 'civic'
+  | 'systems';
+
 export type LabelSide = 'left' | 'right';
 
 export interface EcosystemOrbit {
@@ -16,11 +39,26 @@ export interface EcosystemOrbit {
   path: string;
 }
 
-export interface EcosystemPlanet {
-  id: string;
+export interface EcosystemGroup {
+  id: ProductGroup;
   name: string;
-  subtitle: string;
+  short: string;
+  blurb: string;
+  color: string;
+}
+
+export interface EcosystemNode {
+  id: string;
+  manifestId: string;
+  name: string;
+  /** Short label rendered under the body on the orbital map. */
+  tag: string;
   href: string;
+  group: ProductGroup;
+  category: string;
+  status: CanonicalStatus;
+  statusLabel: string;
+  purpose: string;
   icon: EcosystemIcon;
   character: string;
   color: string;
@@ -81,132 +119,100 @@ const orbit = (
   opacity: number
 ): EcosystemOrbit => ({ rx, ry, rotation, duration, direction, start, opacity, path: buildEllipsePath(rx, ry, rotation) });
 
-/**
- * FDS Ecosystem Planets
- * 
- * Orbits are intentionally designed with varied geometries:
- * - Different rx/ry ratios create varied eccentricities
- * - Different rotations create diagonal, horizontal, and vertical paths
- * - Varied durations create natural orbital speed differences
- * - Inner orbits move faster, outer orbits move slower
- * - No paths spend significant portions overlapping near the center
- */
-export const ecosystemPlanets: EcosystemPlanet[] = [
-  // INNER ORBIT BELT - Faster, tighter paths around the core
-  { 
-    id: 'intelligence', 
-    name: 'INTELLIGENCE', 
-    subtitle: 'AI-DRIVEN INSIGHT', 
-    href: '/projects/gems-training-grounds', 
-    icon: 'intelligence',
-    character: '/images/ecosystem/8bit/intelligence-8bit.webp',
-    color: '#4f8fff', 
-    glow: '#1f63ff', 
-    size: 42, 
-    labelSide: 'left', 
-    // Long horizontal ellipse (most stretched), fastest inner orbit
-    orbit: orbit(295, 98, -18, 38, 'normal', 52, .48) 
-  },
-  { 
-    id: 'forged', 
-    name: 'FORGED', 
-    subtitle: 'PUBLIC SOFTWARE',
-    href: '/forged', 
-    icon: 'forged',
-    character: '/images/ecosystem/8bit/forged-8bit.webp',
-    color: '#c2d5f4', 
-    glow: '#77a8e9', 
-    size: 40, 
-    labelSide: 'left', 
-    // Short vertical ellipse, tilted counter-clockwise
-    orbit: orbit(128, 198, -72, 44, 'reverse', 78, .36) 
-  },
-  
-  // MIDDLE ORBIT BELT - Medium eccentricity, varied orientations
-  { 
-    id: 'publishing', 
-    name: 'PUBLISHING', 
-    subtitle: 'CREATIVE MEDIA', 
-    href: '/projects/kayla-ai-publisher', 
-    icon: 'publishing', 
-    character: '/images/ecosystem/8bit/publishing-8bit.webp',
-    color: '#b473ff', 
-    glow: '#7b3df0', 
-    size: 44, 
-    labelSide: 'right', 
-    // Tall diagonal ellipse, medium-fast
-    orbit: orbit(168, 262, 55, 56, 'normal', 12, .42) 
-  },
-  { 
-    id: 'applications', 
-    name: 'APPLICATIONS', 
-    subtitle: 'REAL-WORLD IMPACT', 
-    href: '/projects', 
-    icon: 'applications',
-    character: '/images/ecosystem/8bit/applications-8bit.webp',
-    color: '#61d7a1', 
-    glow: '#24a971', 
-    size: 45, 
-    labelSide: 'right', 
-    // Wide horizontal path, different tilt from intelligence
-    orbit: orbit(285, 135, 8, 62, 'normal', 88, .40) 
-  },
-  
-  // OUTER ORBIT BELT - Longer, slower, more eccentric paths
-  { 
-    id: 'gaming', 
-    name: 'GAMING', 
-    subtitle: 'GAME ENGINES', 
-    href: '/projects/kyrablox', 
-    icon: 'gaming', 
-    character: '/images/ecosystem/8bit/gaming-8bit.webp',
-    color: '#48c9f2', 
-    glow: '#1594c6', 
-    size: 43, 
-    labelSide: 'left', 
-    // Extreme diagonal ellipse reaching far corners
-    orbit: orbit(262, 188, -48, 68, 'reverse', 35, .32) 
-  },
-  { 
-    id: 'foraging', 
-    name: 'FORAGING', 
-    subtitle: 'LOCAL DISCOVERY', 
-    href: '/projects/farmstand-finder', 
-    icon: 'foraging', 
-    character: '/images/ecosystem/8bit/foraging-8bit.webp',
-    color: '#a8df64', 
-    glow: '#62a833', 
-    size: 45, 
-    labelSide: 'right', 
-    // Very tall vertical ellipse, reaches high and low
-    orbit: orbit(142, 285, 72, 74, 'normal', 25, .30) 
-  },
-  { 
-    id: 'civic', 
-    name: 'CIVIC', 
-    subtitle: 'COMMUNITY FIRST', 
-    href: '/projects/we-the-people', 
-    icon: 'civic', 
-    character: '/images/ecosystem/8bit/civic-8bit.webp',
-    color: '#f0a052', 
-    glow: '#d06b24', 
-    size: 43, 
-    labelSide: 'right', 
-    // Large wide ellipse, slower outer orbit
-    orbit: orbit(305, 198, 22, 82, 'reverse', 68, .26) 
-  },
-  { 
-    id: 'systems', 
-    name: 'SYSTEMS', 
-    subtitle: 'FOUNDATION LAYER', 
-    href: '/technology', 
-    icon: 'systems', 
-    character: '/images/ecosystem/8bit/systems-8bit.webp',
-    color: '#8faee5', 
-    glow: '#5178bd', 
-    size: 40, 
-    labelSide: 'right', 
-    // Largest outermost orbit, slowest movement
-    orbit: orbit(308, 252, -12, 92, 'normal', 8, .22) 
-  }
+/** The four conceptual layers of Ecosystem 2.0, inner to outer. */
+export const ecosystemGroups: EcosystemGroup[] = [
+  { id: 'build', name: 'Build & Engineering', short: 'BUILD', blurb: 'Software that plans, edits, tests, and repairs.', color: '#5a82e8' },
+  { id: 'intelligence', name: 'Intelligence & Research', short: 'INTELLIGENCE', blurb: 'Specialized model research and evaluation.', color: '#4f8fff' },
+  { id: 'create', name: 'Create', short: 'CREATE', blurb: 'Tools for game development and publishing.', color: '#b487ff' },
+  { id: 'knowledge', name: 'Knowledge & Community', short: 'KNOWLEDGE', blurb: 'Practical information and local discovery.', color: '#61d7a1' },
 ];
+
+type NodeSpec = Omit<EcosystemNode, 'name' | 'href' | 'category' | 'status' | 'statusLabel' | 'purpose'> & {
+  manifestId: string;
+  tag: string;
+  hrefOverride?: string;
+  purposeOverride?: string;
+};
+
+const specs: NodeSpec[] = [
+  // INNER BELT — BUILD / ENGINEERING (fastest, tightest paths)
+  {
+    id: 'codeforge', manifestId: 'codeforge', tag: 'CODEFORGE', group: 'build',
+    icon: 'forged',
+    character: ecosystemCharacterMap.forged,
+    color: '#5a82e8', glow: '#1f4fd8', size: 46, labelSide: 'left',
+    orbit: orbit(284, 96, -18, 38, 'normal', 30, .5),
+  },
+  {
+    id: 'forgerems', manifestId: 'forgerems', tag: 'FORGEREMS', group: 'build',
+    icon: 'systems',
+    character: ecosystemCharacterMap.forgerems,
+    color: '#e0a63c', glow: '#b06f10', size: 40, labelSide: 'right',
+    orbit: orbit(284, 96, -18, 38, 'normal', 80, .5),
+  },
+  // SECOND BELT — INTELLIGENCE / RESEARCH
+  {
+    id: 'gems', manifestId: 'gems', tag: 'GEMS', group: 'intelligence',
+    icon: 'intelligence',
+    character: ecosystemCharacterMap.intelligence,
+    color: '#4f8fff', glow: '#1f63ff', size: 44, labelSide: 'left',
+    orbit: orbit(206, 232, 52, 56, 'normal', 8, .42),
+  },
+  {
+    id: 'training-grounds', manifestId: 'training-grounds', tag: 'TRAINING GROUNDS', group: 'intelligence',
+    icon: 'applications',
+    character: ecosystemCharacterMap.applications,
+    color: '#38b6e0', glow: '#0f7fae', size: 38, labelSide: 'right',
+    orbit: orbit(206, 232, 52, 56, 'normal', 58, .42),
+  },
+  // THIRD BELT — CREATE
+  {
+    id: 'kyrablox', manifestId: 'kyrablox', tag: 'KYRABLOX', group: 'create',
+    icon: 'gaming',
+    character: ecosystemCharacterMap.gaming,
+    color: '#b487ff', glow: '#7b3df0', size: 42, labelSide: 'left',
+    orbit: orbit(258, 196, -44, 68, 'reverse', 42, .34),
+  },
+  {
+    id: 'kayla-publisher', manifestId: 'kayla-publisher', tag: 'KAYLA', group: 'create',
+    icon: 'publishing',
+    character: ecosystemCharacterMap.publishing,
+    color: '#d9813f', glow: '#a34f14', size: 40, labelSide: 'right',
+    orbit: orbit(258, 196, -44, 68, 'reverse', 92, .34),
+  },
+  // OUTER BELT — KNOWLEDGE / COMMUNITY (slowest, widest paths)
+  {
+    id: 'we-the-people', manifestId: 'we-the-people', tag: 'WE THE PEOPLE', group: 'knowledge',
+    icon: 'civic',
+    character: ecosystemCharacterMap.civic,
+    color: '#8fa2c0', glow: '#5a6f92', size: 40, labelSide: 'left',
+    orbit: orbit(296, 246, 24, 82, 'reverse', 16, .28),
+  },
+  {
+    id: 'farmstand-finder', manifestId: 'farmstand-finder', tag: 'FARMSTAND FINDER', group: 'knowledge',
+    icon: 'foraging',
+    character: ecosystemCharacterMap.foraging,
+    color: '#76b77d', glow: '#3d8245', size: 40, labelSide: 'right',
+    orbit: orbit(296, 246, 24, 82, 'reverse', 66, .28),
+  },
+];
+
+const resolveHref = (manifestId: string, hrefOverride?: string): string =>
+  hrefOverride ?? manifestById[manifestId]?.projectUrl ?? '/projects';
+
+export const ecosystemNodes: EcosystemNode[] = specs.map((spec) => {
+  const entry = manifestById[spec.manifestId];
+  if (!entry) throw new Error(`ecosystem node references unknown manifest entry: ${spec.manifestId}`);
+  const { manifestId, hrefOverride, purposeOverride, tag, ...rest } = spec;
+  return {
+    ...rest,
+    manifestId,
+    tag,
+    name: entry.name,
+    href: resolveHref(manifestId, hrefOverride),
+    category: entry.category,
+    status: entry.canonicalStatus,
+    statusLabel: canonicalStatusLabels[entry.canonicalStatus],
+    purpose: purposeOverride ?? entry.oneLineDescription,
+  };
+});

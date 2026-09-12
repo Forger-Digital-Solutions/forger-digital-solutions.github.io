@@ -70,6 +70,7 @@ export const CANONICAL_INTERNAL_ROUTES = [
   '/',
   '/projects',
   '/projects/codeforge',
+  '/projects/forgerems',
   '/projects/gems-training-grounds',
   '/projects/kyrablox',
   '/projects/kayla-ai-publisher',

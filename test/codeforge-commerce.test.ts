@@ -14,25 +14,27 @@ describe('CodeForge Commerce & Upgrade Architecture', () => {
     expect(freePlan?.status).toBe('active');
     expect(freePlan?.checkoutEnabled).toBe(true);
     expect(freePlan?.ctaAction).toBe('download');
-    expect(isPlanCheckoutActive('free')).toBe(false); // $0 does not invoke Stripe checkout
+    expect(isPlanCheckoutActive('free')).toBe(false); // $0 does not invoke checkout
 
-    const proPlan = getPlanById('pro');
-    expect(proPlan).toBeDefined();
-    expect(proPlan?.price).toBeNull();
-    expect(proPlan?.displayPrice).toBe('Not yet published');
-    expect(proPlan?.status).toBe('preview');
-    expect(proPlan?.checkoutEnabled).toBe(false);
-    expect(proPlan?.ctaAction).toBe('preview_notice');
-    expect(isPlanCheckoutActive('pro')).toBe(false);
+    const expandedPlan = getPlanById('expanded');
+    expect(expandedPlan).toBeDefined();
+    expect(expandedPlan?.price).toBeNull();
+    expect(expandedPlan?.displayPrice).toBe('Not yet published');
+    expect(expandedPlan?.status).toBe('in-development');
+    expect(expandedPlan?.checkoutEnabled).toBe(false);
+    expect(expandedPlan?.ctaAction).toBe('in_development_notice');
+    expect(isPlanCheckoutActive('expanded')).toBe(false);
+  });
 
-    const studioPlan = getPlanById('studio');
-    expect(studioPlan).toBeDefined();
-    expect(studioPlan?.price).toBeNull();
-    expect(studioPlan?.displayPrice).toBe('Not yet published');
-    expect(studioPlan?.status).toBe('preview');
-    expect(studioPlan?.checkoutEnabled).toBe(false);
-    expect(studioPlan?.ctaAction).toBe('preview_notice');
-    expect(isPlanCheckoutActive('studio')).toBe(false);
+  it('keeps the commercial presentation intentionally simple (no obsolete plan taxonomy)', () => {
+    const serialized = JSON.stringify(codeForgePlans);
+    // The obsolete plan architecture must not return.
+    expect(serialized).not.toContain('Professional');
+    expect(serialized).not.toContain('Studio');
+    expect(serialized).not.toContain('entitlement');
+    expect(serialized).not.toContain('commercial license');
+    // Exactly two public surfaces: the active free tier and the in-development expansion.
+    expect(codeForgePlans.map((p) => p.id)).toEqual(['free', 'expanded']);
   });
 
   it('guarantees no provisional prices ($10 / $25) are published in data models', () => {
@@ -45,23 +47,26 @@ describe('CodeForge Commerce & Upgrade Architecture', () => {
 
   it('unlisted /codeforge/upgrade route has noindex and sitemap exclusion', () => {
     expect(upgradePage).toContain('noindex={true}');
-    expect(upgradePage).toContain('CodeForge Upgrade & Commercial Preview');
+    expect(upgradePage).toContain('CodeForge Plans & Availability');
     expect(astroConfig).toContain("!page.includes('/codeforge/upgrade')");
   });
 
-  it('handles checkout redirect statuses fail-closed without granting client entitlements', () => {
-    expect(upgradePage).toContain("status === 'success'");
-    expect(upgradePage).toContain("status === 'canceled'");
-    expect(upgradePage).toContain('status-banner-success');
-    expect(upgradePage).toContain('status-banner-canceled');
-    expect(upgradePage).toContain('Checkout Session Received — Verification In Progress');
-    expect(upgradePage).toContain('desktop entitlements are never self-asserted or granted client-side');
-    expect(upgradePage).toContain('Checkout Session Canceled');
+  it('publishes no fake checkout states and accepts no payment', () => {
+    // The obsolete pretend-checkout flow must not return.
+    expect(upgradePage).not.toContain("status === 'success'");
+    expect(upgradePage).not.toContain('Checkout Session Received');
+    expect(upgradePage).not.toContain('Checkout Session Canceled');
+    expect(upgradePage).not.toContain('entitlement');
+    expect(upgradePage).not.toContain('signed license key');
+    // ForgeZero copy must match the actual fail-closed architecture.
+    expect(upgradePage).not.toContain('or local models');
+    expect(upgradePage).toContain('no checkout or');
+    expect(upgradePage).toContain('payment is active');
   });
 
-  it('includes interactive preview dialog for commercial inquiries', () => {
+  it('includes an informational in-development dialog for commercial inquiries', () => {
     expect(upgradePage).toContain('id="preview-dialog"');
-    expect(upgradePage).toContain('Private Verification in Progress');
+    expect(upgradePage).toContain('Expanded plans are in development');
     expect(upgradePage).toContain('commercial-inquiry-link');
   });
 });

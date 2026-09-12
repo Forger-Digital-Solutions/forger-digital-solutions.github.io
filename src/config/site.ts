@@ -5,7 +5,7 @@ export type { EmailRole, EmailRoutingEntry, FdsEmailConfig } from './email';
 export const siteConfig = {
   name: "Forger Digital Solutions",
   shortName: "FDS",
-  description: "Independent software and AI engineering studio building tools for software engineering, AI research, game creation, publishing, civic information, local discovery, and technical diagnostics.",
+  description: "Independent AI and software company building AI systems, developer tools, technical utilities, and specialized research systems — real products where they are ready, transparent research where they are not.",
   siteUrl: "https://forgerdigitalsolutions.com",
 
   // --- Social profiles ---

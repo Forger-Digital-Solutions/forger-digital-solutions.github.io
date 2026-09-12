@@ -5,20 +5,74 @@ import { siteConfig } from '../config/site';
 const faqs = [
   {
     q: 'What is Forger Digital Solutions?',
-    a: `FDS is an independent software and AI engineering studio building developer tools, model
-        research, game-creation software, publishing tools, civic information, local discovery, and technician applications.`
+    a: `FDS is an independent AI and software company. It builds AI systems, developer tools,
+        software products, technical utilities, and specialized research systems — real products
+        where they are ready, transparent research where they are not.`
   },
   {
     q: 'What does FDS build?',
-    a: `Work spans CodeForge, GEMS and Training Grounds, KyraBlox, Kayla AI Publisher,
-        We The People, FarmStand Finder, and ForgerEMS. You can see the current
-        line-up on the Projects page.`
+    a: `Work spans CodeForge (autonomous software engineering), ForgerEMS (Windows technician
+        workbench), GEMS and Training Grounds (AI research), KyraBlox (game development),
+        Kayla AI Publisher (creative/publishing software), We The People Library (offline
+        knowledge), and FarmStand Finder (local discovery). The current line-up, grouped by
+        availability, is on the Products page.`
   },
   {
     q: 'What can I use right now?',
-    a: `Forged lists public software. CodeForge has a released Windows installer and portable build;
-        ForgerEMS has public-preview packages. Other projects have status labels and links that separate
-        research, private development, prerelease software, and public releases.`
+    a: `The Releases page (Forged) lists public software. CodeForge has a released Windows installer
+        and portable build; ForgerEMS has public-preview packages; a CodeForge source archive is
+        published as a ZIP with a verified SHA-256 checksum. Other projects have status labels that
+        separate research, private development, prerelease software, and public releases.`
+  },
+  {
+    q: 'What are ForgeAuto, 8-Bit, and ForgeZero?',
+    a: `They are CodeForge model-control systems. ForgeZero is the fail-closed zero-cost boundary:
+        it refuses paid inference, local models, and unverified providers rather than falling back
+        silently. ForgeAuto is the automatic selection mode that routes free-experience work across
+        verified zero-cost models. 8-Bit is the dynamic model-routing and failover core that keeps
+        sessions working as free-model availability, quotas, and health change — routing authority
+        only, with no path into permissions, approvals, or verification. These systems are part of
+        active development; specifics are not backported onto the released v0.2.0 binary.`
+  },
+  {
+    q: 'Are paid CodeForge plans available?',
+    a: `No. CodeForge Free is available now. Expanded commercial plans are in development — final
+        tier names, prices, limits, and billing terms have not been published, and no checkout is
+        active anywhere on this site.`
+  },
+  {
+    q: 'Is GEMS trained from scratch?',
+    a: `Not as a blanket claim. Current GEMS strategy builds on strong open or pretrained foundations
+        where a role benefits from them, while fully from-scratch FDS-developed model development
+        remains longer-term research. Training Grounds — curriculum, evaluation, diagnosis, and
+        advancement — governs every lineage either way.`
+  },
+  {
+    q: 'What is Sapphire? Has it been trained?',
+    a: `Sapphire is the GEMS lineage for software engineering and coding. It has produced
+        experimental research checkpoints evaluated through Training Grounds. No Sapphire model is
+        presented as a public production model, and no Sapphire capability is claimed inside
+        CodeForge.`
+  },
+  {
+    q: 'How do I download and verify project archives?',
+    a: `Project archives are published on the Releases page as .zip files only. Each archive card
+        shows the file name, size, source commit, and the full Archive SHA-256, with a copy button.
+        After downloading, run certutil -hashfile FILE SHA256 (Windows) or shasum -a 256 FILE
+        (macOS/Linux) and compare the value before trusting the archive.`
+  },
+  {
+    q: 'What is We The People?',
+    a: `We The People Library is an offline-first knowledge platform in private development:
+        practical reference material — civics, public information, science, engineering, trades,
+        agriculture, mathematics, and general reference — designed to stay available offline,
+        stored locally with source provenance.`
+  },
+  {
+    q: 'Are you Kayla Publisher?',
+    a: `No. The website assistant is Kayla — the FDS Guide, a separate helper for questions about
+        FDS. Kayla Publisher is a different FDS product: creative and publishing software for
+        long-form work.`
   },
   {
     q: 'How can I support FDS?',
@@ -34,12 +88,14 @@ const faqs = [
   },
   {
     q: 'Do you collect my data when I visit?',
-    a: `The site itself uses no cookies, analytics, or trackers. See the Privacy Policy for the
-        full details on what is and isn't collected.`
+    a: `The site uses no cookies and no advertising. It loads no analytics or profiling trackers;
+        the only third-party call on the homepage is a privacy-preserving visit counter that records
+        an anonymous hit count and nothing about you. See the Privacy Policy for the full details
+        on what is and isn't collected.`
   },
   {
     q: 'Where can I follow updates?',
-    a: `Check the Notes section for build logs and research write-ups, and subscribe on YouTube or
+    a: `Check the Engineering Log for build logs and research write-ups, and subscribe on YouTube or
         join Discord for ongoing updates.`
   }
 ];

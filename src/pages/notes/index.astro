@@ -6,11 +6,19 @@ import { projects } from '../../data/projects';
 const notes = await getPublishedNotes();
 const [latest, ...rest] = notes;
 
+const stateLabels: Record<string, { label: string; className: string }> = {
+  current: { label: 'CURRENT', className: 'journal-state--current' },
+  research: { label: 'RESEARCH', className: 'journal-state--research' },
+  historical: { label: 'HISTORICAL', className: 'journal-state--historical' },
+  superseded: { label: 'SUPERSEDED', className: 'journal-state--superseded' },
+};
+const stateOf = (note: Note) => stateLabels[note.data.state] ?? stateLabels.current;
+
 const relatedProject = (note: Note) =>
   note.data.projectSlug ? projects.find((p) => p.slug === note.data.projectSlug) : undefined;
 ---
 <BaseLayout
-  title="Notes"
+  title="Engineering Log"
   description="A public engineering log from Forger Digital Solutions: build logs, research notes, and writing tied to active projects."
 >
   <div class="page-head">
@@ -18,7 +26,8 @@ const relatedProject = (note: Note) =>
     <h1 class="page-title">Notes</h1>
     <p class="page-description">
       Public field notes on product releases, engineering decisions, model research, findings,
-      and meaningful changes across FDS.
+      and meaningful changes across FDS. Each entry is labeled by where it stands:
+      current, research, historical, or superseded.
     </p>
   </div>
 
@@ -33,6 +42,7 @@ const relatedProject = (note: Note) =>
           <p class="journal-featured__meta">
             <span>{formatNoteDate(latest.data.date)}</span>
             {latest.data.category && <span class="journal-featured__cat">{latest.data.category}</span>}
+            <span class={`journal-state ${stateOf(latest).className}`}>{stateOf(latest).label}</span>
             {relatedProject(latest) && <span>· {relatedProject(latest)!.name}</span>}
           </p>
           <h2 class="journal-featured__title">
@@ -56,6 +66,7 @@ const relatedProject = (note: Note) =>
                   <p class="journal-row__meta">
                     <span>{formatNoteDate(note.data.date)}</span>
                     {note.data.category && <span>{note.data.category}</span>}
+                    <span class={`journal-state ${stateOf(note).className}`}>{stateOf(note).label}</span>
                   </p>
                   <div class="journal-row__body">
                     <h3 class="journal-row__title"><a href={`/notes/${note.id}`}>{note.data.title}</a></h3>
@@ -103,6 +114,12 @@ const relatedProject = (note: Note) =>
   .journal-row__title a:hover { color: var(--color-accent-bright); }
   .journal-row__desc { margin: .45rem 0 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.6; }
   .journal-row__foot { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin: .6rem 0 0; color: var(--color-text-subtle); font: 650 .64rem/1 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }
+
+  .journal-state { padding: .2rem .5rem; border: 1px solid var(--color-border); border-radius: 999px; font: 700 .58rem/1.4 var(--font-mono); letter-spacing: .1em; }
+  .journal-state--current { color: #61d7a1; border-color: rgba(97,215,161,.35); }
+  .journal-state--research { color: #b487ff; border-color: rgba(180,135,255,.35); }
+  .journal-state--historical { color: #8b97a8; border-color: rgba(139,151,168,.4); }
+  .journal-state--superseded { color: #e0a63c; border-color: rgba(224,166,60,.4); }
 
   @media (max-width: 640px) {
     .journal-row { grid-template-columns: 1fr; gap: .6rem; }

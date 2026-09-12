@@ -55,13 +55,41 @@ const ecosystemStyles: Record<string, { color: string; bg: string }> = {
   'Gaming': { color: '#b487ff', bg: 'rgba(180,135,255,.12)' },
   'Publishing': { color: '#d9813f', bg: 'rgba(217,129,63,.12)' },
   'Civic': { color: '#8792a8', bg: 'rgba(135,146,168,.12)' },
-  'Foraging': { color: '#76b77d', bg: 'rgba(118,183,125,.12)' }
+  'Local Discovery': { color: '#76b77d', bg: 'rgba(118,183,125,.12)' }
 };
 const ecosystemStyle = project.ecosystem ? ecosystemStyles[project.ecosystem] : null;
 const ecoColor = ecosystemStyle?.color || project.accentColor;
+
+// Structured data: breadcrumbs for every project page, plus a SoftwareApplication
+// record (with the download URL) only for projects that actually ship one. Source
+// archives are never presented as applications.
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://forgerdigitalsolutions.com').href;
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site ?? 'https://forgerdigitalsolutions.com').href },
+    { '@type': 'ListItem', position: 2, name: 'Products', item: new URL('/projects', Astro.site ?? 'https://forgerdigitalsolutions.com').href },
+    { '@type': 'ListItem', position: 3, name: project.name, item: pageUrl }
+  ]
+};
+const softwareSchema = releaseProduct ? {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: releaseProduct.name,
+  operatingSystem: releaseProduct.platform.join(', '),
+  softwareVersion: releaseProduct.version,
+  applicationCategory: releaseProduct.slug === 'codeforge' ? 'DeveloperApplication' : 'UtilitiesApplication',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  url: pageUrl,
+  downloadUrl: releaseProduct.downloadUrl,
+  author: { '@type': 'Organization', name: 'Forger Digital Solutions', url: 'https://forgerdigitalsolutions.com' }
+} : null;
 ---
 
 <BaseLayout title={project.name} description={project.summary} ogImage={ogImage}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {softwareSchema && <script is:inline type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />}
   <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href="/">Home</a><span aria-hidden="true">/</span>
     <a href="/projects">Projects</a><span aria-hidden="true">/</span>
@@ -381,7 +409,7 @@ const ecoColor = ecosystemStyle?.color || project.accentColor;
 
     <!-- GEMS Special Section -->
     {isGems && (
-      <section class="gems-section" aria-labelledby="gems-systems">
+      <section id="training-grounds" class="gems-section" aria-labelledby="gems-systems">
         <p class="gems-kicker">The Model Family</p>
         <h2 id="gems-systems" class="gems-title">Meet the GEMS and Training Grounds</h2>
         <GemsDeep />

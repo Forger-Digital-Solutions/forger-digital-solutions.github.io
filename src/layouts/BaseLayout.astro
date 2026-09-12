@@ -22,11 +22,20 @@ const robotsDirective = robots || (noindex ? 'noindex, nofollow' : undefined);
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
 const pageDesc =
   description ||
-  'Independent software and AI engineering across developer tools, model research, game creation, publishing, civic information, local discovery, and technical diagnostics.';
+  siteConfig.description ||
+  'Independent AI and software company building AI systems, developer tools, and practical software.';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
 const ogImageUrl = new URL(ogImage || siteConfig.ogImage, siteConfig.siteUrl).href;
 const kaylaPageContext = buildPageContext(Astro.url.pathname);
 const isHomepage = Astro.url.pathname === '/';
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteConfig.name,
+  alternateName: siteConfig.shortName,
+  url: siteConfig.siteUrl,
+  publisher: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.siteUrl }
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -66,6 +75,7 @@ const isHomepage = Astro.url.pathname === '/';
       description: pageDesc,
       sameAs: [siteConfig.githubUrl, siteConfig.youtubeUrl, siteConfig.linkedinUrl].filter(Boolean)
     })} />
+    {isHomepage && <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />}
 
     <!-- Kayla Copilot page context -->
     <script is:inline define:vars={{ kaylaPageContext }}>

@@ -16,63 +16,63 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const understandSection = getSection(project, 'Understand Public Information');
-const sourcesSection = getSection(project, 'Official Sources');
-const servicesSection = getSection(project, 'Services & Resources');
-const claritySection = getSection(project, 'Accessibility & Clarity');
-const neutralitySection = getSection(project, 'Neutrality');
+const availabilitySection = getSection(project, 'Knowledge That Stays Available');
+const provenanceSection = getSection(project, 'Source Provenance');
+const domainsSection = getSection(project, 'Practical Domains');
+const discoverySection = getSection(project, 'Structured Discovery');
+const resilienceSection = getSection(project, 'Reliability & Resilience');
 
-const sourceItems = servicesSection.items ?? [];
+const domainItems = domainsSection.items ?? [];
 ---
 
 <section class="sig-trace" aria-labelledby="wtp-trace-title">
   <p class="sig-kicker">SYSTEM // SOURCE TRACEABILITY</p>
-  <h2 id="wtp-trace-title" class="sig-title">From question to source</h2>
-  <p class="sig-intro">{understandSection.body}</p>
+  <h2 id="wtp-trace-title" class="sig-title">From shelf to source</h2>
+  <p class="sig-intro">{availabilitySection.body}</p>
 
   <div class="sig-trace__grid">
     <div class="sig-trace__path">
       <article class="sig-trace__node sig-trace__node--q">
-        <p class="sig-trace__label">01 // The question</p>
-        <h3 class="sig-trace__name">Dense, scattered public information</h3>
+        <p class="sig-trace__label">01 // The need</p>
+        <h3 class="sig-trace__name">Knowledge that outlasts the network</h3>
         <p class="sig-trace__text">{project.problem}</p>
       </article>
 
       <p class="sig-trace__link" aria-hidden="true">
         <span class="sig-trace__link-line"></span>
-        <span class="sig-trace__link-tag">Plain language</span>
+        <span class="sig-trace__link-tag">Local discovery</span>
         <span class="sig-trace__link-line"></span>
       </p>
 
       <article class="sig-trace__node sig-trace__node--a">
         <p class="sig-trace__label">02 // The answer</p>
-        <h3 class="sig-trace__name">An understandable next step</h3>
-        <p class="sig-trace__text">{claritySection.body}</p>
+        <h3 class="sig-trace__name">Found locally, traceable to the source</h3>
+        <p class="sig-trace__text">{discoverySection.body}</p>
       </article>
     </div>
 
     <div class="sig-trace__sources">
-      <p class="sig-trace__sources-title">The answer stays traceable to</p>
+      <p class="sig-trace__sources-title">The library stays grounded in</p>
       <ul class="sig-trace__trail">
         <li class="sig-trace__source">
-          <p class="sig-trace__source-label">Official source</p>
-          <p class="sig-trace__text">{sourcesSection.body}</p>
+          <p class="sig-trace__source-label">Source provenance</p>
+          <p class="sig-trace__text">{provenanceSection.body}</p>
         </li>
         <li class="sig-trace__source">
-          <p class="sig-trace__source-label">Jurisdiction</p>
-          <p class="sig-trace__text">The boundaries between local, state, and federal information stay visible.</p>
+          <p class="sig-trace__source-label">Practical domains</p>
+          <p class="sig-trace__text">{domainItems.join(' · ')}.</p>
         </li>
         <li class="sig-trace__source">
-          <p class="sig-trace__source-label">Relevant service</p>
-          <p class="sig-trace__text">{sourceItems.slice(1).join('. ')}.</p>
+          <p class="sig-trace__source-label">Resilience</p>
+          <p class="sig-trace__text">{resilienceSection.body}</p>
         </li>
       </ul>
     </div>
   </div>
 
-  <aside class="sig-trace__neutral" aria-label="Neutrality commitment">
+  <aside class="sig-trace__neutral" aria-label="Offline-first commitment">
     <span class="sig-trace__neutral-mark" aria-hidden="true">◇</span>
-    <p class="sig-trace__text">{neutralitySection.body}</p>
+    <p class="sig-trace__text">Offline-first is the design premise: once material is stored locally it stays available — no connection, account, or subscription required.</p>
   </aside>
 </section>
 

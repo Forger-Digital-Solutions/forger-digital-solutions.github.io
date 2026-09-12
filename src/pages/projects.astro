@@ -2,19 +2,31 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { projects } from '../data/projects';
 import { products } from '../data/products';
+import { manifestByProjectSlug, canonicalStatusLabels, type CanonicalStatus } from '../data/manifest';
 import ProjectSpotlight from '../components/ProjectSpotlight.astro';
 import ProjectIndexItem from '../components/ProjectIndexItem.astro';
 
 // Sort by sortOrder to maintain deliberate ecosystem narrative
 const ordered = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
+
+// Portfolio tiers come from the canonical product manifest, never page-local labels.
+const statusOf = (slug: string): CanonicalStatus =>
+  manifestByProjectSlug[slug]?.canonicalStatus ?? 'concept';
+
 const codeForge = ordered.find((p) => p.slug === 'codeforge')!;
+const forgerEms = ordered.find((p) => p.slug === 'forgerems')!;
 const gems = ordered.find((p) => p.slug === 'gems-training-grounds')!;
-const privateDev = ordered.filter((p) => p.slug !== 'codeforge' && p.slug !== 'gems-training-grounds');
 const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
+
+const spotlightSlugs = ['codeforge', 'forgerems', 'gems-training-grounds'];
+const byStatus = (status: CanonicalStatus) =>
+  ordered.filter((p) => statusOf(p.slug) === status && !spotlightSlugs.includes(p.slug));
+const activeDev = byStatus('active-development');
+const privateDev = byStatus('private-development');
 ---
 <BaseLayout
-  title="Projects"
-  description="Browse FDS projects across autonomous engineering, AI research, game creation, publishing, civic information, and local discovery."
+  title="Products & Projects"
+  description="FDS products and projects across AI systems, developer tools, technician software, creative technology, and practical applications."
 >
   <div class="projects-hero">
     <div class="projects-hero__backdrop" aria-hidden="true">
@@ -31,16 +43,17 @@ const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
         <circle cx="600" cy="350" r="1.5" fill="rgba(217,129,63,.32)" />
       </svg>
     </div>
-    <p class="projects-hero__kicker">FDS // SYSTEM DIRECTORY</p>
-    <h1 class="projects-hero__title">Projects</h1>
+    <p class="projects-hero__kicker">FDS // PRODUCT PORTFOLIO</p>
+    <h1 class="projects-hero__title">Products &amp; Projects</h1>
     <p class="projects-hero__description">
-      Browse the software and research FDS is actively developing—from autonomous engineering and model learning
-      to game creation, publishing, civic information, and nearby food discovery.
+      The software and research FDS builds — AI systems, developer tools, technician software, creative technology,
+      and practical applications — grouped by availability. Released products are downloadable through{' '}
+      <a href="/forged">Releases</a>; research is described exactly as far as the evidence goes.
     </p>
   </div>
 
   <section class="ecosystem-overview" aria-labelledby="ecosystem-heading">
-    <h2 id="ecosystem-heading" class="sr-only">FDS Technology Ecosystems</h2>
+    <h2 id="ecosystem-heading" class="sr-only">FDS Product Layers</h2>
     <div class="ecosystem-overview__content">
       <p class="ecosystem-intro">
         Projects are what FDS is building. Some are research programs, some are private products, and some are already released through Forged.
@@ -74,13 +87,13 @@ const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
           <span class="ecosystem-dot" aria-hidden="true"></span>
           <div class="ecosystem-text">
             <h3>Civic</h3>
-            <p>Public information access</p>
+            <p>Offline knowledge library</p>
           </div>
         </a>
-        <a href="#farmstand-finder" class="ecosystem-item" data-ecosystem="foraging">
+        <a href="#farmstand-finder" class="ecosystem-item" data-ecosystem="local-discovery">
           <span class="ecosystem-dot" aria-hidden="true"></span>
           <div class="ecosystem-text">
-            <h3>Foraging</h3>
+            <h3>Local Discovery</h3>
             <p>Local food discovery</p>
           </div>
         </a>
@@ -92,21 +105,33 @@ const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
     <h2 id="projects-list" class="sr-only">Project Directory</h2>
 
     <div class="directory-tier">
-      <p class="directory-tier__label">Featured / Released</p>
+      <p class="directory-tier__label">{canonicalStatusLabels['public-release']}</p>
       <ProjectSpotlight
         project={codeForge}
-        tier="Public product and FDS engineering foundation"
+        tier="Flagship product and FDS engineering foundation"
         secondaryCta={codeForgeProduct ? { label: 'Get CodeForge', href: '/forged' } : undefined}
       />
     </div>
 
     <div class="directory-tier">
-      <p class="directory-tier__label">Active Research</p>
+      <p class="directory-tier__label">{canonicalStatusLabels['public-preview']}</p>
+      <ProjectSpotlight project={forgerEms} tier="Public preview for Windows technicians" />
+    </div>
+
+    <div class="directory-tier">
+      <p class="directory-tier__label">{canonicalStatusLabels['active-ai-research']}</p>
       <ProjectSpotlight project={gems} tier="Flagship AI research program" />
     </div>
 
     <div class="directory-tier">
-      <p class="directory-tier__label">Private Development</p>
+      <p class="directory-tier__label">{canonicalStatusLabels['active-development']}</p>
+      <ul class="directory-list">
+        {activeDev.map((project) => <ProjectIndexItem project={project} />)}
+      </ul>
+    </div>
+
+    <div class="directory-tier">
+      <p class="directory-tier__label">{canonicalStatusLabels['private-development']}</p>
       <p class="directory-tier__note">Earlier-stage work, not yet public. Status labels below reflect where each project actually is.</p>
       <ul class="directory-list">
         {privateDev.map((project) => <ProjectIndexItem project={project} />)}
@@ -240,8 +265,8 @@ const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
   .ecosystem-item[data-ecosystem="publishing"] .ecosystem-dot { background: #d9813f; }
   .ecosystem-item[data-ecosystem="civic"] { color: #8792a8; }
   .ecosystem-item[data-ecosystem="civic"] .ecosystem-dot { background: #8792a8; }
-  .ecosystem-item[data-ecosystem="foraging"] { color: #76b77d; }
-  .ecosystem-item[data-ecosystem="foraging"] .ecosystem-dot { background: #76b77d; }
+  .ecosystem-item[data-ecosystem="local-discovery"] { color: #76b77d; }
+  .ecosystem-item[data-ecosystem="local-discovery"] .ecosystem-dot { background: #76b77d; }
 
   .ecosystem-text h3 {
     margin: 0;

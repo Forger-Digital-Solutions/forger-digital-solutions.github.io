@@ -1,12 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { projectTechnologies, technologyCategories } from '../data/technology';
+import { projectTechnologies, technologyGroups, tierLabels, type TechnologyTier } from '../data/technology';
+
+const tierOrder: TechnologyTier[] = ['core', 'active', 'research', 'historical'];
+const grouped = tierOrder.map((tier) => ({
+  tier,
+  label: tierLabels[tier],
+  groups: technologyGroups.filter((group) => group.tier === tier),
+})).filter((section) => section.groups.length > 0);
 ---
-<BaseLayout title="Technology" description="How languages, runtimes, engines, model tooling, and compute environments map to current Forger Digital Solutions projects.">
+<BaseLayout title="Technology" description="The FDS technology map: core foundations, active infrastructure, research systems, and previously evaluated platforms.">
   <header class="page-head">
-    <p class="eyebrow">FDS // TECHNICAL FOUNDATIONS</p>
+    <p class="eyebrow">FDS // TECHNOLOGY MAP</p>
     <h1 class="page-title">Technology in context</h1>
-    <p class="page-description">A stack matters because of what it enables. This map connects the major FDS systems to the languages, runtimes, engines, and technical areas actually used in their current repositories.</p>
+    <p class="page-description">A stack matters because of what it enables. This map separates what is foundational today, what is active infrastructure, what is research, and what FDS has evaluated and moved past — so "used" never quietly becomes "current".</p>
   </header>
 
   <section class="project-tech" aria-labelledby="project-tech-title">
@@ -39,27 +46,40 @@ import { projectTechnologies, technologyCategories } from '../data/technology';
     </ul>
   </section>
 
-  <section class="broader" aria-labelledby="broader-title">
-    <h2 id="broader-title">Active foundations</h2>
-    <p class="broader__lead">The grouped technical areas behind the systems above — context, not an inventory to rank.</p>
-    <div class="tech-grid">
-      {technologyCategories.map((category) => (
-        <article class="tech-category">
-          <h3>{category.name}</h3>
-          {category.description && <p>{category.description}</p>}
-          <ul>{category.items.map((item) => <li>{item}</li>)}</ul>
-        </article>
-      ))}
-    </div>
-  </section>
+  {grouped.map((section) => (
+    <section class="tier-section" aria-labelledby={`tier-${section.tier}`} data-tier={section.tier}>
+      <h2 id={`tier-${section.tier}`} class="tier-title">
+        {section.label}
+        <span class="tier-count" aria-label={`${section.groups.reduce((sum, group) => sum + group.items.length, 0)} items`}></span>
+      </h2>
+      <div class="tech-grid">
+        {section.groups.map((group) => (
+          <article class="tech-category">
+            <h3>{group.name}</h3>
+            <p>{group.description}</p>
+            <ul>{group.items.map((item) => <li>{item}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
 
-  <p class="tech-disclaimer">Product and platform names belong to their respective owners. A name here indicates use or investigation—not endorsement, sponsorship, certification, or partnership. Planned integrations are not treated as current support.</p>
+  <p class="tech-disclaimer">Product and platform names belong to their respective owners. A name here indicates use, evaluation, or investigation — not endorsement, sponsorship, certification, or partnership. Research and historical entries are not presented as current infrastructure, and planned integrations are not treated as current support.</p>
 </BaseLayout>
 
 <style>
   .page-head { max-width: 52rem; padding: 3.5rem 0 2.5rem; }.eyebrow { margin: 0 0 .75rem; color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .15em; }.page-title { margin: 0; font-size: clamp(2.4rem, 6vw, 4.2rem); letter-spacing: -.05em; }.page-description { margin: 1rem 0 0; color: var(--color-text-muted); font-size: 1.08rem; line-height: 1.75; }
-  .project-tech, .broader { margin-bottom: 3.5rem; }.project-tech h2, .broader h2 { margin: 0 0 1rem; font-size: clamp(1.5rem, 3vw, 2rem); }.table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: rgba(7,12,20,.92); }table { width: 100%; min-width: 48rem; border-collapse: collapse; }th, td { padding: 1rem; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; line-height: 1.55; }thead th { color: var(--color-accent-bright); font: 700 .68rem/1.3 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; }tbody th { width: 15%; color: var(--color-text); }tbody td { color: var(--color-text-muted); font-size: .9rem; }tbody tr:last-child > * { border-bottom: 0; }
-  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(15rem,1fr)); gap: 1px; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-border); }.tech-category { padding: 1.1rem 1.2rem; background: rgba(7,12,20,.92); }.tech-category h3 { margin: 0; font: 700 .78rem/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--color-text); }.tech-category p { color: var(--color-text-subtle); font-size: .8rem; line-height: 1.55; }.tech-category ul { margin: .7rem 0 0; padding: 0; list-style: none; }.tech-category li { padding: .35rem 0; border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: .84rem; }.broader__lead { margin: -.4rem 0 1rem; color: var(--color-text-subtle); font-size: .88rem; line-height: 1.6; }.tech-disclaimer { max-width: 54rem; margin: 0 0 5rem; color: var(--color-text-subtle); font-size: .8rem; line-height: 1.65; }
+  .project-tech, .tier-section { margin-bottom: 3rem; }.project-tech h2 { margin: 0 0 1rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+  .tier-title { position: relative; display: flex; align-items: baseline; gap: .7rem; margin: 0 0 1rem; font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -.02em; }
+  .tier-title::before { content: ''; width: .55rem; height: .55rem; border-radius: 50%; background: var(--tier-dot, var(--color-accent-bright)); box-shadow: 0 0 10px var(--tier-dot, var(--color-accent-bright)); }
+  .tier-section[data-tier='core'] { --tier-dot: #61d7a1; }
+  .tier-section[data-tier='active'] { --tier-dot: #5a82e8; }
+  .tier-section[data-tier='research'] { --tier-dot: #b487ff; }
+  .tier-section[data-tier='historical'] { --tier-dot: #8b97a8; }
+  .tier-count { color: var(--color-text-subtle); font: 700 .64rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: rgba(7,12,20,.92); }table { width: 100%; min-width: 48rem; border-collapse: collapse; }th, td { padding: 1rem; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; line-height: 1.55; }thead th { color: var(--color-accent-bright); font: 700 .68rem/1.3 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; }tbody th { width: 15%; color: var(--color-text); }tbody td { color: var(--color-text-muted); font-size: .9rem; }tbody tr:last-child > * { border-bottom: 0; }
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(15rem,1fr)); gap: 1px; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-border); }.tech-category { padding: 1.1rem 1.2rem; background: rgba(7,12,20,.92); }.tech-category h3 { margin: 0; font: 700 .78rem/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--color-text); }.tech-category p { color: var(--color-text-subtle); font-size: .8rem; line-height: 1.55; }.tech-category ul { margin: .7rem 0 0; padding: 0; list-style: none; }.tech-category li { padding: .35rem 0; border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: .84rem; }
+  .tech-disclaimer { max-width: 54rem; margin: 0 0 5rem; color: var(--color-text-subtle); font-size: .8rem; line-height: 1.65; }
   .tech-stack { display: none; }
   @media (max-width: 767px) {
     .table-wrap { display: none; }
