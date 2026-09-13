@@ -15,7 +15,7 @@
     "sha256": "1B34642E03D46CBC6CB0E3B0423E8BC2CD4105673026079ACB49E9C355BD9577"
   },
   "benchmark_environment": {
-    "os": "win32 10.0.26100 (x64)",
+    "os": "win32 10.0.26200 (x64)",
     "node": "v24.19.0",
     "browser": "Chromium 151.0.7922.34",
     "playwright": "^1.62.1",
@@ -42,7 +42,7 @@
     "S2: Pointer Burst 1440px (5 bursts of 20 rapid pointermove events, CSS variable writes, recalc)",
     "S3: Ecosystem Visible 1440px/3s (CDP Layout, RecalcStyle, Task, RAF frame tracking, animation states)",
     "S4: Ecosystem Offscreen 1440px/3s (IntersectionObserver suspension, data-eco-paused, CDP metrics)",
-    "S5: Hidden Tab 1440px/3s (visibilitychange lifecycle suspension, data-bg-paused, CDP metrics)",
+    "S5: Hidden Tab 1440px/3s (visibilitychange_logic_simulation: verifies application pause logic via simulated visibilitychange; not a physical browser-background CPU/battery benchmark)",
     "S6: Reduced Motion 1440px/3s (prefers-reduced-motion: reduce, animation state verification)",
     "S7: Mobile Viewport 390px/3s (touch isolation, scene-wrap hidden, planet paused, CDP metrics)",
     "S8: Kayla Copilot Open/Close 1440px (interaction-to-visible, CSS transition settle, close settle)"

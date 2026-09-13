@@ -88,6 +88,7 @@ Data collected via CDP `Performance.getMetrics` and injected `requestAnimationFr
 - **Constellation Nodes Play State while Hidden:** `running`
 - **Task Duration (Median):** 0.3156s
 - *Baseline Behavior:* Browser continued running CSS animation timelines when the tab was hidden.
+- *Methodology Note:* Visibility lifecycle behavior was verified through a deterministic simulated `document.hidden`/`visibilitychange` path. This verifies application pause logic but is not a physical browser-background CPU/battery benchmark.
 
 ### S6: Reduced-Motion Mode (`prefers-reduced-motion: reduce`, 3 seconds)
 - **Active Web Animations:** 0 anims

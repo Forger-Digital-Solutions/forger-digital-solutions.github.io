@@ -70,7 +70,7 @@ The reconciled benchmark evidence establishes that **R4.2 is a runtime hardening
 5. **Dialog Settlement (S8):** Kayla panel closing settled **15.9% faster** (491ms → 413ms).
 
 ### Neutral & Regressive Metrics Documented
-1. **Headless Cumulative Task Duration (S1, S3):** In headless Chromium under test conditions, task duration registered increases during idle (+320.5%) and visible (+236.3%) scenarios. This reflects the execution of additional lifecycle listeners (`IntersectionObserver`, `visibilitychange`, and pointer event delegation) within Chromium's headless scheduling loop.
+1. **Headless Cumulative Task Duration (S1, S3):** Headless Chromium reported higher TaskDuration during idle (+320.5%) and visible (+236.3%) scenarios. The R4.2R benchmark did not isolate the cause of this signal. R4.2H investigates this separately using headed browser tracing.
 2. **Kayla Open Latency (S8):** Dialog visibility latency is slightly longer by **+13ms** (239ms → 252ms, +5.4%), while total open transition settled duration remained effectively identical (+3ms, +0.5%, well within statistical noise).
 3. **Pointer Burst Task Duration (S2):** Task duration during burst processing registered a minor increase (+0.0599s, 0.1241s → 0.1840s), reflecting RAF queue management overhead even as style writes were cut by 95%.
 
