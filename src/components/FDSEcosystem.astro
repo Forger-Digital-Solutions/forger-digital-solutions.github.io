@@ -48,6 +48,11 @@ const researchChords = [
         <radialGradient id="forge-heart" cx="50%" cy="42%" r="62%">
           <stop offset="0" stop-color="#f4f9ff" /><stop offset=".38" stop-color="#a8ccff" /><stop offset=".72" stop-color="#2f6bff" /><stop offset="1" stop-color="#0b1e4d" />
         </radialGradient>
+        <radialGradient id="halo-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#4d8eff" stop-opacity=".3" />
+          <stop offset="55%" stop-color="#2f6bff" stop-opacity=".12" />
+          <stop offset="100%" stop-color="#1442b8" stop-opacity="0" />
+        </radialGradient>
         <filter id="core-glow" x="-100%" y="-100%" width="300%" height="300%">
           <feGaussianBlur stdDeviation="7" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
@@ -261,6 +266,22 @@ const researchChords = [
       link.addEventListener('focus', () => showNode(link));
       link.addEventListener('pointerdown', () => showNode(link));
     });
+
+    // Suspend continuous rendering work when the ecosystem is offscreen.
+    // CSS uses [data-eco-paused] to freeze animation-play-state at the current frame,
+    // ensuring planets never jump, drift, or snap when scrolling into/out of view.
+    if ('IntersectionObserver' in window) {
+      const ecoObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            ecosystem.removeAttribute('data-eco-paused');
+          } else {
+            ecosystem.setAttribute('data-eco-paused', '');
+          }
+        });
+      }, { rootMargin: '100px 0px 100px 0px', threshold: 0.02 });
+      ecoObserver.observe(ecosystem);
+    }
   })();
 </script>
 
@@ -284,7 +305,7 @@ const researchChords = [
   .orbit-path, .orbit-segment, .orbit-pulse { fill: none; vector-effect: non-scaling-stroke; }
   .orbit-path { stroke: var(--planet-color); stroke-width: 1.05; opacity: var(--orbit-opacity); filter: drop-shadow(0 0 1.8px color-mix(in srgb, var(--planet-color) 55%, transparent)); transition: opacity .2s ease, stroke-width .2s ease, filter .2s ease; }
   .orbit-segment { stroke: var(--planet-color); stroke-width: 1.25; stroke-dasharray: 115 885; stroke-dashoffset: -120; opacity: calc(var(--orbit-opacity) + .12); filter: drop-shadow(0 0 2px color-mix(in srgb, var(--planet-color) 65%, transparent)); }
-  .orbit-pulse { stroke: var(--planet-color); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 3 997; opacity: .65; filter: drop-shadow(0 0 4px var(--planet-color)); animation: orbit-energy var(--pulse-duration) var(--pulse-delay) linear infinite; }
+  .orbit-pulse { stroke: var(--planet-color); stroke-width: 2.8; stroke-linecap: round; stroke-dasharray: 4 996; opacity: .88; animation: orbit-energy var(--pulse-duration) var(--pulse-delay) linear infinite; }
   .orbit-visual.orbit-highlight .orbit-path { opacity: .9; stroke-width: 1.8; }
   .planet-motion { offset-path: var(--orbit-path); offset-rotate: 0deg; offset-anchor: 0 0; animation: orbit-locked var(--orbit-duration) var(--orbit-delay) linear infinite; animation-direction: var(--orbit-direction); transform-box: view-box; will-change: offset-distance; }
   .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: filter .2s ease; }.planet-link:hover .planet, .planet-link:focus-visible .planet { filter: brightness(1.22); }
@@ -305,9 +326,9 @@ const researchChords = [
   .core { transform-origin: 340px 340px; }.core__aura { fill: rgba(21,72,190,.14); stroke: rgba(84,139,255,.24); filter: drop-shadow(0 0 28px rgba(29,91,237,.58)); }
   .core-link { outline: none; }.core-link:hover .core, .core-link:focus-visible .core { filter: brightness(1.14); }.core-link:focus-visible .core__aura { stroke: #d6e9ff; stroke-width: 3; }
   .core__ring { fill: none; stroke: rgba(94,154,255,.5); stroke-width: 1; transform-origin: 340px 340px; }.core__ring--outer { stroke-dasharray: 3 8 16 5; animation: core-ring-spin 48s linear infinite; }.core__ring--mid { stroke: rgba(132,176,250,.4); stroke-dasharray: 1 5 20 7; animation: core-ring-spin 34s linear infinite reverse; }.core__ring--inner { stroke: rgba(92,151,255,.62); stroke-dasharray: 2 4; animation: core-ring-spin 26s linear infinite; }
-  .core__heart-halo { fill: rgba(56,130,246,.16); filter: url(#core-glow); transform-origin: 340px 340px; animation: core-breathe 9s cubic-bezier(.45,0,.35,1) infinite; }
+  .core__heart-halo { fill: url(#halo-glow); transform-origin: 340px 340px; animation: core-breathe 9s cubic-bezier(.45,0,.35,1) infinite; }
   .core__heart { fill: url(#forge-heart); stroke: rgba(190,216,255,.85); stroke-width: 1.2; filter: drop-shadow(0 0 14px rgba(72,140,255,.85)); }
-  .core__vents { fill: #9ecbff; stroke: #9ecbff; stroke-width: 1; opacity: .8; filter: drop-shadow(0 0 5px #4c91f2); transform-origin: 340px 340px; animation: core-ring-spin 22s linear infinite reverse; }
+  .core__vents { fill: #badaff; stroke: #badaff; stroke-width: 1.1; opacity: .92; transform-origin: 340px 340px; animation: core-ring-spin 22s linear infinite reverse; }
   .core__title, .core__subtitle, .core__reveal { fill: #e8f1ff; font-family: var(--font-mono); }.core__title { font-size: 14px; font-weight: 850; letter-spacing: 2.5px; }.core__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 2px; opacity: .62; }
   /* Restrained company reveal: the core names its three arms on inspection only. */
   .core__reveal { font-size: 7px; font-weight: 650; letter-spacing: 1.6px; fill: #bcd4ff; opacity: 0; transition: opacity .25s ease; }
@@ -316,6 +337,23 @@ const researchChords = [
   @keyframes orbit-energy { to { stroke-dashoffset: -1000; } }
   @keyframes core-ring-spin { to { transform: rotate(360deg); } }
   @keyframes core-breathe { 0%, 100% { opacity: .68; transform: scale(.985); } 44%, 58% { opacity: 1; transform: scale(1.025); } }
+
+  /* Suspend ecosystem animation work when offscreen or when tab is backgrounded.
+     CSS animation-play-state: paused preserves exact orbital phase so planets never snap or drift. */
+  .fds-ecosystem[data-eco-paused] .planet-motion,
+  .fds-ecosystem[data-eco-paused] .orbit-pulse,
+  .fds-ecosystem[data-eco-paused] .core__ring,
+  .fds-ecosystem[data-eco-paused] .core__vents,
+  .fds-ecosystem[data-eco-paused] .core__heart-halo,
+  .fds-ecosystem[data-eco-paused] .ecosystem-stars__calm,
+  :global([data-bg-paused]) .fds-ecosystem .planet-motion,
+  :global([data-bg-paused]) .fds-ecosystem .orbit-pulse,
+  :global([data-bg-paused]) .fds-ecosystem .core__ring,
+  :global([data-bg-paused]) .fds-ecosystem .core__vents,
+  :global([data-bg-paused]) .fds-ecosystem .core__heart-halo,
+  :global([data-bg-paused]) .fds-ecosystem .ecosystem-stars__calm {
+    animation-play-state: paused;
+  }
 
   /* Inspection panel: compact, textual, always the same shape. */
   .fds-ecosystem__panel { margin: 1.1rem auto 0; max-width: 30rem; min-height: 6.4rem; padding: .9rem 1.1rem; border: 1px solid var(--color-border); border-left: 3px solid var(--color-accent); border-radius: var(--radius-md); background: rgba(9,15,26,.92); }
@@ -345,6 +383,14 @@ const researchChords = [
   .fds-ecosystem__belts { display: none; }
   @media (max-width: 719px) {
     .fds-ecosystem__scene-wrap, .fds-ecosystem__legend { display: none; }
+    .fds-ecosystem__scene-wrap .planet-motion,
+    .fds-ecosystem__scene-wrap .orbit-pulse,
+    .fds-ecosystem__scene-wrap .core__ring,
+    .fds-ecosystem__scene-wrap .core__vents,
+    .fds-ecosystem__scene-wrap .core__heart-halo,
+    .fds-ecosystem__scene-wrap .ecosystem-stars__calm {
+      animation-play-state: paused;
+    }
     .fds-ecosystem__mobile { display: grid; gap: 1rem; }
     .fds-ecosystem__panel { margin-top: 1rem; }
   }
