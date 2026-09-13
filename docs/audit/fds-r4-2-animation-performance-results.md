@@ -2,7 +2,7 @@
 
 **Starting Baseline Commit:** `bdfaa573d7c127ce2ff93465018826bed95d9244` (`FDS_WEBSITE_R4_1_HARDENED_LIVE_CERTIFIED`)  
 **Target Candidate Commit:** `d7c4056824748006106b326d78859cb4071fcb4c` (`main` HEAD)  
-**Reconciliation Status:** `FDS_WEBSITE_R4_2_RUNTIME_HARDENED_LIVE_CERTIFIED_WITH_MIXED_PERFORMANCE_METRICS`  
+**Reconciliation Status:** `FDS_WEBSITE_R4_2_RUNTIME_HARDENED_LIVE_CERTIFIED_WITH_MIXED_PERFORMANCE_METRICS` (superseded by the final R4.2H-R1 certification: `FDS_WEBSITE_R4_2_RUNTIME_HARDENED_LIVE_CERTIFIED_WITH_VISIBLE_WORKLOAD_TRADEOFF`)  
 **Audit Timestamp:** 2026-09-13T11:34:41Z  
 **Benchmark Methodology:** Playwright Headless Chromium + Chrome DevTools Protocol (CDP) `Performance.getMetrics` & `PerformanceObserver`  
 **Execution Mode:** Serial execution (`--workers=1`), embedded in-process HTTP static file server (port 4323) serving `dist/`  
@@ -70,7 +70,7 @@ The reconciled benchmark evidence establishes that **R4.2 is a runtime hardening
 5. **Dialog Settlement (S8):** Kayla panel closing settled **15.9% faster** (491ms → 413ms).
 
 ### Neutral & Regressive Metrics Documented
-1. **Headless Cumulative Task Duration (S1, S3):** Headless Chromium reported higher TaskDuration during idle (+320.5%) and visible (+236.3%) scenarios. The R4.2R benchmark did not isolate the cause of this signal. R4.2H investigates this separately using headed browser tracing.
+1. **Headless Cumulative Task Duration (S1, S3):** Headless Chromium reported higher TaskDuration during idle (+320.5%) and visible (+236.3%) scenarios. The R4.2R benchmark did not isolate the cause of this signal. **R4.2H outcome (see `fds-r4-2-headed-runtime-performance.md`, R1 revision):** headed trace-only measurement confirms R4.2 genuinely does more passive main-thread work (H1 +66.5%, H2 +62.5% over 10s windows) — the headless benchmark amplified the signal but did not invent it. No >50ms long tasks occurred in headed H1–H5 on either build, and scroll/hover workloads are lighter on R4.2.
 2. **Kayla Open Latency (S8):** Dialog visibility latency is slightly longer by **+13ms** (239ms → 252ms, +5.4%), while total open transition settled duration remained effectively identical (+3ms, +0.5%, well within statistical noise).
 3. **Pointer Burst Task Duration (S2):** Task duration during burst processing registered a minor increase (+0.0599s, 0.1241s → 0.1840s), reflecting RAF queue management overhead even as style writes were cut by 95%.
 
@@ -86,6 +86,6 @@ The reconciled benchmark evidence establishes that **R4.2 is a runtime hardening
 - **Kayla Golden Knowledge Suite:** 345 / 345 PASS (100.0%)
 - **Internal Link Consistency Check:** 1,254 / 1,254 verified (0 broken links)
 - **Astro Content & Build Check:** 29 pages generated cleanly with 0 errors
-- **Playwright Full Suite Certification:** 165 / 165 PASS across 21 test spec files (including 5 / 5 in `perf-animation-lifecycle.spec.ts`)
+- **Playwright Full Suite Certification:** 165 / 165 PASS across 21 test spec files (including 5 / 5 in `perf-animation-lifecycle.spec.ts`). Accounting verified against CI job logs (165 passed, 0 failed, 0 skipped in runs 34739559016, 34755517674, 34758450375).
 - **Dependency Security Audits:** 0 vulnerabilities across root and Cloudflare worker packages
 - **CodeForge Download Archive Integrity:** SHA-256 verified as `A6E16D0056DEEBEEB8D8B99F7228F5FED43C380722E97012E45B26D5C6FE3208` (matched and preserved)

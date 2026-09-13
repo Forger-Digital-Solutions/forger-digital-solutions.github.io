@@ -1,6 +1,5 @@
 {
-  "$schema": "./r42-headed-performance-summary.schema.json",
-  "certificationStatus": "FDS_WEBSITE_R4_2_VISIBLE_RUNTIME_PERFORMANCE_CERTIFIED",
+  "certificationStatus": "FDS_WEBSITE_R4_2_RUNTIME_HARDENED_LIVE_CERTIFIED_WITH_VISIBLE_WORKLOAD_TRADEOFF",
   "timestamp": "2026-09-13T12:45:51.729Z",
   "environment": {
     "os": "win32 10.0.26200 (x64)",
@@ -12,7 +11,11 @@
     },
     "server": "In-process Node.js HTTP static server",
     "harness": "scripts/r42h-trace-harness.ts",
-    "headed": true
+    "headed": true,
+    "playwright": "1.62.1",
+    "windowsEdition": "Windows 11 Pro (Build 26200, x64)",
+    "devicePixelRatio": 1,
+    "nodeVersionNote": "Harness-captured and reconciled against node --version on the executing machine; an earlier revision of the report erroneously stated v20.19.0."
   },
   "lineage": {
     "r41_baseline_commit": "bdfaa573d7c127ce2ff93465018826bed95d9244",
@@ -100,7 +103,7 @@
         "r41": 0,
         "r42": 0
       },
-      "cpuLoadPerSecondMs": {
+      "mainThreadTaskTimePerSecondMs": {
         "r41": 46.8,
         "r42": 77.9
       }
@@ -185,7 +188,7 @@
         "r41": 0,
         "r42": 0
       },
-      "cpuLoadPerSecondMs": {
+      "mainThreadTaskTimePerSecondMs": {
         "r41": 48.8,
         "r42": 79.3
       }
@@ -268,7 +271,7 @@
       },
       "pointerEvents": 70,
       "cssVariableWrites": 140,
-      "coalescingEfficiency": "100% (coalesced via RAF queue into bounded writes per frame)"
+      "pointerWriteObservation": "70 pointer events produced 140 CSS variable writes (an x/y custom-property pair per event). Natural movement was paced at or below frame cadence, so each event received its own RAF cycle; this scenario does not measure burst coalescing efficiency. Burst coalescing is separately proven by R4.2R S2: 100 events reduced 200 writes to 10 (-95.0%)."
     },
     "H4_scroll_ecosystem": {
       "description": "Continuous smooth scroll from top through ecosystem (30 increments across 1.5s)",
@@ -580,12 +583,39 @@
             ]
           ]
         }
-      }
+      },
+      "interpretation": "The real tab switch did not take effect in this harness run: visibilityState remained \"visible\" and data-bg-paused stayed false with animations running in all phases, for both builds. This artifact therefore does not demonstrate OS-level hidden-tab suspension. The hidden-tab pause mechanism remains verified via R4.2R S5 visibilitychange logic simulation (bg_paused_attr=true, targeted timelines paused, raf_while_hidden=0 in all iterations)."
     }
   },
   "keyFindings": {
-    "headlessDiscrepancyRootCause": "In headless mode with --disable-renderer-backgrounding and --disable-background-timer-throttling, Chromium operates without hardware V-Sync synchronization. The benchmark probe scripts (RAF_SCRIPT, FT_SCRIPT, and LT_SCRIPT) repeatedly queued high-frequency frame tracking callbacks (240 consecutive RAFs) directly into Chromium compositor queues. In genuine headed Chromium, the main thread CPU time is only ~63-79ms per second (<8% of one core), with 0 long tasks (>50ms) across all idle and visible scenarios.",
-    "userPerceivedSmoothness": "R4.2 is measurably smoother than R4.1 in all real user interactions. Continuous scroll (H4) shows a 21.0% task reduction and a 48.5% paint reduction. Planet hover (H5) shows a 15.9% task reduction and 19.1% style recalculation reduction. Pointer interaction shows 26% lower task time under burst instrumentation with 0 long tasks.",
-    "reconciliationVerdict": "The historical headless TaskDuration inflation was entirely benchmark-harness and headless-scheduling induced. R4.2 delivers superior real-world performance, verified in genuine headed Chromium traces."
-  }
+    "passiveWorkloadIncrease": "Headed trace-only measurement (zero synthetic probes) shows higher aggregate main-thread work on R4.2 during passive desktop idle and continuously visible ecosystem animation: H1 467.81ms -> 778.99ms (+66.5%) and H2 488.09ms -> 793.33ms (+62.5%) over 10-second windows, with increases in style recalculation, layout, and paint. The original headless benchmark substantially amplified this signal but did not invent it.",
+    "mainThreadHeadroom": "Despite the increased aggregate work, no long tasks (>50ms) occurred in H1-H5 on either build. In H2 visible on R4.2, approximately 7.9% of the 10-second observation window contained recorded main-thread task activity (~92.1% free). These are CDP trace main-thread busy-time ratios, not OS CPU utilization measurements.",
+    "userPerceivedSmoothness": "Real interactions are lighter on R4.2: continuous scroll (H4) -21.0% task time and -48.5% paint; planet hover (H5) -15.9% task time and -19.1% style recalc. Realistic pointer movement (H3 trace-only) was roughly neutral (+1.9%); burst instrumented pointer load was 26.0% lower on R4.2, and R4.2R S2 separately proved 95.0% burst write reduction (200 -> 10).",
+    "lifecycleSuspension": "Targeted decorative animation timelines pause while the ecosystem is offscreen (data-eco-paused, R4.2R S4) and pause in the hidden state per deterministic visibilitychange logic simulation (R4.2R S5: bg_paused_attr=true, timelines paused, raf_while_hidden=0). The headed H7 real tab switch never reached a hidden state, so OS-level background suspension is not demonstrated by that artifact. No GPU/compositor/energy claims are made.",
+    "headlessDiscrepancy": "Proven: adding benchmark instrumentation materially changes collected timing; trace-only and instrumented results differ; the headless benchmark produced substantially larger TaskDuration deltas than headed trace-only execution; the Chromium execution environment affects scheduling. Inferred (likely contributors, not isolated): headless compositing without hardware V-Sync, probe-script distortion (240 queued RAF callbacks, monkey-patched RAF counter, PerformanceObserver), and CDP cumulative-counter boundary effects over short windows.",
+    "reconciliationVerdict": "R4.2 is certified as FDS_WEBSITE_R4_2_RUNTIME_HARDENED_LIVE_CERTIFIED_WITH_VISIBLE_WORKLOAD_TRADEOFF: no user-facing blocking/jank defect observed, real interactions responsive, lifecycle hardening works, and the known passive visible main-thread workload increase is documented. Certification does not mean passive rendering is cheaper than R4.1, that CPU usage decreased, or that GPU/power was measured."
+  },
+  "revision": {
+    "label": "R4.2H-R1 claim hardening reconciliation",
+    "date": "2026-09-13",
+    "notes": "Measurements unchanged; wording and metadata corrected. See docs/audit/fds-r4-2-headed-runtime-performance.md (R1 revision).",
+    "correctedClaims": [
+      "R4.2R canonical commit is 51d2e44703556c31ffa153780ed91b7f2177ea32; expanded SHAs cited elsewhere were unreliable and were re-derived from git",
+      "Headed trace-only H1/H2 passive main-thread work is higher on R4.2 (+66.5% / +62.5%); the headless regression was amplified by instrumentation, not disproved",
+      "Main-thread task-time ratios are not OS CPU utilization; all CPU/GPU/battery utilization language removed",
+      "H3 (70 events -> 140 writes) is not a coalescing measurement; burst coalescing remains proven by R4.2R S2 (100 events: 200 -> 10 writes)",
+      "GPU/energy-savings claims removed; suspension claims limited to animation-timeline pause behavior",
+      "E2E accounting per CI job logs: 165 passed, 0 failed, 0 skipped (runs 34739559016, 34755517674, 34758450375)",
+      "H7 real tab switch never reached a hidden state in the harness; hidden-tab pause mechanism proven via R4.2R S5 visibilitychange logic simulation",
+      "Environment metadata corrected: Node v24.19.0, Playwright 1.62.1, Windows 11 Pro Build 26200"
+    ]
+  },
+  "limitations": [
+    "No physical OS CPU utilization measurement was taken; only CDP main-thread task-time ratios",
+    "No GPU utilization or power measurement",
+    "No battery or energy consumption measurement; any energy claims require separate physical instrumentation",
+    "Trace timings are browser- and environment-dependent; comparisons are valid only between builds measured back-to-back on this rig",
+    "Frame pacing was not independently captured in trace-only mode (no frame events in the selected trace categories); instrumented RAF pacing was probe-distorted",
+    "The H7 headed tab-switch harness never produced a hidden tab; OS-level hidden-tab behavior is unverified headed"
+  ]
 }
