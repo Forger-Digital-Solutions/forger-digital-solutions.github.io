@@ -238,6 +238,12 @@ const unpublishedArchives = productManifest
           }
         }
         if (!copied) {
+          // KNOWN DEPRECATED COMPATIBILITY FALLBACK: document.execCommand('copy')
+          // is deprecated but remains the only programmatic copy that works when
+          // navigator.clipboard is unavailable or rejects within the click
+          // gesture (observed on some Firefox/Safari builds). This branch runs
+          // only after the Clipboard API above has failed; the Astro check hint
+          // for it is accepted, not a defect.
           const helper = document.createElement('textarea');
           helper.value = sha;
           helper.setAttribute('readonly', '');
