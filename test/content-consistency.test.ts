@@ -131,7 +131,12 @@ describe('content consistency guards (Phase 28)', () => {
   });
 
   it('keeps support secondary on the homepage', () => {
-    expect(homepage).not.toContain('SupportDialog');
+    // R4.2H-R2: the first-visit support dialog is mounted on the homepage again
+    // (60% scroll trigger, 24-hour dismissal dedupe, dismissible overlay) after
+    // being accidentally dropped during the Phase 28 content reconciliation.
+    // Support still gets no primary-navigation slot, and the quiet closing
+    // note remains the always-visible support surface.
+    expect(homepage).toContain('SupportDialog');
     expect(homepage).not.toContain('Help independent work continue');
     // Support routes remain reachable but as a quiet closing note.
     expect(homepage).toContain('href="/support"');
