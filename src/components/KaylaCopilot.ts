@@ -19,7 +19,22 @@ export function isSourceLinkSafe(source: KaylaSource): boolean {
   return true; // a source with neither is still a valid "internal knowledge, no link" citation
 }
 
-type KaylaMode = 'ai' | 'local' | 'unavailable';
+/**
+ * R4.2H-R2.1 truthful status model.
+ *
+ * 'ready' — operational, but no response lane has been proven yet (initial
+ *           state; never claims AI or knowledge).
+ * 'ai'    — the most recent completed response was actually served from the
+ *           provider lane (server `mode: "ai"`, routeMode provider_accepted).
+ *           Never derived from health flags, config, or budget alone.
+ * 'local' — the most recent response came from the deterministic/canonical
+ *           knowledge lane without a failed provider attempt.
+ * 'local-fallback' — a provider attempt was made for the most recent response
+ *           but failed or was replaced (routeMode provider_failed_fallback /
+ *           provider_replaced) and the verified knowledge lane answered.
+ * 'unavailable' — no useful answer could be served at all.
+ */
+type KaylaMode = 'ready' | 'ai' | 'local' | 'local-fallback' | 'unavailable';
 
 let messages: KaylaMessage[] = [];
 let isOpen = false;
@@ -74,16 +89,38 @@ function updateStatus(mode: KaylaMode): void {
   const dot = statusDot();
   if (!text || !dot) return;
 
+  // Never display a stronger service state than the system has proven:
+  // 'ai' is only ever set from a response the server actually served through
+  // the provider lane; 'ready' makes no lane claim at all.
   if (mode === 'ai') {
     text.textContent = 'AI Online';
     dot.style.background = '#63a8ff';
+  } else if (mode === 'local-fallback') {
+    text.textContent = 'AI Limited · Knowledge Mode';
+    dot.style.background = '#f0a050';
   } else if (mode === 'local') {
     text.textContent = 'Knowledge Mode';
     dot.style.background = '#f0a050';
+  } else if (mode === 'ready') {
+    text.textContent = 'Ready';
+    dot.style.background = '#8fa3c7';
   } else {
     text.textContent = 'Service Unavailable';
     dot.style.background = '#888';
   }
+}
+
+/**
+ * Set the badge from the server's own metadata for a completed response.
+ * The server is the authority on which lane served the answer: `mode: "ai"`
+ * proves the provider lane; a provider attempt that failed or was replaced
+ * (provider_failed_fallback / provider_replaced) proves the degraded-but-
+ * working knowledge fallback; any other local response is plain knowledge.
+ */
+function applyResponseLaneStatus(mode: KaylaMode, routeMode?: string): void {
+  if (mode === 'ai') updateStatus('ai');
+  else if (mode === 'local' && (routeMode === 'provider_failed_fallback' || routeMode === 'provider_replaced')) updateStatus('local-fallback');
+  else if (mode === 'local') updateStatus('local');
 }
 
 function scrollToBottom(): void {
@@ -477,6 +514,7 @@ async function handleQuery(query: string): Promise<void> {
     let streamingText = '';
     let streamingSources: KaylaSource[] | undefined;
     let responseMode: KaylaMode = 'local';
+    let lastRouteMode: string | undefined;
 
     while (true) {
       if (!isCurrent()) {
@@ -498,13 +536,14 @@ async function handleQuery(query: string): Promise<void> {
         if (!trimmed) continue;
 
         try {
-          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; actions?: KaylaSafeAction[]; sourceLinks?: KaylaSource[]; done?: boolean; replace?: boolean };
+          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; routeMode?: string; actions?: KaylaSafeAction[]; sourceLinks?: KaylaSource[]; done?: boolean; replace?: boolean };
 
           // The server rejected the model's answer for contradicting canonical
           // FDS data. Discard whatever streamed and show the canonical answer.
           if (chunk.replace) {
             streamingText = chunk.content || '';
             responseMode = chunk.mode || 'local';
+            lastRouteMode = chunk.routeMode ?? lastRouteMode;
             streamingActions = chunk.actions?.filter(a => isActionAllowed(a)) ?? streamingActions;
             streamingSources = chunk.sourceLinks ?? streamingSources;
             updateStreamingMessage(placeholder, streamingText, streamingActions);
@@ -518,11 +557,14 @@ async function handleQuery(query: string): Promise<void> {
             break;
           }
 
-          // Track the mode for the transcript, but leave the header alone: a
-          // canonical answer served without the model is not a degraded
-          // service, and flipping the badge per message reads like an outage.
+          // Track the lane metadata for the badge, but leave the header alone
+          // while chunks stream: the badge is updated once, from the final
+          // server metadata, when the response completes.
           if (chunk.mode) {
             responseMode = chunk.mode;
+          }
+          if (chunk.routeMode) {
+            lastRouteMode = chunk.routeMode;
           }
 
           if (chunk.actions) {
@@ -548,6 +590,9 @@ async function handleQuery(query: string): Promise<void> {
     }
 
     if (!isCurrent()) { placeholder?.remove(); return; }
+    // The response completed: the badge now reflects the lane that actually
+    // served it, per the server's own mode/routeMode metadata.
+    applyResponseLaneStatus(responseMode, lastRouteMode);
     finalizeStreamingMessage(placeholder, streamingText, streamingActions, responseMode, streamingSources);
   } catch (error) {
     // A superseded request must stay silent: the newer turn owns the
@@ -559,7 +604,8 @@ async function handleQuery(query: string): Promise<void> {
     if ((error as Error).name === 'AbortError') {
       finalizeStreamingMessage(placeholder, 'Response cancelled.', undefined, 'local', undefined);
     } else if ((error as Error).message === 'RATE_LIMITED') {
-      updateStatus('local');
+      // Nothing was served this turn, so the badge keeps the last proven lane
+      // instead of claiming a mode the visitor never received.
       finalizeStreamingMessage(placeholder, 'Kayla has received several requests recently. Please try again a little later.', undefined, 'local', undefined);
     } else {
       updateStatus('unavailable');
@@ -677,29 +723,12 @@ function close(): void {
   setTimeout(() => { if (!isOpen) p.hidden = true; }, 300);
 }
 
-async function checkAIMode(): Promise<void> {
-  try {
-    const response = await fetch(API_ENDPOINTS.health, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    if (response.ok) {
-      const data = await response.json() as { aiAvailable?: boolean; mode?: string };
-      if (data.aiAvailable || data.mode === 'ai-capable') {
-        updateStatus('ai');
-      } else {
-        updateStatus('local');
-      }
-    } else {
-      updateStatus('local');
-    }
-  } catch {
-    updateStatus('local');
-  }
-}
-
 function init(): void {
-  updateStatus('local');
+  // No lane has been proven before the first response, and the health
+  // endpoint cannot prove one either (a configured provider is not an
+  // available provider), so the badge starts at the claim-free "Ready"
+  // state. The first completed response sets the real lane.
+  updateStatus('ready');
 
   const l = launcherBtn();
   const p = panel();
@@ -757,8 +786,6 @@ function init(): void {
   });
 
   addMessage('kayla', `Hi, I'm Kayla Copilot. I can help you learn about Forger Digital Solutions, our projects, and downloads. How can I help?`);
-
-  checkAIMode();
 }
 
 export function initKaylaCopilot(): void {
