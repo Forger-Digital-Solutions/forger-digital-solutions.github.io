@@ -20,15 +20,21 @@ export default defineConfig({
   // storms) contend for the single dev server until their step budgets
   // expire — timeouts with zero assertion failures. Four workers keeps the
   // suite parallel while bounding that contention; slow tests additionally
-  // carry explicit step budgets via test.setTimeout.
-  workers: 4,
+  // carry explicit step budgets via test.setTimeout. CI runners are slower
+  // than local hardware and share no warm caches, so the gate runs two
+  // workers there to keep contention below the step budgets.
+  workers: process.env.CI ? 2 : 4,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? 'list' : [['list']],
+  // CI keeps the console list and additionally writes an HTML report so a
+  // failed release gate carries reviewable evidence (uploaded as an artifact).
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
   use: {
     baseURL: 'http://localhost:4321',
-    trace: 'off',
-    screenshot: 'off'
+    // Failure evidence for the CI deployment gate: a trace with screenshots
+    // and network is written only when a test fails, so green runs stay fast.
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure'
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
