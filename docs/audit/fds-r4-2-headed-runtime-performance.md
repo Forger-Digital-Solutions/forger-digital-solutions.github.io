@@ -280,3 +280,16 @@ Also verified during R2: the live Kayla assistant works end-to-end (health, stre
 
 **The freeze is back in force as of R4.2H-R2.** The same reopening conditions apply, unchanged.
 
+### R4.2H-R2.1 Kayla status truthfulness (September 13, 2026)
+
+One truthfulness defect surfaced during the R2 live Kayla verification: the panel badge displayed **"AI Online"** from the health endpoint's configured `aiAvailable` flag while the upstream OpenRouter free lane was actually returning HTTP 429 and the verified knowledge lane was what served the visitor. R4.2H-R2.1 (commit `a6e0b1cf983b93a35c9d8fcbc04a4148b423a119`) fixed the badge semantics under the rule *never display a stronger service state than the system has actually proven*:
+
+* **Ready** — claim-free initial state (no lane proven yet); the page-load health probe was removed entirely, so no request is spent on the badge and no provider probing occurs outside real visitor queries.
+* **AI Online** — only after a response the server actually served from the provider lane (`mode: "ai"` / `provider_accepted`).
+* **Knowledge Mode** — deterministic/canonical responses.
+* **AI Limited · Knowledge Mode** — a provider attempt failed or was replaced (`provider_failed_fallback` / `provider_replaced`) and the knowledge lane answered; still a working assistant, honestly labeled.
+* **Service Unavailable** — unchanged; only when nothing useful is served. A rate-limited turn no longer claims any lane.
+
+The badge is derived once per completed response from the worker's own `mode`/`routeMode` metadata — the server is the authority. New e2e guards (`kayla-status-truthfulness.spec.ts`) pin all five states, including that `aiAvailable: true` alone can no longer produce "AI Online". The worker, zero-cost model policy, canonical knowledge, and all other components are unchanged. Verified live in a real browser after deployment; **the freeze remains in force.**
+
+
