@@ -267,3 +267,16 @@ With the publication of this revision, the FDS website performance/visual polish
 * a real FDS product release requiring website updates.
 
 Otherwise, engineering time returns to actual FDS product work: CodeForge, GEMS / Training Grounds, ForgeGreen, ForgerEMS, We The People Library, and other active FDS products. No R4.3 cosmetic/performance churn.
+
+### R4.2H-R2 reopening and re-freeze (September 13, 2026)
+
+The freeze was briefly reopened for **R4.2H-R2**, a surgical repair pass under the "reproducible user-facing regression" clause, after a live visual audit found real defects. Three were repaired (commit `b79187472535a46828ca49b876d03a82ebb95865`):
+
+1. **Homepage support dialog restored** — the Phase 28 content reconciliation (commit `9a691c9`) had accidentally unmounted `SupportDialog.astro`, disabling the first-visit support experience entirely. Re-mounted; trigger, 24h dedupe, and dismissal behavior certified by new e2e guards; verified live in a real browser.
+2. **ForgerEMS ecosystem destination corrected** — the One FDS Ecosystem Maintenance domain linked to `/forged` (the CodeForge storefront) instead of `/projects/forgerems`. Fixed and verified live.
+3. **Visual-certification harness repaired** — the site's global `scroll-behavior: smooth` defeated the capture harness's stepped scroll sweep, so scroll-reveal sections below the fold were captured as blank regions (the "huge empty regions" in prior automated screenshots). The harness now sweeps with instant scrolling, waits for every reveal target to actually reveal (failing the capture if any does not), and pre-seeds the support-dialog dismissal. Repaired-harness captures were exercised locally (26/26) and show every section rendered.
+
+Also verified during R2: the live Kayla assistant works end-to-end (health, streaming chat through the deployed worker, hostile-CORS block, real browser Q&A round trip); the upstream OpenRouter free lane was returning HTTP 429 during verification, which the worker classifies and falls back from gracefully to the verified knowledge lane — visitors keep working answers, and the zero-cost model policy is unchanged.
+
+**The freeze is back in force as of R4.2H-R2.** The same reopening conditions apply, unchanged.
+
