@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "FDS Website R4.2R Performance Evidence Manifest",
+  "generated_at": "2026-09-13T11:34:41Z",
+  "baseline": {
+    "commit": "bdfaa573d7c127ce2ff93465018826bed95d9244",
+    "release": "R4.1 Certified Baseline",
+    "raw_artifact": "docs/audit/r42-perf-raw-before.json",
+    "sha256": "853AC1893DCA62BB87924BF77FDF4C37A418F81696C09569B485970AF2DE19CC"
+  },
+  "candidate": {
+    "commit": "d7c4056824748006106b326d78859cb4071fcb4c",
+    "release": "R4.2 HEAD Candidate",
+    "raw_artifact": "docs/audit/r42-perf-raw-after.json",
+    "sha256": "1B34642E03D46CBC6CB0E3B0423E8BC2CD4105673026079ACB49E9C355BD9577"
+  },
+  "benchmark_environment": {
+    "os": "win32 10.0.26100 (x64)",
+    "node": "v24.19.0",
+    "browser": "Chromium 151.0.7922.34",
+    "playwright": "^1.62.1",
+    "package_lock_identical": true,
+    "concurrency": "serial (workers=1)",
+    "iterations_per_scenario": 5,
+    "statistical_method": "5-iteration median, mean, min, max; deltas computed from medians; <5% noise threshold",
+    "port": 4323,
+    "server_mode": "embedded in-process HTTP static file server serving dist/"
+  },
+  "harness": {
+    "benchmark_script": "scripts/r42-perf-benchmark.ts",
+    "benchmark_script_sha256": "514674DA7B3F4632432E6FE6D266104DDAF108E047470742D6725DC1B10BCE1A",
+    "report_script": "scripts/r42-perf-report.ts",
+    "report_script_sha256": "C922AA7BE0FB5851462B1F319C9F6D1C38F357821A001CFBD2EEF0F381A557F3"
+  },
+  "binary_integrity": {
+    "codeforge_zip": "public/downloads/codeforge/CodeForge-source-6b0770b.zip",
+    "codeforge_zip_sha256": "A6E16D0056DEEBEEB8D8B99F7228F5FED43C380722E97012E45B26D5C6FE3208",
+    "integrity_status": "MATCHED_AND_PRESERVED"
+  },
+  "scenarios_covered": [
+    "S1: Desktop Idle 1440px/3s (CDP Layout, RecalcStyle, Task, RAF frame tracking)",
+    "S2: Pointer Burst 1440px (5 bursts of 20 rapid pointermove events, CSS variable writes, recalc)",
+    "S3: Ecosystem Visible 1440px/3s (CDP Layout, RecalcStyle, Task, RAF frame tracking, animation states)",
+    "S4: Ecosystem Offscreen 1440px/3s (IntersectionObserver suspension, data-eco-paused, CDP metrics)",
+    "S5: Hidden Tab 1440px/3s (visibilitychange lifecycle suspension, data-bg-paused, CDP metrics)",
+    "S6: Reduced Motion 1440px/3s (prefers-reduced-motion: reduce, animation state verification)",
+    "S7: Mobile Viewport 390px/3s (touch isolation, scene-wrap hidden, planet paused, CDP metrics)",
+    "S8: Kayla Copilot Open/Close 1440px (interaction-to-visible, CSS transition settle, close settle)"
+  ]
+}

@@ -1,20 +1,23 @@
 # FDS Website R4.2 — Animation Performance Baseline Audit
 
 **Starting Baseline Commit:** `bdfaa573d7c127ce2ff93465018826bed95d9244` (`FDS_WEBSITE_R4_1_HARDENED_LIVE_CERTIFIED`)  
-**Timestamp:** 2026-09-13T04:32:22.681Z  
+**Audit Timestamp:** 2026-09-13T11:31:52Z  
 **Methodology:** Playwright Headless Chromium + Chrome DevTools Protocol (CDP) `Performance.getMetrics` & `PerformanceObserver`  
-**Raw Data Artifact:** `docs/audit/r42-perf-raw-before.json`  
+**Execution Mode:** Serial execution (`--workers=1`), embedded in-process HTTP static file server (port 4323) serving `dist/`  
+**Statistical Method:** 5 iterations per numerical scenario (reporting samples, median, mean, min, max; medians used for all primary metrics)  
+**Raw Data Artifact:** `docs/audit/r42-perf-raw-before.json` (SHA-256: `853AC1893DCA62BB87924BF77FDF4C37A418F81696C09569B485970AF2DE19CC`)  
+**Evidence Manifest:** `docs/audit/r42-performance-evidence-manifest.json`  
 
 ---
 
 ## 1. Executive Summary
 
-Under R4.1, the website visual identity and functionality met all acceptance criteria, but visitors reported an overall feeling of rendering lag. Profiling against the untouched baseline commit `bdfaa573` confirmed that the lag stemmed from five specific runtime and compositor inefficiencies:
-1. **Unthrottled `pointermove` handler:** Each mouse move directly modified CSS custom properties `--pointer-x` and `--pointer-y`, invalidating styles and forcing style recalculation (`recalc_s: 1.7695s` in a 2s window) and long tasks (`lt: 3`, max 65ms).
-2. **Offscreen ecosystem animations:** The 8 planets, 4 orbit energy pulses, 3 core rings, and core vents continued running at full frame rate when scrolled completely offscreen (`120` RAFs in 3s, `recalc_s: 0.2076s`, 30 dropped frames proxy).
-3. **Animated SVG filters:** The core reactor heart halo (`feGaussianBlur stdDeviation=7`) and moving orbit pulses (`filter: drop-shadow`) forced software/GPU filter re-evaluations during each animation frame.
-4. **Constellation keyframe box-shadow:** Keyframe mutations on `box-shadow` forced paint operations rather than compositor-only transforms.
-5. **No visibility suspension:** Animations ran unchecked when browser tabs were hidden or backgrounded.
+Under R4.1 (`bdfaa573`), the website visual identity and core functionality met all acceptance criteria. However, targeted performance profiling against the untouched baseline commit revealed specific runtime rendering and lifecycle opportunities:
+1. **Unthrottled `pointermove` handler:** Each pointer movement event synchronously updated CSS custom properties `--pointer-x` and `--pointer-y` on `<html>`, invalidating inline styles with zero frame-level coalescing (200 writes across 100 burst events; 2.0 writes per event).
+2. **Offscreen ecosystem animations:** The 8 orbital planets, 4 orbit energy pulses, 3 core rings, and reactor vents continued animating when scrolled completely offscreen (`data-eco-paused` absent / `false`), consuming layout (0.0817s) and style recalculation (0.1557s) in background.
+3. **Animated SVG filters:** The core reactor heart halo utilized an SVG `<filter>` (`<feGaussianBlur stdDeviation="7">`) and orbit pulses utilized CSS `filter: drop-shadow()`, requiring continuous software/GPU filter re-evaluations during each animation frame.
+4. **Constellation keyframe mutations:** Keyframe animations mutated `box-shadow` dynamically, inducing paint invalidations.
+5. **No visibility suspension:** Planetary and background animations continued running when the browser tab was hidden or backgrounded (`data-bg-paused` absent / `false`).
 
 ---
 
@@ -34,84 +37,81 @@ Under R4.1, the website visual identity and functionality met all acceptance cri
 
 ---
 
-## 3. Baseline Measurements (R4.1 Untouched Commit `bdfaa573`)
+## 3. Reconciled Baseline Measurements (5-Iteration Medians)
 
-Data collected via CDP `Performance.getMetrics` and RAF timestamp delta distributions:
+Data collected via CDP `Performance.getMetrics` and injected `requestAnimationFrame` timing loops across 5 deterministic iterations:
 
 ### S1: Homepage Idle (1440px Desktop, 3 seconds)
 - **Active Web Animations:** 75
 - **DOM Node Count:** 1,154
-- **Script Duration:** 0.0115s
-- **Layout Duration:** 0.0679s
-- **Recalc Style Duration:** 0.0623s
-- **Task Duration:** 0.3245s
-- **RAF Callback Count:** 34
-- **Frame Interval Mean:** 94.27ms (fps proxy: 10.6)
-- **Dropped Frame Proxy (>33.3ms):** 31 / 32
+- **Layout Duration (Median):** 0.0433s (samples: 0.0254s – 0.0721s)
+- **Recalc Style Duration (Median):** 0.0428s (samples: 0.0407s – 0.0500s)
+- **Task Duration (Median):** 0.3476s (samples: 0.2788s – 0.3892s)
+- **RAF Frame Rate Proxy (Median):** 18.8 fps
+- **Dropped Frames Proxy (>33.3ms, Median):** 52 frames
 
-### S2: Continuous Pointer Movement (1440px Desktop, ~2 seconds, 60 events)
-- **Pointer Events Emitted:** 60
-- **CSS Variable Updates:** 120 (2 updates per pointer event, 0% coalesced)
-- **Script Duration:** 0.0084s
-- **Recalc Style Duration:** 1.7695s
-- **Total Task Duration:** 2.5538s
-- **Long Tasks (>50ms):** 3 (Max Duration: 65.0ms)
-- *Finding:* Unthrottled style updates triggered continuous full-viewport fixed background repaints.
+### S2: Pointer Burst Coalescing (1440px Desktop, 5 bursts × 20 events = 100 events)
+- **Pointer Events Dispatched:** 100 events
+- **CSS Variable Writes (`--pointer-x` / `--pointer-y`):** 200 writes (Median: 200)
+- **Pointer Update Cycles:** 100 cycles (Median: 100)
+- **Writes Per Pointer Event:** 2.0 writes/ev (0% coalesced)
+- **Recalc Style Duration (Median):** 0.0666s
+- **Task Duration (Median):** 0.1241s
+- *Baseline Behavior:* Every dispatched pointermove synchronously updated CSS variables on `<html>` without frame throttling.
 
 ### S3: Ecosystem Fully Visible (1440px Desktop, 3 seconds)
 - **Active Web Animations:** 75
-- **Ecosystem Paused Attribute:** `false`
-- **Planets Animation State:** `running`
-- **Orbit Pulses Animation State:** `running`
-- **Core Rings Animation State:** `running`
-- **Script Duration:** 0.0017s
-- **Layout Duration:** 0.0578s
-- **Recalc Style Duration:** 0.0727s
-- **Total Task Duration:** 0.8326s
-- **Frame Interval Mean:** 58.82ms (fps proxy: 17.0)
-- **Dropped Frame Proxy (>33.3ms):** 47 / 51
+- **Ecosystem Paused Attribute (`data-eco-paused`):** `false`
+- **Planets Animation Play State:** `running`
+- **Orbit Pulses Animation Play State:** `running`
+- **Core Rings Animation Play State:** `running`
+- **Layout Duration (Median):** 0.0439s
+- **Recalc Style Duration (Median):** 0.0679s
+- **Task Duration (Median):** 0.5442s
+- **RAF Frame Rate Proxy (Median):** 28.5 fps
+- **Dropped Frames Proxy (>33.3ms, Median):** 58 frames
 
-### S4: Ecosystem Offscreen (Scrolled to Page Bottom, 3 seconds)
-- **Ecosystem Paused Attribute:** `false` (no IntersectionObserver suspension)
-- **Planets Animation State:** `running`
-- **Core Rings Animation State:** `running`
-- **Recalc Style Duration:** 0.2076s
-- **Total Task Duration:** 0.7496s
-- **RAF Callbacks:** 120
-- **Frame Interval Mean:** 22.41ms (fps proxy: 44.6)
-- **Dropped Frame Proxy (>33.3ms):** 30 / 119
-- *Finding:* Complete solar system animation machinery executed unthrottled despite being 100% invisible.
+### S4: Ecosystem Offscreen (Scrolled to Bottom of Page, 3 seconds)
+- **Ecosystem Paused Attribute (`data-eco-paused`):** `false` (no IntersectionObserver suspension)
+- **Planets Animation Play State:** `running`
+- **Core Rings Animation Play State:** `running`
+- **Layout Duration (Median):** 0.0817s
+- **Recalc Style Duration (Median):** 0.1557s
+- **Task Duration (Median):** 0.5496s
+- **RAF Frame Rate Proxy (Median):** 60.0 fps
+- **Dropped Frames Proxy (>33.3ms, Median):** 0 frames
+- *Baseline Behavior:* Orbital CSS animations ran uninhibited while 100% offscreen outside the viewport.
 
-### S5: Hidden / Background Tab (3 seconds)
-- **Tab Background Paused Attribute (`data-bg-paused`):** `false`
-- **Planet States while Hidden:** `running`
-- *Finding:* Background tabs wasted CPU/battery maintaining full 60fps CSS animation state.
+### S5: Hidden / Background Tab State (3 seconds)
+- **Tab Background Paused Attribute (`data-bg-paused`):** `false` (no Page Visibility handler)
+- **Planets Animation Play State while Hidden:** `running`
+- **Constellation Nodes Play State while Hidden:** `running`
+- **Task Duration (Median):** 0.3156s
+- *Baseline Behavior:* Browser continued running CSS animation timelines when the tab was hidden.
 
-### S6: Reduced-Motion Mode (`prefers-reduced-motion: reduce`)
-- **Active Animations:** 0
-- **Planet Motion State:** static
-- **Orbit Pulse State:** static
-- **Core Ring State:** static
-- **Total Task Duration:** 0.0003s
-- *Finding:* CSS reduced-motion rule effectively suppressed CSS animations.
+### S6: Reduced-Motion Mode (`prefers-reduced-motion: reduce`, 3 seconds)
+- **Active Web Animations:** 0 anims
+- **Task Duration (Median):** 0.0002s
+- *Baseline Behavior:* CSS `@media (prefers-reduced-motion: reduce)` successfully halted keyframe animations.
 
 ### S7: Mobile Viewport (390px × 844px, 3 seconds)
-- **Active Animations:** 28
-- **Desktop Scene Display:** `none`
-- **Planet Motion States:** empty
-- **Recalc Style Duration:** 0.0813s
-- **Total Task Duration:** 0.4076s
-- **Frame Interval Mean:** 24.23ms (fps proxy: 41.3)
-- **Dropped Frame Proxy (>33.3ms):** 38 / 119
+- **Orbital Scene Wrap Display:** `none`
+- **Planet Animation Play State:** `running` (hidden via `display: none`, but play-state remained `running`)
+- **Layout Duration (Median):** 0.0403s
+- **Recalc Style Duration (Median):** 0.0763s
+- **Task Duration (Median):** 0.3527s
+- **RAF Frame Rate Proxy (Median):** 59.3 fps
+- **Dropped Frames Proxy (>33.3ms, Median):** 1 frame
 
-### S8: Kayla Copilot Open / Close Journey
-- **Open Latency (including 250ms CSS transition):** 367ms
-- **Close Latency:** 519ms
-- **Long Tasks during Open/Close:** 2
+### S8: Kayla Copilot Open / Close Interaction Timing
+- **Dialog Visible Raw Duration (Median):** 239ms (from launcher click to `#kayla-panel.kayla-panel--open` visibility)
+- **Dialog Transition Settled Duration (Median):** 553ms (including 250ms CSS slide transition)
+- **Dialog Close Settled Duration (Median):** 491ms (from close button click to hidden settlement)
 
 ---
 
-## 4. Measurement Limitations
-1. CDP `Performance.getMetrics` deltas reflect cumulative process-level rendering time and serve as relative proxies for CPU style/script work.
-2. Frame intervals are derived from injected `requestAnimationFrame` timing loops rather than hardware VSYNC displays.
-3. Headless Chromium may throttle certain rendering operations differently than physical GPUs; numbers are strictly compared against identical execution conditions in the "after" measurement run.
+## 4. Measurement Methodology & Limitations
+
+1. **Cumulative Process-Level Metrics:** CDP `Performance.getMetrics` metrics (`LayoutDuration`, `RecalcStyleDuration`, `TaskDuration`) are cumulative process-level counters measured over fixed time windows. Deltas represent relative browser workload rather than absolute wall-clock CPU render times.
+2. **Frame Interval Proxy:** Frame intervals and FPS proxies are derived from timestamps captured in an injected `requestAnimationFrame` tracking loop, not physical hardware VSYNC refresh rates.
+3. **Headless Environment:** Headless Chromium may schedule timers, background tasks, and GPU rasterization differently than headed browsers on physical hardware. All candidate numbers are strictly compared against this identical baseline run on the same machine, Node version, Playwright version, and server mode.
