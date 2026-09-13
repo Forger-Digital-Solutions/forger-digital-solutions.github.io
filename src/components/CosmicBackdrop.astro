@@ -25,13 +25,18 @@
   .constellation { position: absolute; width: 18rem; height: 12rem; opacity: .28; }
   .constellation--featured { opacity: .42; }.constellation--one { top: 8rem; left: 5%; transform: rotate(-8deg); }.constellation--two { top: 17rem; right: 5%; transform: rotate(14deg) scale(.86); opacity: .36; }.constellation--three { top: 36rem; left: 43%; transform: rotate(-12deg) scale(.7); opacity: .21; }
   .constellation__node, .constellation__line { position: absolute; display: block; }
+  /* box-shadow is static on the element — NOT inside keyframes — so browsers
+     only composite opacity+transform, no paint per frame for the glow. */
   .constellation__node { z-index: 2; width: 4px; height: 4px; border: 1px solid rgba(143,177,243,.8); border-radius: 50%; background: #a9c2f4; box-shadow: 0 0 .65rem rgba(78,126,226,.62); animation: constellation-pulse 7s ease-in-out infinite; }
   .constellation__line { z-index: 1; height: 1px; background: linear-gradient(90deg, rgba(75,117,204,.08), rgba(121,157,225,.46), rgba(75,117,204,.08)); transform-origin: left center; }
-  .constellation--featured .constellation__line { background: linear-gradient(90deg, rgba(69,116,212,.1), rgba(145,181,245,.68), rgba(69,116,212,.1)); box-shadow: 0 0 .2rem rgba(70,123,232,.28); }.constellation__node--beacon { width: 6px; height: 6px; margin: -1px; border-color: rgba(224,238,255,.98); background: #e1edff; box-shadow: 0 0 .35rem #cfe2ff, 0 0 1rem rgba(64,125,255,.94); animation-name: constellation-beacon; animation-duration: 8.5s; }
+  .constellation--featured .constellation__line { background: linear-gradient(90deg, rgba(69,116,212,.1), rgba(145,181,245,.68), rgba(69,116,212,.1)); box-shadow: 0 0 .2rem rgba(70,123,232,.28); }.constellation__node--beacon { width: 6px; height: 6px; margin: -1px; border-color: rgba(224,238,255,.98); background: #e1edff; box-shadow: 0 0 .45rem #e6f0ff, 0 0 1.25rem rgba(64,125,255,.92); animation-name: constellation-beacon; animation-duration: 8.5s; }
   .constellation .n1 { top: 18%; left: 8%; }.constellation .n2 { top: 37%; left: 34%; animation-delay: -1.5s; }.constellation .n3 { top: 14%; left: 62%; animation-delay: -3.2s; }.constellation .n4 { top: 56%; left: 78%; animation-delay: -4.7s; }.constellation .n5 { top: 78%; left: 47%; animation-delay: -2.4s; }
   .constellation .l1 { top: 20%; left: 9%; width: 30%; transform: rotate(26deg); }.constellation .l2 { top: 38%; left: 35%; width: 34%; transform: rotate(-28deg); }.constellation .l3 { top: 16%; left: 63%; width: 26%; transform: rotate(55deg); }.constellation .l4 { top: 58%; left: 79%; width: 38%; transform: rotate(144deg); }
-  @keyframes constellation-pulse { 50% { opacity: .45; transform: scale(.7); box-shadow: 0 0 .25rem rgba(78,126,226,.4); } }
-  @keyframes constellation-beacon { 0%, 28%, 100% { opacity: .62; transform: scale(.78); } 45%, 58% { opacity: 1; transform: scale(1.12); box-shadow: 0 0 .45rem #e6f0ff, 0 0 1.25rem rgba(64,125,255,.92); } }
+  /* Keyframes: opacity + transform only — compositor-only, zero paint cost. */
+  @keyframes constellation-pulse { 50% { opacity: .45; transform: scale(.7); } }
+  @keyframes constellation-beacon { 0%, 28%, 100% { opacity: .62; transform: scale(.78); } 45%, 58% { opacity: 1; transform: scale(1.12); } }
   @media (max-width: 760px) { .cosmic-backdrop { height: 72rem; }.cosmic-backdrop__stars--far { opacity: .25; }.cosmic-backdrop__stars--near { opacity: .4; background-size: 281px 259px, 347px 323px, 189px 207px; }.constellation--one { left: -7rem; opacity: .16; }.constellation--two { top: 28rem; right: -9rem; opacity: .15; }.constellation--three { display: none; } }
   @media (prefers-reduced-motion: reduce) { .constellation__node { animation: none; } }
+  /* Suspend when tab is hidden (data-bg-paused set by BaseLayout visibilitychange handler). */
+  :global([data-bg-paused]) .constellation__node { animation-play-state: paused; }
 </style>

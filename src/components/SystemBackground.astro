@@ -28,4 +28,6 @@
   @keyframes system-node-pulse { 0%, 100% { opacity: .45; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.35); } }
   @media (max-width: 760px) { .system-environment__grid { background-size: 48px 48px; opacity: .2; }.system-environment__network { right: -8rem; width: 26rem; opacity: .18; }.system-environment__glow--two { display: none; } }
   @media (prefers-reduced-motion: reduce) { .system-node { animation: none; } }
+  /* Suspend when tab is hidden (data-bg-paused set by BaseLayout visibilitychange handler). */
+  :global([data-bg-paused]) .system-node { animation-play-state: paused; }
 </style>
