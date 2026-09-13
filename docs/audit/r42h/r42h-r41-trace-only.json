@@ -1,0 +1,611 @@
+{
+  "_environment": {
+    "label": "r41",
+    "mode": "trace-only",
+    "browserVersion": "151.0.7922.34",
+    "screen": {
+      "width": 1440,
+      "height": 900,
+      "availWidth": 1440,
+      "availHeight": 900
+    },
+    "window": {
+      "innerWidth": 1440,
+      "innerHeight": 900,
+      "outerWidth": 1456,
+      "outerHeight": 879,
+      "devicePixelRatio": 1.0000000149011612
+    },
+    "navigator": {
+      "hardwareConcurrency": 12,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+    }
+  },
+  "H1_desktop_idle": {
+    "scenario": "H1: Homepage Idle (1440px, 10s)",
+    "runs": [
+      {
+        "totalTaskMs": 467.81,
+        "scriptMs": 0,
+        "styleMs": 109.12,
+        "layoutMs": 51.33,
+        "paintMs": 141.85,
+        "compositeMs": 32.54,
+        "unattributedTaskMs": 132.98,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 466.42,
+        "scriptMs": 0,
+        "styleMs": 103.78,
+        "layoutMs": 47.98,
+        "paintMs": 141.17,
+        "compositeMs": 34.57,
+        "unattributedTaskMs": 138.91,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 475.47,
+        "scriptMs": 0,
+        "styleMs": 108.66,
+        "layoutMs": 49.41,
+        "paintMs": 147.51,
+        "compositeMs": 37.14,
+        "unattributedTaskMs": 132.75,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      }
+    ],
+    "meta": [
+      {
+        "run": 1,
+        "traceFile": "trace-h1-r41-trace-only-run1.json",
+        "sha256": "f85df56a7a027a1c2f1d6d6244917264fee755e4591a668d5e4064f6ffabf2f8"
+      },
+      {
+        "run": 2,
+        "traceFile": "trace-h1-r41-trace-only-run2.json",
+        "sha256": "9ae935df36a0fe2bed6e2f1e73acd7c31b7bfa93d1228e9f98f8a53474cef7ca"
+      },
+      {
+        "run": 3,
+        "traceFile": "trace-h1-r41-trace-only-run3.json",
+        "sha256": "d0b7e211778215c9d6c3998d41d0dc6eaf0aa8f0b3a9fabaab3ab652a7c007dd"
+      }
+    ],
+    "median": {
+      "totalTaskMs": 467.81,
+      "scriptMs": 0,
+      "styleMs": 108.66,
+      "layoutMs": 49.41,
+      "paintMs": 141.85,
+      "compositeMs": 34.57,
+      "unattributedTaskMs": 132.98,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "longTasksP95Ms": 0,
+      "frameCount": 0,
+      "frameIntervalMeanMs": 0,
+      "frameIntervalP95Ms": 0,
+      "droppedFramesGt33": 0,
+      "droppedFramesGt50": 0
+    }
+  },
+  "H2_ecosystem_visible": {
+    "scenario": "H2: Ecosystem Fully Visible (1440px, 10s, center viewport)",
+    "runs": [
+      {
+        "totalTaskMs": 500.7,
+        "scriptMs": 0,
+        "styleMs": 114.52,
+        "layoutMs": 48.7,
+        "paintMs": 157.4,
+        "compositeMs": 41.01,
+        "unattributedTaskMs": 139.07,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 483.06,
+        "scriptMs": 0,
+        "styleMs": 110.67,
+        "layoutMs": 49.47,
+        "paintMs": 154.04,
+        "compositeMs": 36.84,
+        "unattributedTaskMs": 132.05,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 488.09,
+        "scriptMs": 0,
+        "styleMs": 110.38,
+        "layoutMs": 49.43,
+        "paintMs": 150.12,
+        "compositeMs": 38.3,
+        "unattributedTaskMs": 139.87,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      }
+    ],
+    "meta": [
+      {
+        "run": 1,
+        "traceFile": "trace-h2-r41-trace-only-run1.json",
+        "sha256": "cb367ee0fbd3308726c8ea06aaf57294e5b5c60a9128443dc62028a408d6c21b",
+        "preCheck": {
+          "rect": {
+            "top": 79.7750015258789,
+            "bottom": 820.5312881469727,
+            "height": 740.7562866210938
+          },
+          "ecoPaused": false,
+          "planetsRunning": true,
+          "ringsRunning": true,
+          "pulsesRunning": true
+        }
+      },
+      {
+        "run": 2,
+        "traceFile": "trace-h2-r41-trace-only-run2.json",
+        "sha256": "c9357bfa5ba246b9dca5db8197df22a1b1e88b551cd87b397e96df516af68822",
+        "preCheck": {
+          "rect": {
+            "top": 79.7750015258789,
+            "bottom": 820.5312881469727,
+            "height": 740.7562866210938
+          },
+          "ecoPaused": false,
+          "planetsRunning": true,
+          "ringsRunning": true,
+          "pulsesRunning": true
+        }
+      },
+      {
+        "run": 3,
+        "traceFile": "trace-h2-r41-trace-only-run3.json",
+        "sha256": "096fb42b2192261c3ab4ba0bab3640f06f194289c44e8fe0a3d65104776896a0",
+        "preCheck": {
+          "rect": {
+            "top": 79.7750015258789,
+            "bottom": 820.5312881469727,
+            "height": 740.7562866210938
+          },
+          "ecoPaused": false,
+          "planetsRunning": true,
+          "ringsRunning": true,
+          "pulsesRunning": true
+        }
+      }
+    ],
+    "observations": {
+      "rect": {
+        "top": 79.7750015258789,
+        "bottom": 820.5312881469727,
+        "height": 740.7562866210938
+      },
+      "ecoPaused": false,
+      "planetsRunning": true,
+      "ringsRunning": true,
+      "pulsesRunning": true
+    },
+    "median": {
+      "totalTaskMs": 488.09,
+      "scriptMs": 0,
+      "styleMs": 110.67,
+      "layoutMs": 49.43,
+      "paintMs": 154.04,
+      "compositeMs": 38.3,
+      "unattributedTaskMs": 139.07,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "longTasksP95Ms": 0,
+      "frameCount": 0,
+      "frameIntervalMeanMs": 0,
+      "frameIntervalP95Ms": 0,
+      "droppedFramesGt33": 0,
+      "droppedFramesGt50": 0
+    }
+  },
+  "H3_pointer_interaction": {
+    "scenario": "H3: Ecosystem Visible + Natural Pointer Movement",
+    "runs": [
+      {
+        "totalTaskMs": 1856.13,
+        "scriptMs": 6.25,
+        "styleMs": 1302.27,
+        "layoutMs": 84.45,
+        "paintMs": 151.66,
+        "compositeMs": 55.19,
+        "unattributedTaskMs": 256.31,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 1939.99,
+        "scriptMs": 6.5,
+        "styleMs": 1388.96,
+        "layoutMs": 85.48,
+        "paintMs": 170,
+        "compositeMs": 59.97,
+        "unattributedTaskMs": 229.08,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 1878.87,
+        "scriptMs": 6.24,
+        "styleMs": 1326.22,
+        "layoutMs": 82.79,
+        "paintMs": 164.02,
+        "compositeMs": 57.3,
+        "unattributedTaskMs": 242.29,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      }
+    ],
+    "interactionStats": [
+      {
+        "pm": 70,
+        "csv": 140,
+        "traceFile": "trace-h3-r41-trace-only-run1.json",
+        "sha256": "8d9c8ce21404b759eb88f065b31bd6d11f3762012674c11aaba4b8836abd69f4"
+      },
+      {
+        "pm": 70,
+        "csv": 140,
+        "traceFile": "trace-h3-r41-trace-only-run2.json",
+        "sha256": "ff36e396fca2e31af469515c6a0bebb8a3700329d44bcd0410993030b0f70d32"
+      },
+      {
+        "pm": 70,
+        "csv": 140,
+        "traceFile": "trace-h3-r41-trace-only-run3.json",
+        "sha256": "e1637c5b3282da0c3f4a08e1e15666c687fc38bd9ea816061daccde081a89df1"
+      }
+    ],
+    "median": {
+      "totalTaskMs": 1878.87,
+      "scriptMs": 6.25,
+      "styleMs": 1326.22,
+      "layoutMs": 84.45,
+      "paintMs": 164.02,
+      "compositeMs": 57.3,
+      "unattributedTaskMs": 242.29,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "longTasksP95Ms": 0,
+      "frameCount": 0,
+      "frameIntervalMeanMs": 0,
+      "frameIntervalP95Ms": 0,
+      "droppedFramesGt33": 0,
+      "droppedFramesGt50": 0
+    }
+  },
+  "H4_scroll_ecosystem": {
+    "scenario": "H4: Continuous Scroll Through Ecosystem (30 steps over 1.5s)",
+    "runs": [
+      {
+        "totalTaskMs": 322.81,
+        "scriptMs": 0.27,
+        "styleMs": 82.7,
+        "layoutMs": 41.18,
+        "paintMs": 80.94,
+        "compositeMs": 18.57,
+        "unattributedTaskMs": 99.15,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 335.16,
+        "scriptMs": 0.27,
+        "styleMs": 80.76,
+        "layoutMs": 40.44,
+        "paintMs": 89.59,
+        "compositeMs": 17.49,
+        "unattributedTaskMs": 106.61,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 370.25,
+        "scriptMs": 0.15,
+        "styleMs": 101.92,
+        "layoutMs": 46.69,
+        "paintMs": 99.89,
+        "compositeMs": 18.8,
+        "unattributedTaskMs": 102.81,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      }
+    ],
+    "meta": [
+      {
+        "traceFile": "trace-h4-r41-trace-only-run1.json",
+        "sha256": "2d546f0d20427a417d7cfd7fe4b2b60bfc3cbd2b9e303c54c69cc77b67c41fd8"
+      },
+      {
+        "traceFile": "trace-h4-r41-trace-only-run2.json",
+        "sha256": "4254f0936e598bce7604025b0b59eda3167aee941bfe6dcfa1b72f0cf2ac25c8"
+      },
+      {
+        "traceFile": "trace-h4-r41-trace-only-run3.json",
+        "sha256": "67ad64dad850bfced36cea3e3fb79c6e656888ae21532b093ffcbe4496b96430"
+      }
+    ],
+    "median": {
+      "totalTaskMs": 335.16,
+      "scriptMs": 0.27,
+      "styleMs": 82.7,
+      "layoutMs": 41.18,
+      "paintMs": 89.59,
+      "compositeMs": 18.57,
+      "unattributedTaskMs": 102.81,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "longTasksP95Ms": 0,
+      "frameCount": 0,
+      "frameIntervalMeanMs": 0,
+      "frameIntervalP95Ms": 0,
+      "droppedFramesGt33": 0,
+      "droppedFramesGt50": 0
+    }
+  },
+  "H5_planet_hover": {
+    "scenario": "H5: Hover 4 Planets Sequentially",
+    "runs": [
+      {
+        "totalTaskMs": 270.75,
+        "scriptMs": 9.7,
+        "styleMs": 129.08,
+        "layoutMs": 17.37,
+        "paintMs": 39.83,
+        "compositeMs": 8.22,
+        "unattributedTaskMs": 66.55,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 217.47,
+        "scriptMs": 9.3,
+        "styleMs": 101,
+        "layoutMs": 13.43,
+        "paintMs": 28.41,
+        "compositeMs": 6.91,
+        "unattributedTaskMs": 58.42,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 256.25,
+        "scriptMs": 10.88,
+        "styleMs": 111.11,
+        "layoutMs": 16.82,
+        "paintMs": 37.05,
+        "compositeMs": 8.45,
+        "unattributedTaskMs": 71.94,
+        "longTaskCount": 0,
+        "maxLongTaskMs": 0,
+        "longTasksP95Ms": 0,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      }
+    ],
+    "median": {
+      "totalTaskMs": 256.25,
+      "scriptMs": 9.7,
+      "styleMs": 111.11,
+      "layoutMs": 16.82,
+      "paintMs": 37.05,
+      "compositeMs": 8.22,
+      "unattributedTaskMs": 66.55,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "longTasksP95Ms": 0,
+      "frameCount": 0,
+      "frameIntervalMeanMs": 0,
+      "frameIntervalP95Ms": 0,
+      "droppedFramesGt33": 0,
+      "droppedFramesGt50": 0
+    }
+  },
+  "H6_resize": {
+    "scenario": "H6: Viewport Resize 1440 -> 1024 -> 768 -> 1440",
+    "runs": [
+      {
+        "totalTaskMs": 361.83,
+        "scriptMs": 0,
+        "styleMs": 47.84,
+        "layoutMs": 254.74,
+        "paintMs": 34.2,
+        "compositeMs": 4.37,
+        "unattributedTaskMs": 20.68,
+        "longTaskCount": 3,
+        "maxLongTaskMs": 150.23,
+        "longTasksP95Ms": 150.23,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 348.27,
+        "scriptMs": 0,
+        "styleMs": 47.85,
+        "layoutMs": 231.21,
+        "paintMs": 32.88,
+        "compositeMs": 4.36,
+        "unattributedTaskMs": 31.97,
+        "longTaskCount": 3,
+        "maxLongTaskMs": 107.48,
+        "longTasksP95Ms": 107.48,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      },
+      {
+        "totalTaskMs": 365.03,
+        "scriptMs": 0,
+        "styleMs": 56.46,
+        "layoutMs": 237.45,
+        "paintMs": 39.03,
+        "compositeMs": 4.59,
+        "unattributedTaskMs": 27.5,
+        "longTaskCount": 3,
+        "maxLongTaskMs": 126.58,
+        "longTasksP95Ms": 126.58,
+        "frameCount": 0,
+        "frameIntervalMeanMs": 0,
+        "frameIntervalP95Ms": 0,
+        "droppedFramesGt33": 0,
+        "droppedFramesGt50": 0
+      }
+    ],
+    "median": {
+      "totalTaskMs": 361.83,
+      "scriptMs": 0,
+      "styleMs": 47.85,
+      "layoutMs": 237.45,
+      "paintMs": 34.2,
+      "compositeMs": 4.37,
+      "unattributedTaskMs": 27.5,
+      "longTaskCount": 3,
+      "maxLongTaskMs": 126.58,
+      "longTasksP95Ms": 126.58,
+      "frameCount": 0,
+      "frameIntervalMeanMs": 0,
+      "frameIntervalP95Ms": 0,
+      "droppedFramesGt33": 0,
+      "droppedFramesGt50": 0
+    }
+  },
+  "H7_real_tab_switch": {
+    "scenario": "H7: Real Browser Tab Switch",
+    "initial": {
+      "visibilityState": "visible",
+      "dataBgPaused": false
+    },
+    "backgrounded": {
+      "visibilityState": "visible",
+      "dataBgPaused": false,
+      "planetStates": [
+        [
+          "running"
+        ],
+        [
+          "running"
+        ],
+        [
+          "running"
+        ]
+      ]
+    },
+    "returned": {
+      "visibilityState": "visible",
+      "dataBgPaused": false,
+      "planetStates": [
+        [
+          "running"
+        ],
+        [
+          "running"
+        ],
+        [
+          "running"
+        ]
+      ]
+    }
+  }
+}

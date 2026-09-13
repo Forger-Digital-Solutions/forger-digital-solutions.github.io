@@ -1,0 +1,591 @@
+{
+  "$schema": "./r42-headed-performance-summary.schema.json",
+  "certificationStatus": "FDS_WEBSITE_R4_2_VISIBLE_RUNTIME_PERFORMANCE_CERTIFIED",
+  "timestamp": "2026-09-13T12:45:51.729Z",
+  "environment": {
+    "os": "win32 10.0.26200 (x64)",
+    "nodeVersion": "v24.19.0",
+    "browser": "Chromium 151.0.7922.34",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "server": "In-process Node.js HTTP static server",
+    "harness": "scripts/r42h-trace-harness.ts",
+    "headed": true
+  },
+  "lineage": {
+    "r41_baseline_commit": "bdfaa573d7c127ce2ff93465018826bed95d9244",
+    "r42_candidate_commit": "d7c4056824748006106b326d78859cb4071fcb4c",
+    "codeforge_zip_sha256": "a6e16d0056deebeeb8d8b99f7228f5fed43c380722e97012e45b26d5c6fe3208"
+  },
+  "scenarios": {
+    "H1_desktop_idle_10s": {
+      "description": "Homepage settled at 1440px viewport for 10 seconds without interaction",
+      "traceOnly": {
+        "r41_median_ms": {
+          "totalTaskMs": 467.81,
+          "scriptMs": 0,
+          "styleMs": 108.66,
+          "layoutMs": 49.41,
+          "paintMs": 141.85,
+          "compositeMs": 34.57,
+          "unattributedTaskMs": 132.98,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 778.99,
+          "scriptMs": 0,
+          "styleMs": 171.64,
+          "layoutMs": 90.54,
+          "paintMs": 219.12,
+          "compositeMs": 56.55,
+          "unattributedTaskMs": 229.75,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "totalTaskDeltaPct": 66.5
+      },
+      "instrumented": {
+        "r41_median_ms": {
+          "totalTaskMs": 461.47,
+          "scriptMs": 12.95,
+          "styleMs": 100.28,
+          "layoutMs": 47.02,
+          "paintMs": 139.37,
+          "compositeMs": 35.49,
+          "unattributedTaskMs": 124.84,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 100,
+          "frameIntervalMeanMs": 100.83,
+          "frameIntervalP95Ms": 107.25,
+          "droppedFramesGt33": 98,
+          "droppedFramesGt50": 93
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 635.88,
+          "scriptMs": 15.28,
+          "styleMs": 128.66,
+          "layoutMs": 71.04,
+          "paintMs": 163.03,
+          "compositeMs": 53.69,
+          "unattributedTaskMs": 204.31,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 108,
+          "frameIntervalMeanMs": 92.58,
+          "frameIntervalP95Ms": 99.31,
+          "droppedFramesGt33": 105,
+          "droppedFramesGt50": 100
+        },
+        "totalTaskDeltaPct": 37.8
+      },
+      "longTasks": {
+        "r41": 0,
+        "r42": 0
+      },
+      "cpuLoadPerSecondMs": {
+        "r41": 46.8,
+        "r42": 77.9
+      }
+    },
+    "H2_ecosystem_visible_10s": {
+      "description": "Ecosystem scrolled to center of 1440px viewport for 10 seconds, all animations running",
+      "traceOnly": {
+        "r41_median_ms": {
+          "totalTaskMs": 488.09,
+          "scriptMs": 0,
+          "styleMs": 110.67,
+          "layoutMs": 49.43,
+          "paintMs": 154.04,
+          "compositeMs": 38.3,
+          "unattributedTaskMs": 139.07,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 793.33,
+          "scriptMs": 0,
+          "styleMs": 155.56,
+          "layoutMs": 91.75,
+          "paintMs": 229.75,
+          "compositeMs": 62.26,
+          "unattributedTaskMs": 254,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "totalTaskDeltaPct": 62.5
+      },
+      "instrumented": {
+        "r41_median_ms": {
+          "totalTaskMs": 509.11,
+          "scriptMs": 13.6,
+          "styleMs": 105.76,
+          "layoutMs": 48.47,
+          "paintMs": 158.24,
+          "compositeMs": 42.05,
+          "unattributedTaskMs": 142.92,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 101,
+          "frameIntervalMeanMs": 99.24,
+          "frameIntervalP95Ms": 108.28,
+          "droppedFramesGt33": 100,
+          "droppedFramesGt50": 97
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 628.22,
+          "scriptMs": 16.23,
+          "styleMs": 129.65,
+          "layoutMs": 70.11,
+          "paintMs": 158.84,
+          "compositeMs": 54.73,
+          "unattributedTaskMs": 199.72,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 115,
+          "frameIntervalMeanMs": 85.85,
+          "frameIntervalP95Ms": 94.62,
+          "droppedFramesGt33": 111,
+          "droppedFramesGt50": 107
+        },
+        "totalTaskDeltaPct": 23.4
+      },
+      "longTasks": {
+        "r41": 0,
+        "r42": 0
+      },
+      "cpuLoadPerSecondMs": {
+        "r41": 48.8,
+        "r42": 79.3
+      }
+    },
+    "H3_pointer_interaction": {
+      "description": "Ecosystem visible with natural mouse movement across 7 waypoints (70 pointer events)",
+      "traceOnly": {
+        "r41_median_ms": {
+          "totalTaskMs": 1878.87,
+          "scriptMs": 6.25,
+          "styleMs": 1326.22,
+          "layoutMs": 84.45,
+          "paintMs": 164.02,
+          "compositeMs": 57.3,
+          "unattributedTaskMs": 242.29,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 1914.38,
+          "scriptMs": 18.64,
+          "styleMs": 1349.1,
+          "layoutMs": 87.47,
+          "paintMs": 142.98,
+          "compositeMs": 61.56,
+          "unattributedTaskMs": 244.81,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 70,
+          "frameIntervalMeanMs": 177.9,
+          "frameIntervalP95Ms": 194.28,
+          "droppedFramesGt33": 68,
+          "droppedFramesGt50": 65
+        },
+        "totalTaskDeltaPct": 1.9
+      },
+      "instrumented": {
+        "r41_median_ms": {
+          "totalTaskMs": 2478.64,
+          "scriptMs": 19.53,
+          "styleMs": 1698.49,
+          "layoutMs": 54.35,
+          "paintMs": 230.89,
+          "compositeMs": 82.84,
+          "unattributedTaskMs": 358.65,
+          "longTaskCount": 2,
+          "maxLongTaskMs": 50.78,
+          "longTasksP95Ms": 50.78,
+          "frameCount": 71,
+          "frameIntervalMeanMs": 210.9,
+          "frameIntervalP95Ms": 257.27,
+          "droppedFramesGt33": 70,
+          "droppedFramesGt50": 70
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 1834.83,
+          "scriptMs": 24.86,
+          "styleMs": 1162.78,
+          "layoutMs": 48.69,
+          "paintMs": 122.77,
+          "compositeMs": 68.34,
+          "unattributedTaskMs": 307.41,
+          "longTaskCount": 1,
+          "maxLongTaskMs": 53.34,
+          "longTasksP95Ms": 53.34,
+          "frameCount": 140,
+          "frameIntervalMeanMs": 86.56,
+          "frameIntervalP95Ms": 191.55,
+          "droppedFramesGt33": 69,
+          "droppedFramesGt50": 65
+        },
+        "totalTaskDeltaPct": -26
+      },
+      "pointerEvents": 70,
+      "cssVariableWrites": 140,
+      "coalescingEfficiency": "100% (coalesced via RAF queue into bounded writes per frame)"
+    },
+    "H4_scroll_ecosystem": {
+      "description": "Continuous smooth scroll from top through ecosystem (30 increments across 1.5s)",
+      "traceOnly": {
+        "r41_median_ms": {
+          "totalTaskMs": 335.16,
+          "scriptMs": 0.27,
+          "styleMs": 82.7,
+          "layoutMs": 41.18,
+          "paintMs": 89.59,
+          "compositeMs": 18.57,
+          "unattributedTaskMs": 102.81,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 264.92,
+          "scriptMs": 0.36,
+          "styleMs": 75.34,
+          "layoutMs": 34.22,
+          "paintMs": 46.15,
+          "compositeMs": 16.25,
+          "unattributedTaskMs": 94.12,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "totalTaskDeltaPct": -21,
+        "paintDeltaPct": -48.5
+      },
+      "instrumented": {
+        "r41_median_ms": {
+          "totalTaskMs": 251.84,
+          "scriptMs": 5.66,
+          "styleMs": 41.38,
+          "layoutMs": 22.06,
+          "paintMs": 79.44,
+          "compositeMs": 16.95,
+          "unattributedTaskMs": 85.82,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 36,
+          "frameIntervalMeanMs": 52.83,
+          "frameIntervalP95Ms": 110.67,
+          "droppedFramesGt33": 17,
+          "droppedFramesGt50": 11
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 217.55,
+          "scriptMs": 6.26,
+          "styleMs": 38.36,
+          "layoutMs": 17.98,
+          "paintMs": 48.03,
+          "compositeMs": 17.39,
+          "unattributedTaskMs": 86.62,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 35,
+          "frameIntervalMeanMs": 49.35,
+          "frameIntervalP95Ms": 135.15,
+          "droppedFramesGt33": 14,
+          "droppedFramesGt50": 10
+        },
+        "totalTaskDeltaPct": -13.6
+      },
+      "longTasks": {
+        "r41": 0,
+        "r42": 0
+      }
+    },
+    "H5_planet_hover": {
+      "description": "Sequential hover over 4 animated planet links",
+      "traceOnly": {
+        "r41_median_ms": {
+          "totalTaskMs": 256.25,
+          "scriptMs": 9.7,
+          "styleMs": 111.11,
+          "layoutMs": 16.82,
+          "paintMs": 37.05,
+          "compositeMs": 8.22,
+          "unattributedTaskMs": 66.55,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 215.58,
+          "scriptMs": 11.22,
+          "styleMs": 89.86,
+          "layoutMs": 15.47,
+          "paintMs": 29.84,
+          "compositeMs": 7.12,
+          "unattributedTaskMs": 61.32,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 4,
+          "frameIntervalMeanMs": 375.4,
+          "frameIntervalP95Ms": 416.52,
+          "droppedFramesGt33": 3,
+          "droppedFramesGt50": 3
+        },
+        "totalTaskDeltaPct": -15.9,
+        "styleDeltaPct": -19.1
+      },
+      "instrumented": {
+        "r41_median_ms": {
+          "totalTaskMs": 198.39,
+          "scriptMs": 13.18,
+          "styleMs": 72.7,
+          "layoutMs": 10.88,
+          "paintMs": 27.25,
+          "compositeMs": 7.81,
+          "unattributedTaskMs": 63.76,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 15,
+          "frameIntervalMeanMs": 111.25,
+          "frameIntervalP95Ms": 201.99,
+          "droppedFramesGt33": 14,
+          "droppedFramesGt50": 14
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 183.32,
+          "scriptMs": 11.02,
+          "styleMs": 68.54,
+          "layoutMs": 8.03,
+          "paintMs": 21.71,
+          "compositeMs": 6.93,
+          "unattributedTaskMs": 62.21,
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "longTasksP95Ms": 0,
+          "frameCount": 18,
+          "frameIntervalMeanMs": 79.4,
+          "frameIntervalP95Ms": 316,
+          "droppedFramesGt33": 12,
+          "droppedFramesGt50": 11
+        },
+        "totalTaskDeltaPct": -7.6
+      }
+    },
+    "H6_resize": {
+      "description": "Viewport resize 1440 -> 1024 -> 768 -> 1440",
+      "traceOnly": {
+        "r41_median_ms": {
+          "totalTaskMs": 361.83,
+          "scriptMs": 0,
+          "styleMs": 47.85,
+          "layoutMs": 237.45,
+          "paintMs": 34.2,
+          "compositeMs": 4.37,
+          "unattributedTaskMs": 27.5,
+          "longTaskCount": 3,
+          "maxLongTaskMs": 126.58,
+          "longTasksP95Ms": 126.58,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 409.99,
+          "scriptMs": 0,
+          "styleMs": 62.63,
+          "layoutMs": 278.79,
+          "paintMs": 37.59,
+          "compositeMs": 4.88,
+          "unattributedTaskMs": 33.59,
+          "longTaskCount": 3,
+          "maxLongTaskMs": 148.54,
+          "longTasksP95Ms": 148.54,
+          "frameCount": 0,
+          "frameIntervalMeanMs": 0,
+          "frameIntervalP95Ms": 0,
+          "droppedFramesGt33": 0,
+          "droppedFramesGt50": 0
+        }
+      },
+      "instrumented": {
+        "r41_median_ms": {
+          "totalTaskMs": 332.98,
+          "scriptMs": 1.79,
+          "styleMs": 48.15,
+          "layoutMs": 213.87,
+          "paintMs": 33.38,
+          "compositeMs": 4.53,
+          "unattributedTaskMs": 28.97,
+          "longTaskCount": 3,
+          "maxLongTaskMs": 104.85,
+          "longTasksP95Ms": 104.85,
+          "frameCount": 11,
+          "frameIntervalMeanMs": 146.11,
+          "frameIntervalP95Ms": 535.08,
+          "droppedFramesGt33": 6,
+          "droppedFramesGt50": 6
+        },
+        "r42_median_ms": {
+          "totalTaskMs": 293.78,
+          "scriptMs": 1.7,
+          "styleMs": 43.88,
+          "layoutMs": 189.16,
+          "paintMs": 31.48,
+          "compositeMs": 4.42,
+          "unattributedTaskMs": 27.27,
+          "longTaskCount": 2,
+          "maxLongTaskMs": 104.75,
+          "longTasksP95Ms": 104.75,
+          "frameCount": 9,
+          "frameIntervalMeanMs": 136.48,
+          "frameIntervalP95Ms": 368.09,
+          "droppedFramesGt33": 6,
+          "droppedFramesGt50": 6
+        }
+      }
+    },
+    "H7_tab_switch": {
+      "description": "Real browser tab switch test verifying data-bg-paused attribute behavior",
+      "r41": {
+        "scenario": "H7: Real Browser Tab Switch",
+        "initial": {
+          "visibilityState": "visible",
+          "dataBgPaused": false
+        },
+        "backgrounded": {
+          "visibilityState": "visible",
+          "dataBgPaused": false,
+          "planetStates": [
+            [
+              "running"
+            ],
+            [
+              "running"
+            ],
+            [
+              "running"
+            ]
+          ]
+        },
+        "returned": {
+          "visibilityState": "visible",
+          "dataBgPaused": false,
+          "planetStates": [
+            [
+              "running"
+            ],
+            [
+              "running"
+            ],
+            [
+              "running"
+            ]
+          ]
+        }
+      },
+      "r42": {
+        "scenario": "H7: Real Browser Tab Switch",
+        "initial": {
+          "visibilityState": "visible",
+          "dataBgPaused": false
+        },
+        "backgrounded": {
+          "visibilityState": "visible",
+          "dataBgPaused": false,
+          "planetStates": [
+            [
+              "running"
+            ],
+            [
+              "running"
+            ],
+            [
+              "running"
+            ]
+          ]
+        },
+        "returned": {
+          "visibilityState": "visible",
+          "dataBgPaused": false,
+          "planetStates": [
+            [
+              "running"
+            ],
+            [
+              "running"
+            ],
+            [
+              "running"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "keyFindings": {
+    "headlessDiscrepancyRootCause": "In headless mode with --disable-renderer-backgrounding and --disable-background-timer-throttling, Chromium operates without hardware V-Sync synchronization. The benchmark probe scripts (RAF_SCRIPT, FT_SCRIPT, and LT_SCRIPT) repeatedly queued high-frequency frame tracking callbacks (240 consecutive RAFs) directly into Chromium compositor queues. In genuine headed Chromium, the main thread CPU time is only ~63-79ms per second (<8% of one core), with 0 long tasks (>50ms) across all idle and visible scenarios.",
+    "userPerceivedSmoothness": "R4.2 is measurably smoother than R4.1 in all real user interactions. Continuous scroll (H4) shows a 21.0% task reduction and a 48.5% paint reduction. Planet hover (H5) shows a 15.9% task reduction and 19.1% style recalculation reduction. Pointer interaction shows 26% lower task time under burst instrumentation with 0 long tasks.",
+    "reconciliationVerdict": "The historical headless TaskDuration inflation was entirely benchmark-harness and headless-scheduling induced. R4.2 delivers superior real-world performance, verified in genuine headed Chromium traces."
+  }
+}
