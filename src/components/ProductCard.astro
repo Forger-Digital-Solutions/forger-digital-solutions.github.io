@@ -117,7 +117,9 @@ const statusLabel = {
         const iframe = document.createElement('iframe');
         iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
         iframe.title = button.getAttribute('data-video-title') || 'Product video';
-        iframe.setAttribute('allow', 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        // autoplay must be granted here because the facade URL requests it;
+        // the click above is still the only gesture that creates the player.
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
         iframe.setAttribute('allowfullscreen', '');
         wrapper.replaceChildren(iframe);
       }, { once: true });
