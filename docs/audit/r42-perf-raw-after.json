@@ -1,0 +1,210 @@
+{
+  "s1_idle": {
+    "scenario": "Homepage idle 1440px/3s",
+    "script_s": 0.002,
+    "layout_s": 0.0272,
+    "recalc_s": 0.0461,
+    "task_s": 1.5583,
+    "raf_3s": 35,
+    "lt": 12,
+    "lt_max_ms": 118,
+    "frame": {
+      "mean_ms": 90.91,
+      "p95_ms": 166.7,
+      "dropped_gt33ms": 33,
+      "fps_proxy": 11,
+      "n": 33
+    },
+    "animations": 75,
+    "dom_nodes": 1158
+  },
+  "s2_pointer": {
+    "scenario": "Pointermove 1440px/60 events/~2s",
+    "script_s": 0.0245,
+    "recalc_s": 1.3416,
+    "task_s": 4.6477,
+    "raf": 60,
+    "pointer_events": 60,
+    "css_var_updates": 120,
+    "css_var_per_event": 2,
+    "lt": 57,
+    "lt_max_ms": 153
+  },
+  "s3_eco_visible": {
+    "scenario": "Ecosystem visible 1440px/3s",
+    "script_s": 0.0023,
+    "layout_s": 0.028,
+    "recalc_s": 0.0501,
+    "task_s": 1.6401,
+    "raf_3s": 46,
+    "lt": 14,
+    "lt_max_ms": 77,
+    "frame": {
+      "mean_ms": 67.8,
+      "p95_ms": 116.6,
+      "dropped_gt33ms": 42,
+      "fps_proxy": 14.7,
+      "n": 44
+    },
+    "total_animations": 75,
+    "eco_paused_attr": false,
+    "planet_states": [
+      [
+        "running"
+      ],
+      [
+        "running"
+      ],
+      [
+        "running"
+      ]
+    ],
+    "orbit_pulse_states": [
+      [
+        "running"
+      ],
+      [
+        "running"
+      ],
+      [
+        "running"
+      ],
+      [
+        "running"
+      ]
+    ],
+    "core_ring_states": [
+      [
+        "running"
+      ],
+      [
+        "running"
+      ],
+      [
+        "running"
+      ]
+    ],
+    "halo_states": [
+      [
+        "running"
+      ]
+    ]
+  },
+  "s4_eco_offscreen": {
+    "scenario": "Ecosystem offscreen (bottom of page) 1440px/3s",
+    "script_s": 0.0025,
+    "recalc_s": 0.1028,
+    "task_s": 0.4656,
+    "raf_3s": 120,
+    "lt": 0,
+    "lt_max_ms": 0,
+    "frame": {
+      "mean_ms": 17.08,
+      "p95_ms": 16.8,
+      "dropped_gt33ms": 3,
+      "fps_proxy": 58.5,
+      "n": 119
+    },
+    "eco_paused_attr": true,
+    "planet_states": [
+      [
+        "paused"
+      ],
+      [
+        "paused"
+      ],
+      [
+        "paused"
+      ]
+    ],
+    "ring_states": [
+      [
+        "paused"
+      ],
+      [
+        "paused"
+      ]
+    ]
+  },
+  "s5_hidden": {
+    "scenario": "Hidden/background tab 3s",
+    "raf_while_hidden": 0,
+    "lt": 0,
+    "bg_paused_attr": true,
+    "planet_states_hidden": [
+      [
+        "paused"
+      ],
+      [
+        "paused"
+      ]
+    ],
+    "note": "R4.1 baseline: no visibilitychange handler expected"
+  },
+  "s6_reduced": {
+    "scenario": "Reduced motion 1440px/3s",
+    "script_s": 0,
+    "recalc_s": 0,
+    "task_s": 0.0003,
+    "raf_3s": 0,
+    "lt": 0,
+    "total_animations": 0,
+    "planet_states": [
+      [],
+      []
+    ],
+    "orbit_pulse_states": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "core_ring_states": [
+      [],
+      [],
+      []
+    ]
+  },
+  "s7_mobile": {
+    "scenario": "Mobile 390px/3s",
+    "script_s": 0.0031,
+    "recalc_s": 0.0709,
+    "task_s": 0.3557,
+    "raf_3s": 120,
+    "lt": 0,
+    "lt_max_ms": 0,
+    "frame": {
+      "mean_ms": 17.65,
+      "p95_ms": 33.3,
+      "dropped_gt33ms": 4,
+      "fps_proxy": 56.7,
+      "n": 119
+    },
+    "total_animations": 28,
+    "eco_scene_display": "none",
+    "planet_states_mobile": [
+      [],
+      []
+    ]
+  },
+  "s8_kayla": {
+    "scenario": "Kayla open/close 1440px",
+    "open_ms": 476,
+    "close_ms": 519,
+    "lt": 3,
+    "note": "open_ms includes 250ms CSS transition; net interaction latency is open_ms - 250"
+  },
+  "_meta": {
+    "label": "after",
+    "timestamp": "2026-09-13T04:39:58.454Z",
+    "base_url": "http://localhost:4323",
+    "env": "Playwright headless Chromium (CDP)",
+    "limitations": [
+      "CDP Performance.getMetrics are cumulative process-level proxies — deltas approximate rendering cost",
+      "FPS values are frame-interval proxies from RAF timestamps, not direct vsync",
+      "Headless Chromium may throttle some CSS animations differently than headed",
+      "CDP Emulation.setVisibilityOverride availability varies — fallback fires event manually",
+      "Long task detection requires PerformanceObserver support (available in Chromium)"
+    ]
+  }
+}

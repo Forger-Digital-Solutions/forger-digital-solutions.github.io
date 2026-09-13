@@ -1,0 +1,46 @@
+{
+  "s1_idle": {
+    "scenario": "Homepage idle 1440px/3s",
+    "script_s": 0.0009,
+    "layout_s": 0.0091,
+    "recalc_s": 0.0305,
+    "task_s": 2.987,
+    "raf_3s": 13,
+    "lt": 9,
+    "lt_max_ms": 758,
+    "frame": {
+      "mean_ms": 349.98,
+      "p95_ms": 883.3,
+      "dropped_gt33ms": 11,
+      "fps_proxy": 2.9,
+      "n": 11
+    },
+    "animations": 75,
+    "dom_nodes": 1158
+  },
+  "s2_pointer": {
+    "scenario": "Pointermove 1440px/60 events/~2s",
+    "script_s": 0.0205,
+    "recalc_s": 2.6105,
+    "task_s": 23.9412,
+    "raf": 60,
+    "pointer_events": 60,
+    "css_var_updates": 120,
+    "css_var_per_event": 2,
+    "lt": 46,
+    "lt_max_ms": 549
+  },
+  "_meta": {
+    "label": "before",
+    "timestamp": "2026-09-13T04:52:47.463Z",
+    "base_url": "http://localhost:4323",
+    "env": "Playwright headless Chromium (CDP)",
+    "limitations": [
+      "CDP Performance.getMetrics are cumulative process-level proxies — deltas approximate rendering cost",
+      "FPS values are frame-interval proxies from RAF timestamps, not direct vsync",
+      "Headless Chromium may throttle some CSS animations differently than headed",
+      "CDP Emulation.setVisibilityOverride availability varies — fallback fires event manually",
+      "Long task detection requires PerformanceObserver support (available in Chromium)"
+    ]
+  }
+}
