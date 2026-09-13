@@ -55,7 +55,7 @@ export const emailConfig: FdsEmailConfig = {
       targetAddress: 'contact@forgerdigitalsolutions.com',
       activeAddress: 'forgerdigisolsupport@gmail.com',
       status: 'pending_domain_verification',
-      description: 'General studio inquiries, partnerships, and press',
+      description: 'General company inquiries, partnerships, and press',
     },
   },
 };

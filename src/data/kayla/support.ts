@@ -15,7 +15,7 @@ export const supportInfo = {
 export const faqs: { q: string; a: string }[] = [
   {
     q: 'What is Forger Digital Solutions?',
-    a: 'FDS is an independent software and AI engineering studio building developer tools, model research, game-creation software, publishing tools, civic information, local discovery, and technician applications.'
+    a: 'FDS is an independent AI and software company building developer tools, model research, game-creation software, publishing tools, civic information, local discovery, and technician applications.'
   },
   {
     q: 'What does FDS build?',

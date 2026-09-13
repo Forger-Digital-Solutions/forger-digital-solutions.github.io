@@ -831,7 +831,7 @@ function navigationAnswer(entityId?: string, query?: string): CanonicalAnswer | 
   }
   if (query && /\b(start here|where (should|do) i start|new (here|to fds)|newcomer|give me a tour|best place to start|tour of fds)\b/i.test(query)) {
     return {
-      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Software you can use now: Forged (/forged) has current public builds, starting with CodeForge (free-first developer workbench).\n• AI research: GEMS Training Grounds (/projects/gems-training-grounds) covers our 4 specialized foundation lineages.\n• Full catalog: Projects (/projects) displays everything FDS is building across developer tools, AI, publishing, and community.\n• Studio story: About (/about) explains the engineering philosophy and founder background.',
+      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Software you can use now: Forged (/forged) has current public builds, starting with CodeForge (free-first developer workbench).\n• AI research: GEMS Training Grounds (/projects/gems-training-grounds) covers our 4 specialized foundation lineages.\n• Full catalog: Projects (/projects) displays everything FDS is building across developer tools, AI, publishing, and community.\n• Company story: About (/about) explains the engineering philosophy and founder background.',
       actions: [
         { type: 'OPEN_FORGED', label: 'See Available Software', href: '/forged' },
         { type: 'SHOW_APPS', label: 'Explore Projects', href: '/projects' },
@@ -907,7 +907,7 @@ function founderAnswer(): CanonicalAnswer {
 
 function companyAnswer(): CanonicalAnswer {
   return {
-    text: `Forger Digital Solutions (FDS) is an independent software and AI engineering studio. ${fds.mission} ${fds.vision.current}`,
+    text: `Forger Digital Solutions (FDS) is an independent AI and software company. ${fds.mission} ${fds.vision.current}`,
     actions: [{ type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }, { type: 'SHOW_APPS', label: 'View Projects' }],
     sources: ['fds-company', 'fds-mission'],
     intent: 'identity',
@@ -1116,7 +1116,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   // False founder premise: Elon Musk or other non-canonical founders
   if (FALSE_FOUNDER.test(text)) {
     return {
-      text: `${founder.name} founded Forger Digital Solutions, not Elon Musk or anyone else. FDS is an independent studio founded and operated by ${founder.name}.`,
+      text: `${founder.name} founded Forger Digital Solutions, not Elon Musk or anyone else. FDS is an independent company founded and operated by ${founder.name}.`,
       actions: [{ type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }],
       sources: ['founder-bio'],
       intent: 'founder'

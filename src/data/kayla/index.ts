@@ -316,7 +316,7 @@ function compareApps(query: string): { text: string; title?: string; actions?: K
 
 function synthesizeEcosystem(): { text: string; title?: string; actions?: KaylaSafeAction[]; sources: string[] } {
   return {
-    text: `Forger Digital Solutions (FDS) is an independent software and AI engineering studio.\n\n` +
+    text: `Forger Digital Solutions (FDS) is an independent AI and software company.\n\n` +
       `Current products:\n` +
       `• CodeForge — released free-first autonomous software engineering for Windows.\n` +
       `• GEMS / Training Grounds — model specialization, curriculum, and evaluation research.\n` +

@@ -35,9 +35,15 @@ const hasArchives = publishedArchives.length > 0;
  * distributed.
  */
 const archiveStatusLabels: Record<string, string> = {
-  'not-published': 'Not Published',
-  private: 'Private',
+  'not-published': 'Not Publicly Distributed',
+  private: 'Private Source',
   'not-applicable': 'Not Applicable',
+};
+/** Plain-language primary reason; the full policy stays one click away. */
+const archiveStatusShort: Record<string, string> = {
+  'not-published': 'Source archive not publicly distributed',
+  private: 'Source code is not public',
+  'not-applicable': 'No source archive applies to this project',
 };
 const unpublishedArchives = productManifest
   .filter((entry) => !entry.archive.available)
@@ -45,7 +51,8 @@ const unpublishedArchives = productManifest
     project: entry.name,
     projectUrl: entry.projectUrl,
     status: entry.archive.status,
-    statusLabel: archiveStatusLabels[entry.archive.status] ?? 'Not Published',
+    statusLabel: archiveStatusLabels[entry.archive.status] ?? 'Not Publicly Distributed',
+    reason: archiveStatusShort[entry.archive.status] ?? 'Source archive not publicly distributed',
     policy: entry.archive.policy ?? 'Source archive not publicly distributed.',
   }));
 ---
@@ -140,7 +147,12 @@ const unpublishedArchives = productManifest
               <div class="archive-card__row"><dt>Size</dt><dd>{formatSize(archive.sizeBytes)}</dd></div>
             </dl>
             <div class="archive-card__checksum">
-              <p class="archive-card__checksum-label">Archive SHA-256</p>
+              <p class="archive-card__checksum-label">Archive SHA-256
+                <details class="archive-card__why">
+                  <summary aria-label="Why publish a SHA-256?">Why?</summary>
+                  <p>Use this digest to confirm your downloaded file exactly matches the archive published by FDS.</p>
+                </details>
+              </p>
               <code class="archive-card__sha" id={`sha-${archive.filename}`}>{archive.sha256}</code>
             </div>
             <div class="archive-card__actions">
@@ -196,7 +208,13 @@ const unpublishedArchives = productManifest
               <td data-label="Archive status">
                 <span class={`archive-status__pill archive-status__pill--${item.status}`}>{item.statusLabel}</span>
               </td>
-              <td data-label="Reason">{item.policy}</td>
+              <td data-label="Reason">
+                {item.reason}
+                <details class="archive-status__detail">
+                  <summary>Full policy</summary>
+                  <p>{item.policy}</p>
+                </details>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -530,6 +548,14 @@ const unpublishedArchives = productManifest
   .archive-status__pill--not-applicable {
     color: var(--color-text-subtle);
   }
+  /* Full policy reasoning stays available without cluttering the scan path. */
+  .archive-card__why, .archive-card__why summary { display: inline; }
+  .archive-card__why summary { margin-left: .45rem; color: var(--color-accent-bright); font: 700 .6rem/1 var(--font-mono); letter-spacing: .08em; cursor: pointer; list-style: none; }
+  .archive-card__why summary::-webkit-details-marker { display: none; }
+  .archive-card__why p { margin: .4rem 0 0; color: var(--color-text-muted); font: .72rem/1.5 var(--font-sans); }
+  .archive-status__detail { margin-top: .3rem; }
+  .archive-status__detail summary { color: var(--color-text-subtle); font: 650 .66rem/1.4 var(--font-mono); letter-spacing: .04em; cursor: pointer; }
+  .archive-status__detail p { margin: .35rem 0 0; color: var(--color-text-muted); font-size: .82rem; line-height: 1.55; }
 
   @media (max-width: 760px) {
     .forged-featured,

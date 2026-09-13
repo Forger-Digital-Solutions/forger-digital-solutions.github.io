@@ -42,3 +42,4 @@ playwright-report/
 # Evidence artifacts, not website assets — kept local, never committed.
 shots/
 _archive-sources/
+tmp-shots/
