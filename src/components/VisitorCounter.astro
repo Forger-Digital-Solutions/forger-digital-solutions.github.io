@@ -142,6 +142,17 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
 
     setTimeout(recordHit, 150);
   })();
+
+  // Suspend the dot pulse once the counter scrolls out of view: far-offscreen
+  // opacity animations lose their compositor layer and tick on the main thread.
+  (() => {
+    const el = document.getElementById('fds-visitor-counter');
+    if (!el || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver((entries) => {
+      for (const e of entries) el.toggleAttribute('data-counter-paused', !e.isIntersecting);
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0 });
+    obs.observe(el);
+  })();
 </script>
 <style>
   .visitor-counter {
@@ -181,7 +192,8 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
   @media (max-width: 640px) {
     .visitor-counter { display: none; }
   }
-  :global([data-bg-paused]) .visitor-counter__dot {
+  :global([data-bg-paused]) .visitor-counter__dot,
+  .visitor-counter[data-counter-paused] .visitor-counter__dot {
     animation-play-state: paused;
   }
   @media (prefers-reduced-motion: reduce) {

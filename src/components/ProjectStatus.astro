@@ -26,6 +26,21 @@ const config = statusConfig[status] || { semantic: 'active' };
   <span class="project-status__text">{status}</span>
 </span>
 
+<script>
+  // Pause the status-dot pulse while its badge is offscreen. Chromium does not
+  // keep a compositor layer for opacity animations that sit far outside the
+  // paint cull rect, so an offscreen pulse degrades to a per-frame main-thread
+  // style recalc. One shared observer gates every badge on the page.
+  (() => {
+    const badges = document.querySelectorAll('.project-status');
+    if (!badges.length || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver((entries) => {
+      for (const e of entries) e.target.toggleAttribute('data-status-paused', !e.isIntersecting);
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0 });
+    badges.forEach((badge) => obs.observe(badge));
+  })();
+</script>
+
 <style>
   .project-status {
     display: inline-flex;
@@ -98,7 +113,8 @@ const config = statusConfig[status] || { semantic: 'active' };
     }
   }
 
-  :global([data-bg-paused]) .project-status__dot {
+  :global([data-bg-paused]) .project-status__dot,
+  .project-status[data-status-paused] .project-status__dot {
     animation-play-state: paused;
   }
 
