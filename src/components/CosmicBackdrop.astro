@@ -15,8 +15,26 @@
   </div>
 </div>
 
+<script is:inline>
+  (() => {
+    const el = document.querySelector('.cosmic-backdrop');
+    if (!el || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          el.removeAttribute('data-cosmic-paused');
+        } else {
+          el.setAttribute('data-cosmic-paused', '');
+        }
+      });
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0.01 });
+    obs.observe(el);
+  })();
+</script>
+
 <style>
   .cosmic-backdrop { position: absolute; z-index: 0; top: 0; left: 0; width: 100%; height: min(76rem, 145vh); overflow: hidden; pointer-events: none; mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgba(0,0,0,.62) 69%, transparent 100%); }
+  .cosmic-backdrop[data-cosmic-paused] .constellation__node { animation-play-state: paused; }
   .cosmic-backdrop::before { position: absolute; inset: 0; opacity: .3; background-image: radial-gradient(circle, rgba(181,209,255,.78) 0 .75px, transparent 1px), radial-gradient(circle, rgba(87,131,223,.7) 0 .65px, transparent .95px), radial-gradient(circle, rgba(234,242,255,.62) 0 .55px, transparent .85px); background-position: 7px 17px, 49px 73px, 91px 29px; background-size: 83px 97px, 127px 113px, 159px 137px; content: ''; }
   .cosmic-backdrop::after { position: absolute; inset: 0; background: radial-gradient(ellipse at 73% 25%, rgba(23,62,148,.13), transparent 42%), linear-gradient(180deg, rgba(3,7,14,.05), rgba(4,7,12,.4) 76%, var(--color-bg)); content: ''; }
   .cosmic-backdrop__stars { position: absolute; inset: 0; background-repeat: repeat; }

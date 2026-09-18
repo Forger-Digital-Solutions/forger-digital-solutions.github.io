@@ -81,6 +81,11 @@ const config = statusConfig[status] || { semantic: 'active' };
   }
 
   /* Pulse animation for active statuses */
+  .project-status--research .project-status__dot,
+  .project-status--active .project-status__dot {
+    box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 15%, transparent); 
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .project-status--research .project-status__dot,
     .project-status--active .project-status__dot {
@@ -88,13 +93,13 @@ const config = statusConfig[status] || { semantic: 'active' };
     }
 
     @keyframes status-pulse {
-      0%, 100% { 
-        box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 15%, transparent); 
-      }
-      50% { 
-        box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 5%, transparent); 
-      }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
+  }
+
+  :global([data-bg-paused]) .project-status__dot {
+    animation-play-state: paused;
   }
 
   /* Ensure reduced motion is respected */

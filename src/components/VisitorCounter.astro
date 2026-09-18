@@ -181,4 +181,10 @@ const COUNTER_URL = `https://countapi.mileshilliard.com/api/v1/hit/${siteConfig.
   @media (max-width: 640px) {
     .visitor-counter { display: none; }
   }
+  :global([data-bg-paused]) .visitor-counter__dot {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .visitor-counter__dot { animation: none; }
+  }
 </style>

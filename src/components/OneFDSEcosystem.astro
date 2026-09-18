@@ -158,8 +158,33 @@ const domains = [
   </div>
 </section>
 
+<script is:inline>
+  (() => {
+    const el = document.querySelector('.one-eco');
+    if (!el || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          el.removeAttribute('data-oneeco-paused');
+        } else {
+          el.setAttribute('data-oneeco-paused', '');
+        }
+      });
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0.02 });
+    obs.observe(el);
+  })();
+</script>
+
 <style>
   .one-eco { position: relative; }
+  .one-eco[data-oneeco-paused] .eco-pulse,
+  .one-eco[data-oneeco-paused] :global(.cf-plane),
+  .one-eco[data-oneeco-paused] :global(.cf-shine),
+  :global([data-bg-paused]) .one-eco .eco-pulse,
+  :global([data-bg-paused]) .one-eco :global(.cf-plane),
+  :global([data-bg-paused]) .one-eco :global(.cf-shine) {
+    animation-play-state: paused;
+  }
   .one-eco__head { max-width: 52rem; margin-bottom: 1.5rem; }
   .one-eco__eyebrow { display: flex; align-items: center; gap: .6rem; margin: 0 0 .9rem; color: var(--color-accent-bright); font: 700 .68rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
   .one-eco__eyebrow span { width: 1.7rem; height: 1px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-bright)); box-shadow: 0 0 8px rgba(63,132,255,.55); }
@@ -206,9 +231,9 @@ const domains = [
   .eco-node--foundation:hover, .eco-node--foundation:focus-visible { border-color: rgba(127,176,255,.85); box-shadow: 0 0 60px rgba(34,108,241,.32), inset 0 0 30px rgba(117,174,255,.12); }
   .eco-node--intelligence:hover, .eco-node--intelligence:focus-visible { border-color: rgba(111,163,255,.8); }
 
-  .eco-line { position: relative; z-index: 1; width: 2px; height: 1.9rem; margin: 0 auto; background: linear-gradient(180deg, rgba(79,143,255,.06), rgba(91,159,255,.55), rgba(79,143,255,.06)); }
-  .eco-pulse { position: absolute; left: 50%; top: -3px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #8fb6ff; box-shadow: 0 0 12px #4a8cff; animation: eco-signal 3.4s linear infinite; }
-  @keyframes eco-signal { 0% { top: -3px; opacity: 0; } 12% { opacity: 1; } 86% { opacity: 1; } 100% { top: calc(100% + 3px); opacity: 0; } }
+  .eco-line { position: relative; z-index: 1; width: 2px; height: 1.9rem; margin: 0 auto; background: linear-gradient(180deg, rgba(79,143,255,.06), rgba(91,159,255,.55), rgba(79,143,255,.06)); overflow: hidden; }
+  .eco-pulse { position: absolute; left: 50%; top: 0; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #8fb6ff; box-shadow: 0 0 8px #4a8cff; animation: eco-signal 3.4s linear infinite; }
+  @keyframes eco-signal { 0% { transform: translateY(-4px); opacity: 0; } 12% { opacity: 1; } 86% { opacity: 1; } 100% { transform: translateY(2rem); opacity: 0; } }
 
   /* ---- Rail (specialized domains) ---- */
   .eco-rail { position: relative; z-index: 1; margin-top: .25rem; }

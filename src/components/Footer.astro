@@ -96,6 +96,23 @@ const columns: { title: string; links: { label: string; href: string; external?:
   </div>
 </footer>
 
+<script is:inline>
+  (() => {
+    const el = document.querySelector('.footer');
+    if (!el || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          el.removeAttribute('data-footer-paused');
+        } else {
+          el.setAttribute('data-footer-paused', '');
+        }
+      });
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0.02 });
+    obs.observe(el);
+  })();
+</script>
+
 <style>
 .footer {
   position: relative;
@@ -104,6 +121,10 @@ const columns: { title: string; links: { label: string; href: string; external?:
   border-top: 1px solid var(--color-border);
   margin-top: 3rem;
   padding: 2.25rem 0 1.5rem;
+}
+.footer[data-footer-paused] .footer-kicker span,
+:global([data-bg-paused]) .footer-kicker span {
+  animation-play-state: paused;
 }
 .footer::before { position: absolute; inset: 0; background-image: linear-gradient(rgba(104,149,230,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(104,149,230,.045) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, #000, transparent 75%); content: ''; pointer-events: none; }
 
@@ -194,7 +215,7 @@ const columns: { title: string; links: { label: string; href: string; external?:
 .footer-bottom p { margin: 0; }
 .footer-system-line { color: var(--color-accent-bright); font: 650 .6rem/1.4 var(--font-mono); letter-spacing: .12em; }
 .footer-colophon__detail { color: var(--color-text-subtle); opacity: .75; }
-@keyframes footer-pulse { 50% { opacity: .42; box-shadow: 0 0 4px rgba(87,150,255,.4); } }
+@keyframes footer-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .42; } }
 
 @media (max-width: 1150px) {
   .footer-container { grid-template-columns: repeat(3, minmax(0, 1fr)); }

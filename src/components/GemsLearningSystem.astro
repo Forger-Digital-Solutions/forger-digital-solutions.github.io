@@ -164,8 +164,35 @@ const gemColors: Record<string, string> = {
   </figcaption>
 </figure>
 
+<script is:inline>
+  (() => {
+    const el = document.querySelector('.gems-system');
+    if (!el || !('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          el.removeAttribute('data-gems-paused');
+        } else {
+          el.setAttribute('data-gems-paused', '');
+        }
+      });
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0.02 });
+    obs.observe(el);
+  })();
+</script>
+
 <style>
   .gems-system { margin: 0; }
+  .gems-system[data-gems-paused] .gems-art__pulse path,
+  .gems-system[data-gems-paused] .gems-art__ring-glow path,
+  .gems-system[data-gems-paused] .gems-art__core,
+  .gems-system[data-gems-paused] .gems-cycle li,
+  :global([data-bg-paused]) .gems-system .gems-art__pulse path,
+  :global([data-bg-paused]) .gems-system .gems-art__ring-glow path,
+  :global([data-bg-paused]) .gems-system .gems-art__core,
+  :global([data-bg-paused]) .gems-system .gems-cycle li {
+    animation-play-state: paused;
+  }
   .gems-system__frame {
     position: relative;
     overflow: hidden;

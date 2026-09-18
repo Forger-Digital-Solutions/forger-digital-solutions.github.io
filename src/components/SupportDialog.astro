@@ -96,16 +96,25 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
       return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     };
 
+    const cleanup = () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+
     const open = () => {
       if (opened || dialog.open) return;
       opened = true;
+      cleanup();
       document.documentElement.classList.add('has-open-dialog');
       dialog.showModal();
     };
 
     const evaluate = () => {
       ticking = false;
-      if (opened || dialog.open) return;
+      if (opened || dialog.open) {
+        cleanup();
+        return;
+      }
       // Require genuine scroll progress so a fresh top-of-page load never pops the dialog.
       if (progress() >= TRIGGER && window.scrollY > 0) open();
     };
@@ -122,6 +131,7 @@ const hardwareMailtoHref = `mailto:${siteConfig.supportEmail}?subject=${encodeUR
     evaluate();
 
     dialog.addEventListener('close', () => {
+      cleanup();
       document.documentElement.classList.remove('has-open-dialog');
       // Any dismissal (button, backdrop, ESC, X) is remembered so the visitor isn't nagged.
       try {
