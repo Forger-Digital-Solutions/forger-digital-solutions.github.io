@@ -1,0 +1,763 @@
+{
+  "base": "https://forgerdigitalsolutions.com",
+  "at": "2026-09-24T22:27:25.339Z",
+  "smoke": [
+    {
+      "route": "/",
+      "status": 200,
+      "title": "Forger Digital Solutions",
+      "markers": {
+        "noisePng": true,
+        "feTurbulence": false,
+        "kayla": true,
+        "footer": true,
+        "imgsBroken": []
+      },
+      "errors": {
+        "console": [],
+        "page": [],
+        "requests": []
+      }
+    },
+    {
+      "route": "/forged",
+      "status": 200,
+      "title": "Forged — Releases & Downloads | Forger Digital Solutions",
+      "markers": {
+        "noisePng": true,
+        "feTurbulence": false,
+        "kayla": true,
+        "footer": true,
+        "imgsBroken": []
+      },
+      "errors": {
+        "console": [],
+        "page": [],
+        "requests": []
+      }
+    },
+    {
+      "route": "/projects/codeforge",
+      "status": 200,
+      "title": "CodeForge | Forger Digital Solutions",
+      "markers": {
+        "noisePng": true,
+        "feTurbulence": false,
+        "kayla": true,
+        "footer": true,
+        "imgsBroken": []
+      },
+      "errors": {
+        "console": [],
+        "page": [],
+        "requests": []
+      }
+    },
+    {
+      "route": "/projects/gems-training-grounds",
+      "status": 200,
+      "title": "GEMS / Training Grounds | Forger Digital Solutions",
+      "markers": {
+        "noisePng": true,
+        "feTurbulence": false,
+        "kayla": true,
+        "footer": true,
+        "imgsBroken": []
+      },
+      "errors": {
+        "console": [],
+        "page": [],
+        "requests": []
+      }
+    },
+    {
+      "route": "/technology",
+      "status": 200,
+      "title": "Technology | Forger Digital Solutions",
+      "markers": {
+        "noisePng": true,
+        "feTurbulence": false,
+        "kayla": true,
+        "footer": true,
+        "imgsBroken": []
+      },
+      "errors": {
+        "console": [],
+        "page": [],
+        "requests": []
+      }
+    },
+    {
+      "route": "/about",
+      "status": 200,
+      "title": "About | Forger Digital Solutions",
+      "markers": {
+        "noisePng": true,
+        "feTurbulence": false,
+        "kayla": true,
+        "footer": true,
+        "imgsBroken": []
+      },
+      "errors": {
+        "console": [],
+        "page": [],
+        "requests": []
+      }
+    }
+  ],
+  "suspension": {
+    "top": {
+      "scrollY": 0,
+      "running": 41,
+      "total": 75,
+      "paused": 34,
+      "pausedHooks": {
+        "cosmic": 0,
+        "eco": 0,
+        "gems": 1,
+        "oneeco": 1,
+        "footer": 1
+      },
+      "anyPaused": [
+        {
+          "tag": "span",
+          "cls": "project-status project-status--released ",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "figure",
+          "cls": "gems-system",
+          "attrs": [
+            "data-gems-paused"
+          ]
+        },
+        {
+          "tag": "section",
+          "cls": "one-eco",
+          "attrs": [
+            "data-oneeco-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--private-d",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "footer",
+          "cls": "footer",
+          "attrs": [
+            "data-footer-paused"
+          ]
+        }
+      ],
+      "runningProps": {
+        "composite": 41,
+        "transform": 26,
+        "opacity": 25,
+        "strokeDashoffset": 4
+      },
+      "layoutTriggering": [],
+      "runningByTarget": {
+        "i.system-node.system-node--1": 1,
+        "i.system-node.system-node--2": 1,
+        "i.system-node.system-node--3": 1,
+        "i.system-node.system-node--4": 1,
+        "i.system-node.system-node--5": 1,
+        "i.system-node.system-node--6": 1,
+        "i.constellation__node.n1": 2,
+        "i.constellation__node.n2": 2,
+        "i.constellation__node.n3.constellation__node--beacon": 1,
+        "i.constellation__node.n4": 2,
+        "i.constellation__node.n5.constellation__node--beacon": 1,
+        "i.constellation__node.n1.constellation__node--beacon": 1,
+        "i.constellation__node.n3": 2,
+        "i.constellation__node.n4.constellation__node--beacon": 1,
+        "i.constellation__node.n5": 1,
+        "i.constellation__node.n2.constellation__node--beacon": 1,
+        "span.visitor-counter__dot": 1,
+        "span": 1,
+        "circle.ecosystem-stars__calm": 1,
+        "circle.ecosystem-stars__calm.ecosystem-stars__calm--late": 1,
+        "path.orbit-pulse": 4,
+        "g.planet-motion": 8,
+        "g.core__ring.core__ring--outer": 1,
+        "g.core__ring.core__ring--mid": 1,
+        "g.core__ring.core__ring--inner": 1,
+        "circle.core__heart-halo": 1,
+        "g.core__vents": 1
+      }
+    },
+    "ecosystem": {
+      "scrollY": 119,
+      "running": 41,
+      "total": 75,
+      "paused": 34,
+      "pausedHooks": {
+        "cosmic": 0,
+        "eco": 0,
+        "gems": 1,
+        "oneeco": 1,
+        "footer": 1
+      },
+      "anyPaused": [
+        {
+          "tag": "span",
+          "cls": "project-status project-status--released ",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "figure",
+          "cls": "gems-system",
+          "attrs": [
+            "data-gems-paused"
+          ]
+        },
+        {
+          "tag": "section",
+          "cls": "one-eco",
+          "attrs": [
+            "data-oneeco-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--private-d",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "footer",
+          "cls": "footer",
+          "attrs": [
+            "data-footer-paused"
+          ]
+        }
+      ],
+      "runningProps": {
+        "composite": 41,
+        "transform": 26,
+        "opacity": 25,
+        "strokeDashoffset": 4
+      },
+      "layoutTriggering": [],
+      "runningByTarget": {
+        "i.system-node.system-node--1": 1,
+        "i.system-node.system-node--2": 1,
+        "i.system-node.system-node--3": 1,
+        "i.system-node.system-node--4": 1,
+        "i.system-node.system-node--5": 1,
+        "i.system-node.system-node--6": 1,
+        "i.constellation__node.n1": 2,
+        "i.constellation__node.n2": 2,
+        "i.constellation__node.n3.constellation__node--beacon": 1,
+        "i.constellation__node.n4": 2,
+        "i.constellation__node.n5.constellation__node--beacon": 1,
+        "i.constellation__node.n1.constellation__node--beacon": 1,
+        "i.constellation__node.n3": 2,
+        "i.constellation__node.n4.constellation__node--beacon": 1,
+        "i.constellation__node.n5": 1,
+        "i.constellation__node.n2.constellation__node--beacon": 1,
+        "span.visitor-counter__dot": 1,
+        "span": 1,
+        "circle.ecosystem-stars__calm": 1,
+        "circle.ecosystem-stars__calm.ecosystem-stars__calm--late": 1,
+        "path.orbit-pulse": 4,
+        "g.planet-motion": 8,
+        "g.core__ring.core__ring--outer": 1,
+        "g.core__ring.core__ring--mid": 1,
+        "g.core__ring.core__ring--inner": 1,
+        "circle.core__heart-halo": 1,
+        "g.core__vents": 1
+      }
+    },
+    "footer": {
+      "scrollY": 6937,
+      "running": 9,
+      "total": 77,
+      "paused": 68,
+      "pausedHooks": {
+        "cosmic": 1,
+        "eco": 1,
+        "gems": 1,
+        "oneeco": 1,
+        "footer": 0
+      },
+      "anyPaused": [
+        {
+          "tag": "div",
+          "cls": "cosmic-backdrop",
+          "attrs": [
+            "data-cosmic-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "visitor-counter",
+          "attrs": [
+            "data-counter-paused"
+          ]
+        },
+        {
+          "tag": "p",
+          "cls": "hero__status",
+          "attrs": [
+            "data-hero-status-paused"
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "fds-ecosystem",
+          "attrs": [
+            "data-eco-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--released ",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "figure",
+          "cls": "gems-system",
+          "attrs": [
+            "data-gems-paused"
+          ]
+        },
+        {
+          "tag": "section",
+          "cls": "one-eco",
+          "attrs": [
+            "data-oneeco-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--private-d",
+          "attrs": [
+            "data-status-paused"
+          ]
+        },
+        {
+          "tag": "span",
+          "cls": "project-status project-status--active-de",
+          "attrs": [
+            "data-status-paused"
+          ]
+        }
+      ],
+      "runningProps": {
+        "composite": 9,
+        "opacity": 8,
+        "transform": 7
+      },
+      "layoutTriggering": [],
+      "runningByTarget": {
+        "section.page-section.page-section--tight.support-section": 2,
+        "i.system-node.system-node--1": 1,
+        "i.system-node.system-node--2": 1,
+        "i.system-node.system-node--3": 1,
+        "i.system-node.system-node--4": 1,
+        "i.system-node.system-node--5": 1,
+        "i.system-node.system-node--6": 1,
+        "span": 1
+      }
+    }
+  },
+  "animationInventoryTop": {
+    "total": 75,
+    "running": 41,
+    "paused": 34,
+    "runningProps": {
+      "composite": 41,
+      "transform": 26,
+      "opacity": 25,
+      "strokeDashoffset": 4
+    },
+    "runningByTarget": {
+      "i.system-node.system-node--1": 1,
+      "i.system-node.system-node--2": 1,
+      "i.system-node.system-node--3": 1,
+      "i.system-node.system-node--4": 1,
+      "i.system-node.system-node--5": 1,
+      "i.system-node.system-node--6": 1,
+      "i.constellation__node.n1": 2,
+      "i.constellation__node.n2": 2,
+      "i.constellation__node.n3.constellation__node--beacon": 1,
+      "i.constellation__node.n4": 2,
+      "i.constellation__node.n5.constellation__node--beacon": 1,
+      "i.constellation__node.n1.constellation__node--beacon": 1,
+      "i.constellation__node.n3": 2,
+      "i.constellation__node.n4.constellation__node--beacon": 1,
+      "i.constellation__node.n5": 1,
+      "i.constellation__node.n2.constellation__node--beacon": 1,
+      "span.visitor-counter__dot": 1,
+      "span": 1,
+      "circle.ecosystem-stars__calm": 1,
+      "circle.ecosystem-stars__calm.ecosystem-stars__calm--late": 1,
+      "path.orbit-pulse": 4,
+      "g.planet-motion": 8,
+      "g.core__ring.core__ring--outer": 1,
+      "g.core__ring.core__ring--mid": 1,
+      "g.core__ring.core__ring--inner": 1,
+      "circle.core__heart-halo": 1,
+      "g.core__vents": 1
+    },
+    "layoutTriggering": [],
+    "sample": [
+      {
+        "playState": "running",
+        "name": "system-node-pulse",
+        "target": "i.system-node.system-node--1",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "system-node-pulse",
+        "target": "i.system-node.system-node--2",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "system-node-pulse",
+        "target": "i.system-node.system-node--3",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "system-node-pulse",
+        "target": "i.system-node.system-node--4",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "system-node-pulse",
+        "target": "i.system-node.system-node--5",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "system-node-pulse",
+        "target": "i.system-node.system-node--6",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n1",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n2",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-beacon",
+        "target": "i.constellation__node.n3.constellation__node--beacon",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n4",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-beacon",
+        "target": "i.constellation__node.n5.constellation__node--beacon",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-beacon",
+        "target": "i.constellation__node.n1.constellation__node--beacon",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n2",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n3",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-beacon",
+        "target": "i.constellation__node.n4.constellation__node--beacon",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n5",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n1",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-beacon",
+        "target": "i.constellation__node.n2.constellation__node--beacon",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n3",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "constellation-pulse",
+        "target": "i.constellation__node.n4",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "pulse",
+        "target": "span.visitor-counter__dot",
+        "props": [
+          "composite",
+          "transform",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "system-pulse",
+        "target": "span",
+        "props": [
+          "composite",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "star-calibrate",
+        "target": "circle.ecosystem-stars__calm",
+        "props": [
+          "composite",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "star-calibrate",
+        "target": "circle.ecosystem-stars__calm.ecosystem-stars__calm--late",
+        "props": [
+          "composite",
+          "opacity"
+        ]
+      },
+      {
+        "playState": "running",
+        "name": "orbit-energy",
+        "target": "path.orbit-pulse",
+        "props": [
+          "composite",
+          "strokeDashoffset"
+        ]
+      }
+    ]
+  },
+  "suspensionErrors": {
+    "console": [],
+    "page": [],
+    "requests": []
+  },
+  "reducedMotion": {
+    "mediaMatches": true,
+    "running": 0,
+    "total": 0,
+    "errors": {
+      "console": [],
+      "page": [],
+      "requests": []
+    }
+  },
+  "tabBackground": {
+    "before": {
+      "running": 41,
+      "total": 75,
+      "raf": 0,
+      "vis": "visible"
+    },
+    "hiddenA": {
+      "running": 41,
+      "bgPausedHtml": false,
+      "bgPausedBody": false,
+      "anyBg": false,
+      "raf": 25,
+      "vis": "visible"
+    },
+    "hiddenB": {
+      "running": 41,
+      "raf": 27
+    },
+    "resumed": {
+      "running": 41,
+      "total": 75,
+      "raf": 148,
+      "vis": "visible"
+    },
+    "rafDeltaWhileHidden": 2
+  }
+}

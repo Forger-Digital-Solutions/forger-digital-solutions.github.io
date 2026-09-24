@@ -1,0 +1,2500 @@
+{
+  "meta": {
+    "base": "https://forgerdigitalsolutions.com",
+    "mode": "headed",
+    "idleMs": 5000,
+    "traceMs": 4000,
+    "settleMs": 3500,
+    "iterations": 3,
+    "startedAt": "2026-09-24T22:10:43.091Z",
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "finishedAt": "2026-09-24T22:15:41.339Z"
+  },
+  "scenarios": {
+    "top": {
+      "scenario": "top",
+      "label": "Homepage: Hero / Top",
+      "url": "https://forgerdigitalsolutions.com/",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 1.3,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0.08,
+        "RecalcStyleDuration_s": 0.31,
+        "mainThreadBusyPct": 25.98,
+        "runningAnims": 41,
+        "totalAnims": 75,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1.05,
+        "RasterTask_ms": 89.2,
+        "RasterTask_calls": 1002,
+        "Paint_ms": 212.34,
+        "Paint_calls": 482,
+        "UpdateLayoutTree_ms": 292.88,
+        "Layerize_ms": 206.32,
+        "Commit_ms": 102.86,
+        "UpdateLayer_calls": 12141,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 1270.9,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 2089,
+          "busy": {
+            "TaskDuration_s": 1.2955,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0.0895,
+            "RecalcStyleDuration_s": 0.3091,
+            "mainThreadBusyPct": 25.91,
+            "layoutCount": 327,
+            "recalcStyleCount": 327
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            },
+            "after": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1012300,
+            "cdpTotalSize": 2359296,
+            "usedJSHeapSize": 1095930
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 932,
+                "ms": 89.2
+              },
+              "Paint": {
+                "count": 482,
+                "ms": 212.34
+              },
+              "PrePaint": {
+                "count": 482,
+                "ms": 119.92
+              },
+              "UpdateLayoutTree": {
+                "count": 256,
+                "ms": 322.22
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 256,
+                "ms": 83.56
+              },
+              "Layerize": {
+                "count": 241,
+                "ms": 206.32
+              },
+              "Commit": {
+                "count": 241,
+                "ms": 102.86
+              },
+              "UpdateLayer": {
+                "count": 12141,
+                "ms": 27.75
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 552,
+                "ms": 1905.24
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 1283.18,
+            "mainRunTaskCount": 3214,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 33403,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 1290,
+          "busy": {
+            "TaskDuration_s": 1.4573,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0.0841,
+            "RecalcStyleDuration_s": 0.3623,
+            "mainThreadBusyPct": 29.15,
+            "layoutCount": 312,
+            "recalcStyleCount": 312
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            },
+            "after": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1012212,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1095842
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 1014,
+                "ms": 74.13
+              },
+              "Paint": {
+                "count": 482,
+                "ms": 203.7
+              },
+              "PrePaint": {
+                "count": 482,
+                "ms": 113.98
+              },
+              "UpdateLayoutTree": {
+                "count": 254,
+                "ms": 254.68
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 254,
+                "ms": 71.83
+              },
+              "Layerize": {
+                "count": 241,
+                "ms": 182.27
+              },
+              "Commit": {
+                "count": 241,
+                "ms": 85.12
+              },
+              "UpdateLayer": {
+                "count": 12013,
+                "ms": 22.52
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 505,
+                "ms": 1669.98
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 1124.52,
+            "mainRunTaskCount": 2755,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 33298,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 1488,
+          "busy": {
+            "TaskDuration_s": 1.2992,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0.0736,
+            "RecalcStyleDuration_s": 0.2847,
+            "mainThreadBusyPct": 25.98,
+            "layoutCount": 316,
+            "recalcStyleCount": 316
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            },
+            "after": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1012188,
+            "cdpTotalSize": 2359296,
+            "usedJSHeapSize": 1095818
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 1002,
+                "ms": 90.53
+              },
+              "Paint": {
+                "count": 478,
+                "ms": 224.52
+              },
+              "PrePaint": {
+                "count": 478,
+                "ms": 117.18
+              },
+              "UpdateLayoutTree": {
+                "count": 247,
+                "ms": 292.88
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 247,
+                "ms": 84.8
+              },
+              "Layerize": {
+                "count": 239,
+                "ms": 218.27
+              },
+              "Commit": {
+                "count": 239,
+                "ms": 106.81
+              },
+              "UpdateLayer": {
+                "count": 12142,
+                "ms": 28.37
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 563,
+                "ms": 1969
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 1270.9,
+            "mainRunTaskCount": 2809,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 32852,
+            "mainTidFound": true
+          }
+        }
+      ]
+    },
+    "ecosystem": {
+      "scenario": "ecosystem",
+      "label": "Homepage: Ecosystem Section",
+      "url": "https://forgerdigitalsolutions.com/",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 1.28,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0.08,
+        "RecalcStyleDuration_s": 0.29,
+        "mainThreadBusyPct": 25.63,
+        "runningAnims": 41,
+        "totalAnims": 75,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1.05,
+        "RasterTask_ms": 76.2,
+        "RasterTask_calls": 1022,
+        "Paint_ms": 181.71,
+        "Paint_calls": 482,
+        "UpdateLayoutTree_ms": 235.39,
+        "Layerize_ms": 179.2,
+        "Commit_ms": 90.17,
+        "UpdateLayer_calls": 12060,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 1106.32,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 1167,
+          "busy": {
+            "TaskDuration_s": 1.2136,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0.0779,
+            "RecalcStyleDuration_s": 0.2939,
+            "mainThreadBusyPct": 24.27,
+            "layoutCount": 309,
+            "recalcStyleCount": 309
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            },
+            "after": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1018860,
+            "cdpTotalSize": 2359296,
+            "usedJSHeapSize": 1102503
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 1026,
+                "ms": 67.92
+              },
+              "Paint": {
+                "count": 482,
+                "ms": 162.46
+              },
+              "PrePaint": {
+                "count": 482,
+                "ms": 105.85
+              },
+              "UpdateLayoutTree": {
+                "count": 244,
+                "ms": 235.39
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 244,
+                "ms": 65.41
+              },
+              "Layerize": {
+                "count": 241,
+                "ms": 164.42
+              },
+              "Commit": {
+                "count": 241,
+                "ms": 83.61
+              },
+              "UpdateLayer": {
+                "count": 12051,
+                "ms": 21.65
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 491,
+                "ms": 1587.23
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 1033.12,
+            "mainRunTaskCount": 2594,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 32387,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 1103,
+          "busy": {
+            "TaskDuration_s": 1.2817,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0.0781,
+            "RecalcStyleDuration_s": 0.2907,
+            "mainThreadBusyPct": 25.63,
+            "layoutCount": 329,
+            "recalcStyleCount": 329
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            },
+            "after": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1018876,
+            "cdpTotalSize": 2359296,
+            "usedJSHeapSize": 1102519
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 1022,
+                "ms": 82.44
+              },
+              "Paint": {
+                "count": 482,
+                "ms": 181.71
+              },
+              "PrePaint": {
+                "count": 482,
+                "ms": 126.77
+              },
+              "UpdateLayoutTree": {
+                "count": 264,
+                "ms": 280.48
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 264,
+                "ms": 85.69
+              },
+              "Layerize": {
+                "count": 241,
+                "ms": 179.2
+              },
+              "Commit": {
+                "count": 241,
+                "ms": 97.54
+              },
+              "UpdateLayer": {
+                "count": 12206,
+                "ms": 25.99
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 528,
+                "ms": 1748.12
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 1207.96,
+            "mainRunTaskCount": 3548,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 33725,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 1401,
+          "busy": {
+            "TaskDuration_s": 1.2989,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0.0896,
+            "RecalcStyleDuration_s": 0.2808,
+            "mainThreadBusyPct": 25.98,
+            "layoutCount": 316,
+            "recalcStyleCount": 316
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            },
+            "after": {
+              "total": 75,
+              "running": 41,
+              "paused": 34
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1018860,
+            "cdpTotalSize": 2359296,
+            "usedJSHeapSize": 1102503
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 1015,
+                "ms": 76.2
+              },
+              "Paint": {
+                "count": 482,
+                "ms": 186.1
+              },
+              "PrePaint": {
+                "count": 482,
+                "ms": 114.95
+              },
+              "UpdateLayoutTree": {
+                "count": 249,
+                "ms": 218.81
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 249,
+                "ms": 67.12
+              },
+              "Layerize": {
+                "count": 240,
+                "ms": 181.54
+              },
+              "Commit": {
+                "count": 240,
+                "ms": 90.17
+              },
+              "UpdateLayer": {
+                "count": 12060,
+                "ms": 22.73
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 497,
+                "ms": 1651.21
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 1106.32,
+            "mainRunTaskCount": 2224,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 32132,
+            "mainTidFound": true
+          }
+        }
+      ]
+    },
+    "bottom": {
+      "scenario": "bottom",
+      "label": "Homepage: Bottom / Footer",
+      "url": "https://forgerdigitalsolutions.com/",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 0.01,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0,
+        "RecalcStyleDuration_s": 0,
+        "mainThreadBusyPct": 0.13,
+        "runningAnims": 7,
+        "totalAnims": 75,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1.08,
+        "RasterTask_ms": 0,
+        "RasterTask_calls": 0,
+        "Paint_ms": 0,
+        "Paint_calls": 0,
+        "UpdateLayoutTree_ms": 0.19,
+        "Layerize_ms": 0,
+        "Commit_ms": 0.27,
+        "UpdateLayer_calls": 0,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 6.92,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 1127,
+          "busy": {
+            "TaskDuration_s": 0.0069,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0003,
+            "mainThreadBusyPct": 0.14,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 7,
+              "paused": 68
+            },
+            "after": {
+              "total": 75,
+              "running": 7,
+              "paused": 68
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1036452,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1120148
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.08
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.21
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0.01
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.44
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 7.29,
+            "mainRunTaskCount": 268,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4298,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 1101,
+          "busy": {
+            "TaskDuration_s": 0.0067,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0003,
+            "mainThreadBusyPct": 0.13,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 7,
+              "paused": 68
+            },
+            "after": {
+              "total": 75,
+              "running": 7,
+              "paused": 68
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1053800,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1137597
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.08
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.19
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.27
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 6.92,
+            "mainRunTaskCount": 269,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4551,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 1426,
+          "busy": {
+            "TaskDuration_s": 0.0067,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0004,
+            "mainThreadBusyPct": 0.13,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 75,
+              "running": 7,
+              "paused": 68
+            },
+            "after": {
+              "total": 75,
+              "running": 7,
+              "paused": 68
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1053800,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1137597
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.07
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.15
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.23
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 6.52,
+            "mainRunTaskCount": 269,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4547,
+            "mainTidFound": true
+          }
+        }
+      ]
+    },
+    "codeforge": {
+      "scenario": "codeforge",
+      "label": "CodeForge (/projects/codeforge)",
+      "url": "https://forgerdigitalsolutions.com/projects/codeforge",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 0.01,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0,
+        "RecalcStyleDuration_s": 0,
+        "mainThreadBusyPct": 0.15,
+        "runningAnims": 7,
+        "totalAnims": 10,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1.56,
+        "RasterTask_ms": 0,
+        "RasterTask_calls": 0,
+        "Paint_ms": 0,
+        "Paint_calls": 0,
+        "UpdateLayoutTree_ms": 0.13,
+        "Layerize_ms": 0,
+        "Commit_ms": 0.3,
+        "UpdateLayer_calls": 0,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 7.22,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 1047,
+          "busy": {
+            "TaskDuration_s": 0.0067,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0002,
+            "mainThreadBusyPct": 0.13,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 10,
+              "running": 7,
+              "paused": 3
+            },
+            "after": {
+              "total": 10,
+              "running": 7,
+              "paused": 3
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1544892,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1631063
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.06
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.12
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.2
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 6.35,
+            "mainRunTaskCount": 272,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4308,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 904,
+          "busy": {
+            "TaskDuration_s": 0.0077,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0003,
+            "mainThreadBusyPct": 0.15,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 10,
+              "running": 7,
+              "paused": 3
+            },
+            "after": {
+              "total": 10,
+              "running": 7,
+              "paused": 3
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1546156,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1632327
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.08
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.13
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.31
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 7.22,
+            "mainRunTaskCount": 271,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4293,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 919,
+          "busy": {
+            "TaskDuration_s": 0.0082,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0003,
+            "mainThreadBusyPct": 0.16,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 10,
+              "running": 7,
+              "paused": 3
+            },
+            "after": {
+              "total": 10,
+              "running": 7,
+              "paused": 3
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1544740,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1630911
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.09
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.17
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.3
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 9.01,
+            "mainRunTaskCount": 271,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4535,
+            "mainTidFound": true
+          }
+        }
+      ]
+    },
+    "gems": {
+      "scenario": "gems",
+      "label": "GEMS Training Grounds",
+      "url": "https://forgerdigitalsolutions.com/projects/gems-training-grounds",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 0.41,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0,
+        "RecalcStyleDuration_s": 0.04,
+        "mainThreadBusyPct": 8.12,
+        "runningAnims": 7,
+        "totalAnims": 9,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1,
+        "RasterTask_ms": 65.93,
+        "RasterTask_calls": 792,
+        "Paint_ms": 219.61,
+        "Paint_calls": 396,
+        "UpdateLayoutTree_ms": 62.56,
+        "Layerize_ms": 18.68,
+        "Commit_ms": 44.79,
+        "UpdateLayer_calls": 3133,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 431.63,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 1240,
+          "busy": {
+            "TaskDuration_s": 0.4058,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0437,
+            "mainThreadBusyPct": 8.12,
+            "layoutCount": 0,
+            "recalcStyleCount": 257
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 9,
+              "running": 7,
+              "paused": 2
+            },
+            "after": {
+              "total": 9,
+              "running": 7,
+              "paused": 2
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 967912,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1043359
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 800,
+                "ms": 84.7
+              },
+              "Paint": {
+                "count": 400,
+                "ms": 220.74
+              },
+              "PrePaint": {
+                "count": 612,
+                "ms": 39.76
+              },
+              "UpdateLayoutTree": {
+                "count": 412,
+                "ms": 65.41
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 212,
+                "ms": 20.49
+              },
+              "Commit": {
+                "count": 212,
+                "ms": 51.73
+              },
+              "UpdateLayer": {
+                "count": 3124,
+                "ms": 5.95
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 241,
+                "ms": 850.05
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 444.04,
+            "mainRunTaskCount": 1332,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 17226,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 1079,
+          "busy": {
+            "TaskDuration_s": 0.3953,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0427,
+            "mainThreadBusyPct": 7.91,
+            "layoutCount": 0,
+            "recalcStyleCount": 252
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 9,
+              "running": 7,
+              "paused": 2
+            },
+            "after": {
+              "total": 9,
+              "running": 7,
+              "paused": 2
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 967912,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1043359
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 792,
+                "ms": 65.93
+              },
+              "Paint": {
+                "count": 396,
+                "ms": 219.61
+              },
+              "PrePaint": {
+                "count": 595,
+                "ms": 37.49
+              },
+              "UpdateLayoutTree": {
+                "count": 397,
+                "ms": 62.56
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 198,
+                "ms": 18.64
+              },
+              "Commit": {
+                "count": 198,
+                "ms": 42.85
+              },
+              "UpdateLayer": {
+                "count": 3143,
+                "ms": 4.97
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 208,
+                "ms": 777.15
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 431.63,
+            "mainRunTaskCount": 1262,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 16707,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 999,
+          "busy": {
+            "TaskDuration_s": 0.4472,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0458,
+            "mainThreadBusyPct": 8.94,
+            "layoutCount": 0,
+            "recalcStyleCount": 262
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 9,
+              "running": 7,
+              "paused": 2
+            },
+            "after": {
+              "total": 9,
+              "running": 7,
+              "paused": 2
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 967912,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1043359
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 792,
+                "ms": 65.17
+              },
+              "Paint": {
+                "count": 396,
+                "ms": 198.93
+              },
+              "PrePaint": {
+                "count": 601,
+                "ms": 34.93
+              },
+              "UpdateLayoutTree": {
+                "count": 403,
+                "ms": 53.54
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 205,
+                "ms": 18.68
+              },
+              "Commit": {
+                "count": 205,
+                "ms": 44.79
+              },
+              "UpdateLayer": {
+                "count": 3133,
+                "ms": 5.97
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 214,
+                "ms": 742.61
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 392.06,
+            "mainRunTaskCount": 1312,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 17197,
+            "mainTidFound": true
+          }
+        }
+      ]
+    },
+    "technology": {
+      "scenario": "technology",
+      "label": "Technology (/technology)",
+      "url": "https://forgerdigitalsolutions.com/technology",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 0.01,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0,
+        "RecalcStyleDuration_s": 0,
+        "mainThreadBusyPct": 0.16,
+        "runningAnims": 6,
+        "totalAnims": 7,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1.55,
+        "RasterTask_ms": 0,
+        "RasterTask_calls": 0,
+        "Paint_ms": 0,
+        "Paint_calls": 0,
+        "UpdateLayoutTree_ms": 0.2,
+        "Layerize_ms": 0,
+        "Commit_ms": 0.3,
+        "UpdateLayer_calls": 0,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 8.53,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 1052,
+          "busy": {
+            "TaskDuration_s": 0.0091,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0003,
+            "mainThreadBusyPct": 0.18,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            },
+            "after": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1540704,
+            "cdpTotalSize": 2883584,
+            "usedJSHeapSize": 1626479
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.08
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.2
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.3
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 8.53,
+            "mainRunTaskCount": 271,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4296,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 913,
+          "busy": {
+            "TaskDuration_s": 0.0078,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0002,
+            "mainThreadBusyPct": 0.16,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            },
+            "after": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1540740,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1626515
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 0,
+                "ms": 0
+              },
+              "UpdateLayoutTree": {
+                "count": 0,
+                "ms": 0
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 0,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 0,
+                "ms": 0
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 8.29,
+            "mainRunTaskCount": 275,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4396,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 1056,
+          "busy": {
+            "TaskDuration_s": 0.0081,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0002,
+            "mainThreadBusyPct": 0.16,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            },
+            "after": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1540740,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1626515
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.11
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.23
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0.01
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.34
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 10.07,
+            "mainRunTaskCount": 271,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4306,
+            "mainTidFound": true
+          }
+        }
+      ]
+    },
+    "about": {
+      "scenario": "about",
+      "label": "About (/about)",
+      "url": "https://forgerdigitalsolutions.com/about",
+      "iterations": 3,
+      "median": {
+        "TaskDuration_s": 0.01,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0,
+        "RecalcStyleDuration_s": 0,
+        "mainThreadBusyPct": 0.17,
+        "runningAnims": 6,
+        "totalAnims": 7,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "heapUsedMB": 1.55,
+        "RasterTask_ms": 0,
+        "RasterTask_calls": 0,
+        "Paint_ms": 0,
+        "Paint_calls": 0,
+        "UpdateLayoutTree_ms": 0.15,
+        "Layerize_ms": 0,
+        "Commit_ms": 0.27,
+        "UpdateLayer_calls": 0,
+        "ImageDecodeTask_calls": 0,
+        "mainRunTask_ms": 7.57,
+        "traceLongTaskCount": 0,
+        "traceLongTaskMaxMs": 0
+      },
+      "health": {
+        "consoleErrors": [],
+        "pageErrors": [],
+        "failedRequests": []
+      },
+      "raw": [
+        {
+          "iteration": 0,
+          "loadMs": 1008,
+          "busy": {
+            "TaskDuration_s": 0.0084,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0003,
+            "mainThreadBusyPct": 0.17,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            },
+            "after": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1540728,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1626488
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.12
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.15
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0.01
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.3
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 6.85,
+            "mainRunTaskCount": 271,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4306,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 1,
+          "loadMs": 837,
+          "busy": {
+            "TaskDuration_s": 0.008,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0002,
+            "mainThreadBusyPct": 0.16,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            },
+            "after": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1540728,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1626488
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 0,
+                "ms": 0
+              },
+              "UpdateLayoutTree": {
+                "count": 0,
+                "ms": 0
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 0,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 0,
+                "ms": 0
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 7.57,
+            "mainRunTaskCount": 269,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4270,
+            "mainTidFound": true
+          }
+        },
+        {
+          "iteration": 2,
+          "loadMs": 830,
+          "busy": {
+            "TaskDuration_s": 0.009,
+            "ScriptDuration_s": 0,
+            "LayoutDuration_s": 0,
+            "RecalcStyleDuration_s": 0.0002,
+            "mainThreadBusyPct": 0.18,
+            "layoutCount": 0,
+            "recalcStyleCount": 2
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animations": {
+            "before": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            },
+            "after": {
+              "total": 7,
+              "running": 6,
+              "paused": 1
+            }
+          },
+          "heap": {
+            "cdpUsedSize": 1541848,
+            "cdpTotalSize": 2621440,
+            "usedJSHeapSize": 1627608
+          },
+          "trace": {
+            "byName": {
+              "RasterTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "Paint": {
+                "count": 0,
+                "ms": 0
+              },
+              "PrePaint": {
+                "count": 1,
+                "ms": 0.08
+              },
+              "UpdateLayoutTree": {
+                "count": 1,
+                "ms": 0.16
+              },
+              "RecalculateStyles": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layout": {
+                "count": 0,
+                "ms": 0
+              },
+              "Layerize": {
+                "count": 1,
+                "ms": 0
+              },
+              "Commit": {
+                "count": 1,
+                "ms": 0.27
+              },
+              "UpdateLayer": {
+                "count": 0,
+                "ms": 0
+              },
+              "ImageDecodeTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "GPUTask": {
+                "count": 0,
+                "ms": 0
+              },
+              "CompositeLayers": {
+                "count": 0,
+                "ms": 0
+              },
+              "FireAnimationFrame": {
+                "count": 0,
+                "ms": 0
+              },
+              "FunctionCall": {
+                "count": 0,
+                "ms": 0
+              },
+              "DrawFrame": {
+                "count": 0,
+                "ms": 0
+              }
+            },
+            "mainRunTaskMs": 9.11,
+            "mainRunTaskCount": 271,
+            "traceLongTaskCount": 0,
+            "traceLongTaskMaxMs": 0,
+            "traceLongTaskTotalMs": 0,
+            "totalEvents": 4294,
+            "mainTidFound": true
+          }
+        }
+      ]
+    }
+  }
+}
