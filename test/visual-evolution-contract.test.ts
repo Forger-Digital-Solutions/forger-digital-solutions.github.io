@@ -18,8 +18,12 @@ describe('final visual evolution contract', () => {
     expect(ecosystem).toContain('offset-path: var(--orbit-path)');
   });
 
-  it('draws three independent visible CodeForge reference planes and uses the canonical center mark', () => {
-    expect(ecosystem.match(/data-scaffold-plane="(?:one|two|three)"/g)).toHaveLength(3);
+  it('shows the same eight paths that drive the products and uses the canonical center mark', () => {
+    expect(ecosystem).not.toContain('data-scaffold-plane');
+    expect(ecosystem).toContain('class="orbit-path" d={node.orbit.path}');
+    expect(ecosystem).toContain('--orbit-path:path("${node.orbit.path}")');
+    expect(ecosystem).toContain('.orbit-path { fill: none; stroke: #8ba9e0;');
+    expect(ecosystem).not.toContain('class="relation-layer"');
     expect(ecosystem).toContain('codeforge-icon.svg');
     expect(ecosystem).toContain('class="core__heart"');
     expect(ecosystem).toContain('class="core__reactor-frame core__ring core__ring--outer"');
@@ -49,6 +53,10 @@ describe('final visual evolution contract', () => {
     expect(gemsVisual).toContain('.gems-system:not([data-visual-candidate=\'neural-lattice\']) .gems-art__pulse { display: none; }');
     expect(gemsVisual).toContain('Training Grounds');
     expect(gemsVisual).toContain('Evidence-gated advancement');
+    expect(gemsVisual).not.toContain('fieldLinks');
+    expect(gemsVisual).toContain('class="gems-node__port"');
+    expect(gemsVisual).toContain('class="gems-art__port gems-art__port--topaz"');
+    expect(gemsVisual).toContain('.gems-art { position: absolute; z-index: 1;');
   });
 
   it('keeps a structural mobile GEMS layout and low-cost motion hooks', () => {

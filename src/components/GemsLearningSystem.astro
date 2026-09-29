@@ -55,7 +55,6 @@ const fieldPoints = [
   { x: 918, y: 176, r: 2.2 }, { x: 62, y: 812, r: 1.8 }, { x: 148, y: 916, r: 1.3 },
   { x: 872, y: 886, r: 2 }, { x: 942, y: 768, r: 1.4 }, { x: 500, y: 34, r: 1.4 }, { x: 500, y: 968, r: 1.4 }
 ];
-const fieldLinks = ['M 96 120 L 210 74 L 500 34', 'M 806 96 L 918 176', 'M 62 812 L 148 916 L 500 968'];
 
 const gemColors: Record<string, string> = {
   topaz: '#e9ba61',
@@ -86,9 +85,6 @@ const gemColors: Record<string, string> = {
         </defs>
 
         <g class="gems-art__field">
-          <path d={fieldLinks[0]}></path>
-          <path d={fieldLinks[1]}></path>
-          <path d={fieldLinks[2]}></path>
           {fieldPoints.map((p) => <circle cx={p.x} cy={p.y} r={p.r}></circle>)}
         </g>
 
@@ -98,10 +94,14 @@ const gemColors: Record<string, string> = {
         </g>
 
         <g class="gems-art__connectors">
-          <path class="gems-art__connector gems-art__connector--topaz" d="M 500 96 L 500 236"></path>
-          <path class="gems-art__connector gems-art__connector--sapphire" d="M 96 500 L 236 500"></path>
-          <path class="gems-art__connector gems-art__connector--peridot" d="M 904 500 L 764 500"></path>
-          <path class="gems-art__connector gems-art__connector--garnet" d="M 500 904 L 500 764"></path>
+          <path class="gems-art__connector gems-art__connector--topaz" d="M 500 176 L 500 236"></path>
+          <path class="gems-art__connector gems-art__connector--sapphire" d="M 190 500 L 236 500"></path>
+          <path class="gems-art__connector gems-art__connector--peridot" d="M 810 500 L 764 500"></path>
+          <path class="gems-art__connector gems-art__connector--garnet" d="M 500 824 L 500 764"></path>
+          <circle class="gems-art__port gems-art__port--topaz" cx="500" cy="236" r="5"></circle>
+          <circle class="gems-art__port gems-art__port--sapphire" cx="236" cy="500" r="5"></circle>
+          <circle class="gems-art__port gems-art__port--peridot" cx="764" cy="500" r="5"></circle>
+          <circle class="gems-art__port gems-art__port--garnet" cx="500" cy="764" r="5"></circle>
         </g>
         <g class="gems-art__pulse gems-art__pulse--in">
           <path style={`animation-delay: 0s`} d="M 500 96 L 500 236"></path>
@@ -153,7 +153,12 @@ const gemColors: Record<string, string> = {
       <ul class="gems-nodes" role="list" aria-label="GEMS research lineages">
         {gems.map((gem) => (
           <li class="gems-node" data-gem={gem.key} tabindex="0" style={`--gem-color: ${gemColors[gem.key] ?? 'var(--color-accent-bright)'}`}>
-            <span class="gems-node__gem" aria-hidden="true"></span>
+            <span class="gems-node__port" aria-hidden="true"></span>
+            <svg class="gems-node__core" viewBox="0 0 50 42" aria-hidden="true" focusable="false">
+              <path class="gems-node__core-frame" d="M12 4H38L47 21 38 38H12L3 21Z"></path>
+              <path class="gems-node__core-facet" d="M25 7 38 18 31 32H19L12 18Z M25 7V32 M12 18H38 M19 32 25 7 31 32"></path>
+              <circle cx="25" cy="20" r="2.5"></circle>
+            </svg>
             <span class="gems-node__name">{gem.name}</span>
             <span class="gems-node__role">{gem.role}</span>
             <span class="gems-node__state"><span aria-hidden="true"></span>{gem.state}</span>
@@ -258,7 +263,7 @@ const gemColors: Record<string, string> = {
     margin: 0 auto;
   }
 
-  .gems-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .gems-art { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .gems-art__field path { fill: none; stroke: rgba(111, 163, 255, 0.09); stroke-width: 1; }
   .gems-art__field circle { fill: rgba(148, 183, 255, 0.16); }
   .gems-art__calib { fill: none; stroke: rgba(111, 163, 255, 0.1); stroke-width: 1; }
@@ -384,6 +389,7 @@ const gemColors: Record<string, string> = {
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__calib { stroke: rgba(139, 176, 245, 0.14); stroke-dasharray: 1 8; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__ticks path { stroke: rgba(148, 183, 255, 0.18); }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__connectors path { stroke: rgba(114, 151, 218, 0.66); stroke-width: 1.4; }
+  .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__port { fill: #a7c4ff; stroke: #0b1426; stroke-width: 2; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__pulse { display: none; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__pulse path { animation: none; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-art__pulse--out { display: none; }
@@ -425,8 +431,28 @@ const gemColors: Record<string, string> = {
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-core__sub { color: #a7c4ff; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-cycle li { color: #c3d2ec; font-size: clamp(0.55rem, 1.15vw, 0.66rem); letter-spacing: 0.075em; animation: none; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-cycle__num { display: inline-flex; align-items: center; justify-content: center; width: 1.12rem; height: 1.12rem; border: 1px solid rgba(146, 180, 239, 0.56); border-radius: 50%; color: #d6e4ff; font-size: 0.56rem; line-height: 1; }
-  .gems-system:not([data-visual-candidate='neural-lattice']) .gems-node { border-radius: 0.35rem; background: linear-gradient(145deg, rgba(16, 25, 43, 0.97), rgba(7, 12, 22, 0.97)); box-shadow: inset 0 1px rgba(255, 255, 255, 0.045); }
-  .gems-system:not([data-visual-candidate='neural-lattice']) .gems-node__gem { width: 0.58rem; height: 0.66rem; clip-path: polygon(50% 0, 92% 22%, 82% 76%, 50% 100%, 18% 76%, 8% 22%); rotate: none; box-shadow: none; }
+  .gems-system:not([data-visual-candidate='neural-lattice']) .gems-node {
+    padding: 0.62rem 0.55rem 0.7rem;
+    border-radius: 0;
+    clip-path: polygon(0 11px, 11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px));
+    background: linear-gradient(145deg, color-mix(in srgb, var(--gem-color) 11%, #111b2d), #070c16 75%);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .gems-system:not([data-visual-candidate='neural-lattice']) .gems-node::before {
+    position: absolute; inset: 5px; border: 1px solid color-mix(in srgb, var(--gem-color) 35%, transparent);
+    clip-path: polygon(0 9px, 9px 0, calc(100% - 9px) 0, 100% 9px, 100% calc(100% - 9px), calc(100% - 9px) 100%, 9px 100%, 0 calc(100% - 9px));
+    content: ''; pointer-events: none;
+  }
+  .gems-node__core { display: block; width: 2.5rem; height: 2.1rem; overflow: visible; color: var(--gem-color); filter: drop-shadow(0 0 5px color-mix(in srgb, var(--gem-color) 45%, transparent)); }
+  .gems-node__core, .gems-node__name, .gems-node__role, .gems-node__state { position: relative; z-index: 1; }
+  .gems-node__core-frame { fill: color-mix(in srgb, var(--gem-color) 13%, #0c1425); stroke: currentColor; stroke-width: 1.5; }
+  .gems-node__core-facet { fill: none; stroke: currentColor; stroke-width: 1; opacity: .75; }
+  .gems-node__core circle { fill: currentColor; }
+  .gems-node__port { position: absolute; z-index: 2; width: .48rem; height: .48rem; border: 2px solid #09111f; border-radius: 50%; background: var(--gem-color); box-shadow: 0 0 0 1px var(--gem-color); }
+  .gems-node[data-gem='topaz'] .gems-node__port { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+  .gems-node[data-gem='sapphire'] .gems-node__port { right: 0; top: 50%; transform: translate(50%, -50%); }
+  .gems-node[data-gem='peridot'] .gems-node__port { left: 0; top: 50%; transform: translate(-50%, -50%); }
+  .gems-node[data-gem='garnet'] .gems-node__port { top: 0; left: 50%; transform: translate(-50%, -50%); }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-node { transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease; }
   .gems-system:not([data-visual-candidate='neural-lattice']) .gems-node:is(:hover, :focus-visible) {
     border-color: var(--gem-color);
@@ -440,6 +466,10 @@ const gemColors: Record<string, string> = {
   .gems-system:not([data-visual-candidate='neural-lattice']):has(.gems-node[data-gem='sapphire']:is(:hover, :focus-visible)) .gems-art__connector--sapphire { stroke: #81adff; stroke-width: 2.8; }
   .gems-system:not([data-visual-candidate='neural-lattice']):has(.gems-node[data-gem='peridot']:is(:hover, :focus-visible)) .gems-art__connector--peridot { stroke: #77d8ad; stroke-width: 2.8; }
   .gems-system:not([data-visual-candidate='neural-lattice']):has(.gems-node[data-gem='garnet']:is(:hover, :focus-visible)) .gems-art__connector--garnet { stroke: #d39cff; stroke-width: 2.8; }
+  .gems-system:has(.gems-node[data-gem='topaz']:is(:hover, :focus-visible)) .gems-art__port--topaz { fill: #f2bd55; }
+  .gems-system:has(.gems-node[data-gem='sapphire']:is(:hover, :focus-visible)) .gems-art__port--sapphire { fill: #81adff; }
+  .gems-system:has(.gems-node[data-gem='peridot']:is(:hover, :focus-visible)) .gems-art__port--peridot { fill: #77d8ad; }
+  .gems-system:has(.gems-node[data-gem='garnet']:is(:hover, :focus-visible)) .gems-art__port--garnet { fill: #d39cff; }
   .gems-system:not([data-visual-candidate='neural-lattice']):has(.gems-node[data-gem='topaz']:is(:hover, :focus-visible)) .gems-core { border-color: #f2bd55; box-shadow: inset 0 0 1.2rem rgba(242, 189, 85, 0.12); }
   .gems-system:not([data-visual-candidate='neural-lattice']):has(.gems-node[data-gem='sapphire']:is(:hover, :focus-visible)) .gems-core { border-color: #81adff; box-shadow: inset 0 0 1.2rem rgba(129, 173, 255, 0.12); }
   .gems-system:not([data-visual-candidate='neural-lattice']):has(.gems-node[data-gem='peridot']:is(:hover, :focus-visible)) .gems-core { border-color: #77d8ad; box-shadow: inset 0 0 1.2rem rgba(119, 216, 173, 0.12); }
@@ -471,6 +501,8 @@ const gemColors: Record<string, string> = {
     /* (0,2,0) specificity: must tie with the desktop per-GEM placement rules
        so their absolute offsets lose the cascade here. */
     .gems-node[data-gem] { position: relative; inset: auto; transform: none; order: 0; width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.2rem 0.6rem; padding: 0.7rem 0.8rem; margin: 0.55rem 0; }
+    .gems-node__core { width: 2rem; height: 1.7rem; }
+    .gems-node__port { display: none; }
     .gems-node__role { flex-basis: 100%; }
     .gems-node[data-gem='topaz'] { order: 1; margin-top: 0; }
     .gems-node[data-gem='sapphire'] { order: 2; }

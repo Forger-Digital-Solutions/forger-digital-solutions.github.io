@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test.describe('Homepage visual evolution: CodeForge scaffold and GEMS reactor', () => {
-  test('keeps the CodeForge scaffold separate from the eight certified product paths', async ({ page }) => {
+test.describe('Homepage visual lock: true atomic rails and GEMS reactor', () => {
+  test('shows eight true product rails around the CodeForge core', async ({ page }) => {
     await page.goto('/');
     const ecosystem = page.locator('.fds-ecosystem');
     await ecosystem.scrollIntoViewIfNeeded();
     await expect(ecosystem).toHaveAttribute('data-visual-candidate', 'codeforge-reactor');
-    await expect(ecosystem.locator('[data-scaffold-plane]')).toHaveCount(3);
+    await expect(ecosystem.locator('[data-scaffold-plane]')).toHaveCount(0);
     await expect(ecosystem.locator('.planet-motion[data-planet]')).toHaveCount(8);
     await expect(ecosystem.locator('.tag-motion[data-tag-for]')).toHaveCount(8);
     await expect(ecosystem.locator('.orbit-layer path.orbit-path')).toHaveCount(8);
@@ -19,17 +19,24 @@ test.describe('Homepage visual evolution: CodeForge scaffold and GEMS reactor', 
         await expect(ecosystem.locator('.fds-ecosystem__scene-wrap')).toBeHidden();
       } else {
         const pathOpacity = await ecosystem.locator('.orbit-layer .orbit-path').first().evaluate((el) => getComputedStyle(el).opacity);
-        await expect(ecosystem.locator('[data-scaffold-plane]')).toHaveCount(3);
-        expect(pathOpacity, `legacy track visibility at ${width}px`).toBe('0');
+        expect(Number(pathOpacity), `product rail visibility at ${width}px`).toBeGreaterThan(0.2);
       }
     }
 
     const productPathCount = await page.evaluate(() => {
-      const paths = [...document.querySelectorAll('.planet-motion[data-planet]')]
-        .map((node) => /--orbit-path:path\("([^"]+)"\)/.exec(node.getAttribute('style') || '')?.[1]);
-      return new Set(paths).size;
+      const paths = [...document.querySelectorAll<SVGElement>('.planet-motion[data-planet]')]
+        .map((node) => {
+          const id = node.getAttribute('data-planet');
+          const motion = /--orbit-path:path\("([^"]+)"\)/.exec(node.getAttribute('style') || '')?.[1];
+          const visible = document.getElementById(`orbit-${id}`)?.getAttribute('d');
+          const tag = document.querySelector(`.tag-motion[data-tag-for="${id}"]`);
+          const tagMotion = /--orbit-path:path\("([^"]+)"\)/.exec(tag?.getAttribute('style') || '')?.[1];
+          return { id, motion, visible, tagMotion };
+        });
+      return { count: new Set(paths.map((entry) => entry.motion)).size, matches: paths.every((entry) => entry.motion === entry.visible && entry.motion === entry.tagMotion) };
     });
-    expect(productPathCount).toBe(8);
+    expect(productPathCount.count).toBe(8);
+    expect(productPathCount.matches).toBe(true);
   });
 
   test('renders four canonical lineages and all seven readable training stages', async ({ page }) => {
@@ -38,6 +45,9 @@ test.describe('Homepage visual evolution: CodeForge scaffold and GEMS reactor', 
     await system.scrollIntoViewIfNeeded();
     await expect(system).toHaveAttribute('data-visual-candidate', 'reactor-pipeline');
     await expect(system.locator('.gems-node')).toHaveCount(4);
+    await expect(system.locator('.gems-node__core')).toHaveCount(4);
+    await expect(system.locator('.gems-node__port')).toHaveCount(4);
+    await expect(system.locator('.gems-art__port')).toHaveCount(4);
     await expect(system.locator('.gems-cycle li')).toHaveText([
       /Curriculum/, /Teach/, /Test/, /Diagnose/, /Refine/, /Verify/, /Advance/
     ]);
@@ -51,11 +61,23 @@ test.describe('Homepage visual evolution: CodeForge scaffold and GEMS reactor', 
     expect(movingSignals, 'one sequential stage sweep should drive the visible GEMS cycle').toBe(1);
 
     const topaz = system.locator('.gems-node[data-gem="topaz"]');
+    await topaz.scrollIntoViewIfNeeded();
     await topaz.hover();
     await expect(system.locator('.gems-art__connector--topaz')).toHaveCSS('stroke', 'rgb(242, 189, 85)');
     await topaz.focus();
     await expect(topaz).toBeFocused();
     await expect(topaz).toHaveCSS('outline-style', 'solid');
+    for (const [gem, color] of [
+      ['topaz', 'rgb(242, 189, 85)'],
+      ['sapphire', 'rgb(129, 173, 255)'],
+      ['peridot', 'rgb(119, 216, 173)'],
+      ['garnet', 'rgb(211, 156, 255)'],
+    ]) {
+      const node = system.locator(`.gems-node[data-gem="${gem}"]`);
+      await node.focus();
+      await expect(node).toHaveCSS('outline-style', 'solid');
+      await expect(system.locator(`.gems-art__connector--${gem}`)).toHaveCSS('stroke', color);
+    }
   });
 
   test('keeps desktop stage labels clear of lineage cards at 1920, 1440, 1024, and 768 widths', async ({ page }) => {

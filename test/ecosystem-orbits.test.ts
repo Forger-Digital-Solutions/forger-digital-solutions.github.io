@@ -321,17 +321,15 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
     ]));
   });
 
-  it('keeps eight independent product paths separate from the three visible reference planes', () => {
+  it('uses eight visible product paths as the exact motion paths', () => {
     expect(component).toContain('d={node.orbit.path}');
     expect(component).toContain('--orbit-path:path("${node.orbit.path}")');
     expect(component).toContain('offset-path: var(--orbit-path)');
     expect(component).toContain('offset-rotate: 0deg');
-    expect(component).toContain('class="electron-scaffold"');
-    expect(component).toContain('data-scaffold-plane="one"');
-    expect(component).toContain('data-scaffold-plane="two"');
-    expect(component).toContain('data-scaffold-plane="three"');
-    expect(component).toContain('.orbit-path, .orbit-segment, .orbit-pulse { stroke: var(--planet-color); opacity: 0; }');
-    expect(component).toContain('.electron-scaffold__plane.is-active');
+    expect(component).toContain('class="orbit-path" d={node.orbit.path}');
+    expect(component).toContain('.orbit-path { fill: none; stroke: #8ba9e0;');
+    expect(component).not.toContain('class="electron-scaffold"');
+    expect(component).not.toContain('class="relation-layer"');
   });
 
   it('renders the FDS Core with the canonical static CodeForge mark (no animated emblem, no filters)', () => {
@@ -349,8 +347,6 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
   it('renders the Ecosystem 2.0 information architecture', () => {
     expect(component).toContain('fds-ecosystem__panel');
     expect(component).toContain('data-panel-purpose');
-    expect(component).toContain('fds-ecosystem__legend');
-    expect(component).toContain('relation-chord');
     expect(component).toContain('fds-ecosystem__mobile');
     expect(component).toContain('eco-group__link');
   });

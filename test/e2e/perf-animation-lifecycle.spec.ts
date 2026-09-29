@@ -91,7 +91,6 @@ test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
 
     const motionStyles = await page.evaluate(() => {
       const planet = document.querySelector('.planet-motion');
-      const pulse = document.querySelector('.orbit-pulse');
       const coreHalo = document.querySelector('.core__heart-halo');
       const constellation = document.querySelector('.constellation__node');
       const systemNode = document.querySelector('.system-node');
@@ -99,7 +98,7 @@ test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
       return {
         planetAnimation: planet ? getComputedStyle(planet).animationName : null,
         planetWillChange: planet ? getComputedStyle(planet).willChange : null,
-        pulseAnimation: pulse ? getComputedStyle(pulse).animationName : null,
+        pulseCount: document.querySelectorAll('.orbit-pulse').length,
         coreHaloAnimation: coreHalo ? getComputedStyle(coreHalo).animationName : null,
         constellationAnimation: constellation ? getComputedStyle(constellation).animationName : null,
         systemNodeAnimation: systemNode ? getComputedStyle(systemNode).animationName : null,
@@ -108,7 +107,7 @@ test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
 
     expect(motionStyles.planetAnimation).toBe('none');
     expect(motionStyles.planetWillChange).toBe('auto');
-    expect(motionStyles.pulseAnimation).toBe('none');
+    expect(motionStyles.pulseCount).toBe(0);
     expect(motionStyles.coreHaloAnimation).toBe('none');
     expect(motionStyles.constellationAnimation).toBe('none');
     expect(motionStyles.systemNodeAnimation).toBe('none');
@@ -126,20 +125,19 @@ test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
     const mobileState = await page.evaluate(() => {
       const sceneWrap = document.querySelector('.fds-ecosystem__scene-wrap');
       const planet = document.querySelector('.fds-ecosystem__scene-wrap .planet-motion');
-      const pulse = document.querySelector('.fds-ecosystem__scene-wrap .orbit-pulse');
       const ring = document.querySelector('.fds-ecosystem__scene-wrap .core__ring');
 
       return {
         display: sceneWrap ? getComputedStyle(sceneWrap).display : null,
         planetPlayState: planet ? getComputedStyle(planet).animationPlayState : null,
-        pulsePlayState: pulse ? getComputedStyle(pulse).animationPlayState : null,
+        pulseCount: document.querySelectorAll('.orbit-pulse').length,
         ringPlayState: ring ? getComputedStyle(ring).animationPlayState : null,
       };
     });
 
     expect(mobileState.display).toBe('none');
     expect(mobileState.planetPlayState).toBe('paused');
-    expect(mobileState.pulsePlayState).toBe('paused');
+    expect(mobileState.pulseCount).toBe(0);
     expect(mobileState.ringPlayState).toBe('paused');
 
     await context.close();
