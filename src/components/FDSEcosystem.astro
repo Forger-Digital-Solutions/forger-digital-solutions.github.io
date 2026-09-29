@@ -5,6 +5,9 @@ const labelTransform = (side: 'left' | 'right', size: number) => side === 'right
   ? `translate(${size / 2 + 12} -23)`
   : `translate(${-size / 2 - 132} -23)`;
 
+/** Baseline-to-baseline for a stacked tag. Must match TAG_FONT.lineHeight in scripts/eco-orbit-model.cjs. */
+const TAG_LEADING = 12;
+
 /** Two fixed calibration ticks on each body's signal ring (45deg / 225deg). */
 const ringTicks = (size: number) => {
   const r1 = size / 2 + 4.5;
@@ -91,6 +94,26 @@ const researchChords = [
         ))}
       </g>
 
+      <!-- Identity tags ride their own motion group on the same path/delay as their
+           planet, painted UNDER the bodies: when a nearer world crosses a tag it
+           occludes it like a moon passing behind a planet — a clean depth cue
+           instead of ink painted over a shell. -->
+      <g class="tag-layer" aria-hidden="true">
+        {ecosystemNodes.map((node) => (
+          <g
+            class="planet-motion tag-motion"
+            data-tag-for={node.id}
+            data-orbit={`orbit-${node.id}`}
+            data-duration={node.orbit.duration}
+            data-direction={node.orbit.direction}
+            data-start={node.orbit.start}
+            style={`--orbit-path:path("${node.orbit.path}");--orbit-duration:${node.orbit.duration}s;--orbit-direction:${node.orbit.direction};--orbit-delay:${-node.orbit.duration * (node.orbit.direction === 'reverse' ? 100 - node.orbit.start : node.orbit.start) / 100}s;--orbit-start:${node.orbit.start}%;--planet-color:${node.color}`}
+          >
+            <text class="planet__tag" data-label-position={node.labelPosition} x={node.labelDx} y={node.labelDy} text-anchor={node.labelAnchor}>{node.tagLines.map((line, i) => <tspan x={node.labelDx} dy={i === 0 ? 0 : TAG_LEADING}>{line}</tspan>)}</text>
+          </g>
+        ))}
+      </g>
+
       <g class="planet-layer">
         {ecosystemNodes.map((node) => (
           <a
@@ -111,7 +134,7 @@ const researchChords = [
               data-duration={node.orbit.duration}
               data-direction={node.orbit.direction}
               data-start={node.orbit.start}
-              style={`--orbit-path:path("${node.orbit.path}");--orbit-duration:${node.orbit.duration}s;--orbit-direction:${node.orbit.direction};--orbit-delay:${-(node.orbit.duration * node.orbit.start / 100)}s;--orbit-start:${node.orbit.start}%;--planet-color:${node.color};--planet-glow:${node.glow};--sigil-accent:${node.color}`}
+              style={`--orbit-path:path("${node.orbit.path}");--orbit-duration:${node.orbit.duration}s;--orbit-direction:${node.orbit.direction};--orbit-delay:${-node.orbit.duration * (node.orbit.direction === 'reverse' ? 100 - node.orbit.start : node.orbit.start) / 100}s;--orbit-start:${node.orbit.start}%;--planet-color:${node.color};--planet-glow:${node.glow};--sigil-accent:${node.color}`}
             >
               <g class="planet" style={`--planet-size:${node.size}px`}>
                 <circle class="planet__focus-ring" r={node.size / 2 + 8} />
@@ -130,7 +153,6 @@ const researchChords = [
                   preserveAspectRatio="xMidYMid meet"
                   aria-hidden="true"
                 />
-                <text class="planet__tag" y={node.size / 2 + 15} text-anchor="middle">{node.tag}</text>
                 <g class="planet__label" transform={labelTransform(node.labelSide, node.size)}>
                   <line class="planet__leader" x1={node.labelSide === 'right' ? -12 : 120} y1="23" x2={node.labelSide === 'right' ? 0 : 112} y2="23" />
                   <path class="planet__label-frame" d="M6 0H112L120 8V46H8L0 38V8Z" />
@@ -158,6 +180,11 @@ const researchChords = [
           <path d="M297 305 L283 291 M383 305 L397 291 M297 375 L283 389 M383 375 L397 389" />
           <circle cx="340" cy="286" r="2.2" /><circle cx="340" cy="394" r="2.2" /><circle cx="286" cy="340" r="2.2" /><circle cx="394" cy="340" r="2.2" />
         </g>
+
+        <!-- Canonical CodeForge mark embedded in the reactor: static asset on a dark
+             contrast plate so the crystal reads against the bright heart. No filters. -->
+        <circle class="core__codeforge-plate" cx="340" cy="340" r="48" />
+        <image class="core__codeforge" href="/images/codeforge/codeforge-icon.svg" x="294" y="294" width="92" height="92" aria-hidden="true" />
 
         <text class="core__title" x="340" y="438" text-anchor="middle">FDS CORE</text>
         <text class="core__subtitle" x="340" y="455" text-anchor="middle">THE COMPANY AT THE CENTER</text>
@@ -319,6 +346,9 @@ const researchChords = [
   .planet-link:hover .planet__atmosphere, .planet-link:focus-visible .planet__atmosphere { opacity: .22; }
   .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:hover .planet__label, .planet-link:focus-visible .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
   .planet__name, .planet__subtitle, .planet__tag { fill: currentColor; font-family: var(--font-mono); }.planet__name { font-size: 13px; font-weight: 800; letter-spacing: 1.8px; }.planet__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 1.1px; opacity: .72; }.planet__tag { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1px; paint-order: stroke; stroke: rgba(3,8,18,.96); stroke-width: 4px; }
+  /* Tags are decorative identity text: they sit under the planet layer so a passing
+     body occludes them (depth cue) and they never intercept a click meant for a world. */
+  .tag-motion { color: var(--planet-color); pointer-events: none; }
 
   /* FDS Core: forge-reactor heart. Stable, mechanical, breathing on one rhythm. */
   .core { transform-origin: 340px 340px; }.core__aura { fill: url(#halo-glow); stroke: rgba(84,139,255,.32); stroke-width: 1.2; }
@@ -326,6 +356,10 @@ const researchChords = [
   .core__ring { fill: none; stroke: rgba(94,154,255,.5); stroke-width: 1; transform-origin: 340px 340px; }.core__ring--outer { stroke-dasharray: 3 8 16 5; animation: core-ring-spin 48s linear infinite; }.core__ring--mid { stroke: rgba(132,176,250,.4); stroke-dasharray: 1 5 20 7; animation: core-ring-spin 34s linear infinite reverse; }.core__ring--inner { stroke: rgba(92,151,255,.62); stroke-dasharray: 2 4; animation: core-ring-spin 26s linear infinite; }
   .core__heart-halo { fill: url(#halo-glow); transform-origin: 340px 340px; animation: core-breathe 9s cubic-bezier(.45,0,.35,1) infinite; }
   .core__heart { fill: url(#forge-heart); stroke: rgba(190,216,255,.9); stroke-width: 1.2; }
+  /* Static CodeForge mark in the reactor: dark plate guarantees contrast against the
+     bright heart; the asset itself carries no animation, so this adds zero frame cost. */
+  .core__codeforge-plate { fill: rgba(4,9,18,.62); stroke: rgba(214,233,255,.28); stroke-width: 1; }
+  .core__codeforge { pointer-events: none; }
   .core__vents { fill: #badaff; stroke: #badaff; stroke-width: 1.1; opacity: .92; transform-origin: 340px 340px; animation: core-ring-spin 22s linear infinite reverse; }
   .core__title, .core__subtitle, .core__reveal { fill: #e8f1ff; font-family: var(--font-mono); }.core__title { font-size: 14px; font-weight: 850; letter-spacing: 2.5px; }.core__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 2px; opacity: .62; }
   /* Restrained company reveal: the core names its three arms on inspection only. */

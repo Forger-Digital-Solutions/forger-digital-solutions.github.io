@@ -9,11 +9,27 @@ import { manifestById, canonicalStatusLabels, type CanonicalStatus, type Product
  * derived from the canonical product manifest so the map can never contradict
  * the pages it links to.
  *
- * Orbit rules:
- * - Every node owns one unique, fixed ellipse; nodes never drift or bounce.
- * - Inner belts (Build) move faster; outer belts (Knowledge) move slower.
+ * Orbit rules — ONE PLANET = ONE ORBIT:
+ * - Every node owns exactly one ellipse and no two of them are the same plane:
+ *   radii, eccentricity and tilt all differ, so the eight tracks read as an atomic
+ *   system of intersecting orbits rather than as concentric rings or shared belts.
+ *   Two bodies 180 degrees apart on one ellipse would still be sharing an orbit,
+ *   which is why the geometry is per-body and not per-layer.
+ * - Every plane has its own period, an exact divisor of the 1080s master cycle,
+ *   shortest for the innermost world, so nothing locks into formation and the
+ *   system repeats exactly at t = 1080s — one dense sweep certifies all future time.
+ * - All eight planes run prograde. Mixed/retrograde layouts were measured and are
+ *   deliberately rejected: any counter-rotating plane at these world sizes cost
+ *   25-32u of closest-approach margin, and collision safety plus legibility
+ *   outrank CW/CCW symmetry.
+ * - The eight planes were laid out and verified offline against closest approach
+ *   across the whole animated cycle, with every plane kept clear of the nucleus
+ *   and inside the scene; see scripts/eco-orbit-solver.cjs.
  * - Motion is pure CSS offset-path and freezes at a configured position under
  *   prefers-reduced-motion.
+ * - Identity tags ride on a second motion layer painted UNDER the planets: a tag
+ *   that meets a nearer world is occluded by it, a depth cue that reads like a
+ *   moon passing behind a planet instead of ink painted over a shell.
  */
 
 export type EcosystemIcon =
@@ -27,6 +43,19 @@ export type EcosystemIcon =
   | 'systems';
 
 export type LabelSide = 'left' | 'right';
+
+/**
+ * Compass position of a world's tag around its body, and the exact offset that
+ * position resolves to. The offsets are data, not markup: scripts/eco-orbit-solver.cjs
+ * searches these eight anchors against the full master cycle and writes the winners
+ * back here, so a label fix survives every future retune instead of living in a
+ * hard-coded transform that collides again.
+ */
+export type LabelPosition =
+  | 'below' | 'below-left' | 'below-right'
+  | 'left' | 'right'
+  | 'above' | 'above-left' | 'above-right';
+export type LabelAnchor = 'start' | 'middle' | 'end';
 
 export interface EcosystemOrbit {
   rx: number;
@@ -53,6 +82,18 @@ export interface EcosystemNode {
   name: string;
   /** Short label rendered under the body on the orbital map. */
   tag: string;
+  /**
+   * The same label as painted lines. A tag is horizontal at every bearing while its
+   * world travels all the way around the nucleus, so the widest line is what decides
+   * how far that world can reach before its own label leaves the viewBox. Stacking
+   * the three two-word names keeps the canonical wording and halves their span;
+   * scripts/eco-orbit-model.cjs certifies the result over the whole master cycle.
+   */
+  tagLines: string[];
+  labelPosition: LabelPosition;
+  labelDx: number;
+  labelDy: number;
+  labelAnchor: LabelAnchor;
   href: string;
   group: ProductGroup;
   category: string;
@@ -109,6 +150,12 @@ export function buildEllipsePath(rx: number, ry: number, rotation: number): stri
   return `M ${p0.join(' ')} C ${c1.join(' ')} ${c2.join(' ')} ${p1.join(' ')} C ${c3.join(' ')} ${c4.join(' ')} ${p2.join(' ')} C ${c5.join(' ')} ${c6.join(' ')} ${p3.join(' ')} C ${c7.join(' ')} ${c8.join(' ')} ${p0.join(' ')} Z`;
 }
 
+/**
+ * One ellipse per world, ordered inner to outer. `start` is the percentage of the
+ * plane's own arc length the body occupies at t=0 — in the animation AND in the
+ * prefers-reduced-motion freeze, so the composition that gets verified is the one
+ * that gets painted. Retrograde planes run the same keyframes backwards from there.
+ */
 const orbit = (
   rx: number,
   ry: number,
@@ -127,73 +174,99 @@ export const ecosystemGroups: EcosystemGroup[] = [
   { id: 'knowledge', name: 'Knowledge & Community', short: 'KNOWLEDGE', blurb: 'Practical information and local discovery.', color: '#61d7a1' },
 ];
 
-type NodeSpec = Omit<EcosystemNode, 'name' | 'href' | 'category' | 'status' | 'statusLabel' | 'purpose'> & {
+type NodeSpec = Omit<EcosystemNode, 'name' | 'href' | 'category' | 'status' | 'statusLabel' | 'purpose' | 'tagLines'> & {
   manifestId: string;
   tag: string;
+  /** Painted lines for `tag`; defaults to the whole tag on a single line. */
+  tagLines?: string[];
   hrefOverride?: string;
   purposeOverride?: string;
 };
 
+/**
+ * Eight worlds, eight planes, listed inner to outer. Nothing here is generated:
+ * each ellipse was laid out for the shape of the system it contributes — a compact
+ * ground-state orbit, a broad horizontal plane, a tall near-vertical one, shallow
+ * and steep diagonals, a wide outer fence — and then verified offline against every
+ * other plane for closest approach across the whole animated cycle.
+ *
+ * All eight run prograde and every period divides the 1080s master cycle, so the
+ * full state at t=1080 is bit-identical to t=0 and the offline certificate covers
+ * all future time. The counter-rotating alternative was measured and rejected: at
+ * this planet size family (33-37u) any retrograde plane cost 25-32u of clearance.
+ */
 const specs: NodeSpec[] = [
-  // INNER BELT — BUILD / ENGINEERING (fastest, tightest paths)
   {
     id: 'codeforge', manifestId: 'codeforge', tag: 'CODEFORGE', group: 'build',
+    labelPosition: 'below', labelDx: 8, labelDy: 27, labelAnchor: 'middle',
     icon: 'forged',
     character: ecosystemCharacterMap.forged,
-    color: '#5a82e8', glow: '#1f4fd8', size: 46, labelSide: 'left',
-    orbit: orbit(284, 96, -18, 38, 'normal', 30, .5),
+    color: '#5a82e8', glow: '#1f4fd8', size: 34, labelSide: 'left',
+    // Ground state: the tightest, roundest plane, closest lap of all.
+    orbit: orbit(168, 155, 29, 30, 'normal', 98.333, .5),
   },
   {
     id: 'forgerems', manifestId: 'forgerems', tag: 'FORGEREMS', group: 'build',
+    labelPosition: 'below-left', labelDx: -23.8, labelDy: 6.3, labelAnchor: 'end',
     icon: 'systems',
     character: ecosystemCharacterMap.forgerems,
-    color: '#e0a63c', glow: '#b06f10', size: 40, labelSide: 'right',
-    orbit: orbit(284, 96, -18, 38, 'normal', 80, .5),
+    color: '#e0a63c', glow: '#b06f10', size: 34, labelSide: 'right',
+    // The broad horizontal plane: wide sweep, shallow tilt.
+    orbit: orbit(242, 202, 6, 45, 'normal', 46.972, .46),
   },
-  // SECOND BELT — INTELLIGENCE / RESEARCH
   {
     id: 'gems', manifestId: 'gems', tag: 'GEMS', group: 'intelligence',
+    labelPosition: 'below-left', labelDx: -3.2, labelDy: 32.3, labelAnchor: 'end',
     icon: 'intelligence',
     character: ecosystemCharacterMap.intelligence,
-    color: '#4f8fff', glow: '#1f63ff', size: 44, labelSide: 'left',
-    orbit: orbit(206, 232, 52, 56, 'normal', 8, .42),
+    color: '#4f8fff', glow: '#1f63ff', size: 33, labelSide: 'left',
+    // Mid field, shallow negative tilt.
+    orbit: orbit(208, 167, -12, 36, 'normal', 0, .42),
   },
   {
-    id: 'training-grounds', manifestId: 'training-grounds', tag: 'TRAINING GROUNDS', group: 'intelligence',
+    id: 'training-grounds', manifestId: 'training-grounds', tag: 'TRAINING GROUNDS', tagLines: ['TRAINING', 'GROUNDS'], group: 'intelligence',
+    labelPosition: 'left', labelDx: -45.4, labelDy: -13.4, labelAnchor: 'end',
     icon: 'applications',
     character: ecosystemCharacterMap.applications,
-    color: '#38b6e0', glow: '#0f7fae', size: 38, labelSide: 'right',
-    orbit: orbit(206, 232, 52, 56, 'normal', 58, .42),
+    color: '#38b6e0', glow: '#0f7fae', size: 33, labelSide: 'right',
+    // Medium eccentricity on a steep negative diagonal.
+    orbit: orbit(264, 228, -66, 54, 'normal', 87.75, .38),
   },
-  // THIRD BELT — CREATE
   {
     id: 'kyrablox', manifestId: 'kyrablox', tag: 'KYRABLOX', group: 'create',
+    labelPosition: 'below-left', labelDx: -27.8, labelDy: 15.3, labelAnchor: 'end',
     icon: 'gaming',
     character: ecosystemCharacterMap.gaming,
-    color: '#b487ff', glow: '#7b3df0', size: 42, labelSide: 'left',
-    orbit: orbit(258, 196, -44, 68, 'reverse', 42, .34),
+    color: '#b487ff', glow: '#7b3df0', size: 36, labelSide: 'left',
+    // Wide plane on the opposing diagonal.
+    orbit: orbit(285, 232, 63, 60, 'normal', 46.266, .34),
   },
   {
-    id: 'kayla-publisher', manifestId: 'kayla-publisher', tag: 'KAYLA', group: 'create',
+    id: 'kayla-publisher', manifestId: 'kayla-publisher', tag: 'KAYLA PUBLISHER', tagLines: ['KAYLA', 'PUBLISHER'], group: 'create',
+    labelPosition: 'below', labelDx: 24, labelDy: 27.5, labelAnchor: 'middle',
     icon: 'publishing',
     character: ecosystemCharacterMap.publishing,
-    color: '#d9813f', glow: '#a34f14', size: 40, labelSide: 'right',
-    orbit: orbit(258, 196, -44, 68, 'reverse', 92, .34),
+    color: '#d9813f', glow: '#a34f14', size: 35, labelSide: 'right',
+    // Steep negative tilt through the outer middle field.
+    orbit: orbit(301, 254, -84, 72, 'normal', 7.5, .31),
   },
-  // OUTER BELT — KNOWLEDGE / COMMUNITY (slowest, widest paths)
   {
-    id: 'we-the-people', manifestId: 'we-the-people', tag: 'WE THE PEOPLE', group: 'knowledge',
+    id: 'we-the-people', manifestId: 'we-the-people', tag: 'WE THE PEOPLE', tagLines: ['WE THE', 'PEOPLE'], group: 'knowledge',
+    labelPosition: 'below-right', labelDx: 41.9, labelDy: 1.4, labelAnchor: 'start',
     icon: 'civic',
     character: ecosystemCharacterMap.civic,
-    color: '#8fa2c0', glow: '#5a6f92', size: 40, labelSide: 'left',
-    orbit: orbit(296, 246, 24, 82, 'reverse', 16, .28),
+    color: '#8fa2c0', glow: '#5a6f92', size: 37, labelSide: 'left',
+    // The outer fence: slowest world on the widest, near-circular plane.
+    orbit: orbit(306, 300, 90, 108, 'normal', 0.095, .28),
   },
   {
-    id: 'farmstand-finder', manifestId: 'farmstand-finder', tag: 'FARMSTAND FINDER', group: 'knowledge',
+    id: 'farmstand-finder', manifestId: 'farmstand-finder', tag: 'FARMSTAND FINDER', tagLines: ['FARMSTAND', 'FINDER'], group: 'knowledge',
+    labelPosition: 'below', labelDx: 7, labelDy: 45.5, labelAnchor: 'middle',
     icon: 'foraging',
     character: ecosystemCharacterMap.foraging,
-    color: '#76b77d', glow: '#3d8245', size: 40, labelSide: 'right',
-    orbit: orbit(296, 246, 24, 82, 'reverse', 66, .28),
+    color: '#76b77d', glow: '#3d8245', size: 37, labelSide: 'right',
+    // Second outer plane: a large diagonal crossing the fence at an angle.
+    orbit: orbit(318, 263, -37, 90, 'normal', 47.012, .26),
   },
 ];
 
@@ -203,11 +276,12 @@ const resolveHref = (manifestId: string, hrefOverride?: string): string =>
 export const ecosystemNodes: EcosystemNode[] = specs.map((spec) => {
   const entry = manifestById[spec.manifestId];
   if (!entry) throw new Error(`ecosystem node references unknown manifest entry: ${spec.manifestId}`);
-  const { manifestId, hrefOverride, purposeOverride, tag, ...rest } = spec;
+  const { manifestId, hrefOverride, purposeOverride, tag, tagLines, ...rest } = spec;
   return {
     ...rest,
     manifestId,
     tag,
+    tagLines: tagLines ?? [tag],
     name: entry.name,
     href: resolveHref(manifestId, hrefOverride),
     category: entry.category,

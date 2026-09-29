@@ -1,4 +1,4 @@
-import generatedArchives from './generated-archives.json';
+import generatedArchives from './generated-archives.json' with { type: 'json' };
 
 /**
  * FDS CANONICAL PRODUCT MANIFEST
