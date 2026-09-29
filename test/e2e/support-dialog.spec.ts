@@ -42,7 +42,9 @@ test('support dialog opens at the scroll trigger, dedupes for 24h after dismissa
   await expect(dialog.locator('.sdialog__title')).toContainText('Help Forge What Comes Next');
   await dialog.locator('[data-sdialog-close]').click();
   await expect(dialog).not.toBeVisible();
-  expect(await page.evaluate(() => window.localStorage.getItem('fds_support_dismissed_at'))).toBeTruthy();
+  await expect
+    .poll(() => page.evaluate(() => window.localStorage.getItem('fds_support_dismissed_at')))
+    .toBeTruthy();
 
   await page.reload({ waitUntil: 'networkidle' });
   await scrollToTrigger(page);

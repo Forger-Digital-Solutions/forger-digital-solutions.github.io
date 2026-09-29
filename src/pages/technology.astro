@@ -50,7 +50,7 @@ const grouped = tierOrder.map((tier) => ({
     <section class="tier-section" aria-labelledby={`tier-${section.tier}`} data-tier={section.tier}>
       <h2 id={`tier-${section.tier}`} class="tier-title">
         {section.label}
-        <span class="tier-count" aria-label={`${section.groups.reduce((sum, group) => sum + group.items.length, 0)} items`}></span>
+        <span class="tier-count">{section.groups.reduce((sum, group) => sum + group.items.length, 0)} items</span>
       </h2>
       <div class="tech-grid">
         {section.groups.map((group) => (
