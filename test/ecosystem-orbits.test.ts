@@ -321,12 +321,17 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
     ]));
   });
 
-  it('uses the same generated path for the visible rail and CSS motion path', () => {
+  it('keeps eight independent product paths separate from the three visible reference planes', () => {
     expect(component).toContain('d={node.orbit.path}');
     expect(component).toContain('--orbit-path:path("${node.orbit.path}")');
     expect(component).toContain('offset-path: var(--orbit-path)');
     expect(component).toContain('offset-rotate: 0deg');
-    expect(component).toContain('.orbit-path { stroke: var(--planet-color)');
+    expect(component).toContain('class="electron-scaffold"');
+    expect(component).toContain('data-scaffold-plane="one"');
+    expect(component).toContain('data-scaffold-plane="two"');
+    expect(component).toContain('data-scaffold-plane="three"');
+    expect(component).toContain('.orbit-path, .orbit-segment, .orbit-pulse { stroke: var(--planet-color); opacity: 0; }');
+    expect(component).toContain('.electron-scaffold__plane.is-active');
   });
 
   it('renders the FDS Core with the canonical static CodeForge mark (no animated emblem, no filters)', () => {

@@ -1,0 +1,399 @@
+{
+  "meta": {
+    "url": "http://127.0.0.1:4321",
+    "chromium": "151.0.7922.34",
+    "viewport": "1440x900",
+    "idleMs": 2500,
+    "traceMs": 2000,
+    "settleMs": 1000,
+    "iterations": 1,
+    "capturedAt": "2026-09-29T17:59:42.957Z"
+  },
+  "scenarios": {
+    "homepage-hero": {
+      "iterations": 1,
+      "median": {
+        "TaskDuration_s": 0.22,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0.02,
+        "RecalcStyleDuration_s": 0.03,
+        "RasterTask_ms": 571.54,
+        "RasterTask_calls": 296,
+        "Paint_ms": 35.84,
+        "Paint_calls": 116,
+        "ImageDecodeTask_calls": 464,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "longTaskMaxMs": 0,
+        "runningAnimations": 49,
+        "totalAnimations": 83,
+        "heapMB": 2.29
+      },
+      "raw": [
+        {
+          "loadMs": 0,
+          "metrics": {
+            "TaskDuration": 0.22,
+            "ScriptDuration": 0,
+            "LayoutDuration": 0.02,
+            "RecalcStyleDuration": 0.03
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animationsBefore": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "animationsAfter": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "heapBytes": 2396032,
+          "trace": {
+            "RasterTask": {
+              "count": 296,
+              "ms": 571.54
+            },
+            "Paint": {
+              "count": 116,
+              "ms": 35.84
+            },
+            "ImageDecodeTask": {
+              "count": 464,
+              "ms": 2.38
+            },
+            "UpdateLayoutTree": {
+              "count": 58,
+              "ms": 28.65
+            },
+            "Layerize": {
+              "count": 58,
+              "ms": 46.45
+            },
+            "Commit": {
+              "count": 58,
+              "ms": 21.22
+            },
+            "UpdateLayer": {
+              "count": 2743,
+              "ms": 5.52
+            }
+          }
+        }
+      ]
+    },
+    "homepage-ecosystem": {
+      "iterations": 1,
+      "median": {
+        "TaskDuration_s": 0.22,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0.02,
+        "RecalcStyleDuration_s": 0.03,
+        "RasterTask_ms": 644.07,
+        "RasterTask_calls": 275,
+        "Paint_ms": 39.01,
+        "Paint_calls": 108,
+        "ImageDecodeTask_calls": 432,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "longTaskMaxMs": 0,
+        "runningAnimations": 49,
+        "totalAnimations": 83,
+        "heapMB": 2.36
+      },
+      "raw": [
+        {
+          "loadMs": 0,
+          "metrics": {
+            "TaskDuration": 0.22,
+            "ScriptDuration": 0,
+            "LayoutDuration": 0.02,
+            "RecalcStyleDuration": 0.03
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animationsBefore": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "animationsAfter": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "heapBytes": 2476680,
+          "trace": {
+            "RasterTask": {
+              "count": 275,
+              "ms": 644.07
+            },
+            "Paint": {
+              "count": 108,
+              "ms": 39.01
+            },
+            "ImageDecodeTask": {
+              "count": 432,
+              "ms": 2.67
+            },
+            "UpdateLayoutTree": {
+              "count": 54,
+              "ms": 25.17
+            },
+            "Layerize": {
+              "count": 54,
+              "ms": 47.34
+            },
+            "Commit": {
+              "count": 54,
+              "ms": 21.5
+            },
+            "UpdateLayer": {
+              "count": 2657,
+              "ms": 5.6
+            }
+          }
+        }
+      ]
+    },
+    "gems": {
+      "iterations": 1,
+      "median": {
+        "TaskDuration_s": 0.18,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0,
+        "RecalcStyleDuration_s": 0.04,
+        "RasterTask_ms": 155.92,
+        "RasterTask_calls": 787,
+        "Paint_ms": 44.72,
+        "Paint_calls": 492,
+        "ImageDecodeTask_calls": 0,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "longTaskMaxMs": 0,
+        "runningAnimations": 29,
+        "totalAnimations": 83,
+        "heapMB": 2.36
+      },
+      "raw": [
+        {
+          "loadMs": 0,
+          "metrics": {
+            "TaskDuration": 0.18,
+            "ScriptDuration": 0,
+            "LayoutDuration": 0,
+            "RecalcStyleDuration": 0.04
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animationsBefore": {
+            "total": 83,
+            "running": 29,
+            "paused": 54
+          },
+          "animationsAfter": {
+            "total": 83,
+            "running": 29,
+            "paused": 54
+          },
+          "heapBytes": 2471152,
+          "trace": {
+            "RasterTask": {
+              "count": 787,
+              "ms": 155.92
+            },
+            "Paint": {
+              "count": 492,
+              "ms": 44.72
+            },
+            "ImageDecodeTask": {
+              "count": 0,
+              "ms": 0
+            },
+            "UpdateLayoutTree": {
+              "count": 121,
+              "ms": 39.96
+            },
+            "Layerize": {
+              "count": 121,
+              "ms": 18.13
+            },
+            "Commit": {
+              "count": 121,
+              "ms": 35.33
+            },
+            "UpdateLayer": {
+              "count": 6655,
+              "ms": 8.66
+            }
+          }
+        }
+      ]
+    },
+    "kayla-closed": {
+      "iterations": 1,
+      "median": {
+        "TaskDuration_s": 0.22,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0.03,
+        "RecalcStyleDuration_s": 0.03,
+        "RasterTask_ms": 567.75,
+        "RasterTask_calls": 250,
+        "Paint_ms": 35.22,
+        "Paint_calls": 98,
+        "ImageDecodeTask_calls": 392,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "longTaskMaxMs": 0,
+        "runningAnimations": 49,
+        "totalAnimations": 83,
+        "heapMB": 2.06
+      },
+      "raw": [
+        {
+          "loadMs": 0,
+          "metrics": {
+            "TaskDuration": 0.22,
+            "ScriptDuration": 0,
+            "LayoutDuration": 0.03,
+            "RecalcStyleDuration": 0.03
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animationsBefore": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "animationsAfter": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "heapBytes": 2157508,
+          "trace": {
+            "RasterTask": {
+              "count": 250,
+              "ms": 567.75
+            },
+            "Paint": {
+              "count": 98,
+              "ms": 35.22
+            },
+            "ImageDecodeTask": {
+              "count": 392,
+              "ms": 2.18
+            },
+            "UpdateLayoutTree": {
+              "count": 49,
+              "ms": 24.81
+            },
+            "Layerize": {
+              "count": 49,
+              "ms": 41.96
+            },
+            "Commit": {
+              "count": 49,
+              "ms": 20.22
+            },
+            "UpdateLayer": {
+              "count": 2441,
+              "ms": 6.52
+            }
+          }
+        }
+      ]
+    },
+    "kayla-open": {
+      "iterations": 1,
+      "median": {
+        "TaskDuration_s": 0.24,
+        "ScriptDuration_s": 0,
+        "LayoutDuration_s": 0.02,
+        "RecalcStyleDuration_s": 0.04,
+        "RasterTask_ms": 551.28,
+        "RasterTask_calls": 229,
+        "Paint_ms": 38.65,
+        "Paint_calls": 90,
+        "ImageDecodeTask_calls": 360,
+        "longTaskCount": 0,
+        "longTaskTotalMs": 0,
+        "longTaskMaxMs": 0,
+        "runningAnimations": 49,
+        "totalAnimations": 83,
+        "heapMB": 2.55
+      },
+      "raw": [
+        {
+          "loadMs": 0,
+          "metrics": {
+            "TaskDuration": 0.24,
+            "ScriptDuration": 0,
+            "LayoutDuration": 0.02,
+            "RecalcStyleDuration": 0.04
+          },
+          "longTasks": {
+            "count": 0,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "animationsBefore": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "animationsAfter": {
+            "total": 83,
+            "running": 49,
+            "paused": 34
+          },
+          "heapBytes": 2670896,
+          "trace": {
+            "RasterTask": {
+              "count": 229,
+              "ms": 551.28
+            },
+            "Paint": {
+              "count": 90,
+              "ms": 38.65
+            },
+            "ImageDecodeTask": {
+              "count": 360,
+              "ms": 2.06
+            },
+            "UpdateLayoutTree": {
+              "count": 51,
+              "ms": 37.52
+            },
+            "Layerize": {
+              "count": 46,
+              "ms": 46.88
+            },
+            "Commit": {
+              "count": 46,
+              "ms": 20.74
+            },
+            "UpdateLayer": {
+              "count": 2281,
+              "ms": 5.26
+            }
+          }
+        }
+      ]
+    }
+  }
+}

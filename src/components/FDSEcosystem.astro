@@ -34,13 +34,13 @@ const researchChords = [
 ];
 ---
 
-<div class="fds-ecosystem" role="group" aria-labelledby="fds-ecosystem-title">
+<div class="fds-ecosystem" data-visual-candidate="codeforge-reactor" role="group" aria-labelledby="fds-ecosystem-title">
   <h2 id="fds-ecosystem-title" class="sr-only">How FDS works: the FDS ecosystem map</h2>
 
   <div class="fds-ecosystem__scene-wrap">
     <svg class="fds-ecosystem__scene" viewBox="0 0 680 680" role="group" aria-labelledby="fds-ecosystem-svg-title fds-ecosystem-svg-desc">
       <title id="fds-ecosystem-svg-title">FDS ecosystem map</title>
-      <desc id="fds-ecosystem-svg-desc">Eight FDS projects travel on fixed orbital layers around the FDS core: CodeForge and ForgerEMS on the Build layer, GEMS and Training Grounds on the Intelligence layer, KyraBlox and Kayla Publisher on the Create layer, and We The People Library plus FarmStand Finder on the Knowledge layer. Each body is a link to that project's page.</desc>
+      <desc id="fds-ecosystem-svg-desc">Eight FDS projects follow individually measured motion paths around a central FDS core. Three crossing scaffold planes echo the CodeForge emblem. CodeForge and ForgerEMS are on the Build layer, GEMS and Training Grounds on Intelligence, KyraBlox and Kayla Publisher on Create, and We The People Library plus FarmStand Finder on Knowledge. Each body links to its project's page.</desc>
       <defs>
         <radialGradient id="body-face" cx="36%" cy="30%" r="78%">
           <stop offset="0" stop-color="#2b3444" /><stop offset=".55" stop-color="#141b28" /><stop offset="1" stop-color="#070b13" />
@@ -61,6 +61,17 @@ const researchChords = [
       <g class="ecosystem-grid" aria-hidden="true">
         <circle cx="340" cy="340" r="302" /><circle cx="340" cy="340" r="264" /><circle cx="340" cy="340" r="218" />
         <path d="M 38 340 H 642 M 340 38 V 642" /><path d="M 126 126 L 554 554 M 554 126 L 126 554" />
+      </g>
+
+      <!-- Three visible CodeForge planes are a visual scaffold only. Product
+           motion still follows each certified, independent orbit path below. -->
+      <g class="electron-scaffold" aria-hidden="true">
+        <ellipse class="electron-scaffold__plane electron-scaffold__plane--one" data-scaffold-plane="one" cx="340" cy="340" rx="296" ry="112" transform="rotate(-18 340 340)" />
+        <ellipse class="electron-scaffold__plane electron-scaffold__plane--two" data-scaffold-plane="two" cx="340" cy="340" rx="296" ry="112" transform="rotate(42 340 340)" />
+        <ellipse class="electron-scaffold__plane electron-scaffold__plane--three" data-scaffold-plane="three" cx="340" cy="340" rx="296" ry="112" transform="rotate(78 340 340)" />
+        <circle class="electron-scaffold__electron electron-scaffold__electron--one" cx="603" cy="248" r="4" />
+        <circle class="electron-scaffold__electron electron-scaffold__electron--two" cx="431" cy="115" r="4" />
+        <circle class="electron-scaffold__electron electron-scaffold__electron--three" cx="493" cy="617" r="4" />
       </g>
 
       <!-- fixed faint stars: two calibrate slowly, the rest hold still -->
@@ -168,11 +179,11 @@ const researchChords = [
       <!-- FDS Core: the forge-reactor heart of the ecosystem -->
       <a class="core-link" href="/about" aria-label="FDS Core — the company at the center of the ecosystem. About Forger Digital Solutions.">
       <g class="core">
-        <circle class="core__aura" cx="340" cy="340" r="116" />
+        <circle class="core__aura" cx="340" cy="340" r="120" />
 
-        <g class="core__ring core__ring--outer"><circle cx="340" cy="340" r="107" /><circle cx="340" cy="340" r="101" /></g>
-        <g class="core__ring core__ring--mid"><circle cx="340" cy="340" r="89" /><path d="M340 246V262M340 418V434M246 340H262M418 340H434" /></g>
-        <g class="core__ring core__ring--inner"><circle cx="340" cy="340" r="72" /><circle cx="340" cy="340" r="66" /></g>
+        <path class="core__reactor-frame core__ring core__ring--outer" d="M340 224 424 256 456 340 424 424 340 456 256 424 224 340 256 256Z" />
+        <path class="core__reactor-frame core__ring core__ring--mid" d="M340 248 407 273 432 340 407 407 340 432 273 407 248 340 273 273Z" />
+        <path class="core__reactor-ticks" d="M340 214v16m82 18 12 12m30 80h-16m-26 82-12 12m-70 30v-16m-82-18-12-12m-30-80h16m26-82 12-12" />
 
         <circle class="core__heart-halo" cx="340" cy="340" r="52" />
         <circle class="core__heart" cx="340" cy="340" r="34" />
@@ -183,8 +194,8 @@ const researchChords = [
 
         <!-- Canonical CodeForge mark embedded in the reactor: static asset on a dark
              contrast plate so the crystal reads against the bright heart. No filters. -->
-        <circle class="core__codeforge-plate" cx="340" cy="340" r="48" />
-        <image class="core__codeforge" href="/images/codeforge/codeforge-icon.svg" x="294" y="294" width="92" height="92" aria-hidden="true" />
+        <path class="core__codeforge-plate" d="M340 274 389 291 406 340 389 389 340 406 291 389 274 340 291 291Z" />
+        <image class="core__codeforge" href="/images/codeforge/codeforge-icon.svg" x="276" y="276" width="128" height="128" aria-hidden="true" />
 
         <text class="core__title" x="340" y="438" text-anchor="middle">FDS CORE</text>
         <text class="core__subtitle" x="340" y="455" text-anchor="middle">THE COMPANY AT THE CENTER</text>
@@ -261,6 +272,10 @@ const researchChords = [
   (() => {
     const ecosystem = document.querySelector('.fds-ecosystem');
     if (!ecosystem) return;
+    const requestedCandidate = new URLSearchParams(window.location.search).get('eco');
+    if (['direct-expansion', 'codeforge-reactor', 'quiet-scaffold'].includes(requestedCandidate || '')) {
+      ecosystem.setAttribute('data-visual-candidate', requestedCandidate);
+    }
     const panelDetail = ecosystem.querySelector('[data-panel-detail]');
     const panelDefault = ecosystem.querySelector('[data-panel-default]');
     const panelName = ecosystem.querySelector('[data-panel-name]');
@@ -282,6 +297,10 @@ const researchChords = [
       const orbit = ecosystem.querySelector(`[data-orbit-for="${link.getAttribute('data-node-id')}"]`);
       if (activeOrbit && activeOrbit !== orbit) activeOrbit.classList.remove('orbit-highlight');
       if (orbit) orbit.classList.add('orbit-highlight');
+      const group = link.getAttribute('data-node-category') || '';
+      ecosystem.querySelectorAll('.electron-scaffold__plane').forEach((plane) => plane.classList.remove('is-active'));
+      const planeIndex = group.includes('Intelligence') ? 'two' : group.includes('Create') || group.includes('Publishing') ? 'three' : 'one';
+      ecosystem.querySelector(`[data-scaffold-plane="${planeIndex}"]`)?.classList.add('is-active');
       activeOrbit = orbit;
     };
 
@@ -313,9 +332,9 @@ const researchChords = [
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
   .fds-ecosystem { position: relative; isolation: isolate; width: 100%; max-width: 34rem; margin: 0 auto; container-type: inline-size; }
   .fds-ecosystem__scene-wrap { position: relative; width: 100%; aspect-ratio: 1; }
-  .fds-ecosystem__scene-wrap::before { position: absolute; inset: 9%; border-radius: 50%; background: radial-gradient(circle, rgba(29,86,219,.2), rgba(10,31,78,.08) 42%, transparent 72%); box-shadow: 0 0 8rem rgba(24,73,190,.18); content: ''; }
+  .fds-ecosystem__scene-wrap::before { position: absolute; inset: 13%; border-radius: 50%; background: radial-gradient(circle, rgba(29,86,219,.12), rgba(10,31,78,.04) 42%, transparent 72%); content: ''; }
   .fds-ecosystem__scene { position: relative; z-index: 1; display: block; width: 100%; height: 100%; overflow: visible; }
-  .ecosystem-grid { fill: none; stroke: rgba(91,137,224,.1); stroke-width: 1; }.ecosystem-grid circle:nth-child(2) { stroke-dasharray: 2 12; }.ecosystem-grid circle:nth-child(3) { stroke-dasharray: 1 8; }.ecosystem-grid path { stroke: rgba(82,124,207,.07); }
+  .ecosystem-grid { fill: none; stroke: rgba(91,137,224,.055); stroke-width: 1; }.ecosystem-grid circle:nth-child(2) { stroke-dasharray: 2 12; }.ecosystem-grid circle:nth-child(3) { stroke-dasharray: 1 8; }.ecosystem-grid path { stroke: rgba(82,124,207,.045); }
   .ecosystem-stars { fill: #c9d6ee; stroke: rgba(140,170,225,.5); stroke-width: .6; opacity: .5; }
   .ecosystem-stars__calm { animation: star-calibrate 7.5s ease-in-out infinite; }
   .ecosystem-stars__calm--late { animation-delay: -3.8s; }
@@ -323,26 +342,46 @@ const researchChords = [
 
   /* Relationship spokes: solid = part of FDS today; dashed = research/planned. */
   .relation-spoke, .relation-chord { fill: none; stroke: var(--relation-color); vector-effect: non-scaling-stroke; }
-  .relation-spoke { stroke-width: 1.1; opacity: .3; }
-  .relation-chord { stroke-width: 1; opacity: .34; stroke-dasharray: 3 6; }
+  .relation-spoke { stroke-width: 1; opacity: .18; }
+  .relation-chord { stroke-width: 1; opacity: .22; stroke-dasharray: 3 6; }
+
+  /* The eight individual motion paths remain in the SVG for the products.
+     Three shared reference planes form the separate, CodeForge-like scaffold. */
+  .electron-scaffold { fill: none; pointer-events: none; }
+  .electron-scaffold__plane { stroke: #83a9f3; stroke-width: 1.25; opacity: .38; vector-effect: non-scaling-stroke; transition: opacity .18s ease, stroke-width .18s ease; }
+  .electron-scaffold__plane--two { stroke: #b9c9e8; opacity: .34; }
+  .electron-scaffold__plane--three { stroke: #6586c7; opacity: .35; }
+  .electron-scaffold__plane.is-active { opacity: .76; stroke-width: 1.8; }
+  .electron-scaffold__electron { fill: #e2ecff; stroke: #7ea5ef; stroke-width: 1; }
+  .electron-scaffold__electron--two { fill: #f0f4fc; }
+  .electron-scaffold__electron--three { fill: #afc9ff; }
 
   .orbit-path, .orbit-segment, .orbit-pulse { fill: none; vector-effect: non-scaling-stroke; }
-  .orbit-path { stroke: var(--planet-color); stroke-width: 1.1; opacity: var(--orbit-opacity); transition: opacity .2s ease, stroke-width .2s ease; }
-  .orbit-segment { stroke: var(--planet-color); stroke-width: 1.35; stroke-dasharray: 115 885; stroke-dashoffset: -120; opacity: calc(var(--orbit-opacity) + .15); }
-  .orbit-pulse { stroke: var(--planet-color); stroke-width: 2.8; stroke-linecap: round; stroke-dasharray: 4 996; opacity: .88; animation: orbit-energy var(--pulse-duration) var(--pulse-delay) linear infinite; }
+  .orbit-path, .orbit-segment, .orbit-pulse { stroke: var(--planet-color); opacity: 0; }
+  .orbit-path { stroke-width: 1.1; transition: opacity .2s ease, stroke-width .2s ease; }
+  .orbit-segment { stroke-width: 1.35; stroke-dasharray: 115 885; stroke-dashoffset: -120; }
+  .orbit-pulse { stroke-width: 2.8; stroke-linecap: round; stroke-dasharray: 4 996; animation: none; }
   .orbit-visual.orbit-highlight .orbit-path { opacity: .9; stroke-width: 1.8; }
+  .fds-ecosystem[data-visual-candidate='direct-expansion'] .electron-scaffold { opacity: 0; }
+  .fds-ecosystem[data-visual-candidate='direct-expansion'] .orbit-path { opacity: var(--orbit-opacity); }
+  .fds-ecosystem[data-visual-candidate='direct-expansion'] .orbit-segment { opacity: calc(var(--orbit-opacity) + .15); }
+  .fds-ecosystem[data-visual-candidate='direct-expansion'] .orbit-pulse { opacity: .72; animation: orbit-energy var(--pulse-duration) var(--pulse-delay) linear infinite; }
+  .fds-ecosystem[data-visual-candidate='quiet-scaffold'] .electron-scaffold__plane { opacity: .2; stroke-width: 1; }
+  .fds-ecosystem[data-visual-candidate='quiet-scaffold'] .ecosystem-grid,
+  .fds-ecosystem[data-visual-candidate='quiet-scaffold'] .ecosystem-stars,
+  .fds-ecosystem[data-visual-candidate='quiet-scaffold'] .relation-layer { opacity: .2; }
+  .fds-ecosystem:not([data-visual-candidate='direct-expansion']) .orbit-visual.orbit-highlight .orbit-path { opacity: 0; }
   .planet-motion { offset-path: var(--orbit-path); offset-rotate: 0deg; offset-anchor: 0 0; animation: orbit-locked var(--orbit-duration) var(--orbit-delay) linear infinite; animation-direction: var(--orbit-direction); transform-box: view-box; }
-  .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: filter .2s ease; }.planet-link:hover .planet, .planet-link:focus-visible .planet { filter: brightness(1.22); }
+  .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: opacity .2s ease; }.planet-link:hover .planet, .planet-link:focus-visible .planet { opacity: .95; }
   .planet__focus-ring { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 3 4; opacity: 0; }.planet-link:focus-visible .planet__focus-ring { opacity: .9; }
   .planet__atmosphere { fill: currentColor; opacity: .12; }
   .planet__signal { fill: none; stroke: currentColor; stroke-width: 1.2; opacity: .72; transition: opacity .2s ease; }
   .planet__ticks { fill: none; stroke: currentColor; stroke-width: 1.2; opacity: .65; }
   .planet__shell { fill: url(#body-face); }
   .planet__rim { fill: none; stroke: url(#body-rim); stroke-width: 1.25; opacity: .92; }
-  .planet__character { pointer-events: none; transform-origin: center; transition: transform .22s cubic-bezier(.2,.8,.2,1), filter .22s ease; }
-  .planet-link:hover .planet__character, .planet-link:focus-visible .planet__character { filter: drop-shadow(0 3px 8px rgba(0,0,0,.85)) drop-shadow(0 0 10px var(--planet-glow)) brightness(1.18); transform: scale(1.06); }
-  .planet-link:hover .planet__shell, .planet-link:focus-visible .planet__shell { filter: drop-shadow(0 0 10px var(--planet-glow)); }
-  .planet-link:hover .planet__signal, .planet-link:focus-visible .planet__signal { opacity: 1; filter: drop-shadow(0 0 4px var(--planet-glow)); }
+  .planet__character { pointer-events: none; transform-origin: center; transition: transform .22s cubic-bezier(.2,.8,.2,1); }
+  .planet-link:hover .planet__character, .planet-link:focus-visible .planet__character { transform: scale(1.04); }
+  .planet-link:hover .planet__signal, .planet-link:focus-visible .planet__signal { opacity: 1; }
   .planet-link:hover .planet__atmosphere, .planet-link:focus-visible .planet__atmosphere { opacity: .22; }
   .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:hover .planet__label, .planet-link:focus-visible .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
   .planet__name, .planet__subtitle, .planet__tag { fill: currentColor; font-family: var(--font-mono); }.planet__name { font-size: 13px; font-weight: 800; letter-spacing: 1.8px; }.planet__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 1.1px; opacity: .72; }.planet__tag { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1px; paint-order: stroke; stroke: rgba(3,8,18,.96); stroke-width: 4px; }
@@ -351,16 +390,19 @@ const researchChords = [
   .tag-motion { color: var(--planet-color); pointer-events: none; }
 
   /* FDS Core: forge-reactor heart. Stable, mechanical, breathing on one rhythm. */
-  .core { transform-origin: 340px 340px; }.core__aura { fill: url(#halo-glow); stroke: rgba(84,139,255,.32); stroke-width: 1.2; }
-  .core-link { outline: none; }.core-link:hover .core, .core-link:focus-visible .core { filter: brightness(1.14); }.core-link:focus-visible .core__aura { stroke: #d6e9ff; stroke-width: 3; }
-  .core__ring { fill: none; stroke: rgba(94,154,255,.5); stroke-width: 1; transform-origin: 340px 340px; }.core__ring--outer { stroke-dasharray: 3 8 16 5; animation: core-ring-spin 48s linear infinite; }.core__ring--mid { stroke: rgba(132,176,250,.4); stroke-dasharray: 1 5 20 7; animation: core-ring-spin 34s linear infinite reverse; }.core__ring--inner { stroke: rgba(92,151,255,.62); stroke-dasharray: 2 4; animation: core-ring-spin 26s linear infinite; }
+  .core { transform-origin: 340px 340px; }.core__aura { fill: url(#halo-glow); stroke: rgba(84,139,255,.18); stroke-width: 1; }
+  .core-link { outline: none; }.core-link:focus-visible .core__aura { stroke: #d6e9ff; stroke-width: 2.5; }
+  .core__ring, .core__reactor-frame { fill: rgba(7,14,28,.93); stroke: rgba(130,169,239,.55); stroke-width: 1.3; transform-origin: 340px 340px; vector-effect: non-scaling-stroke; }
+  .core__ring--outer { stroke-dasharray: 3 8 16 5; animation: core-ring-spin 110s linear infinite; }
+  .core__ring--mid { fill: rgba(11,21,39,.96); stroke: rgba(179,201,236,.62); stroke-width: 1.1; }
+  .core__reactor-ticks { fill: none; stroke: #acc5f1; stroke-width: 1.2; opacity: .72; }
   .core__heart-halo { fill: url(#halo-glow); transform-origin: 340px 340px; animation: core-breathe 9s cubic-bezier(.45,0,.35,1) infinite; }
   .core__heart { fill: url(#forge-heart); stroke: rgba(190,216,255,.9); stroke-width: 1.2; }
   /* Static CodeForge mark in the reactor: dark plate guarantees contrast against the
      bright heart; the asset itself carries no animation, so this adds zero frame cost. */
-  .core__codeforge-plate { fill: rgba(4,9,18,.62); stroke: rgba(214,233,255,.28); stroke-width: 1; }
+  .core__codeforge-plate { fill: rgba(4,9,18,.86); stroke: rgba(214,233,255,.45); stroke-width: 1.1; }
   .core__codeforge { pointer-events: none; }
-  .core__vents { fill: #badaff; stroke: #badaff; stroke-width: 1.1; opacity: .92; transform-origin: 340px 340px; animation: core-ring-spin 22s linear infinite reverse; }
+  .core__vents { fill: #badaff; stroke: #badaff; stroke-width: 1.1; opacity: .76; transform-origin: 340px 340px; }
   .core__title, .core__subtitle, .core__reveal { fill: #e8f1ff; font-family: var(--font-mono); }.core__title { font-size: 14px; font-weight: 850; letter-spacing: 2.5px; }.core__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 2px; opacity: .62; }
   /* Restrained company reveal: the core names its three arms on inspection only. */
   .core__reveal { font-size: 7px; font-weight: 650; letter-spacing: 1.6px; fill: #bcd4ff; opacity: 0; transition: opacity .25s ease; }
@@ -448,6 +490,6 @@ const researchChords = [
   .eco-group__node-purpose { color: var(--color-text-muted); font-size: .85rem; line-height: 1.55; }
 
   @media (min-width: 720px) and (max-width: 960px) { .fds-ecosystem { max-width: 30rem; } }
-  @container (max-width: 30rem) { .planet__label { display: none; }.orbit-segment { opacity: .25; }.ecosystem-grid circle:first-child { display: none; } }
+  @container (max-width: 30rem) { .planet__label { display: none; }.fds-ecosystem[data-visual-candidate='direct-expansion'] .orbit-segment { opacity: .25; }.ecosystem-grid circle:first-child { display: none; } }
   @media (prefers-reduced-motion: reduce) { .planet-motion { animation: none; offset-distance: var(--orbit-start); will-change: auto; }.orbit-pulse, .core__ring, .core__vents, .ecosystem-stars__calm, .core__heart-halo { animation: none; }.core__heart-halo { opacity: .8; }.planet__character { transition: none; transform: none; } }
 </style>

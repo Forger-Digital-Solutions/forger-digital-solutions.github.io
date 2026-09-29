@@ -114,8 +114,12 @@ test.describe('Site release-critical surfaces', () => {
     expect(desktopSrc).toContain('gems-training-grounds-family.svg');
 
     await page.setViewportSize({ width: 390, height: 844 });
-    const currentSrc = await picture.locator('img').evaluate((img) => (img as HTMLImageElement).currentSrc);
-    expect(currentSrc).toContain('gems-training-grounds-family-mobile.svg');
+    await picture.scrollIntoViewIfNeeded();
+    const image = picture.locator('img');
+    await expect.poll(
+      () => image.evaluate((img) => (img as HTMLImageElement).currentSrc),
+      { message: 'the mobile GEMS illustration should be selected and loaded' }
+    ).toContain('gems-training-grounds-family-mobile.svg');
 
     // The narrow composition must not introduce horizontal overflow.
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
