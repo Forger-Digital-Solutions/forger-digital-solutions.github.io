@@ -46,6 +46,27 @@ try {
     await saveElement(page, '.fds-ecosystem', resolve(candidateDir, `homepage/${candidate}.png`));
     await context.close();
   }
+
+  // Freeze the actual certified product animations at the solver's minimum
+  // shell separation. Both body and tag layers use .planet-motion.
+  const closestContext = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+  const closestPage = await closestContext.newPage();
+  await closestPage.goto(url(), { waitUntil: 'networkidle' });
+  const closestEcosystem = closestPage.locator('.fds-ecosystem');
+  await closestEcosystem.scrollIntoViewIfNeeded();
+  await closestPage.evaluate((seconds) => {
+    for (const element of document.querySelectorAll('.planet-motion')) {
+      for (const animation of element.getAnimations()) {
+        animation.pause();
+        animation.currentTime = seconds * 1000;
+      }
+    }
+  }, 763.078);
+  await closestPage.waitForTimeout(150);
+  ensureDir(resolve(outRoot, 'geometry'));
+  await closestEcosystem.screenshot({ path: resolve(outRoot, 'geometry/closest-763.078s.png'), animations: 'allow' });
+  await closestContext.close();
+
   for (const candidate of ['neural-lattice', 'reactor-pipeline']) {
     const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await context.newPage();
