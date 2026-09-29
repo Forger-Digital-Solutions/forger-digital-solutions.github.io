@@ -4,8 +4,10 @@ import CodeForgeEmblem from '../../components/icons/CodeForgeEmblem.astro';
 import { siteConfig } from '../../config/site';
 
 const authBaseUrl = (import.meta.env.PUBLIC_CODEFORGE_AUTH_URL || (import.meta.env.DEV ? 'http://127.0.0.1:3220' : 'https://cloud.forgerdigitalsolutions.com')).replace(/\/+$/, '');
-const returnOrigin = import.meta.env.DEV ? Astro.url.origin : siteConfig.siteUrl;
-const returnTarget = new URL('/codeforge/sign-in', `${returnOrigin}/`).href;
+// Build-time fallback only: a static build cannot know the origin that will
+// actually serve the page, so the shipped href uses the canonical origin and
+// the inline script below rebinds `return` to window.location.origin at load.
+const returnTarget = new URL('/codeforge/sign-in', `${siteConfig.siteUrl}/`).href;
 const authStartUrl = `${authBaseUrl}/v1/auth/browser/start?return=${encodeURIComponent(returnTarget)}`;
 ---
 
@@ -74,6 +76,16 @@ const authStartUrl = `${authBaseUrl}/v1/auth/browser/start?return=${encodeURICom
   const authStatus = document.querySelector('[data-codeforge-auth-message]');
   const authStart = document.querySelector('[data-codeforge-auth-start]');
   const authLabel = document.querySelector('[data-codeforge-auth-label]');
+  // Rebind the OAuth return to the origin actually serving this page. A static
+  // build cannot know its serving origin at build time, and the return target
+  // is never taken from page input or query parameters — it is always
+  // location.origin + this fixed path, so the cloud service can only send the
+  // visitor back to the same site that handed them the button.
+  if (authStart) {
+    const authUrl = new URL(authStart.getAttribute('href'));
+    authUrl.searchParams.set('return', new URL('/codeforge/sign-in', window.location.origin).href);
+    authStart.setAttribute('href', authUrl.href);
+  }
   const status = new URLSearchParams(window.location.search).get('auth');
   if (authStatus && status && Object.prototype.hasOwnProperty.call(authMessages, status)) {
     authStatus.textContent = authMessages[status];
