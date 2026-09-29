@@ -173,17 +173,14 @@ describe('Phase 12 Worker - identity, request IDs, and fail-closed guards', () =
     expect(shortSalt.status).toBe(503);
   });
 
-  it('emits a unique non-secret X-Request-ID per response', async () => {
+  it('emits no request-id header — correlation ids stay server-side', async () => {
     const env = makeEnv();
-    const ids = new Set<string>();
     for (let i = 0; i < 5; i++) {
       const response = await worker.fetch(chatRequest({ message: 'Who founded FDS?' }), env, ctx);
-      const id = response.headers.get('X-Request-ID');
-      expect(id, 'missing request id').toBeTruthy();
-      expect(id!).toMatch(/^[0-9a-f-]{8,}/i);
-      ids.add(id!);
+      // Kayla 2.0: nothing internal, even an opaque correlation id, reaches
+      // the visitor. The id still exists in server logs only.
+      expect(response.headers.get('X-Request-ID')).toBeNull();
     }
-    expect(ids.size).toBe(5);
   });
 
   it('rate-limit denials are 429 with visitor-safe copy (no Durable Object jargon)', async () => {
@@ -197,12 +194,17 @@ describe('Phase 12 Worker - identity, request IDs, and fail-closed guards', () =
     expect(body.error).not.toMatch(/durable|guard|quota|allowance/i);
   });
 
-  it('health exposes the exact local knowledge version and degrades without a salt', async () => {
-    const ok = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), makeEnv(), ctx);
-    const body = (await ok.json()) as { knowledgeVersion: string; rateLimiter: string };
-    expect(body.knowledgeVersion).toBe(getCanonicalKnowledgeVersion());
-    const degraded = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), makeEnv({ KAYLA_RATE_LIMIT_SALT: '' }), ctx);
+  it('health keeps the public body generic and the operator body behind the ops token', async () => {
+    const env = makeEnv({ KAYLA_OPS_TOKEN: 'ops-token' });
+    const publicBody = (await (await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), env, ctx)).json()) as Record<string, unknown>;
+    expect(publicBody.status).toBe('ok');
+    expect(publicBody.knowledgeVersion).toBeUndefined();
+    const ops = (await (await worker.fetch(new Request('https://kayla-api.test/api/kayla/health', { headers: { 'X-Kayla-Ops': 'ops-token' } }), env, ctx)).json()) as { knowledgeVersion: string; rateLimiter: string };
+    expect(ops.knowledgeVersion).toBe(getCanonicalKnowledgeVersion());
+    const degraded = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health', { headers: { 'X-Kayla-Ops': 'ops-token' } }), makeEnv({ KAYLA_RATE_LIMIT_SALT: '', KAYLA_OPS_TOKEN: 'ops-token' }), ctx);
     expect(((await degraded.json()) as { rateLimiter: string }).rateLimiter).toBe('unavailable');
+    const publicDegraded = (await (await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), makeEnv({ KAYLA_RATE_LIMIT_SALT: '' }), ctx)).json()) as { status: string };
+    expect(publicDegraded.status).toBe('degraded');
   });
 
   it('chat responses are no-store with a JSON content type', async () => {

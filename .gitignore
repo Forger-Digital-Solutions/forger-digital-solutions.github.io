@@ -11,6 +11,10 @@ dist/
 .env
 .env.local
 .env.*.local
+# Wrangler local secrets file — provider keys live here during development
+# and must never reach source control.
+.dev.vars
+.dev.vars.*
 
 # Logs
 *.log

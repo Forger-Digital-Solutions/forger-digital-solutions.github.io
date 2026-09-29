@@ -1,6 +1,6 @@
-import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, KaylaAIProvider, KaylaAIRequest, KaylaAIResponse } from '../../data/kayla/types';
+import type { KaylaKnowledgeProvider, KaylaKnowledgeResult, KaylaSafeAction, KaylaAIProvider, KaylaAIRequest, KaylaAIResponse, KaylaRouteSpec } from '../../data/kayla/types';
 import { LocalKaylaProvider, kaylaKnowledge } from '../../data/kayla/index';
-import { evaluateModelPolicy, isApprovedProviderEndpoint, OPENROUTER_ENDPOINT, OPENROUTER_FREE_MODEL } from './model-policy';
+import { evaluateModelPolicy, evaluateRoutePolicy, isApprovedProviderEndpoint, endpointForProvider, providerHeaders, OPENROUTER_ENDPOINT, OPENROUTER_FREE_MODEL } from './model-policy';
 import { buildChatMessages } from './systemPrompt';
 import { dedupeActions } from './actions';
 
@@ -42,8 +42,19 @@ export interface KaylaProviderConfig {
   apiKey?: string;
   endpoint?: string;
   timeoutMs?: number;
+  /**
+   * Kayla 2.0 — the admitted route chain, ordered primary-first. When set it
+   * supersedes the single provider/model/apiKey triple, which remains for
+   * backward compatibility with tests and older endpoint configs.
+   */
+  routes?: KaylaRouteSpec[];
 }
 
+/**
+ * Build the single-provider case. Mock/test stay special-cased; every real
+ * provider goes through the same admission policy and the shared
+ * OpenAI-compatible transport.
+ */
 export function createAIProvider(config: KaylaProviderConfig): KaylaAIProvider | null {
   const providerId = config.provider?.toLowerCase();
 
@@ -55,13 +66,58 @@ export function createAIProvider(config: KaylaProviderConfig): KaylaAIProvider |
     return new MockAIProvider();
   }
 
-  if (providerId === 'openrouter') {
-    const policy = evaluateModelPolicy(providerId, config.model || OPENROUTER_FREE_MODEL);
-    if (!policy.eligible || !isApprovedProviderEndpoint(providerId, config.endpoint)) return null;
-    return new OpenRouterAIProvider(config);
+  const model = config.model || (providerId === 'openrouter' ? OPENROUTER_FREE_MODEL : '');
+  const policy = evaluateModelPolicy(providerId, model);
+  if (!policy.eligible || !isApprovedProviderEndpoint(providerId, config.endpoint)) return null;
+  return new OpenAICompatibleProvider({
+    id: `${providerId}:${model}`,
+    provider: providerId,
+    model,
+    apiKey: config.apiKey,
+    endpoint: config.endpoint
+  }, config.timeoutMs);
+}
+
+export interface KaylaChainRoute {
+  route: KaylaRouteSpec;
+  provider: KaylaAIProvider;
+}
+
+/**
+ * Build the ordered failover chain. Admission happens per route — provider
+ * approved, model on the verified-free list, key present — and ineligible
+ * routes drop out silently from the caller's perspective: the rest of the
+ * chain still serves. The caller reports the admitted vs configured count in
+ * diagnostics so a bad entry is visible to operators, never to visitors.
+ */
+export function createProviderChain(config: KaylaProviderConfig): KaylaChainRoute[] {
+  if (!config.routes?.length) {
+    const single = createAIProvider(config);
+    if (!single) return [];
+    const singleRoute: KaylaRouteSpec = {
+      id: `${config.provider}:${config.model}`,
+      provider: config.provider || '',
+      model: config.model || '',
+      apiKey: config.apiKey,
+      endpoint: config.endpoint
+    };
+    return [{ route: singleRoute, provider: single }];
   }
 
-  return null;
+  const chain: KaylaChainRoute[] = [];
+  for (const route of config.routes) {
+    const providerId = route.provider.toLowerCase();
+    let provider: KaylaAIProvider | null = null;
+    if (providerId === 'mock' || providerId === 'test') {
+      provider = new MockAIProvider();
+    } else {
+      const policy = evaluateRoutePolicy(route);
+      if (!policy.eligible || !isApprovedProviderEndpoint(providerId, route.endpoint)) continue;
+      provider = new OpenAICompatibleProvider(route, config.timeoutMs);
+    }
+    chain.push({ route, provider });
+  }
+  return chain;
 }
 
 class MockAIProvider implements KaylaAIProvider {
@@ -91,42 +147,65 @@ class MockAIProvider implements KaylaAIProvider {
   }
 }
 
-class OpenRouterAIProvider implements KaylaAIProvider {
-  id = 'openrouter';
-  name = 'OpenRouter';
-  private config: KaylaProviderConfig;
+/**
+ * Shared transport for every OpenAI-compatible upstream Kayla uses: Groq,
+ * OpenRouter, and the Gemini OpenAI-compat endpoint all speak the same
+ * /chat/completions wire. Differences live in route config (endpoint, extra
+ * headers), not in code paths, so a new admitted route is data, not a new
+ * provider class.
+ */
+class OpenAICompatibleProvider implements KaylaAIProvider {
+  id: string;
+  name: string;
+  private route: KaylaRouteSpec;
+  private timeoutMs?: number;
 
-  constructor(config: KaylaProviderConfig) {
-    this.config = config;
+  constructor(route: KaylaRouteSpec, timeoutMs?: number) {
+    this.route = route;
+    this.id = route.id;
+    this.name = 'Kayla inference route';
+    this.timeoutMs = timeoutMs;
+  }
+
+  private endpoint(): string {
+    return endpointForProvider(this.route.provider) || this.route.endpoint || OPENROUTER_ENDPOINT;
+  }
+
+  private headers(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.route.apiKey}`,
+      ...providerHeaders(this.route.provider)
+    };
+  }
+
+  private requestBody(request: KaylaAIRequest, stream: boolean): string {
+    return JSON.stringify({
+      model: this.route.model,
+      messages: buildChatMessages(request),
+      max_tokens: MAX_RESPONSE_TOKENS,
+      temperature: 0.3,
+      ...(stream ? { stream: true } : {})
+    });
   }
 
   async isAvailable(): Promise<boolean> {
-    return Boolean(this.config.apiKey);
+    return Boolean(this.route.apiKey);
   }
 
   async chat(request: KaylaAIRequest): Promise<{ content: string; actions?: KaylaSafeAction[]; resolvedModel?: string }> {
-    if (!this.config.apiKey) {
+    if (!this.route.apiKey) {
       throw new Error('NO_PROVIDER');
     }
 
-    const endpoint = OPENROUTER_ENDPOINT;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs || 9000);
+    const timeout = setTimeout(() => controller.abort(), this.timeoutMs || 9000);
 
     let response: Response;
-    try { response = await fetch(endpoint, {
+    try { response = await fetch(this.endpoint(), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.config.apiKey}`,
-        'HTTP-Referer': 'https://forger-digital-solutions.github.io',
-        'X-Title': 'Kayla Copilot - FDS'
-      },
-      body: JSON.stringify({
-        model: this.config.model || OPENROUTER_FREE_MODEL,
-        messages: buildChatMessages(request),
-        max_tokens: MAX_RESPONSE_TOKENS
-      }),
+      headers: this.headers(),
+      body: this.requestBody(request, false),
       signal: controller.signal
     }); } catch (error) {
       clearTimeout(timeout);
@@ -162,30 +241,19 @@ class OpenRouterAIProvider implements KaylaAIProvider {
   }
 
   async *stream(request: KaylaAIRequest): AsyncIterable<{ type: 'content' | 'done' | 'error'; content?: string; error?: string }> {
-    if (!this.config.apiKey) {
+    if (!this.route.apiKey) {
       yield { type: 'error', error: 'NO_PROVIDER' };
       return;
     }
 
-    const endpoint = OPENROUTER_ENDPOINT;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs || 9000);
+    const timeout = setTimeout(() => controller.abort(), this.timeoutMs || 9000);
 
     let response: Response;
-    try { response = await fetch(endpoint, {
+    try { response = await fetch(this.endpoint(), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.config.apiKey}`,
-        'HTTP-Referer': 'https://forger-digital-solutions.github.io',
-        'X-Title': 'Kayla Copilot - FDS'
-      },
-      body: JSON.stringify({
-        model: this.config.model || OPENROUTER_FREE_MODEL,
-        messages: buildChatMessages(request),
-        max_tokens: MAX_RESPONSE_TOKENS,
-        stream: true
-      }),
+      headers: this.headers(),
+      body: this.requestBody(request, true),
       signal: controller.signal
     }); } catch {
       clearTimeout(timeout);

@@ -67,7 +67,8 @@ export function conversationAnswer(c: ConversationContext): KaylaKnowledgeResult
     const answer = canonicalAnswer('What is your privacy policy?');
     return answer ? [result(answer)] : undefined;
   }
-  if (/\b(what model are you|do you know everything)\b/i.test(raw)) return [local('I am Kayla Copilot, the FDS website guide. I work from public FDS information and cannot answer every question or provide undocumented model details.', 'assistant_identity', 'kayla-copilot')];
+  if (/\bwhat model are you\b/i.test(raw)) return [local("You're chatting with Kayla, the AI assistant from Forger Digital Solutions. I can help with general questions and with public information about FDS.", 'assistant_identity', 'kayla-copilot')];
+  if (/\bdo you know everything\b/i.test(raw)) return [local("No. I help with general questions — explanations, writing, coding, planning — and I know the FDS ecosystem well, but I don't have live data and I don't know everything. When I don't know something, I'd rather say so than guess.", 'assistant_identity', 'kayla-copilot')];
 
   if (c.goal === 'support' && !id && /\b(help|support|money go|donat|contribut)/i.test(raw)) {
     // The raw turn can carry its own nuance (e.g. a named hardware item) that a

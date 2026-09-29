@@ -20,20 +20,19 @@ export function isSourceLinkSafe(source: KaylaSource): boolean {
 }
 
 /**
- * R4.2H-R2.1 truthful status model.
+ * Kayla 2.0 generic status model.
  *
- * 'ready' — operational, but no response lane has been proven yet (initial
- *           state; never claims AI or knowledge).
- * 'ai'    — the most recent completed response was actually served from the
- *           provider lane (server `mode: "ai"`, routeMode provider_accepted).
- *           Never derived from health flags, config, or budget alone.
- * 'local' — the most recent response came from the deterministic/canonical
- *           knowledge lane without a failed provider attempt.
- * 'local-fallback' — a provider attempt was made for the most recent response
- *           but failed or was replaced (routeMode provider_failed_fallback /
- *           provider_replaced) and the verified knowledge lane answered.
- * 'unavailable' — no useful answer could be served at all.
+ * The badge carries generic states only — Ready, Thinking…, Responding…,
+ * Stopping…, Temporarily unavailable. Which lane answered (deterministic,
+ * retrieved, inference, failover) is server-side routing detail and never
+ * reaches the visitor, so the old 'ai'/'local'/'local-fallback' badges
+ * collapsed into "Ready". The server still sends mode/routeMode on the wire
+ * for its own tests; the UI renders nothing from it except the one failure
+ * state a visitor needs: temporarily unavailable.
+ *
+ * `KaylaMode` below remains the wire enum parsed from response chunks.
  */
+type KaylaStatus = 'ready' | 'thinking' | 'responding' | 'stopping' | 'unavailable';
 type KaylaMode = 'ready' | 'ai' | 'local' | 'local-fallback' | 'unavailable';
 
 let messages: KaylaMessage[] = [];
@@ -73,8 +72,8 @@ const panel = (): HTMLDivElement | null =>
   document.getElementById('kayla-panel') as HTMLDivElement | null;
 const conversation = (): HTMLDivElement | null =>
   document.getElementById('kayla-conversation') as HTMLDivElement | null;
-const input = (): HTMLInputElement | null =>
-  document.getElementById('kayla-input') as HTMLInputElement | null;
+const input = (): HTMLTextAreaElement | null =>
+  document.getElementById('kayla-input') as HTMLTextAreaElement | null;
 const sendBtn = (): HTMLButtonElement | null =>
   document.getElementById('kayla-send') as HTMLButtonElement | null;
 const starterPrompts = (): HTMLDivElement | null =>
@@ -84,43 +83,29 @@ const statusEl = (): HTMLSpanElement | null =>
 const statusDot = (): HTMLSpanElement | null =>
   document.querySelector('.kayla-status-dot') as HTMLSpanElement | null;
 
-function updateStatus(mode: KaylaMode): void {
+function updateStatus(status: KaylaStatus): void {
   const text = statusEl();
   const dot = statusDot();
   if (!text || !dot) return;
 
-  // Never display a stronger service state than the system has proven:
-  // 'ai' is only ever set from a response the server actually served through
-  // the provider lane; 'ready' makes no lane claim at all.
-  if (mode === 'ai') {
-    text.textContent = 'AI Online';
+  // Generic states only. A visitor needs to know whether Kayla is working or
+  // cannot help right now — never which backend served the last answer.
+  if (status === 'thinking') {
+    text.textContent = 'Thinking…';
     dot.style.background = '#63a8ff';
-  } else if (mode === 'local-fallback') {
-    text.textContent = 'AI Limited · Knowledge Mode';
+  } else if (status === 'responding') {
+    text.textContent = 'Responding…';
+    dot.style.background = '#63a8ff';
+  } else if (status === 'stopping') {
+    text.textContent = 'Stopping…';
     dot.style.background = '#f0a050';
-  } else if (mode === 'local') {
-    text.textContent = 'Knowledge Mode';
-    dot.style.background = '#f0a050';
-  } else if (mode === 'ready') {
+  } else if (status === 'unavailable') {
+    text.textContent = 'Temporarily unavailable';
+    dot.style.background = '#888';
+  } else {
     text.textContent = 'Ready';
     dot.style.background = '#8fa3c7';
-  } else {
-    text.textContent = 'Service Unavailable';
-    dot.style.background = '#888';
   }
-}
-
-/**
- * Set the badge from the server's own metadata for a completed response.
- * The server is the authority on which lane served the answer: `mode: "ai"`
- * proves the provider lane; a provider attempt that failed or was replaced
- * (provider_failed_fallback / provider_replaced) proves the degraded-but-
- * working knowledge fallback; any other local response is plain knowledge.
- */
-function applyResponseLaneStatus(mode: KaylaMode, routeMode?: string): void {
-  if (mode === 'ai') updateStatus('ai');
-  else if (mode === 'local' && (routeMode === 'provider_failed_fallback' || routeMode === 'provider_replaced')) updateStatus('local-fallback');
-  else if (mode === 'local') updateStatus('local');
 }
 
 function scrollToBottom(): void {
@@ -266,6 +251,7 @@ function setProcessing(processing: boolean): void {
   if (send) send.disabled = processing;
 
   if (processing) {
+    updateStatus('thinking');
     showStopButton();
   } else {
     hideStopButton();
@@ -273,6 +259,7 @@ function setProcessing(processing: boolean): void {
 }
 
 function cancelRequest(): void {
+  updateStatus('stopping');
   if (abortController) {
     abortController.abort();
     abortController = null;
@@ -419,12 +406,32 @@ function computeFollowUpSuggestions(q: string, actions?: KaylaSafeAction[]): str
   return ['Where should I start?', 'What can I use now?', 'Explore the projects'];
 }
 
+/** A query that failed and can be resent — surfaced as a "Retry" chip. */
+let retryQuery: string | null = null;
+
+function showRetryStarter(query: string): void {
+  retryQuery = query;
+}
+
 function showFollowUpStarters(query: string, actions?: KaylaSafeAction[]): void {
   const starters = starterPrompts();
   if (!starters) return;
   const followUps = getFollowUpSuggestions(query, actions);
   if (!followUps || followUps.length === 0) return;
   starters.innerHTML = '';
+
+  if (retryQuery) {
+    const retry = retryQuery;
+    const btn = document.createElement('button');
+    btn.className = 'kayla-starter kayla-starter--retry';
+    btn.type = 'button';
+    btn.textContent = 'Retry';
+    btn.setAttribute('aria-label', `Retry: ${retry}`);
+    btn.addEventListener('click', () => handleQuery(retry));
+    starters.appendChild(btn);
+    retryQuery = null;
+  }
+
   for (const fQuery of followUps) {
     const btn = document.createElement('button');
     btn.className = 'kayla-starter';
@@ -514,7 +521,6 @@ async function handleQuery(query: string): Promise<void> {
     let streamingText = '';
     let streamingSources: KaylaSource[] | undefined;
     let responseMode: KaylaMode = 'local';
-    let lastRouteMode: string | undefined;
 
     while (true) {
       if (!isCurrent()) {
@@ -543,7 +549,6 @@ async function handleQuery(query: string): Promise<void> {
           if (chunk.replace) {
             streamingText = chunk.content || '';
             responseMode = chunk.mode || 'local';
-            lastRouteMode = chunk.routeMode ?? lastRouteMode;
             streamingActions = chunk.actions?.filter(a => isActionAllowed(a)) ?? streamingActions;
             streamingSources = chunk.sourceLinks ?? streamingSources;
             updateStreamingMessage(placeholder, streamingText, streamingActions);
@@ -557,14 +562,11 @@ async function handleQuery(query: string): Promise<void> {
             break;
           }
 
-          // Track the lane metadata for the badge, but leave the header alone
-          // while chunks stream: the badge is updated once, from the final
-          // server metadata, when the response completes.
+          // The wire still carries mode/routeMode for the server's own tests;
+          // the UI only reads `mode` for the one visitor-visible distinction
+          // left: whether the answer came back unavailable.
           if (chunk.mode) {
             responseMode = chunk.mode;
-          }
-          if (chunk.routeMode) {
-            lastRouteMode = chunk.routeMode;
           }
 
           if (chunk.actions) {
@@ -576,6 +578,7 @@ async function handleQuery(query: string): Promise<void> {
           }
 
           if (chunk.content) {
+            if (!streamingText) updateStatus('responding');
             streamingText += chunk.content;
             updateStreamingMessage(placeholder, streamingText, streamingActions);
           }
@@ -590,9 +593,9 @@ async function handleQuery(query: string): Promise<void> {
     }
 
     if (!isCurrent()) { placeholder?.remove(); return; }
-    // The response completed: the badge now reflects the lane that actually
-    // served it, per the server's own mode/routeMode metadata.
-    applyResponseLaneStatus(responseMode, lastRouteMode);
+    // The response completed: generic states only — the only thing the badge
+    // may carry from the wire is "temporarily unavailable", never a lane.
+    updateStatus(responseMode === 'unavailable' ? 'unavailable' : 'ready');
     finalizeStreamingMessage(placeholder, streamingText, streamingActions, responseMode, streamingSources);
   } catch (error) {
     // A superseded request must stay silent: the newer turn owns the
@@ -602,14 +605,16 @@ async function handleQuery(query: string): Promise<void> {
     // it so a failed request leaves exactly one message, not a stuck
     // "Thinking..." plus a second error bubble.
     if ((error as Error).name === 'AbortError') {
+      updateStatus('ready');
       finalizeStreamingMessage(placeholder, 'Response cancelled.', undefined, 'local', undefined);
     } else if ((error as Error).message === 'RATE_LIMITED') {
-      // Nothing was served this turn, so the badge keeps the last proven lane
-      // instead of claiming a mode the visitor never received.
+      updateStatus('ready');
       finalizeStreamingMessage(placeholder, 'Kayla has received several requests recently. Please try again a little later.', undefined, 'local', undefined);
+      showRetryStarter(query);
     } else {
       updateStatus('unavailable');
-      finalizeStreamingMessage(placeholder, "Kayla's live service is temporarily unavailable. Please try again later.", undefined, 'unavailable', undefined);
+      finalizeStreamingMessage(placeholder, 'Kayla is temporarily unavailable. Please try again later.', undefined, 'unavailable', undefined);
+      showRetryStarter(query);
     }
   } finally {
     if (!isCurrent()) return;
@@ -723,11 +728,41 @@ function close(): void {
   setTimeout(() => { if (!isOpen) p.hidden = true; }, 300);
 }
 
+/** Reset the conversation: transcript, starters, pending work, greeting. */
+function newChat(): void {
+  abortController?.abort();
+  abortController = null;
+  requestSeq += 1;
+  setProcessing(false);
+  messages = [];
+  retryQuery = null;
+  const c = conversation();
+  if (c) c.innerHTML = '';
+  updateStatus('ready');
+  updateStarters();
+  const starters = starterPrompts();
+  if (starters) starters.style.display = 'flex';
+  addGreeting();
+  input()?.focus();
+}
+
+function addGreeting(): void {
+  addMessage('kayla', "Hi, I'm Kayla, the AI assistant from Forger Digital Solutions. Ask me anything — everyday questions, coding help, explanations, or questions about FDS and its projects.");
+}
+
+/** Grow the composer to fit pasted or multi-line text, bounded. */
+function autogrowComposer(): void {
+  const inp = input();
+  if (!inp) return;
+  inp.style.height = 'auto';
+  inp.style.height = `${Math.min(inp.scrollHeight, 140)}px`;
+}
+
 function init(): void {
-  // No lane has been proven before the first response, and the health
-  // endpoint cannot prove one either (a configured provider is not an
-  // available provider), so the badge starts at the claim-free "Ready"
-  // state. The first completed response sets the real lane.
+  // The badge starts at the claim-free "Ready" state; it only ever moves to
+  // Thinking/Responding/Stopping while a request is live, and to
+  // Temporarily unavailable when a completed response proves nothing was
+  // served. It never names a lane.
   updateStatus('ready');
 
   const l = launcherBtn();
@@ -738,6 +773,10 @@ function init(): void {
 
   p.querySelectorAll('.kayla-close').forEach((btn) => {
     btn.addEventListener('click', close);
+  });
+
+  p.querySelectorAll('.kayla-new-chat').forEach((btn) => {
+    btn.addEventListener('click', newChat);
   });
 
   updateStarters();
@@ -755,8 +794,12 @@ function init(): void {
   const inp = input();
   const s = sendBtn();
   if (inp && s) {
-    const send = () => handleQuery(inp.value);
+    const send = () => {
+      handleQuery(inp.value);
+      inp.style.height = '';
+    };
     s.addEventListener('click', send);
+    inp.addEventListener('input', autogrowComposer);
     inp.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -776,7 +819,7 @@ function init(): void {
       // the last visible control never matched it — focus escaped the dialog
       // entirely into the rest of the page. offsetParent is null for any
       // display:none element regardless of how it was hidden.
-      const focusable = [...p.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')].filter(el => !el.hidden && el.offsetParent !== null);
+      const focusable = [...p.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')].filter(el => !el.hidden && el.offsetParent !== null);
       if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -785,7 +828,7 @@ function init(): void {
     }
   });
 
-  addMessage('kayla', `Hi, I'm Kayla Copilot. I can help you learn about Forger Digital Solutions, our projects, and downloads. How can I help?`);
+  addGreeting();
 }
 
 export function initKaylaCopilot(): void {

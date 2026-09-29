@@ -241,8 +241,9 @@ describe('Phase 13 - observability audit (bounded, visitor-safe dimensions)', ()
     await handleKaylaChat({ message: 'Give me a short overview of how the FDS ecosystem fits together.' }, withDiag(aiEndpoint));
     expect(capture.length).toBeGreaterThanOrEqual(4);
     const allowedKeys = new Set([
-      'routeMode', 'intent', 'entity', 'providerAttempted', 'providerOutcome',
-      'providerFailure', 'upstreamStatus', 'resolvedModel', 'verificationOutcome',
+      'routeMode', 'intent', 'entity', 'lane', 'providerAttempted', 'providerOutcome',
+      'providerFailure', 'upstreamStatus', 'providerRoute', 'attemptedRoutes',
+      'resolvedModel', 'verificationOutcome',
       'verificationKinds', 'fallbackReason', 'sourceCount', 'actionCount',
       'goal', 'plannedEntityCount', 'contextCharsBudget'
     ]);

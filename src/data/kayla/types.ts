@@ -265,13 +265,45 @@ export type KaylaErrorType =
   | 'PROVIDER_FAILURE'
   | 'MALFORMED_RESPONSE'
   | 'RETRIEVAL_FAILURE'
+  | 'SERVICE_UNAVAILABLE'
   | 'VALIDATION_ERROR';
+
+/**
+ * Kayla 2.0 — which intelligence lane a request took. Server-side routing
+ * metadata only: it must never reach the public browser response.
+ *
+ *   deterministic - a settled canonical/local answer; no provider consulted
+ *   fds           - FDS question served by the provider with grounding context
+ *   mixed         - FDS facts + general reasoning in one answer
+ *   general       - a question unrelated to FDS, answered as a normal assistant
+ */
+export type KaylaLane = 'deterministic' | 'fds' | 'mixed' | 'general';
+
+/**
+ * One admitted free inference route, resolved server-side from environment
+ * configuration. `apiKey` is populated from the route's key environment
+ * variable; it never appears in responses or client-visible data.
+ */
+export interface KaylaRouteSpec {
+  /** Stable internal id for logs/circuit-breaking, e.g. "groq:qwen/qwen3.8-27b". */
+  id: string;
+  provider: string;
+  model: string;
+  apiKey?: string;
+  endpoint?: string;
+}
 
 export interface KaylaAIRequest {
   message: string;
   history: KaylaConversationMessage[];
   context?: KaylaPageContext;
   sources: KaylaKnowledgeResult[];
+  /**
+   * Kayla 2.0 lane for this request. 'general' builds the general-assistant
+   * prompt (no FDS grounding block); 'mixed' adds the general-synthesis note
+   * to the grounded prompt; 'fds'/absent uses the standard grounded prompt.
+   */
+  lane?: KaylaLane;
 }
 
 export interface KaylaAIResponse {

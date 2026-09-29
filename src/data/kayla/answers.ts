@@ -675,7 +675,7 @@ function comparisonAnswer(entityIds: string[]): CanonicalAnswer | undefined {
 
   if ([first, second].includes('kayla-copilot') && [first, second].includes('kayla-ai-publisher')) {
     return {
-      text: `We share a name and nothing else. I am Kayla Copilot — the guide built into this website. I answer questions about FDS, its projects, statuses, releases, downloads, and support routes.\n\nKayla AI Publisher is a separate FDS product: a creative-project workspace for manuscripts, chapters, characters, revision, visual storytelling, and publishing preparation. It is in ${naturalStatus(project('kayla-ai-publisher')?.status || 'active development')} and has no public release yet.`,
+      text: `I'm Kayla, the AI assistant on the FDS website. I can help with general questions and with public information about FDS.\n\nKayla AI Publisher is a separate FDS product: a creative-project workspace for manuscripts, chapters, characters, revision, visual storytelling, and publishing preparation. It is in ${naturalStatus(project('kayla-ai-publisher')?.status || 'active development')} and has no public release yet.`,
       actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
       sources: ['kayla-copilot', 'app-kayla-ai-publisher'],
       intent: 'comparison'
@@ -882,14 +882,14 @@ function assistantIdentityAnswer(query: string): CanonicalAnswer {
   const publisherConfusion = /\b(kayla ai publisher|kayla publisher|the publisher|publish|manuscript|book|novel|chapter)\b/.test(text);
   if (publisherConfusion) {
     return {
-      text: `No — I am Kayla Copilot, the guide built into the Forger Digital Solutions website. I answer questions about FDS, its projects, statuses, releases, downloads, and support routes.\n\nKayla AI Publisher is a different FDS product: a creative workspace for manuscripts, revision, visual storytelling, and publishing preparation. It is in ${project('kayla-ai-publisher')?.status || 'active development'} with no public release, and I cannot edit or publish anything for you.`,
+      text: `No — I'm Kayla, the AI assistant on the Forger Digital Solutions website. I can help with general questions and with public information about FDS.\n\nKayla AI Publisher is a separate FDS product: a creative workspace for manuscripts, revision, visual storytelling, and publishing preparation. It is in ${project('kayla-ai-publisher')?.status || 'active development'} with no public release, and I cannot edit or publish anything for you.`,
       actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
       sources: ['kayla-copilot', 'app-kayla-ai-publisher'],
       intent: 'assistant_identity'
     };
   }
   return {
-    text: `I am Kayla Copilot, the guide for the Forger Digital Solutions website. I can explain what FDS is and what it is building, tell you a project's real status, point you at what is downloadable today and what is not, cover releases and versions, explain the GEMS research family, and show you support and contact routes. I stay inside public FDS information — I am not a general-purpose assistant, and I share a name with Kayla AI Publisher without being that product.`,
+    text: `I am Kayla, the AI assistant from Forger Digital Solutions. I can help with everyday questions — explanations, writing, coding, planning, and brainstorming — as well as public information about FDS, its projects, releases, research, and support. Kayla AI Publisher is a separate creative product.`,
     actions: [{ type: 'SHOW_APPS', label: 'View Projects' }],
     sources: ['kayla-copilot'],
     intent: 'assistant_identity'
@@ -918,44 +918,25 @@ function companyAnswer(): CanonicalAnswer {
 function boundaryAnswer(intent: KaylaIntent, query: string): CanonicalAnswer | undefined {
   if (intent === 'external_current') {
     return {
-      text: 'I do not have live external data — no weather, news, prices, scores, or anything else happening in the world right now. I only know public information about Forger Digital Solutions and this site.',
+      text: 'I do not have live external data — no weather, news, prices, scores, or anything else happening in the world right now. I can still help with general knowledge, explanations, and anything about FDS.',
       sources: ['scope-boundary'],
       intent
     };
   }
   if (intent === 'private_info') {
     return {
-      text: 'That is not public information, and I do not have access to it. I only work from what FDS has published on this site — project descriptions, statuses, releases, downloads, and support routes. I will not guess at internal details, private code, unreleased work, finances, or credentials.',
+      text: 'That is not public information, and I do not have access to it. For FDS, I work from what is published on this site — project descriptions, statuses, releases, downloads, and support routes — and I will not guess at internal details, private code, unreleased work, finances, or credentials.',
       sources: ['scope-boundary'],
       intent
     };
   }
   if (intent === 'unsupported_task') {
     const text = normalize(query);
-    if (/\b(manuscript|book|novel|chapter|story|draft)\b/.test(text)) {
-      return {
-        text: `I cannot — I am the website guide, not an editing tool. Kayla AI Publisher is the FDS product built for manuscripts, revision, and publishing preparation, and it is in ${project('kayla-ai-publisher')?.status || 'active development'} without a public release yet.`,
-        actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
-        sources: ['kayla-copilot', 'app-kayla-ai-publisher'],
-        intent
-      };
-    }
-    if (/\b(code|script|program|app|application|website|function|python|javascript|typescript|refactor|debug)\b/.test(text)) {
-      return {
-        text: `I do not write or run code — I am the guide for this website. CodeForge is the FDS product for that: a free, released autonomous software-engineering platform for Windows, CLI, and VS Code${productFor('codeforge')?.version ? ` (currently ${productFor('codeforge')?.version})` : ''}.`,
-        actions: [{ type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }],
-        sources: ['kayla-copilot', 'app-codeforge'],
-        intent
-      };
-    }
-    if (/\b(computer|pc|laptop|drive|windows|machine|system)\b/.test(text)) {
-      return {
-        text: `I cannot diagnose your machine — I only answer questions about this website and FDS. ForgerEMS is the FDS product for technician work: diagnostics, drive validation, USB tooling, and driver guidance on Windows${productFor('forgerems')?.version ? ` (currently ${productFor('forgerems')?.version})` : ''}.`,
-        actions: [{ type: 'OPEN_DOWNLOAD', label: 'Download ForgerEMS', href: productFor('forgerems')?.downloadUrl || '/forged' }],
-        sources: ['kayla-copilot', 'product-forgerems'],
-        intent
-      };
-    }
+    // Kayla 2.0: writing, coding, and general troubleshooting are now ordinary
+    // requests the inference lane answers. The boundaries that remain real —
+    // and stay settled here so a model never pretends otherwise — are the
+    // ones Kayla physically cannot do: acting on the visitor's device, or
+    // creating accounts and credentials this site does not have.
     if (/\b(account|register|sign\s*up|log\s*in|sign\s*in)\b/.test(text)) {
       return {
         text: 'FDS has no user accounts, and I cannot create accounts, handle logins, or manage credentials. I am a read-only website assistant, and this site requires no account or registration.',
@@ -972,11 +953,11 @@ function boundaryAnswer(intent: KaylaIntent, query: string): CanonicalAnswer | u
         intent
       };
     }
-    return {
-      text: 'That is outside what I do. I am the guide for the Forger Digital Solutions website — I can explain FDS projects, statuses, releases, downloads, and support routes.',
-      sources: ['scope-boundary'],
-      intent
-    };
+    // Everything else that once landed here — write a script, diagnose a PC,
+    // edit a draft — is a general-assistant task now. Returning no canonical
+    // answer lets the lane classifier route it to inference instead of a
+    // refusal that no longer matches what Kayla can do.
+    return undefined;
   }
   return undefined;
 }
@@ -1328,12 +1309,17 @@ function systemsConceptAnswer(query: string): CanonicalAnswer | undefined {
  */
 export function archiveIntegrityAnswer(query: string): CanonicalAnswer | undefined {
   const q = normalize(query);
-  const integrityNoun = /\bsha[\s-]?256\b|\b(checksums?|hash(es)?|digests?|integrity)\b/.test(q);
+  // "sha-256", "checksum", "digest", "integrity" are unambiguous download
+  // vocabulary. A bare "hash" is not — "hash map" and "hash function" are
+  // computer-science terms — so it only counts alongside a download artifact
+  // or verification/suspicion context.
+  const integrityNoun = /\bsha[\s-]?256\b|\b(checksums?|digests?|integrity)\b/.test(q);
   const verification = /\b(verif\w*|validat\w*|confirm\w*|compar\w*|check\w*)\b/.test(q);
   const suspicion = /\b(legit|authentic\w*|genuine|tamper\w*|altered|unmodified|intact|match\w*)\b/.test(q);
   const changed = /\b(changed|modified)\b/.test(q);
   const downloadArtifact = /\b(zips?|archiv\w+|downloads?|files?|installers?)\b/.test(q);
-  if (integrityNoun || ((verification || suspicion || changed) && downloadArtifact)) {
+  const bareHash = /\bhash(es)?\b/.test(q);
+  if (integrityNoun || ((verification || suspicion || changed || bareHash) && downloadArtifact) || (bareHash && (verification || suspicion))) {
     return {
       text: 'Every project archive on the Releases page shows its full Archive SHA-256. To verify a download: get the ZIP, then compute the checksum locally with certutil -hashfile FILENAME SHA256 (Windows) or shasum -a 256 FILENAME (macOS/Linux), and compare the full 64-character digest against the published value — the Copy SHA-256 button gives you the exact bytes to compare. An exact match is an integrity pass: matching the published digest verifies that your downloaded bytes match the archive FDS published. The source commit listed beside the archive is the provenance record — a SHA-256 confirms the bytes, not who authored them.',
       actions: [{ type: 'OPEN_FORGED', label: 'Open Releases', href: '/forged' }],
@@ -1547,7 +1533,12 @@ export function canonicalAnswer(
     if (answer) return answer;
   }
 
-  if (has('availability') && !primaryEntity) {
+  // Entity-less availability is only an FDS-catalogue question when the
+  // visitor is actually asking about software to download or install.
+  // "How do I get the index in a Python for loop?" matches the broad
+  // availability intent without being a download question at all.
+  if (has('availability') && !primaryEntity
+    && /\b(downloads?|installs?|software|apps?|applications?|releases?|programs?|tools?|builds?|binar\w+|forged)\b/.test(normalize(query))) {
     return {
       text: `Downloadable FDS software lives on Forged: ${products.filter((entry) => entry.downloadUrl).map((entry) => `${entry.name} (${entry.version})`).join(', ')}. Everything else is still in development or research and has no public build.`,
       actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],

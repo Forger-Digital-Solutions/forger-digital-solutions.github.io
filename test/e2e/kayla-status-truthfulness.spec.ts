@@ -1,24 +1,28 @@
 import { test, expect, type Page, type Route } from '@playwright/test';
 
 /**
- * R4.2H-R2.1 — Kayla status truthfulness regression guards.
+ * Kayla status truthfulness regression guards (Kayla 2.0 generic model).
  *
  * The badge used to claim "AI Online" from the health endpoint's configured
  * `aiAvailable` flag while the upstream free provider lane was actually
  * returning HTTP 429 and the verified knowledge lane was what served the
- * visitor. Primary product rule: never display a stronger service state than
- * the system has actually proven.
+ * visitor. Kayla 2.0 goes further than "don't claim a stronger lane than
+ * proven": the badge never names a lane at all. Which backend served an
+ * answer — deterministic, retrieved, inference, failover — is server-side
+ * routing detail and is invisible to the visitor by design.
  *
  * These tests pin the smallest truthful status model:
- * - "Ready" before any response (health flags alone must NOT yield "AI Online")
- * - "AI Online" only after a response the server served from the provider lane
- * - "Knowledge Mode" after a deterministic/canonical response
- * - "AI Limited · Knowledge Mode" after a provider attempt failed/replaced
- * - the badge never claims a lane for a turn that served nothing (429)
+ * - "Ready" before any response (health flags alone must NOT yield a claim)
+ * - "Thinking…"/"Responding…"/"Stopping…" only while a request is live
+ * - "Ready" again after any completed answer, whatever lane served it
+ * - "Temporarily unavailable" only when a completed response served nothing
+ * - never "AI Online", "Knowledge Mode", or "AI Limited" — those strings
+ *   leak internal routing and must not appear in the badge
  */
 
 const CHAT_ROUTE = '**/api/kayla/chat*';
 const HEALTH_ROUTE = '**/api/kayla/health*';
+const LANE_LABELS = /AI Online|AI Limited|Knowledge Mode/;
 
 function ndjson(...objects: unknown[]): string {
   return objects.map((value) => JSON.stringify(value)).join('\n') + '\n';
@@ -48,7 +52,7 @@ async function send(page: Page, body: string, text: string) {
   await expect(page.locator('.kayla-msg--kayla').last()).not.toHaveText(/^Thinking/, { timeout: 10_000 });
 }
 
-test.describe('Kayla badge reflects the actually-proven response lane', () => {
+test.describe('Kayla badge stays generic — it never names a serving lane', () => {
   test.beforeEach(async ({ page }) => { await stubHealth(page); });
 
   test('health with aiAvailable:true does NOT claim AI Online — badge stays Ready', async ({ page }) => {
@@ -56,7 +60,7 @@ test.describe('Kayla badge reflects the actually-proven response lane', () => {
     await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
   });
 
-  test('deterministic knowledge answer sets Knowledge Mode', async ({ page }) => {
+  test('deterministic knowledge answer returns to Ready, never claims a lane', async ({ page }) => {
     await openWidget(page);
     await send(page, ndjson({
       content: 'CodeForge is publicly available and free.',
@@ -65,10 +69,11 @@ test.describe('Kayla badge reflects the actually-proven response lane', () => {
       done: true,
       sourceLinks: [{ label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }]
     }), 'What is CodeForge?');
-    await expect(page.locator('.kayla-status-text')).toHaveText('Knowledge Mode');
+    await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('.kayla-status-text')).not.toHaveText(LANE_LABELS);
   });
 
-  test('provider-accepted answer sets AI Online', async ({ page }) => {
+  test('provider-accepted answer returns to Ready, never claims AI Online', async ({ page }) => {
     await openWidget(page);
     await send(page, ndjson({
       content: 'A generated, canonical-fact-consistent comparison of the two systems.',
@@ -77,10 +82,11 @@ test.describe('Kayla badge reflects the actually-proven response lane', () => {
       done: true,
       sourceLinks: [{ label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }]
     }), 'Compare CodeForge and ForgerEMS.');
-    await expect(page.locator('.kayla-status-text')).toHaveText('AI Online');
+    await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('.kayla-status-text')).not.toHaveText(LANE_LABELS);
   });
 
-  test('provider failure with knowledge fallback sets AI Limited · Knowledge Mode', async ({ page }) => {
+  test('provider failure with knowledge fallback returns to Ready, never claims AI Limited', async ({ page }) => {
     await openWidget(page);
     await send(page, ndjson({
       content: "Kayla's conversational AI is temporarily unavailable, but I can still answer from the FDS knowledge base.\n\nCanonical fallback answer.",
@@ -89,10 +95,11 @@ test.describe('Kayla badge reflects the actually-proven response lane', () => {
       done: true,
       sourceLinks: [{ label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }]
     }), 'Compare Training Grounds versus GEMS.');
-    await expect(page.locator('.kayla-status-text')).toHaveText('AI Limited · Knowledge Mode');
+    await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('.kayla-status-text')).not.toHaveText(LANE_LABELS);
   });
 
-  test('provider answer replaced by canonical verification sets AI Limited · Knowledge Mode', async ({ page }) => {
+  test('provider answer replaced by canonical verification returns to Ready', async ({ page }) => {
     await openWidget(page);
     await send(page, ndjson({
       replace: true,
@@ -102,10 +109,11 @@ test.describe('Kayla badge reflects the actually-proven response lane', () => {
       done: true,
       sourceLinks: [{ label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }]
     }), 'Write something the model would get wrong.');
-    await expect(page.locator('.kayla-status-text')).toHaveText('AI Limited · Knowledge Mode');
+    await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('.kayla-status-text')).not.toHaveText(LANE_LABELS);
   });
 
-  test('a rate-limited turn does not claim any lane; the next real answer does', async ({ page }) => {
+  test('a rate-limited turn claims nothing; the next real answer returns to Ready', async ({ page }) => {
     let calls = 0;
     await openWidget(page);
     await page.route(CHAT_ROUTE, (route: Route) => {
@@ -121,11 +129,13 @@ test.describe('Kayla badge reflects the actually-proven response lane', () => {
     await page.locator('#kayla-input').fill('first question');
     await page.locator('#kayla-send').click();
     await expect(page.locator('.kayla-msg--kayla').last()).toContainText(/try again/i);
-    // Nothing was served: the badge must not claim Knowledge/AI for this turn.
+    // Nothing was served and nothing was claimed — no lane label, no alarm.
     await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('.kayla-status-text')).not.toHaveText(LANE_LABELS);
     await page.locator('#kayla-input').fill('second question');
     await page.locator('#kayla-send').click();
     await expect(page.locator('.kayla-msg--kayla').last()).toContainText('Free first answer.');
-    await expect(page.locator('.kayla-status-text')).toHaveText('Knowledge Mode');
+    await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('.kayla-status-text')).not.toHaveText(LANE_LABELS);
   });
 });

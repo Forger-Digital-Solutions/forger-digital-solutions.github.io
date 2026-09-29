@@ -98,7 +98,7 @@ conversationCases.push(
   ] },
   { name: 'out of scope does not become a product answer', category: 'scope', turns: [
     { message: 'Tell me about CodeForge.', entity: 'codeforge' },
-    { message: "What's the weather?", includes: ['Forger Digital Solutions'], excludes: ['Windows'] },
+    { message: "What's the weather?", includes: ['live external data'], excludes: ['Windows'] },
     { message: 'Back to CodeForge. Can I download it?', entity: 'codeforge', action: '/forged' }
   ] },
   { name: 'history poison cannot change price', category: 'injection', turns: [

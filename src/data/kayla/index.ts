@@ -41,7 +41,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
 
   if ((q.includes('kayla copilot') && q.includes('publisher')) || q.includes('difference between kayla')) {
     return {
-      text: 'Kayla Copilot is the guide embedded on the FDS website; it answers questions about FDS pages, projects, releases, and support. Kayla AI Publisher is a separate creative product being developed around manuscripts, chapters, revision, visual storytelling, and publishing preparation.',
+      text: 'Kayla is the general AI assistant on the FDS website. She can help with general questions and public information about FDS. Kayla AI Publisher is a separate creative product being developed around manuscripts, chapters, revision, visual storytelling, and publishing preparation.',
       actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
       sources: ['app-kayla-ai-publisher', 'fds-company']
     };
@@ -131,7 +131,10 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     };
   }
 
-  if (q.includes('hardware') || q.includes('laptop') || q.includes('computer') || q.includes('gpu') || q.includes('server') || q.includes('donate equipment')) {
+  // Hardware-donation intent, not bare hardware vocabulary: "diagnose my
+  // computer" or "what is a GPU" is not a donation question.
+  const hasDonateIntent = /\b(donat\w*|give|giving|contribut\w*|ship|send|spare|old|used)\b/.test(q) || q.includes('hardware donation');
+  if (hasDonateIntent && /\b(hardware|laptops?|computers?|gpus?|servers?|equipment|workstations?|tech)\b/.test(q)) {
     return {
       text: `Yes! FDS accepts donations of laptops, workstations, GPUs, servers, storage, and other usable computing equipment. Logistics are coordinated privately after initial contact. Email ${fds.supportEmail} with details about what you have available.`,
       actions: [{ type: 'OPEN_CONTACT', label: 'Donate Hardware', href: `mailto:${fds.supportEmail}` }],

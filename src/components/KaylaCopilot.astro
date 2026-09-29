@@ -6,12 +6,12 @@
     id="kayla-launcher"
     class="kayla-launcher"
     type="button"
-    aria-label="Open Kayla Copilot"
+    aria-label="Ask Kayla"
     aria-expanded="false"
     aria-controls="kayla-panel"
   >
     <span class="kayla-launcher__icon" aria-hidden="true">K</span>
-    <span class="kayla-launcher__tooltip">Ask Kayla — FDS website assistant</span>
+    <span class="kayla-launcher__tooltip">ASK KAYLA</span>
   </button>
 
   <aside
@@ -19,19 +19,20 @@
     class="kayla-panel"
     hidden
     role="dialog"
-    aria-label="Kayla Copilot chat"
+    aria-label="Kayla chat"
     aria-modal="true"
   >
     <div class="kayla-panel__header">
       <div class="kayla-panel__title">
-        <span class="kayla-panel__name">Kayla Copilot</span>
-        <span class="kayla-panel__subtitle">FDS website assistant — not the Kayla Publisher product</span>
+        <span class="kayla-panel__name">Kayla</span>
+        <span class="kayla-panel__subtitle">AI assistant from Forger Digital Solutions</span>
       </div>
       <div class="kayla-panel__status" role="status" aria-live="polite">
         <span class="kayla-status-dot" aria-hidden="true"></span>
         <span class="kayla-status-text">Ready</span>
       </div>
-      <button class="kayla-close" type="button" aria-label="Close Kayla Copilot">&times;</button>
+      <button class="kayla-new-chat" type="button" aria-label="Start a new chat" title="New chat">&#8634;</button>
+      <button class="kayla-close" type="button" aria-label="Close Kayla chat">&times;</button>
     </div>
 
     <div id="kayla-conversation" class="kayla-conversation" aria-live="polite" aria-relevant="additions text" tabindex="0"></div>
@@ -47,14 +48,14 @@
 
     <div class="kayla-input-row">
       <label for="kayla-input" class="kayla-input-label">Ask Kayla</label>
-      <input
+      <textarea
         id="kayla-input"
         class="kayla-input"
-        type="text"
-        placeholder="Ask about FDS..."
+        rows="1"
+        placeholder="Ask Kayla anything…"
         autocomplete="off"
         maxlength="2000"
-      />
+      ></textarea>
       <button id="kayla-send" class="kayla-send" type="button" aria-label="Send message">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
@@ -209,7 +210,8 @@
        proves which lane actually served the answer. */
     background: #8fa3c7;
   }
-  .kayla-close {
+  .kayla-close,
+  .kayla-new-chat {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -224,7 +226,11 @@
     cursor: pointer;
     transition: color .2s ease, border-color .2s ease;
   }
-  .kayla-close:hover {
+  .kayla-new-chat {
+    font-size: 1rem;
+  }
+  .kayla-close:hover,
+  .kayla-new-chat:hover {
     color: var(--color-text);
     border-color: var(--color-accent-secondary);
   }
@@ -297,6 +303,50 @@
   .kayla-msg--user .kayla-inline-code {
     background: rgba(255,255,255,.15);
     border-color: rgba(255,255,255,.25);
+  }
+
+  /* General-lane code blocks (render-answer.ts): plain monospace text in a
+     contained block — never parsed HTML. The copy button is a chip in the
+     corner; on narrow screens the block scrolls horizontally instead of
+     blowing out the bubble. */
+  .kayla-code {
+    position: relative;
+    margin: .5rem 0;
+  }
+  .kayla-code__pre {
+    margin: 0;
+    padding: .7rem .8rem;
+    padding-right: 3.4rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font: 500 .8rem/1.5 var(--font-mono);
+    white-space: pre;
+    color: var(--color-text);
+  }
+  .kayla-copy-btn {
+    position: absolute;
+    top: .35rem;
+    right: .35rem;
+    padding: .25rem .5rem;
+    border: 1px solid var(--color-border);
+    border-radius: .3rem;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font: 700 .62rem/1 var(--font-mono);
+    letter-spacing: .04em;
+    cursor: pointer;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .kayla-copy-btn:hover,
+  .kayla-copy-btn:focus-visible {
+    color: var(--color-text);
+    border-color: var(--color-accent-secondary);
+  }
+  .kayla-starter--retry {
+    border-color: var(--color-accent-secondary);
+    color: var(--color-accent-secondary);
   }
   .kayla-msg__actions {
     display: flex;
@@ -409,8 +459,14 @@
     color: var(--color-text);
     font: inherit;
     font-size: .92rem;
+    line-height: 1.45;
     outline: none;
     transition: border-color .2s ease;
+    /* Multi-line composer: grows with content (script caps it), never a
+       manual resize handle fighting the chat layout. */
+    resize: none;
+    max-height: 8.75rem;
+    overflow-y: auto;
   }
   .kayla-input::placeholder {
     color: var(--color-text-subtle);
@@ -438,15 +494,15 @@
     padding: .5rem .8rem;
     border: 1px solid var(--color-border-strong);
     border-radius: var(--radius-sm);
-    background: var(--color-accent-secondary);
+    background: #355ab8;
     color: #f5f7fa;
     font: 700 .72rem/1 var(--font-mono);
     letter-spacing: .04em;
     cursor: pointer;
     transition: background .2s ease, transform .2s ease;
   }
-  .kayla-stop:hover {
-    background: var(--color-accent);
+  .kayla-stop:hover, .kayla-stop:focus-visible {
+    background: #294b9f;
     transform: translateY(-1px);
   }
   .kayla-msg--streaming .kayla-msg__text::after {

@@ -1,7 +1,7 @@
 import { handleKaylaChat, streamKaylaChat, type KaylaEndpointConfig } from '../src/lib/kayla/handler';
-import { createKaylaConfig, getAllowedOrigins, getRateLimitSalt, type KaylaEnv } from '../src/lib/kayla/config';
+import { createKaylaConfig, getAllowedOrigins, getOpsToken, getRateLimitSalt, getRouteSpecs, type KaylaEnv } from '../src/lib/kayla/config';
 import { isOriginAllowed, buildCorsHeaders, type CorsOptions } from '../src/lib/kayla/cors';
-import { evaluateModelPolicy, ZERO_COST_POLICY } from '../src/lib/kayla/model-policy';
+import { evaluateRoutePolicy, ZERO_COST_POLICY } from '../src/lib/kayla/model-policy';
 import { KaylaAbuseGuard, createLimiterIdentifier } from './abuse-guard';
 import type { KaylaDiagnostics } from '../src/lib/kayla/diagnostics';
 import { getCanonicalKnowledgeVersion } from '../src/data/kayla/canonical-registry';
@@ -27,7 +27,9 @@ export default {
     const finalize = (response: Response, responseMode: string, rateLimit = 'not_checked'): Response => {
       const headers = new Headers(response.headers);
       Object.entries(SECURITY_HEADERS).forEach(([key, value]) => headers.set(key, value));
-      headers.set('X-Request-ID', requestId);
+      // Kayla 2.0: no X-Request-ID on the wire. The id still exists — it is
+      // logged server-side for correlation — but the public contract is that
+      // nothing internal, even an opaque correlation id, reaches the visitor.
       Object.entries(buildCorsHeaders(origin, corsOptions)).forEach(([key, value]) => headers.set(key, value));
       const output = new Response(response.body, { status: response.status, statusText: response.statusText, headers });
       ctx.waitUntil(logSafe({ requestId, route: url.pathname, status: response.status, responseMode, durationMs: Date.now() - started, rateLimit }, env));
@@ -42,24 +44,36 @@ export default {
     if (origin && !isOriginAllowed(origin, allowedOrigins)) return finalize(json({ error: 'Origin not allowed', errorType: 'CORS_ERROR' }, 403), 'cors_blocked');
 
     const config = createKaylaConfig(env);
-    const policy = evaluateModelPolicy(config.provider, config.model);
+    const routes = getRouteSpecs(env);
+    const admitted = routes.filter(route => evaluateRoutePolicy(route).eligible);
     const limiterReady = Boolean(env.ABUSE_GUARD && getRateLimitSalt(env).length >= 16);
 
     if (url.pathname === '/api/kayla/health') {
       if (request.method !== 'GET') return finalize(json({ error: 'Method not allowed' }, 405), 'rejected');
+      // Kayla 2.0 public contract: a liveness signal only. Provider names,
+      // route ids, quota counters, and the daily budget are operator data —
+      // they never appear in the public response. The detailed body is gated
+      // behind KAYLA_OPS_TOKEN so an operator can still inspect them.
+      const opsToken = getOpsToken(env);
+      const isOps = opsToken.length > 0 && request.headers.get('X-Kayla-Ops') === opsToken;
+      if (!isOps) {
+        return finalize(json({ status: limiterReady ? 'ok' : 'degraded', streaming: true }), 'health');
+      }
       // Whether the shared daily allowance still has room is the difference
       // between "the model lane is available" and "the model lane is dark for
       // everyone until UTC midnight". aiAvailable claimed the former while the
       // latter was true, which is what made the Phase 6 gap so hard to read.
       const budget = await readAIBudget(env, config.aiDailyRequestLimit);
+      const anyEligible = admitted.length > 0;
       return finalize(json({
         status: limiterReady ? 'ok' : 'degraded', knowledgeReady: true,
         knowledgeVersion: getCanonicalKnowledgeVersion(),
-        aiEnabled: config.enabled, aiConfigured: config.enabled && Boolean(config.apiKey) && policy.eligible,
-        aiAvailable: config.enabled && Boolean(config.apiKey) && policy.eligible && budget.remaining > 0,
-        aiConfiguredButExhausted: config.enabled && Boolean(config.apiKey) && policy.eligible && budget.remaining <= 0,
+        aiEnabled: config.enabled, aiConfigured: config.enabled && anyEligible,
+        aiAvailable: config.enabled && anyEligible && budget.remaining > 0,
+        aiConfiguredButExhausted: config.enabled && anyEligible && budget.remaining <= 0,
         aiDailyLimit: budget.limit, aiDailyUsed: budget.used, aiDailyRemaining: budget.remaining,
-        provider: config.provider || 'local', modelPolicy: ZERO_COST_POLICY.toLowerCase().replaceAll('_', '-'),
+        routes: admitted.map(route => route.id), routesConfigured: routes.length,
+        modelPolicy: ZERO_COST_POLICY.toLowerCase().replaceAll('_', '-'),
         streaming: true, rateLimiter: limiterReady ? 'ready' : 'unavailable', mode: 'production'
       }), 'health');
     }
@@ -83,7 +97,20 @@ export default {
     if (!limiterId || !env.ABUSE_GUARD) return finalize(json({ error: 'Kayla is temporarily unavailable. Please try again later.', errorType: 'SERVICE_UNAVAILABLE' }, 503), 'guard_unavailable', 'unavailable');
     const rateStub = env.ABUSE_GUARD.get(env.ABUSE_GUARD.idFromName(`client:${limiterId}`));
     const globalStub = env.ABUSE_GUARD.get(env.ABUSE_GUARD.idFromName('global-ai-budget'));
-    const consumeAIAllowance = async () => safeAllowance(globalStub, '/ai-budget', { limit: config.aiDailyRequestLimit }, false);
+    const concurrencyStub = env.ABUSE_GUARD.get(env.ABUSE_GUARD.idFromName('global-concurrency'));
+
+    // Kayla 2.0: an inference request needs both the shared daily budget and
+    // a global in-flight slot. The lease id is the same correlation id minted
+    // for logging; released in finally so aborts and crashes cannot pin the
+    // ceiling down, and the DO-side TTL self-heals a lease that never got
+    // released at all.
+    const leaseId = requestId;
+    const releaseLease = () => { try { concurrencyStub.fetch('https://guard.invalid/concurrency-release', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: leaseId }) }).catch(() => {}); } catch { /* release is best-effort; the TTL self-heals */ } };
+    const consumeAIAllowance = async () => {
+      const budget = await safeAllowance(globalStub, '/ai-budget', { limit: config.aiDailyRequestLimit }, false);
+      if (!budget) return false;
+      return safeAllowance(concurrencyStub, '/concurrency-acquire', { limit: 8, id: leaseId }, false);
+    };
 
     // Consume the per-client allowance once, at the edge, so the streaming and
     // JSON paths agree. Previously the stream consumed it inside the generator
@@ -109,7 +136,13 @@ export default {
     };
 
     const endpointConfig: KaylaEndpointConfig = {
-      providerConfig: { provider: config.provider, model: config.model, apiKey: config.apiKey, timeoutMs: config.requestTimeoutMs },
+      providerConfig: {
+        provider: config.provider,
+        model: config.model,
+        apiKey: config.apiKey,
+        timeoutMs: config.requestTimeoutMs,
+        routes
+      },
       kaylaConfig: config, consumeRequestAllowance: async () => true, consumeAIAllowance,
       onDiagnostics: emitDiagnostics
     };
@@ -118,12 +151,16 @@ export default {
       const readable = new ReadableStream({ async start(controller) {
         try { for await (const chunk of streamKaylaChat(body, endpointConfig)) controller.enqueue(new TextEncoder().encode(`${chunk}\n`)); }
         catch { controller.enqueue(new TextEncoder().encode(`${JSON.stringify({ content: 'Kayla is temporarily unavailable. Please try again later.', mode: 'local', done: true })}\n`)); }
-        finally { controller.close(); }
+        finally { controller.close(); releaseLease(); }
       }});
-      return finalize(new Response(readable, { status: 200, headers: { 'Content-Type': 'application/x-ndjson; charset=utf-8', 'X-Accel-Buffering': 'no' } }), policy.eligible ? 'stream' : 'local', 'checked');
+      return finalize(new Response(readable, { status: 200, headers: { 'Content-Type': 'application/x-ndjson; charset=utf-8', 'X-Accel-Buffering': 'no' } }), 'stream', 'checked');
     }
-    const { status, response } = await handleKaylaChat(body, endpointConfig);
-    return finalize(json(response, status), 'mode' in response ? response.mode : 'rejected', 'checked');
+    try {
+      const { status, response } = await handleKaylaChat(body, endpointConfig);
+      return finalize(json(response, status), 'mode' in response ? response.mode : 'rejected', 'checked');
+    } finally {
+      releaseLease();
+    }
   }
 };
 

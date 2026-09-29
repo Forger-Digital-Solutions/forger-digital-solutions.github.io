@@ -86,7 +86,14 @@ const REASONING_LEAK = /<\/?think\b|<\/?thinking\b|<\/?reasoning\b|<\/?scratchpa
  * Only fires when a model opens with these headers as section dividers — which
  * is always scaffolding, never a legitimate visitor answer.
  */
-const REASONING_SECTION_HEADER = /^(Analysis|Chain of thought|Internal reasoning|My reasoning|Let me think|First I should|We need to answer)\s*:/im;
+const REASONING_SECTION_HEADER = /^(Analysis|Chain of thought|Internal reasoning|My reasoning|Thought|Thinking|Internal thought|Scratchpad|Final answer|Final response|Let me think|First I should|We need to answer)\s*:/im;
+
+/**
+ * Reasoning narration that opens an answer without needing a colon — the
+ * model announcing its scratch pad ("Let me think step by step."). Anchored
+ * to the very start so "explained step by step" mid-sentence never matches.
+ */
+const REASONING_OPENING = /^\s*(Let me think\b|First,? let me\b|We need to answer\b|Okay,? (so|let me)\b)/i;
 
 /**
  * A free router can front a model that gets stuck looping rather than
@@ -98,6 +105,23 @@ const REASONING_SECTION_HEADER = /^(Analysis|Chain of thought|Internal reasoning
  */
 const MIN_REPEATED_UNIT_LENGTH = 12;
 const REPEATED_UNIT_THRESHOLD = 4;
+
+/**
+ * A single token looped consecutively — the smallest stuck-loop shape
+ * ("the the the the…"). Legitimate prose never repeats one word eight
+ * times in a row.
+ */
+const WORD_RUN_THRESHOLD = 8;
+
+function hasWordLoop(text: string): boolean {
+  const words = text.toLowerCase().split(/\s+/).map((w) => w.replace(/[^a-z0-9']/g, ''));
+  let run = 1;
+  for (let i = 1; i < words.length; i++) {
+    run = words[i] !== '' && words[i] === words[i - 1] ? run + 1 : 1;
+    if (run >= WORD_RUN_THRESHOLD) return true;
+  }
+  return false;
+}
 
 /** provider.ts bounds the request to 700 tokens; ~4 chars/token plus slack. */
 const MAX_ANSWER_CHARS = 6000;
@@ -136,10 +160,10 @@ function isWholeAnswerJson(text: string): boolean {
   }
 }
 
-function hasPresentationScaffolding(text: string): boolean {
+function hasPresentationScaffolding(text: string, allowCodeFences: boolean): boolean {
   return HTML_COMMENT.test(text)
     || ROLE_LABEL_LINE.test(text)
-    || CODE_FENCE.test(text)
+    || (!allowCodeFences && CODE_FENCE.test(text))
     || PROMPT_BLOCK_LABEL.test(text)
     || isWholeAnswerJson(text);
 }
@@ -155,7 +179,7 @@ function hasPresentationScaffolding(text: string): boolean {
  * above. No legitimate FDS answer states "<word(s)> Safety: safe/unsafe/..."
  * about itself.
  */
-const SAFETY_CLASSIFIER_LEAK = /^\s*[A-Za-z][A-Za-z ]{0,24}\bsafety\s*:\s*(safe|unsafe|flagged|blocked|allowed|denied)\b/im;
+const SAFETY_CLASSIFIER_LEAK = /^\s*(?:[A-Za-z][A-Za-z ]{0,24}?\s+)?safety\s*:\s*(safe|unsafe|flagged|blocked|allowed|denied)\b/im;
 
 function paragraphs(text: string): string[] {
   return text.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
@@ -194,7 +218,7 @@ function hasPathologicalRepetition(text: string): boolean {
  * section headers) and expanded tool-scaffolding to cover additional patterns
  * from common free-model families.
  */
-export function checkAnswerShape(text: string): AnswerShapeVerdict {
+export function checkAnswerShape(text: string, options?: { allowCodeFences?: boolean }): AnswerShapeVerdict {
   const kinds: AnswerShapeViolation[] = [];
 
   if (!text || !text.trim()) {
@@ -202,10 +226,10 @@ export function checkAnswerShape(text: string): AnswerShapeVerdict {
   }
   if (CONTROL_TOKEN.test(text)) kinds.push('control_token');
   if (hasToolScaffolding(text)) kinds.push('tool_call_scaffolding');
-  if (REASONING_LEAK.test(text) || REASONING_SECTION_HEADER.test(text)) kinds.push('reasoning_leak');
+  if (REASONING_LEAK.test(text) || REASONING_SECTION_HEADER.test(text) || REASONING_OPENING.test(text)) kinds.push('reasoning_leak');
   if (text.length > MAX_ANSWER_CHARS) kinds.push('oversized_answer');
-  if (hasPathologicalRepetition(text)) kinds.push('pathological_repetition');
-  if (hasPresentationScaffolding(text)) kinds.push('presentation_scaffolding');
+  if (hasPathologicalRepetition(text) || hasWordLoop(text)) kinds.push('pathological_repetition');
+  if (hasPresentationScaffolding(text, options?.allowCodeFences === true)) kinds.push('presentation_scaffolding');
   if (SAFETY_CLASSIFIER_LEAK.test(text)) kinds.push('safety_classifier_leak');
 
   return { ok: kinds.length === 0, kinds };

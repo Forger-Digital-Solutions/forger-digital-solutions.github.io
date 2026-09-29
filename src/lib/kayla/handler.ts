@@ -1,6 +1,6 @@
-import type { KaylaChatResponse, KaylaKnowledgeResult, KaylaErrorType, KaylaConfig, KaylaRouteMode, KaylaSafeAction } from '../../data/kayla/types';
-import { createProvider, createAIProvider } from './provider';
-import type { KaylaProviderConfig } from './provider';
+import type { KaylaChatResponse, KaylaKnowledgeResult, KaylaErrorType, KaylaConfig, KaylaRouteMode, KaylaSafeAction, KaylaLane } from '../../data/kayla/types';
+import { createProvider, createAIProvider, createProviderChain } from './provider';
+import type { KaylaProviderConfig, KaylaChainRoute } from './provider';
 import { createKaylaConfig, isAIEnabled } from './config';
 import { validateChatRequest, isPromptInjectionAttempt } from './validate';
 import { checkRateLimit } from './rateLimit';
@@ -14,6 +14,7 @@ import { buildTaskPlan, type KaylaTaskPlan } from './task-planner';
 import { resolveConversation } from './conversation';
 import { conversationAnswer, rankConversationActions } from './conversation-answer';
 import { buildGroundingPacket, verifyGroundedSlots } from './grounding';
+import { classifyLane } from './lanes';
 import {
   classifyProviderError,
   emptyDiagnostics,
@@ -69,11 +70,18 @@ function localActions(result?: KaylaKnowledgeResult, taskPlan?: KaylaTaskPlan) {
  * not decide whether something is downloadable, what version is public, or
  * whether Kayla can report the weather — and calling one to restate a fact the
  * site already owns spends provider budget for nothing.
+ *
+ * Kayla 2.0: 'unsupported_task' is no longer in this set. The tasks it used to
+ * refuse outright — write code, diagnose a machine, draft prose — are
+ * ordinary general-assistant work now, so an unsettled boundary result falls
+ * through to the lane classifier like anything else. The two boundaries that
+ * remain real (acting on the visitor's device, managing accounts/credentials)
+ * still arrive settled from the canonical layer and never reach a provider.
  */
 const DETERMINISTIC_INTENTS = new Set([
   'status_taxonomy', 'availability', 'version', 'status', 'pricing', 'support', 'contact',
   'navigation', 'privacy', 'founder', 'assistant_identity', 'external_current',
-  'private_info', 'unsupported_task'
+  'private_info'
 ]);
 
 /**
@@ -179,17 +187,48 @@ function logCanonRejection(kinds: string[]): void {
 }
 
 /**
+ * The generic public copy for the two states that can reach a visitor. No
+ * provider names, no route names, no quota or failure-class detail — the
+ * specific failure is server-side diagnostics, not visitor copy.
+ */
+export const GENERAL_UNAVAILABLE =
+  "Kayla is temporarily unavailable for that request. Please try again in a moment.";
+
+const UNSAFE_REFUSAL =
+  "I can't help with that request. Is there something else I can help you with?";
+
+/**
  * Accept generated text only when it agrees with canonical FDS data.
  * Returns the text to use, and whether the model's version was discarded.
+ *
+ * Kayla 2.0: `lane` decides which checks apply. The FDS lanes ('fds', 'mixed')
+ * keep the full battery — grounded slots plus strict canon verification —
+ * because every generated sentence is expected to respect FDS facts. The
+ * general lane runs shape checks (with code fences allowed: coding answers
+ * need them) and the entity-scoped canon verifier, so an answer about
+ * recursion is not rejected for containing a version number, while a
+ * hallucinated "CodeForge v9" inside a general answer still is.
  */
-function acceptGenerated(text: string, sources: KaylaKnowledgeResult[] = []): { accepted: boolean; kinds: string[] } {
+function acceptGenerated(
+  text: string,
+  sources: KaylaKnowledgeResult[] = [],
+  lane: KaylaLane = 'fds'
+): { accepted: boolean; kinds: string[] } {
   // Shape before substance. Canonical verification asks whether an answer is
   // true, which it cannot do for text that makes no claim — raw tool-call
   // scaffolding passed verification in production and was served to a visitor.
-  const shape = checkAnswerShape(text);
+  const shape = checkAnswerShape(text, { allowCodeFences: lane === 'general' });
   if (!shape.ok) {
     logCanonRejection(shape.kinds);
     return { accepted: false, kinds: shape.kinds };
+  }
+
+  if (lane === 'general') {
+    const verdict = verifyAgainstCanon(text, 'general');
+    if (verdict.ok) return { accepted: true, kinds: [] };
+    const kinds = [...new Set(verdict.violations.map((violation) => violation.kind))];
+    logCanonRejection(kinds);
+    return { accepted: false, kinds };
   }
 
   // The canonical verifier protects the known FDS facts. The grounding packet
@@ -203,7 +242,7 @@ function acceptGenerated(text: string, sources: KaylaKnowledgeResult[] = []): { 
     return { accepted: false, kinds: grounded.kinds };
   }
 
-  const verdict = verifyAgainstCanon(text);
+  const verdict = verifyAgainstCanon(text, 'strict');
   if (verdict.ok) return { accepted: true, kinds: [] };
   const kinds = [...new Set(verdict.violations.map((violation) => violation.kind))];
   logCanonRejection(kinds);
@@ -236,13 +275,6 @@ function reportDiagnostics(
   } catch { /* diagnostics must never break a response */ }
 }
 
-/** Classify a thrown provider error into a failure class plus upstream status. */
-function providerFailureFrom(error: unknown): Pick<KaylaDiagnostics, 'providerFailure' | 'upstreamStatus'> {
-  const message = error instanceof Error ? error.message : String(error ?? '');
-  const { code, status } = parseProviderError(message);
-  return { providerFailure: classifyProviderError(code), upstreamStatus: status };
-}
-
 function localResponse(topResult?: KaylaKnowledgeResult, routeMode?: KaylaRouteMode, taskPlan?: KaylaTaskPlan) {
   const acts = localActions(topResult, taskPlan);
   const srcLinks = topResult ? toKaylaSources([topResult]) : (taskPlan?.recommendedSources || []);
@@ -254,6 +286,168 @@ function localResponse(topResult?: KaylaKnowledgeResult, routeMode?: KaylaRouteM
     sourceLinks: srcLinks,
     routeMode: routeMode ?? classifyLocalRoute(topResult)
   };
+}
+
+/**
+ * The degraded-mode answer when every inference route is down. FDS lanes
+ * still have local knowledge to serve, so the visitor gets the best public
+ * snippet rather than a bare refusal; the general lane has nothing else to
+ * serve and must say so generically. Neither copy names what failed.
+ */
+function degradedAnswer(topResult: KaylaKnowledgeResult | undefined, lane: KaylaLane): string {
+  if (lane !== 'general' && topResult?.snippet) {
+    return `I can't give you the full answer right now, but here's what the public FDS knowledge says:\n\n${topResult.snippet}`;
+  }
+  return GENERAL_UNAVAILABLE;
+}
+
+/**
+ * Resolve the inference chain for this endpoint. A configured route list
+ * goes through the full chain builder; a bare provider/model goes through
+ * the original single-provider factory — which is also the seam the scripted
+ * test suite intercepts, so tests that mock createAIProvider keep proving
+ * the routing behaviour they were written for.
+ */
+function providerChainFor(providerConfig: KaylaProviderConfig): KaylaChainRoute[] {
+  if (providerConfig.routes?.length) return createProviderChain(providerConfig);
+  const provider = createAIProvider(providerConfig);
+  if (!provider) return [];
+  return [{
+    route: {
+      id: `${providerConfig.provider}:${providerConfig.model}`,
+      provider: providerConfig.provider || '',
+      model: providerConfig.model || '',
+      apiKey: providerConfig.apiKey,
+      endpoint: providerConfig.endpoint
+    },
+    provider
+  }];
+}
+
+/**
+ * AI is usable when the deployment is enabled AND some credential path
+ * exists: the legacy single-provider key, or at least one configured route
+ * carrying a key. Route-chain deployments store keys per provider
+ * (GROQ_API_KEY, ...) and leave KAYLA_API_KEY empty — without this, a chain
+ * deployment reads as "AI disabled" and every general-lane question answers
+ * unavailable even though two working routes are configured.
+ */
+function aiUsable(config: KaylaEndpointConfig): boolean {
+  const kaylaConfig = config.kaylaConfig;
+  if (!kaylaConfig?.enabled) return false;
+  if (isAIEnabled(kaylaConfig)) return true;
+  return Boolean(config.providerConfig.routes?.some((route) => route.apiKey));
+}
+
+interface ChainAttempt {
+  ok: boolean;
+  /** Rejected by verification — FDS lanes replace with the local answer. */
+  rejected?: boolean;
+  rejectionKinds?: string[];
+  text?: string;
+  actions?: KaylaSafeAction[];
+  resolvedModel?: string;
+  /** Route id that produced `text`; undefined when nothing succeeded. */
+  routeId?: string;
+  attempted: string[];
+  lastFailure?: string;
+  upstreamStatus?: number;
+}
+
+/**
+ * Walk the admitted free-route chain, primary first. A route error (429,
+ * timeout, 5xx, network failure, malformed body) moves on to the next route —
+ * failover is silent to the visitor and fully visible in diagnostics.
+ *
+ * A verification rejection is different: for the general lane there is no
+ * canonical answer to replace the output with, so the next route is worth
+ * one attempt; for the FDS lanes the canonical answer is already a better
+ * answer than a different model's second guess, so the chain stops and the
+ * caller serves the local replacement.
+ */
+async function attemptChatChain(
+  chain: { route: { id: string }; provider: import('../../data/kayla/types').KaylaAIProvider }[],
+  request: { message: string; history: import('../../data/kayla/types').KaylaConversationMessage[]; context?: import('../../data/kayla/types').KaylaPageContext; sources: KaylaKnowledgeResult[]; lane: KaylaLane },
+  sources: KaylaKnowledgeResult[],
+  lane: KaylaLane
+): Promise<ChainAttempt> {
+  const attempted: string[] = [];
+  let lastFailure: string | undefined;
+  let upstreamStatus: number | undefined;
+
+  for (const { route, provider } of chain) {
+    attempted.push(route.id);
+    try {
+      const response = await provider.chat(request);
+      const verdict = acceptGenerated(response.content, sources, lane);
+      if (verdict.accepted) {
+        return { ok: true, text: response.content, actions: response.actions, resolvedModel: response.resolvedModel, routeId: route.id, attempted };
+      }
+      if (lane === 'general') {
+        lastFailure = `rejected:${verdict.kinds.join('|')}`;
+        continue;
+      }
+      return { ok: false, rejected: true, rejectionKinds: verdict.kinds, routeId: route.id, attempted };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error ?? '');
+      const { code, status } = parseProviderError(message);
+      lastFailure = code;
+      upstreamStatus = status;
+      continue;
+    }
+  }
+  return { ok: false, attempted, lastFailure, upstreamStatus };
+}
+
+/**
+ * Streaming twin of attemptChatChain. Each route's stream is fully buffered
+ * before acceptance — the same guarantee the single-provider path had — so a
+ * mid-stream failure just becomes the next route's turn, and nothing
+ * unverified ever reaches the wire.
+ */
+async function attemptStreamChain(
+  chain: { route: { id: string }; provider: import('../../data/kayla/types').KaylaAIProvider }[],
+  request: { message: string; history: import('../../data/kayla/types').KaylaConversationMessage[]; context?: import('../../data/kayla/types').KaylaPageContext; sources: KaylaKnowledgeResult[]; lane: KaylaLane },
+  sources: KaylaKnowledgeResult[],
+  lane: KaylaLane
+): Promise<ChainAttempt> {
+  const attempted: string[] = [];
+  let lastFailure: string | undefined;
+  let upstreamStatus: number | undefined;
+
+  for (const { route, provider } of chain) {
+    attempted.push(route.id);
+    if (!provider.stream) {
+      lastFailure = 'not_configured';
+      continue;
+    }
+    let buffered = '';
+    let errorCode: string | undefined;
+
+    for await (const chunk of provider.stream(request)) {
+      if (chunk.type === 'error') { errorCode = chunk.error; break; }
+      if (chunk.type === 'content' && chunk.content) buffered += chunk.content;
+      if (chunk.type === 'done') break;
+    }
+
+    if (errorCode || !buffered) {
+      const { code, status } = parseProviderError(errorCode ?? 'EMPTY_RESPONSE');
+      lastFailure = code;
+      upstreamStatus = status;
+      continue;
+    }
+
+    const verdict = acceptGenerated(buffered, sources, lane);
+    if (verdict.accepted) {
+      return { ok: true, text: buffered, routeId: route.id, attempted };
+    }
+    if (lane === 'general') {
+      lastFailure = `rejected:${verdict.kinds.join('|')}`;
+      continue;
+    }
+    return { ok: false, rejected: true, rejectionKinds: verdict.kinds, routeId: route.id, attempted };
+  }
+  return { ok: false, attempted, lastFailure, upstreamStatus };
 }
 
 export async function handleKaylaChat(
@@ -298,7 +492,7 @@ export async function handleKaylaChat(
     return {
       status: 200,
       response: {
-        answer: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions, our projects, and public resources. How can I help you learn about FDS?",
+        answer: UNSAFE_REFUSAL,
         mode: 'local',
         sources: [],
         sourceLinks: [],
@@ -335,22 +529,46 @@ export async function handleKaylaChat(
     };
   }
 
+  const intent = classifyIntent(message);
+  const lane = classifyLane({ message, intent, sources, entities: conversation.entities });
+
   const settled = deterministicAnswer(sources);
   if (settled) {
-    reportDiagnostics(config, settled, 'deterministic', taskDiag);
+    reportDiagnostics(config, settled, 'deterministic', { lane: 'deterministic', ...taskDiag });
     return { status: 200, response: localResponse(settled, 'deterministic', taskPlan) };
   }
 
-  if (!isAIEnabled(kaylaConfig)) {
+  if (!aiUsable(config)) {
+    // The general lane has no honest local answer at all — only the generic
+    // unavailable state. A mixed lane degrades to a local answer only when the
+    // top result is a composed canonical answer ("How is Topaz different from
+    // Sapphire?" still gets the canonical comparison); a bare retrieval hit
+    // only covers the FDS half of the question, so serving it alone would be
+    // a different answer than the visitor asked for.
+    const mixedHasAnswer = lane === 'mixed' && classifyLocalRoute(sources[0]) === 'deterministic';
+    if (lane === 'general' || (lane === 'mixed' && !mixedHasAnswer)) {
+      // 'no_results', not 'provider_failed_fallback': nothing local answered
+      // and no provider actually ran — the failure reason lives in
+      // fallbackReason, the route label stays honest about what executed.
+      reportDiagnostics(config, sources[0], 'no_results', { lane, fallbackReason: 'ai_disabled', ...taskDiag });
+      return {
+        status: 200,
+        response: { answer: GENERAL_UNAVAILABLE, mode: 'unavailable', sources: [], sourceLinks: [], routeMode: 'no_results' }
+      };
+    }
     const routeMode = classifyLocalRoute(sources[0]);
-    reportDiagnostics(config, sources[0], routeMode, { fallbackReason: 'ai_disabled', ...taskDiag });
+    reportDiagnostics(config, sources[0], routeMode, { lane, fallbackReason: 'ai_disabled', ...taskDiag });
     return { status: 200, response: localResponse(sources[0], undefined, taskPlan) };
   }
 
-  // Adaptive routing: only call provider when it would add value
-  if (!isProviderEligible(message, sources, config.providerConfig)) {
+  // Adaptive routing: the FDS lane only calls a provider when it would add
+  // anything beyond what canonical data and retrieval already produced. The
+  // general and mixed lanes always need inference — there is no local answer
+  // for them to fall back to quality-wise.
+  if (lane === 'fds' && !isProviderEligible(message, sources, config.providerConfig)) {
     const routeMode = classifyLocalRoute(sources[0]);
     reportDiagnostics(config, sources[0], routeMode, {
+      lane,
       providerAttempted: false,
       providerOutcome: 'not_attempted',
       fallbackReason: 'deterministic_or_retrieval_sufficient',
@@ -359,15 +577,16 @@ export async function handleKaylaChat(
     return { status: 200, response: localResponse(sources[0], undefined, taskPlan) };
   }
 
-  const aiProvider = createAIProvider(config.providerConfig);
-  if (!aiProvider) {
+  const chain = providerChainFor(config.providerConfig);
+  if (!chain.length) {
     reportDiagnostics(config, sources[0], 'provider_failed_fallback', {
+      lane,
       providerOutcome: 'failed',
       providerFailure: 'not_configured',
       fallbackReason: 'provider_not_constructed',
       ...taskDiag
     });
-    return { status: 200, response: localResponse(sources[0], 'provider_failed_fallback', taskPlan) };
+    return degradedJson(sources[0], lane, taskPlan);
   }
 
   // The local daily allowance is spent before the provider is ever contacted,
@@ -376,88 +595,111 @@ export async function handleKaylaChat(
   // live-provider gap could only be guessed at.
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     reportDiagnostics(config, sources[0], 'provider_failed_fallback', {
+      lane,
       providerOutcome: 'failed',
       providerFailure: 'budget_exhausted',
       fallbackReason: 'local_ai_budget_denied',
       ...taskDiag
     });
-    return { status: 200, response: localResponse(sources[0], 'provider_failed_fallback', taskPlan) };
+    return degradedJson(sources[0], lane, taskPlan);
   }
 
-  try {
-    const aiResponse = await aiProvider.chat({
-      message,
-      history,
-      context,
-      sources
-    });
+  const attempt = await attemptChatChain(
+    chain,
+    { message, history, context, sources, lane },
+    sources,
+    lane
+  );
 
+  if (attempt.rejected) {
     // The model may phrase a canonical fact; it may not change one. When the
     // generated answer contradicts the site's data, the canonical answer that
     // was already computed above is served instead.
-    const verdict = acceptGenerated(aiResponse.content, sources);
-    if (!verdict.accepted) {
-      reportDiagnostics(config, sources[0], 'provider_replaced', {
-        providerAttempted: true,
-        providerOutcome: 'rejected_replaced',
-        verificationOutcome: 'rejected',
-        verificationKinds: verdict.kinds,
-        fallbackReason: 'canonical_verification_rejected',
-        ...taskDiag
-      });
-      return { status: 200, response: localResponse(sources[0], 'provider_replaced', taskPlan) };
-    }
+    reportDiagnostics(config, sources[0], 'provider_replaced', {
+      lane,
+      providerAttempted: true,
+      providerOutcome: 'rejected_replaced',
+      verificationOutcome: 'rejected',
+      verificationKinds: attempt.rejectionKinds,
+      fallbackReason: 'canonical_verification_rejected',
+      providerRoute: attempt.routeId,
+      attemptedRoutes: attempt.attempted,
+      ...taskDiag
+    });
+    return { status: 200, response: localResponse(sources[0], 'provider_replaced', taskPlan) };
+  }
 
-    const finalActions = taskPlan.recommendedActions.length > 0
+  if (!attempt.ok) {
+    const { code, status } = attempt.lastFailure
+      ? parseProviderError(attempt.lastFailure)
+      : { code: 'EMPTY_RESPONSE', status: attempt.upstreamStatus };
+    reportDiagnostics(config, sources[0], 'provider_failed_fallback', {
+      lane,
+      providerAttempted: true,
+      providerOutcome: 'failed',
+      providerFailure: classifyProviderError(code),
+      upstreamStatus: status ?? attempt.upstreamStatus,
+      fallbackReason: 'all_routes_failed',
+      attemptedRoutes: attempt.attempted,
+      ...taskDiag
+    });
+    return degradedJson(sources[0], lane, taskPlan);
+  }
+
+  const finalActions = lane === 'general'
+    ? undefined
+    : taskPlan.recommendedActions.length > 0
       ? dedupeActions(taskPlan.recommendedActions)?.slice(0, 3)
       : localActions(sources[0], taskPlan);
 
-    reportDiagnostics(config, sources[0], 'provider_accepted', {
-      providerAttempted: true,
-      providerOutcome: 'accepted',
-      verificationOutcome: 'passed',
-      sourceCount: toKaylaSources(sources).length,
-      actionCount: finalActions?.length ?? 0,
-      resolvedModel: aiResponse.resolvedModel,
-      ...taskDiag
-    });
-    return {
-      status: 200,
-      response: {
-        answer: aiResponse.content,
-        actions: finalActions,
-        mode: 'ai',
-        sources: sources.slice(0, 3).map(s => ({
-          id: s.id || s.title,
-          title: s.title,
-          type: s.type,
-          route: s.route
-        })),
-        sourceLinks: toKaylaSources(sources),
-        routeMode: 'provider_accepted'
-      }
-    };
-  } catch (error) {
-    const topResult = sources[0];
-    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
-      providerAttempted: true,
-      providerOutcome: 'failed',
-      fallbackReason: 'provider_threw',
-      ...providerFailureFrom(error),
-      ...taskDiag
-    });
-    return {
-      status: 200,
-      response: {
-        answer: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
-        actions: localActions(topResult, taskPlan),
-        mode: 'local',
-        routeMode: 'provider_failed_fallback',
-        sourceLinks: topResult ? toKaylaSources([topResult]) : [],
-        sources: topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
-      }
-    };
-  }
+  reportDiagnostics(config, sources[0], 'provider_accepted', {
+    lane,
+    providerAttempted: true,
+    providerOutcome: 'accepted',
+    verificationOutcome: 'passed',
+    sourceCount: lane === 'general' ? 0 : toKaylaSources(sources).length,
+    actionCount: finalActions?.length ?? 0,
+    resolvedModel: attempt.resolvedModel,
+    providerRoute: attempt.routeId,
+    attemptedRoutes: attempt.attempted,
+    ...taskDiag
+  });
+  return {
+    status: 200,
+    response: {
+      answer: attempt.text!,
+      actions: finalActions,
+      mode: 'ai',
+      sources: lane === 'general' ? [] : sources.slice(0, 3).map(s => ({
+        id: s.id || s.title,
+        title: s.title,
+        type: s.type,
+        route: s.route
+      })),
+      sourceLinks: lane === 'general' ? [] : toKaylaSources(sources),
+      routeMode: 'provider_accepted'
+    }
+  };
+}
+
+function degradedJson(
+  topResult: KaylaKnowledgeResult | undefined,
+  lane: KaylaLane,
+  taskPlan?: KaylaTaskPlan
+): { status: number; response: KaylaChatResponse } {
+  const answer = degradedAnswer(topResult, lane);
+  const hasLocal = lane !== 'general' && Boolean(topResult?.snippet);
+  return {
+    status: 200,
+    response: {
+      answer,
+      actions: hasLocal ? localActions(topResult, taskPlan) : undefined,
+      mode: hasLocal ? 'local' : 'unavailable',
+      routeMode: 'provider_failed_fallback',
+      sourceLinks: hasLocal && topResult ? toKaylaSources([topResult]) : [],
+      sources: hasLocal && topResult?.id ? [{ id: topResult.id, title: topResult.title, type: topResult.type, route: topResult.route }] : []
+    }
+  };
 }
 
 export async function* streamKaylaChat(
@@ -490,7 +732,7 @@ export async function* streamKaylaChat(
   if (isPromptInjectionAttempt(message) || isSensitiveQuery(message)) {
     reportDiagnostics(config, undefined, 'deterministic', { fallbackReason: 'refused_unsafe_request', ...taskDiag });
     yield JSON.stringify({
-      content: "I can't help with that request. I'm here to answer questions about Forger Digital Solutions.",
+      content: UNSAFE_REFUSAL,
       mode: 'local',
       done: true,
       routeMode: 'deterministic',
@@ -507,16 +749,31 @@ export async function* streamKaylaChat(
   taskPlan.recommendedActions = actions;
   if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };
 
+  const intent = classifyIntent(message);
+  const lane = classifyLane({ message, intent, sources, entities: conversation.entities });
+
   const settled = deterministicAnswer(sources);
   if (settled) {
-    reportDiagnostics(config, settled, 'deterministic', taskDiag);
+    reportDiagnostics(config, settled, 'deterministic', { lane: 'deterministic', ...taskDiag });
     yield JSON.stringify({ content: settled.snippet, actions: localActions(settled, taskPlan), mode: 'local', done: true, routeMode: 'deterministic', sourceLinks: toKaylaSources([settled]) });
     return;
   }
 
-  if (!isAIEnabled(kaylaConfig)) {
+  if (!aiUsable(config)) {
+    const mixedHasAnswer = lane === 'mixed' && classifyLocalRoute(sources[0]) === 'deterministic';
+    if (lane === 'general' || (lane === 'mixed' && !mixedHasAnswer)) {
+      reportDiagnostics(config, sources[0], 'no_results', { lane, fallbackReason: 'ai_disabled', ...taskDiag });
+      yield JSON.stringify({
+        content: GENERAL_UNAVAILABLE,
+        mode: 'unavailable',
+        done: true,
+        routeMode: 'no_results',
+        sourceLinks: []
+      });
+      return;
+    }
     const topResult = sources[0];
-    reportDiagnostics(config, topResult, classifyLocalRoute(topResult), { fallbackReason: 'ai_disabled', ...taskDiag });
+    reportDiagnostics(config, topResult, classifyLocalRoute(topResult), { lane, fallbackReason: 'ai_disabled', ...taskDiag });
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
       actions: localActions(topResult, taskPlan),
@@ -528,14 +785,17 @@ export async function* streamKaylaChat(
     return;
   }
 
-  // Adaptive routing: only call provider when it would add value
-  if (!isProviderEligible(message, sources, config.providerConfig)) {
+  // Adaptive routing: the FDS lane only calls a provider when it would add
+  // value; general and mixed lanes always need inference.
+  if (lane === 'fds' && !isProviderEligible(message, sources, config.providerConfig)) {
     const topResult = sources[0];
     const routeMode = classifyLocalRoute(topResult);
     reportDiagnostics(config, topResult, routeMode, {
+      lane,
       providerAttempted: false,
       providerOutcome: 'not_attempted',
-      fallbackReason: 'deterministic_or_retrieval_sufficient'
+      fallbackReason: 'deterministic_or_retrieval_sufficient',
+      ...taskDiag
     });
     yield JSON.stringify({
       content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
@@ -548,22 +808,17 @@ export async function* streamKaylaChat(
     return;
   }
 
-  const aiProvider = createAIProvider(config.providerConfig);
-  if (!aiProvider || !aiProvider.stream) {
+  const chain = providerChainFor(config.providerConfig);
+  if (!chain.length) {
     const topResult = sources[0];
     reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      lane,
       providerOutcome: 'failed',
       providerFailure: 'not_configured',
-      fallbackReason: 'provider_not_constructed'
+      fallbackReason: 'provider_not_constructed',
+      ...taskDiag
     });
-    yield JSON.stringify({
-      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-      actions: localActions(topResult),
-      mode: 'local',
-      done: true,
-      routeMode: 'provider_failed_fallback',
-      sourceLinks: topResult ? toKaylaSources([topResult]) : []
-    });
+    yield JSON.stringify(degradedStreamChunk(topResult, lane, taskPlan));
     return;
   }
 
@@ -572,126 +827,108 @@ export async function* streamKaylaChat(
   if (config.consumeAIAllowance && !(await config.consumeAIAllowance())) {
     const topResult = sources[0];
     reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      lane,
       providerOutcome: 'failed',
       providerFailure: 'budget_exhausted',
-      fallbackReason: 'local_ai_budget_denied'
+      fallbackReason: 'local_ai_budget_denied',
+      ...taskDiag
     });
-    yield JSON.stringify({ content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.", actions: localActions(topResult), mode: 'local', done: true, routeMode: 'provider_failed_fallback', sourceLinks: topResult ? toKaylaSources([topResult]) : [] });
+    yield JSON.stringify(degradedStreamChunk(topResult, lane, taskPlan));
     return;
   }
 
-  try {
-    let providerFailed = false;
-    let providerContentReceived = false;
-    let bufferedText = '';
-    let providerErrorCode: string | undefined;
-    const topResult = sources[0];
+  const attempt = await attemptStreamChain(
+    chain,
+    { message, history, context, sources, lane },
+    sources,
+    lane
+  );
+  const topResult = sources[0];
 
-    for await (const chunk of aiProvider.stream({ message, history, context, sources })) {
-      if (chunk.type === 'error') {
-        providerFailed = true;
-        providerErrorCode = chunk.error;
-        break;
-      }
-
-      if (chunk.type === 'content' && chunk.content) {
-        providerContentReceived = true;
-        bufferedText += chunk.content;
-      }
-
-      if (chunk.type === 'done') {
-        if (!providerContentReceived) {
-          providerFailed = true;
-          providerErrorCode = providerErrorCode ?? 'EMPTY_RESPONSE';
-        }
-        break;
-      }
-    }
-
-    if (providerFailed || !providerContentReceived) {
-      const { code, status } = parseProviderError(providerErrorCode ?? 'EMPTY_RESPONSE');
-      reportDiagnostics(config, topResult, 'provider_failed_fallback', {
-        providerAttempted: true,
-        providerOutcome: 'failed',
-        providerFailure: classifyProviderError(code),
-        upstreamStatus: status,
-        fallbackReason: 'provider_stream_failed',
-        ...taskDiag
-      });
-      const fallback = {
-        content: `Kayla's conversational AI is temporarily unavailable, but I can still answer from the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
-        actions: localActions(topResult, taskPlan),
-        mode: 'local',
-        done: true,
-        replace: true,
-        routeMode: 'provider_failed_fallback',
-        sourceLinks: topResult ? toKaylaSources([topResult]) : []
-      };
-      yield JSON.stringify(fallback);
-      return;
-    }
-
-    // Full buffer canonical verification: never stream unverified tokens to the visitor
-    const verdict = acceptGenerated(bufferedText, sources);
-    if (!verdict.accepted) {
-      reportDiagnostics(config, topResult, 'provider_replaced', {
-        providerAttempted: true,
-        providerOutcome: 'rejected_replaced',
-        verificationOutcome: 'rejected',
-        verificationKinds: verdict.kinds,
-        fallbackReason: 'canonical_verification_rejected',
-        ...taskDiag
-      });
-      yield JSON.stringify({
-        replace: true,
-        content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
-        actions: localActions(topResult, taskPlan),
-        mode: 'local',
-        done: true,
-        routeMode: 'provider_replaced',
-        sourceLinks: topResult ? toKaylaSources([topResult]) : []
-      });
-      return;
-    }
-
-    const finalActions = taskPlan.recommendedActions.length > 0
-      ? dedupeActions(taskPlan.recommendedActions)?.slice(0, 3)
-      : localActions(topResult, taskPlan);
-
-    // Verified output: safe to emit
-    reportDiagnostics(config, topResult, 'provider_accepted', {
+  if (attempt.rejected) {
+    reportDiagnostics(config, topResult, 'provider_replaced', {
+      lane,
       providerAttempted: true,
-      providerOutcome: 'accepted',
-      verificationOutcome: 'passed',
-      sourceCount: toKaylaSources(sources).length,
-      actionCount: finalActions?.length ?? 0,
-      ...taskDiag
-    });
-    yield JSON.stringify({ mode: 'ai', actions: finalActions });
-    yield JSON.stringify({ type: 'content', content: bufferedText });
-    yield JSON.stringify({
-      type: 'done',
-      done: true,
-      routeMode: 'provider_accepted',
-      sourceLinks: taskPlan.recommendedSources.length > 0 ? taskPlan.recommendedSources : toKaylaSources(sources)
-    });
-  } catch (error) {
-    const topResult = sources[0];
-    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
-      providerAttempted: true,
-      providerOutcome: 'failed',
-      fallbackReason: 'provider_threw',
-      ...providerFailureFrom(error),
+      providerOutcome: 'rejected_replaced',
+      verificationOutcome: 'rejected',
+      verificationKinds: attempt.rejectionKinds,
+      fallbackReason: 'canonical_verification_rejected',
+      providerRoute: attempt.routeId,
+      attemptedRoutes: attempt.attempted,
       ...taskDiag
     });
     yield JSON.stringify({
-      content: `Kayla's conversational AI is temporarily unavailable, but I can still search the FDS knowledge base.\n\n${topResult?.snippet || ''}`,
+      replace: true,
+      content: topResult?.snippet || "I couldn't find that in the current public FDS knowledge base.",
       actions: localActions(topResult, taskPlan),
       mode: 'local',
       done: true,
-      replace: true,
-      routeMode: 'provider_failed_fallback',
+      routeMode: 'provider_replaced',
       sourceLinks: topResult ? toKaylaSources([topResult]) : []
     });
+    return;
   }
+
+  if (!attempt.ok) {
+    const { code, status } = attempt.lastFailure
+      ? parseProviderError(attempt.lastFailure)
+      : { code: 'EMPTY_RESPONSE', status: attempt.upstreamStatus };
+    reportDiagnostics(config, topResult, 'provider_failed_fallback', {
+      lane,
+      providerAttempted: true,
+      providerOutcome: 'failed',
+      providerFailure: classifyProviderError(code),
+      upstreamStatus: status ?? attempt.upstreamStatus,
+      fallbackReason: 'all_routes_failed',
+      attemptedRoutes: attempt.attempted,
+      ...taskDiag
+    });
+    const degraded = degradedStreamChunk(topResult, lane, taskPlan);
+    yield JSON.stringify({ ...degraded, replace: true });
+    return;
+  }
+
+  const finalActions = lane === 'general'
+    ? undefined
+    : taskPlan.recommendedActions.length > 0
+      ? dedupeActions(taskPlan.recommendedActions)?.slice(0, 3)
+      : localActions(topResult, taskPlan);
+
+  // Verified output: safe to emit
+  reportDiagnostics(config, topResult, 'provider_accepted', {
+    lane,
+    providerAttempted: true,
+    providerOutcome: 'accepted',
+    verificationOutcome: 'passed',
+    sourceCount: lane === 'general' ? 0 : toKaylaSources(sources).length,
+    actionCount: finalActions?.length ?? 0,
+    providerRoute: attempt.routeId,
+    attemptedRoutes: attempt.attempted,
+    ...taskDiag
+  });
+  yield JSON.stringify({ mode: 'ai', actions: finalActions });
+  yield JSON.stringify({ type: 'content', content: attempt.text });
+  yield JSON.stringify({
+    type: 'done',
+    done: true,
+    routeMode: 'provider_accepted',
+    sourceLinks: lane === 'general' ? [] : (taskPlan.recommendedSources.length > 0 ? taskPlan.recommendedSources : toKaylaSources(sources))
+  });
+}
+
+function degradedStreamChunk(
+  topResult: KaylaKnowledgeResult | undefined,
+  lane: KaylaLane,
+  taskPlan?: KaylaTaskPlan
+): Record<string, unknown> {
+  const answer = degradedAnswer(topResult, lane);
+  const hasLocal = lane !== 'general' && Boolean(topResult?.snippet);
+  return {
+    content: answer,
+    actions: hasLocal ? localActions(topResult, taskPlan) : undefined,
+    mode: hasLocal ? 'local' : 'unavailable',
+    done: true,
+    routeMode: 'provider_failed_fallback',
+    sourceLinks: hasLocal && topResult ? toKaylaSources([topResult]) : []
+  };
 }

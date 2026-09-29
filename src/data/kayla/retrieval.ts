@@ -457,8 +457,8 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
   addDoc({
     id: 'kayla-copilot',
     type: 'general',
-    title: 'Kayla Copilot',
-    text: 'Kayla Copilot is the guide embedded in the Forger Digital Solutions website. She answers questions about FDS, its projects, statuses, releases, downloads, navigation, and support routes using published FDS information. She is not Kayla AI Publisher, which is a separate FDS creative and publishing product, and she has no live external data.',
+    title: 'Kayla',
+    text: 'Kayla is the general AI assistant on the Forger Digital Solutions website. She can help with general questions and public information about FDS, its projects, releases, navigation, and support. Kayla AI Publisher is a separate FDS creative and publishing product. Kayla has no live external data.',
     route: '/',
     entityId: 'kayla-copilot',
     tags: ['kayla', 'copilot', 'kayla copilot', 'assistant', 'guide'],

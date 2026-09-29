@@ -52,20 +52,40 @@ function chatRequest(body: unknown, { stream = false, origin = ORIGIN, ip = '203
 }
 
 describe('Kayla Worker - health', () => {
-  it('reports readiness and the zero-cost model policy', async () => {
+  it('reports only a generic liveness signal to the public', async () => {
     const response = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), makeEnv(), ctx);
     expect(response.status).toBe(200);
     const body = await response.json() as Record<string, unknown>;
-    expect(body.knowledgeReady).toBe(true);
-    expect(typeof body.knowledgeVersion).toBe('string');
-    expect(body.knowledgeVersion).toHaveLength(16);
-    expect(body.modelPolicy).toBe('zero-cost-only');
-    expect(body.rateLimiter).toBe('ready');
+    expect(body.status).toBe('ok');
+    expect(body.streaming).toBe(true);
+    // Kayla 2.0: providers, routes, quotas, versions, and budgets are operator
+    // internals — none of them may appear in the public health body.
+    for (const internal of ['knowledgeReady', 'knowledgeVersion', 'aiEnabled', 'aiConfigured', 'aiAvailable', 'aiDailyLimit', 'aiDailyUsed', 'aiDailyRemaining', 'provider', 'model', 'modelPolicy', 'routes', 'rateLimiter']) {
+      expect(body[internal], `public health leaked ${internal}`).toBeUndefined();
+    }
   });
 
-  it('never returns a provider key', async () => {
-    const response = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), makeEnv({ KAYLA_API_KEY: 'sk-or-v1-secret-value' }), ctx);
-    expect(await response.text()).not.toContain('sk-or');
+  it('exposes operator detail only behind the ops token', async () => {
+    const env = makeEnv({ KAYLA_OPS_TOKEN: 'ops-secret-token' });
+    const publicRes = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), env, ctx);
+    expect((await publicRes.json() as Record<string, unknown>).knowledgeVersion).toBeUndefined();
+    const opsRes = await worker.fetch(
+      new Request('https://kayla-api.test/api/kayla/health', { headers: { 'X-Kayla-Ops': 'ops-secret-token' } }),
+      env, ctx
+    );
+    const ops = await opsRes.json() as Record<string, unknown>;
+    expect(ops.knowledgeReady).toBe(true);
+    expect(ops.modelPolicy).toBe('zero-cost-only');
+    expect(ops.rateLimiter).toBe('ready');
+    expect(Array.isArray(ops.routes)).toBe(true);
+  });
+
+  it('never returns a provider key, to the public or to an operator', async () => {
+    const env = makeEnv({ KAYLA_API_KEY: 'sk-or-v1-secret-value', GROQ_API_KEY: 'gsk-secret-groq-value', KAYLA_OPS_TOKEN: 'ops' });
+    const publicRes = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health'), env, ctx);
+    expect(await publicRes.text()).not.toMatch(/sk-or|gsk-/);
+    const opsRes = await worker.fetch(new Request('https://kayla-api.test/api/kayla/health', { headers: { 'X-Kayla-Ops': 'ops' } }), env, ctx);
+    expect(await opsRes.text()).not.toMatch(/sk-or|gsk-/);
   });
 });
 

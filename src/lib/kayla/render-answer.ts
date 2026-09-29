@@ -117,6 +117,76 @@ function appendBlock(container: HTMLElement, block: string): void {
 }
 
 /**
+ * Kayla 2.0 — fenced code blocks.
+ *
+ * General-lane answers may legitimately contain code: "write a debounce
+ * function" needs the fence the FDS lanes never use. Split the raw text on
+ * triple-backtick fences before block parsing so a fence's contents are never
+ * line-parsed into fake paragraphs or lists. Fence content is rendered as
+ * inert text inside <pre><code> with a small copy affordance — still no HTML
+ * parsing anywhere in the pipeline.
+ */
+const FENCE_SPLIT = /```([a-zA-Z0-9+#.-]{0,20})?\n?([\s\S]*?)(?:```|$)/g;
+
+interface Segment { kind: 'prose' | 'code'; content: string; lang?: string }
+
+function splitSegments(text: string): Segment[] {
+  const segments: Segment[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  FENCE_SPLIT.lastIndex = 0;
+  while ((match = FENCE_SPLIT.exec(text))) {
+    if (match.index > lastIndex) {
+      segments.push({ kind: 'prose', content: text.slice(lastIndex, match.index) });
+    }
+    segments.push({ kind: 'code', content: match[2], lang: match[1] || undefined });
+    lastIndex = FENCE_SPLIT.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    segments.push({ kind: 'prose', content: text.slice(lastIndex) });
+  }
+  return segments;
+}
+
+function appendCodeBlock(container: HTMLElement, content: string, lang?: string): void {
+  const wrap = document.createElement('div');
+  wrap.className = 'kayla-code';
+
+  const pre = document.createElement('pre');
+  pre.className = 'kayla-code__pre';
+  const code = document.createElement('code');
+  code.className = 'kayla-code__body';
+  // The language tag is cosmetic context for a later syntax pass; it is set
+  // as a data attribute, never printed as prose into the answer.
+  if (lang) code.dataset.lang = lang;
+  code.textContent = content.replace(/\n+$/, '');
+  pre.appendChild(code);
+  wrap.appendChild(pre);
+
+  const copy = document.createElement('button');
+  copy.type = 'button';
+  copy.className = 'kayla-copy-btn';
+  copy.setAttribute('aria-label', 'Copy code');
+  copy.textContent = 'Copy';
+  copy.addEventListener('click', () => {
+    const done = () => {
+      copy.textContent = 'Copied';
+      copy.disabled = true;
+      setTimeout(() => { copy.textContent = 'Copy'; copy.disabled = false; }, 1600);
+    };
+    try {
+      navigator.clipboard.writeText(code.textContent || '').then(done, done);
+    } catch {
+      // Clipboard API unavailable (insecure context, denied): leave the
+      // button functional-looking but harmless rather than erroring a reader.
+      done();
+    }
+  });
+  wrap.appendChild(copy);
+  container.appendChild(wrap);
+}
+
+/**
  * Render Kayla's answer text into `container` as safe, structured DOM.
  * Clears any previously-rendered nodes first (removeChild, not innerHTML —
  * this module never assigns HTML, even to clear its own prior output).
@@ -124,10 +194,21 @@ function appendBlock(container: HTMLElement, block: string): void {
 export function renderKaylaAnswer(container: HTMLElement, text: string): void {
   while (container.firstChild) container.removeChild(container.firstChild);
 
-  const blocks = text.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean);
-  if (blocks.length === 0) {
-    container.appendChild(document.createTextNode(text));
-    return;
+  const segments = splitSegments(text);
+  let rendered = false;
+  for (const segment of segments) {
+    if (segment.kind === 'code') {
+      appendCodeBlock(container, segment.content, segment.lang);
+      rendered = true;
+      continue;
+    }
+    const blocks = segment.content.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean);
+    for (const block of blocks) {
+      appendBlock(container, block);
+      rendered = true;
+    }
   }
-  for (const block of blocks) appendBlock(container, block);
+  if (!rendered) {
+    container.appendChild(document.createTextNode(text));
+  }
 }

@@ -66,9 +66,10 @@ describe('Diagnostics never carry visitor content', () => {
       { ...offline, onDiagnostics: (d) => captured.push(d) }
     );
     const allowed = new Set([
-      'routeMode', 'intent', 'entity', 'providerAttempted', 'providerOutcome', 'providerFailure',
-      'upstreamStatus', 'verificationOutcome', 'verificationKinds', 'fallbackReason', 'sourceCount', 'actionCount',
-      'goal', 'plannedEntityCount'
+      'routeMode', 'intent', 'entity', 'lane', 'providerAttempted', 'providerOutcome', 'providerFailure',
+      'upstreamStatus', 'providerRoute', 'attemptedRoutes', 'resolvedModel',
+      'verificationOutcome', 'verificationKinds', 'fallbackReason', 'sourceCount', 'actionCount',
+      'goal', 'plannedEntityCount', 'contextCharsBudget'
     ]);
     for (const key of Object.keys(captured[0])) {
       expect(allowed.has(key), `unexpected diagnostics field: ${key}`).toBe(true);
@@ -107,7 +108,7 @@ describe('Worker logging surface', () => {
     const stored = [...guardSource.matchAll(/storage\.put\(\{\s*([^}]*)\}/g)].map((match) => match[1]);
     expect(stored.length).toBeGreaterThan(0);
     for (const entry of stored) {
-      expect(entry).toMatch(/rate|ai-budget/);
+      expect(entry).toMatch(/rate|ai-budget|leases/);
     }
   });
 

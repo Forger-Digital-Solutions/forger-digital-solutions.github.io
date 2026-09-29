@@ -20,12 +20,33 @@ export interface ConversationContext {
   history: KaylaConversationMessage[];
 }
 
-// "that"/"this" as a bare demonstrative ("is that available?") refers back to
-// a prior entity; as a relative pronoun opening a restrictive clause
-// ("projects that have no download today") it names no entity at all — the
-// negative lookahead tells the two apart so ordinary prose isn't mistaken for
-// an unresolved reference.
-const REFERENTIAL = /\b(it|its|that(?!\s+(?:have|has|is|are|was|were|can|could|will|would|do|does|did|includes?|contains?|works?|runs?|supports?))|this(?!\s+(?:have|has|is|are|was|were|can|could|will|would|do|does|did|includes?|contains?|works?|runs?|supports?))|them|both|those|these|they|which one|other (one|project)|one you mentioned)\b/i;
+// "that"/"this" as a demonstrative ("is that available?", "what about that
+// coding thing?") refers back to a prior entity; as a relative pronoun
+// opening a restrictive clause ("projects that have no download", "a
+// function that reverses a string") it names no entity at all. Verbs can't
+// be enumerated, so the rule is positional: the token after that/this must
+// not open a clause (auxiliaries, and the -s verb form that third-person
+// relative clauses take), and the demonstrative resolves when it stands
+// alone, precedes an evaluative adjective, or heads a short modifier chain
+// ending in a referential noun.
+const DEMO_BLOCKED = /^(?:have|has|is|are|was|were|can|could|will|would|do|does|did|includes?|contains?|works?|runs?|supports?)$/i;
+const DEMO_RESOLVES = /^(?:one|thing|project|gems?|lineage|tool|apps?|applications?|product|version|option|model|platform|page|site|downloads?|release|build|feature|idea|approach|available|free|public|released|out|ready|safe|real|correct|true|right|good|better|different|same|enough|possible|downloadable|supported|open|working|live|useful|usable|yet|now|still|there|here|too)$/i;
+
+function demonstrativeReferential(text: string): boolean {
+  const tokens = normalize(text).split(' ').filter(Boolean);
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] !== 'that' && tokens[i] !== 'this') continue;
+    const next = tokens[i + 1];
+    if (!next || DEMO_RESOLVES.test(next)) return true;
+    if (DEMO_BLOCKED.test(next) || next.endsWith('s')) continue;
+    for (let j = i + 2; j <= Math.min(i + 4, tokens.length - 1); j++) {
+      if (DEMO_RESOLVES.test(tokens[j])) return true;
+      if (DEMO_BLOCKED.test(tokens[j]) || tokens[j].endsWith('s')) break;
+    }
+  }
+  return false;
+}
+const REFERENTIAL = /\b(it|its|them|both|either|those|these|they|which one|other (one|project)|one you mentioned)\b/i;
 const FOLLOWUP = /^(?:(?:okay|ok|and|but)\s+)*(?:why|how|and|more|what else|tell me more|go deeper|keep going|explain it simply|what do you mean|who is it for|why would i use that|would i use that|okay show me)[?.!\s]*$/i;
 const DEEP = /\b(tell me more|more|go deeper|keep going|how (does|do)|how|why|what else)\b/i;
 const BOUNDARY = new Set<KaylaIntent>(['private_info', 'external_current', 'unsupported_task', 'privacy', 'assistant_identity']);
@@ -113,7 +134,7 @@ export function resolveConversation(message: string, supplied: KaylaConversation
   const corrected = query !== message || /\b(no,? i meant|actually)\b/i.test(message);
   let ids = mentioned(query);
   const explicit = ids.length > 0;
-  const followUp = FOLLOWUP.test(query.trim()) || REFERENTIAL.test(query);
+  const followUp = FOLLOWUP.test(query.trim()) || REFERENTIAL.test(query) || demonstrativeReferential(query);
   const intent = classifyIntent(query);
   const currentGoal = goalFor(query);
   if (currentGoal !== 'unknown') goal = currentGoal;
@@ -130,7 +151,7 @@ export function resolveConversation(message: string, supplied: KaylaConversation
     }
   }
 
-  const plural = /\b(both|them|those|these|they|which one|which (?:of|project)|the two)\b/i.test(query);
+  const plural = /\b(both|either|them|those|these|they|which one|which (?:of|project)|the two)\b/i.test(query);
   const comparison = intent === 'comparison' || /\b(same thing|different|compare|relationship)\b/i.test(query);
   let candidates: string[] = [];
   if (!BOUNDARY.has(intent) && !isPromptInjectionAttempt(message)) {

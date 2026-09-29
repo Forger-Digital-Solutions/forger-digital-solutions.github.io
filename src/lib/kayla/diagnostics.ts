@@ -69,6 +69,21 @@ export interface KaylaDiagnostics {
    * provider. Tracked to measure context efficiency before/after optimization.
    */
   contextCharsBudget?: number;
+  /**
+   * Kayla 2.0: which lane handled the request ('deterministic' | 'fds' |
+   * 'mixed' | 'general'). Server-side routing evidence only — the public
+   * response and status text carry no lane labels.
+   */
+  lane?: string;
+  /**
+   * Kayla 2.0: the route id (e.g. "groq:qwen/qwen3.8-27b") that produced the
+   * accepted answer. Absent when no provider served.
+   */
+  providerRoute?: string;
+  /** Kayla 2.0: every route attempted before the outcome, in order. */
+  attemptedRoutes?: string[];
+  /** Kayla 2.0: the model the route resolved to upstream, when exposed. */
+  routeModel?: string;
 }
 
 export function emptyDiagnostics(): KaylaDiagnostics {

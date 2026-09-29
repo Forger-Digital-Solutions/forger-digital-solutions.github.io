@@ -6,6 +6,7 @@ interface DurableStateLike { storage: StorageLike; }
 
 interface RateState { minuteStart: number; minuteCount: number; hourStart: number; hourCount: number; }
 interface BudgetState { day: string; count: number; }
+interface ConcurrencyLease { id: string; expires: number; }
 
 export class KaylaAbuseGuard {
   constructor(private readonly state: DurableStateLike) {}
@@ -26,7 +27,42 @@ export class KaylaAbuseGuard {
     try { input = await request.json() as Record<string, unknown>; } catch { return Response.json({ allowed: false }, { status: 400 }); }
     if (url.pathname === '/rate') return this.consumeRate(input);
     if (url.pathname === '/ai-budget') return this.consumeBudget(input);
+    if (url.pathname === '/concurrency-acquire') return this.acquireConcurrency(input);
+    if (url.pathname === '/concurrency-release') return this.releaseConcurrency(input);
     return Response.json({ allowed: false }, { status: 404 });
+  }
+
+  /**
+   * Kayla 2.0 — global in-flight cap on inference work.
+   *
+   * A free provider allowance is finite; letting an unbounded number of
+   * streams run at once is how one busy minute turns into an exhausted day.
+   * Leases carry a TTL so a worker crash between acquire and release cannot
+   * permanently lower the ceiling — at worst the slot is held for 90s.
+   */
+  private async acquireConcurrency(input: Record<string, unknown>): Promise<Response> {
+    const now = finite(input.now, Date.now());
+    const limit = boundedInt(input.limit, 1, 64, 8);
+    const id = typeof input.id === 'string' ? input.id.slice(0, 64) : '';
+    if (!id) return Response.json({ allowed: false });
+    const ttlMs = 90_000;
+    let leases = await this.state.storage.get<ConcurrencyLease[]>('leases') || [];
+    leases = leases.filter(lease => lease.expires > now && lease.id !== id);
+    if (leases.length >= limit) {
+      const soonest = Math.max(1, Math.ceil(Math.min(...leases.map(l => l.expires)) - now) / 1000);
+      return Response.json({ allowed: false, retryAfterSeconds: soonest });
+    }
+    leases.push({ id, expires: now + ttlMs });
+    await this.state.storage.put({ leases });
+    return Response.json({ allowed: true });
+  }
+
+  private async releaseConcurrency(input: Record<string, unknown>): Promise<Response> {
+    const id = typeof input.id === 'string' ? input.id.slice(0, 64) : '';
+    if (!id) return Response.json({ allowed: false });
+    const leases = (await this.state.storage.get<ConcurrencyLease[]>('leases') || []).filter(lease => lease.id !== id);
+    await this.state.storage.put({ leases });
+    return Response.json({ allowed: true });
   }
 
   private async consumeRate(input: Record<string, unknown>): Promise<Response> {

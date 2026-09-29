@@ -61,7 +61,7 @@ describe('Phase 12 UI reliability contract', () => {
     expect(component).toContain('role="dialog"');
     expect(component).toContain('aria-live="polite"');
     expect(component).toContain('aria-label="Send message"');
-    expect(component).toContain('aria-label="Close Kayla Copilot"');
+    expect(component).toContain('aria-label="Close Kayla chat"');
     expect(component).toContain('for="kayla-input"');
   });
 

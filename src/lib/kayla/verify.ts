@@ -158,12 +158,16 @@ function checkAvailability(sentence: string, violations: CanonViolation[]): void
   }
 }
 
-function checkUrls(sentence: string, violations: CanonViolation[]): void {
-  // Reject dangerous URI schemes immediately
+function checkDangerousSchemes(sentence: string, violations: CanonViolation[]): void {
+  // Reject dangerous URI schemes immediately — in every lane, general
+  // included. A model echoing javascript:/data: is unsafe even when the
+  // sentence is not about FDS.
   for (const match of sentence.matchAll(/\b(javascript|data|vbscript|file):[^\s)<>\]"']*/gi)) {
     violations.push({ kind: 'url', detail: `dangerous URI scheme "${match[0]}" is prohibited`, sentence });
   }
+}
 
+function checkUrls(sentence: string, violations: CanonViolation[]): void {
   for (const match of sentence.matchAll(/https?:\/\/[^\s)<>\]"']+/gi)) {
     const raw = match[0].replace(/[.,;:]+$/, '').toLowerCase();
     if (allowedUrls.has(raw)) continue;
@@ -369,10 +373,24 @@ function checkRoadmapClaims(sentence: string, violations: CanonViolation[]): voi
 /**
  * Check generated text against canonical FDS data.
  * Returns every contradiction found, so callers can log what happened.
+ *
+ * `mode: 'general'` is the Kayla 2.0 general-lane variant: an answer about
+ * recursion or PostgreSQL should not be rejected because it mentions a
+ * version number, a price, or a creator's name — every one of those checks
+ * was written to protect *FDS* facts. In general mode a sentence that names
+ * no FDS entity is checked only for dangerous URI schemes and invented FDS
+ * relationships; a sentence that does name an FDS entity still runs the full
+ * strict battery, so "CodeForge v9 costs $49" is rejected in every lane.
+ * 'strict' mode (the default) is the original behaviour, unchanged for the
+ * FDS lanes where the whole answer is expected to be about FDS.
  */
-export function verifyAgainstCanon(text: string): CanonVerdict {
+export function verifyAgainstCanon(text: string, mode: 'strict' | 'general' = 'strict'): CanonVerdict {
   const violations: CanonViolation[] = [];
   for (const sentence of sentences(text)) {
+    checkDangerousSchemes(sentence, violations);
+    if (mode === 'general' && entitiesIn(sentence).length === 0) {
+      continue;
+    }
     checkVersions(sentence, violations);
     checkAvailability(sentence, violations);
     checkUrls(sentence, violations);

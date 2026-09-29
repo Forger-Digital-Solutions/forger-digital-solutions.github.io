@@ -6,6 +6,12 @@ workers_dev = true
 
 [vars]
 KAYLA_ENABLED = "true"
+# Kayla 2.0 ordered inference chain: Groq's free-tier Qwen first (verified
+# live 2026-09-29), the OpenRouter free router as the zero-cost fallback.
+# Keys come from per-provider secrets (GROQ_API_KEY, OPENROUTER_API_KEY),
+# never from vars. KAYLA_PROVIDER/KAYLA_MODEL remain as the legacy
+# single-route fallback and are what the legacy deploy path reads.
+KAYLA_ROUTES = "groq:qwen/qwen3.8-27b|openrouter:openrouter/free"
 KAYLA_PROVIDER = "openrouter"
 KAYLA_MODEL = "openrouter/free"
 # Both production origins of the website: the Pages custom domain and the

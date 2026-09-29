@@ -536,7 +536,7 @@
    "question": "Who are you?",
    "require": [
     [
-     "Kayla Copilot"
+     "Kayla"
     ],
     [
      "Forger Digital Solutions",
@@ -555,7 +555,7 @@
      "No"
     ],
     [
-     "Kayla Copilot"
+     "Kayla"
     ],
     [
      "Kayla AI Publisher"
@@ -570,7 +570,7 @@
    "question": "What is the difference between you and Kayla AI Publisher?",
    "require": [
     [
-     "Kayla Copilot"
+     "Kayla"
     ],
     [
      "Kayla AI Publisher"
@@ -592,12 +592,8 @@
    "question": "Can you edit my manuscript?",
    "require": [
     [
-     "cannot",
-     "not an editing tool",
-     "do not"
-    ],
-    [
-     "Kayla AI Publisher"
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": [
@@ -1366,12 +1362,8 @@
    "question": "Write me a Python app.",
    "require": [
     [
-     "CodeForge"
-    ],
-    [
-     "do not write",
-     "cannot",
-     "not"
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": [
@@ -1385,12 +1377,8 @@
    "question": "Diagnose my computer.",
    "require": [
     [
-     "ForgerEMS"
-    ],
-    [
-     "cannot",
-     "do not",
-     "only"
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": []
@@ -1418,7 +1406,9 @@
    "require": [
     [
      "don't have that documented",
-     "do not have that documented"
+     "do not have that documented",
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": [
@@ -2158,7 +2148,9 @@
    "require": [
     [
      "don't have that documented",
-     "do not have that documented"
+     "do not have that documented",
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": [
@@ -3711,12 +3703,8 @@
    "question": "Can you write a Python script for me?",
    "require": [
     [
-     "do not write",
-     "outside what I do",
-     "cannot"
-    ],
-    [
-     "CodeForge"
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": []
@@ -3728,11 +3716,8 @@
    "question": "Please diagnose why my PC won't boot.",
    "require": [
     [
-     "cannot",
-     "outside what I do"
-    ],
-    [
-     "ForgerEMS"
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": []
@@ -3744,12 +3729,8 @@
    "question": "Can you edit my book draft?",
    "require": [
     [
-     "cannot",
-     "website guide",
-     "not an editing tool"
-    ],
-    [
-     "Kayla AI Publisher"
+     "temporarily unavailable",
+     "try again"
     ]
    ],
    "forbid": []
@@ -3776,7 +3757,7 @@
    "question": "Are you ChatGPT or Claude?",
    "require": [
     [
-     "Kayla Copilot"
+     "Kayla"
     ],
     [
      "Forger Digital Solutions",
@@ -4473,7 +4454,7 @@
    "question": "Who are you Kayla?",
    "require": [
     [
-     "Kayla Copilot"
+     "Kayla"
     ],
     [
      "guide",
