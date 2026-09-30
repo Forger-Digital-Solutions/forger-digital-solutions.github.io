@@ -266,7 +266,7 @@ test.describe('Failure UX', () => {
     // The greeting is present before any turn; the failed stream must add
     // exactly one settled assistant bubble and never leave a second placeholder.
     await expect(replies).toHaveCount(2);
-    await expect(replies.last()).toHaveText('Kayla is temporarily unavailable. Please try again later.');
+    await expect(replies.last()).toHaveText('Kayla is temporarily unavailable. Please try again shortly.');
     await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
     await expect(page.locator('#kayla-stop')).toBeHidden();
   });

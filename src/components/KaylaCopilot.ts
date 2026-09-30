@@ -622,7 +622,7 @@ async function handleQuery(query: string): Promise<void> {
       showRetryStarter(query);
     } else {
       updateStatus('ready');
-      finalizeStreamingMessage(placeholder, 'Kayla is temporarily unavailable. Please try again later.', undefined, 'unavailable', undefined);
+      finalizeStreamingMessage(placeholder, 'Kayla is temporarily unavailable. Please try again shortly.', undefined, 'unavailable', undefined);
       showRetryStarter(query);
     }
   } finally {
