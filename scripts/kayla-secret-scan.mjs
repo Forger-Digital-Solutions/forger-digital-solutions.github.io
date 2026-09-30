@@ -5,11 +5,17 @@ import process from 'node:process';
 const root = path.resolve(import.meta.dirname, '..');
 const roots = ['src', 'worker', 'scripts', 'test', '.github', 'dist'];
 const ignored = new Set(['node_modules', '.git', '.wrangler']);
+// Gitignored dotenv files (worker/.dev.vars, .env, .env.*) are the designated
+// local secret stores — they never enter source control or the client bundle,
+// so scanning them only guarantees a false positive on every configured
+// development machine. The scan's job is to keep keys out of source and
+// built assets, which is what it still checks.
+const isDotenvFile = (name) => /^\.(?:dev\.vars|env)(?:\.|$)/.test(name);
 const findings = [];
 function walk(target) {
   if (!fs.existsSync(target)) return;
   const stat = fs.statSync(target);
-  if (stat.isDirectory()) { for (const name of fs.readdirSync(target)) if (!ignored.has(name)) walk(path.join(target, name)); return; }
+  if (stat.isDirectory()) { for (const name of fs.readdirSync(target)) if (!ignored.has(name) && !isDotenvFile(name)) walk(path.join(target, name)); return; }
   if (stat.size > 2_000_000 || /\.(png|jpg|jpeg|webp|ico|zip|woff2?)$/i.test(target)) return;
   const text = fs.readFileSync(target, 'utf8');
   if (/sk-or-[A-Za-z0-9_-]{20,}/.test(text)) findings.push(`${path.relative(root, target)}: OpenRouter key-like value`);
