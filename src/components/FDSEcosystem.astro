@@ -25,7 +25,7 @@ const ringTicks = (size: number) => {
   <div class="fds-ecosystem__scene-wrap">
     <svg class="fds-ecosystem__scene" viewBox="0 0 680 680" role="group" aria-labelledby="fds-ecosystem-svg-title fds-ecosystem-svg-desc">
       <title id="fds-ecosystem-svg-title">FDS ecosystem map</title>
-      <desc id="fds-ecosystem-svg-desc">Eight FDS projects follow eight visible individual atomic paths around a central FDS core. CodeForge and ForgerEMS are on the Build layer, GEMS and Training Grounds on Intelligence, KyraBlox and Kayla Publisher on Create, and We The People Library plus FarmStand Finder on Knowledge. Each body links to its project's page.</desc>
+      <desc id="fds-ecosystem-svg-desc">Eight FDS projects travel on eight distinct product paths around a central FDS core. Three crossing electron planes echo the CodeForge emblem. CodeForge and ForgerEMS are on the Build layer, GEMS and Training Grounds on Intelligence, KyraBlox and Kayla Publisher on Create, and We The People Library plus FarmStand Finder on Knowledge. Each body links to its project's page.</desc>
       <defs>
         <radialGradient id="body-face" cx="36%" cy="30%" r="78%">
           <stop offset="0" stop-color="#2b3444" /><stop offset=".55" stop-color="#141b28" /><stop offset="1" stop-color="#070b13" />
@@ -54,6 +54,39 @@ const ringTicks = (size: number) => {
         <circle cx="420" cy="52" r="1.2" class="ecosystem-stars__calm" /><circle cx="614" cy="470" r="1.3" class="ecosystem-stars__calm ecosystem-stars__calm--late" />
         <path d="M96 120 180 164 M592 88 520 132" stroke-opacity=".35" />
       </g>
+
+      <!-- The CodeForge-derived three-plane scaffold is the primary atomic silhouette.
+           Product bodies keep their separate certified paths in the layers below. -->
+      <g class="electron-scaffold" aria-hidden="true">
+        <ellipse class="electron-scaffold__plane electron-scaffold__plane--one" data-scaffold-plane="one" cx="340" cy="340" rx="296" ry="112" transform="rotate(-18 340 340)" />
+        <ellipse class="electron-scaffold__plane electron-scaffold__plane--two" data-scaffold-plane="two" cx="340" cy="340" rx="296" ry="112" transform="rotate(42 340 340)" />
+        <ellipse class="electron-scaffold__plane electron-scaffold__plane--three" data-scaffold-plane="three" cx="340" cy="340" rx="296" ry="112" transform="rotate(78 340 340)" />
+        <circle class="electron-scaffold__electron electron-scaffold__electron--one" cx="603" cy="248" r="4" />
+        <circle class="electron-scaffold__electron electron-scaffold__electron--two" cx="431" cy="115" r="4" />
+        <circle class="electron-scaffold__electron electron-scaffold__electron--three" cx="493" cy="617" r="4" />
+      </g>
+
+      <!-- The company reactor sits below product links in SVG paint order. This
+           keeps its clickable halo from intercepting orbital nodes as they pass. -->
+      <a class="core-link" href="/about" aria-label="FDS Core — the company at the center of the ecosystem. About Forger Digital Solutions.">
+        <g class="core">
+          <circle class="core__aura" cx="340" cy="340" r="120" />
+          <path class="core__reactor-frame core__ring core__ring--outer" d="M340 224 424 256 456 340 424 424 340 456 256 424 224 340 256 256Z" />
+          <path class="core__reactor-frame core__ring core__ring--mid" d="M340 248 407 273 432 340 407 407 340 432 273 407 248 340 273 273Z" />
+          <path class="core__reactor-ticks" d="M340 214v16m82 18 12 12m30 80h-16m-26 82-12 12m-70 30v-16m-82-18-12-12m-30-80h16m26-82 12-12" />
+          <circle class="core__heart-halo" cx="340" cy="340" r="52" />
+          <circle class="core__heart" cx="340" cy="340" r="34" />
+          <g class="core__vents" aria-hidden="true">
+            <path d="M297 305 L283 291 M383 305 L397 291 M297 375 L283 389 M383 375 L397 389" />
+            <circle cx="340" cy="286" r="2.2" /><circle cx="340" cy="394" r="2.2" /><circle cx="286" cy="340" r="2.2" /><circle cx="394" cy="340" r="2.2" />
+          </g>
+          <path class="core__codeforge-plate" d="M340 274 389 291 406 340 389 389 340 406 291 389 274 340 291 291Z" />
+          <image class="core__codeforge" href="/images/codeforge/codeforge-icon.svg" x="276" y="276" width="128" height="128" aria-hidden="true" />
+          <text class="core__title" x="340" y="438" text-anchor="middle">FDS CORE</text>
+          <text class="core__subtitle" x="340" y="455" text-anchor="middle">THE COMPANY AT THE CENTER</text>
+          <text class="core__reveal" x="340" y="472" text-anchor="middle">SOFTWARE + INTELLIGENCE + RESEARCH</text>
+        </g>
+      </a>
 
       <g class="orbit-layer" aria-hidden="true">
         {ecosystemNodes.map((node) => (
@@ -139,32 +172,6 @@ const ringTicks = (size: number) => {
         ))}
       </g>
 
-      <!-- FDS Core: the forge-reactor heart of the ecosystem -->
-      <a class="core-link" href="/about" aria-label="FDS Core — the company at the center of the ecosystem. About Forger Digital Solutions.">
-      <g class="core">
-        <circle class="core__aura" cx="340" cy="340" r="120" />
-
-        <path class="core__reactor-frame core__ring core__ring--outer" d="M340 224 424 256 456 340 424 424 340 456 256 424 224 340 256 256Z" />
-        <path class="core__reactor-frame core__ring core__ring--mid" d="M340 248 407 273 432 340 407 407 340 432 273 407 248 340 273 273Z" />
-        <path class="core__reactor-ticks" d="M340 214v16m82 18 12 12m30 80h-16m-26 82-12 12m-70 30v-16m-82-18-12-12m-30-80h16m26-82 12-12" />
-
-        <circle class="core__heart-halo" cx="340" cy="340" r="52" />
-        <circle class="core__heart" cx="340" cy="340" r="34" />
-        <g class="core__vents" aria-hidden="true">
-          <path d="M297 305 L283 291 M383 305 L397 291 M297 375 L283 389 M383 375 L397 389" />
-          <circle cx="340" cy="286" r="2.2" /><circle cx="340" cy="394" r="2.2" /><circle cx="286" cy="340" r="2.2" /><circle cx="394" cy="340" r="2.2" />
-        </g>
-
-        <!-- Canonical CodeForge mark embedded in the reactor: static asset on a dark
-             contrast plate so the crystal reads against the bright heart. No filters. -->
-        <path class="core__codeforge-plate" d="M340 274 389 291 406 340 389 389 340 406 291 389 274 340 291 291Z" />
-        <image class="core__codeforge" href="/images/codeforge/codeforge-icon.svg" x="276" y="276" width="128" height="128" aria-hidden="true" />
-
-        <text class="core__title" x="340" y="438" text-anchor="middle">FDS CORE</text>
-        <text class="core__subtitle" x="340" y="455" text-anchor="middle">THE COMPANY AT THE CENTER</text>
-        <text class="core__reveal" x="340" y="472" text-anchor="middle">SOFTWARE + INTELLIGENCE + RESEARCH</text>
-      </g>
-      </a>
     </svg>
   </div>
 
@@ -252,6 +259,10 @@ const ringTicks = (size: number) => {
       const orbit = ecosystem.querySelector(`[data-orbit-for="${link.getAttribute('data-node-id')}"]`);
       if (activeOrbit && activeOrbit !== orbit) activeOrbit.classList.remove('orbit-highlight');
       if (orbit) orbit.classList.add('orbit-highlight');
+      ecosystem.querySelectorAll('.electron-scaffold__plane').forEach((plane) => plane.classList.remove('is-active'));
+      const category = (link.getAttribute('data-node-category') || '').toLowerCase();
+      const planeIndex = category.includes('intelligence') ? 'two' : category.includes('create') || category.includes('publishing') ? 'three' : 'one';
+      ecosystem.querySelector(`[data-scaffold-plane="${planeIndex}"]`)?.classList.add('is-active');
       activeOrbit = orbit;
     };
 
@@ -282,19 +293,29 @@ const ringTicks = (size: number) => {
 <style>
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
   .fds-ecosystem { position: relative; isolation: isolate; width: 100%; max-width: 34rem; margin: 0 auto; container-type: inline-size; }
-  .fds-ecosystem__scene-wrap { position: relative; width: 100%; aspect-ratio: 1; }
-  .fds-ecosystem__scene-wrap::before { position: absolute; inset: 13%; border-radius: 50%; background: radial-gradient(circle, rgba(29,86,219,.12), rgba(10,31,78,.04) 42%, transparent 72%); content: ''; }
+  .fds-ecosystem__scene-wrap { position: relative; isolation: isolate; width: 100%; aspect-ratio: 1; }
+  .fds-ecosystem__scene-wrap::before { position: absolute; z-index: 0; inset: -2%; border-radius: 50%; background: radial-gradient(ellipse, rgba(5,9,16,1) 0%, rgba(5,9,16,.99) 72%, rgba(5,9,16,.94) 92%, transparent 106%); content: ''; pointer-events: none; }
   .fds-ecosystem__scene { position: relative; z-index: 1; display: block; width: 100%; height: 100%; overflow: visible; }
-  .ecosystem-grid { fill: none; stroke-width: 1; }.ecosystem-grid path { stroke: rgba(82,124,207,.045); }
-  .ecosystem-stars { fill: #c9d6ee; stroke: rgba(140,170,225,.5); stroke-width: .6; opacity: .5; }
+  .ecosystem-grid { fill: none; stroke-width: 1; }.ecosystem-grid path { stroke: rgba(82,124,207,.025); }
+  .ecosystem-stars { fill: #c9d6ee; stroke: rgba(140,170,225,.35); stroke-width: .6; opacity: .24; }
   .ecosystem-stars__calm { animation: star-calibrate 7.5s ease-in-out infinite; }
   .ecosystem-stars__calm--late { animation-delay: -3.8s; }
   @keyframes star-calibrate { 0%, 88%, 100% { opacity: .45; } 94% { opacity: 1; } }
 
-  /* Every visible rail is the exact path used by its product and identity tag. */
-  .orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: .34; vector-effect: non-scaling-stroke; transition: opacity .2s ease, stroke .2s ease, stroke-width .2s ease; }
-  .orbit-accent { fill: none; stroke: var(--planet-color); stroke-width: 1.7; stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: .54; vector-effect: non-scaling-stroke; }
-  .orbit-visual.orbit-highlight .orbit-path { stroke: var(--planet-color); opacity: .82; stroke-width: 1.7; }
+  /* Three visible scaffold planes carry the silhouette. The eight true product
+     paths stay ghosted until their node is inspected, then reveal that exact path. */
+  .electron-scaffold { fill: none; pointer-events: none; }
+  .electron-scaffold__plane { stroke: #83a9f3; stroke-width: 1.25; opacity: .4; vector-effect: non-scaling-stroke; transition: opacity .18s ease, stroke-width .18s ease; }
+  .electron-scaffold__plane--two { stroke: #b9c9e8; opacity: .36; }
+  .electron-scaffold__plane--three { stroke: #6586c7; opacity: .38; }
+  .electron-scaffold__plane.is-active { opacity: .52; stroke-width: 1.5; }
+  .electron-scaffold__electron { fill: #e2ecff; stroke: #7ea5ef; stroke-width: 1; }
+  .electron-scaffold__electron--two { fill: #f0f4fc; }
+  .electron-scaffold__electron--three { fill: #afc9ff; }
+  .orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: .02; vector-effect: non-scaling-stroke; transition: opacity .2s ease, stroke .2s ease, stroke-width .2s ease; }
+  .orbit-accent { fill: none; stroke: var(--planet-color); stroke-width: 1.7; stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: .018; vector-effect: non-scaling-stroke; transition: opacity .2s ease; }
+  .orbit-visual.orbit-highlight .orbit-path { stroke: var(--planet-color); opacity: .78; stroke-width: 1.7; }
+  .orbit-visual.orbit-highlight .orbit-accent { opacity: .72; }
   .planet-motion { offset-path: var(--orbit-path); offset-rotate: 0deg; offset-anchor: 0 0; animation: orbit-locked var(--orbit-duration) var(--orbit-delay) linear infinite; animation-direction: var(--orbit-direction); transform-box: view-box; }
   .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: opacity .2s ease; }.planet-link:hover .planet, .planet-link:focus-visible .planet { opacity: .95; }
   .planet__focus-ring { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 3 4; opacity: 0; }.planet-link:focus-visible .planet__focus-ring { opacity: .9; }

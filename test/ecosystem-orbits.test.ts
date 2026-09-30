@@ -321,14 +321,15 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
     ]));
   });
 
-  it('uses eight visible product paths as the exact motion paths', () => {
+  it('keeps eight ghosted product paths beneath the three-plane CodeForge scaffold', () => {
     expect(component).toContain('d={node.orbit.path}');
     expect(component).toContain('--orbit-path:path("${node.orbit.path}")');
     expect(component).toContain('offset-path: var(--orbit-path)');
     expect(component).toContain('offset-rotate: 0deg');
     expect(component).toContain('class="orbit-path" d={node.orbit.path}');
-    expect(component).toContain('.orbit-path { fill: none; stroke: #8ba9e0;');
-    expect(component).not.toContain('class="electron-scaffold"');
+    expect(component).toContain('.orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: .02;');
+    expect(component).toContain('stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: .018;');
+    expect(component.match(/data-scaffold-plane="(?:one|two|three)"/g)).toHaveLength(3);
     expect(component).not.toContain('class="relation-layer"');
   });
 

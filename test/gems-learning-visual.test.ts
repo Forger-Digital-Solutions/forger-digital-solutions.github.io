@@ -41,7 +41,9 @@ describe('GEMS learning-system visual (homepage)', () => {
 
   it('restructures on mobile instead of scaling the desktop diagram down', () => {
     expect(visual).toMatch(/@media \(max-width: 640px\)[\s\S]*\.gems-art \{ display: none; \}/);
-    expect(visual).toContain('order: 3');
+    expect(visual).toContain('.gems-core-wrap { position: relative; grid-row: 1;');
+    expect(visual).toContain('grid-template-columns: repeat(2,minmax(0,1fr))');
+    expect(visual).toContain('.gems-cycle {\n      position: relative; inset: auto; z-index: 5; grid-row: 3;');
   });
 
   it('carries no pretrained-foundation terminology and no old phase visual', () => {

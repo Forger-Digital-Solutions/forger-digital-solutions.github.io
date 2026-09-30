@@ -18,12 +18,14 @@ describe('final visual evolution contract', () => {
     expect(ecosystem).toContain('offset-path: var(--orbit-path)');
   });
 
-  it('shows the same eight paths that drive the products and uses the canonical center mark', () => {
-    expect(ecosystem).not.toContain('data-scaffold-plane');
+  it('shows three dominant planes while retaining the exact eight product paths and canonical center mark', () => {
+    expect(ecosystem.match(/data-scaffold-plane="(?:one|two|three)"/g)).toHaveLength(3);
     expect(ecosystem).toContain('class="orbit-path" d={node.orbit.path}');
     expect(ecosystem).toContain('--orbit-path:path("${node.orbit.path}")');
-    expect(ecosystem).toContain('.orbit-path { fill: none; stroke: #8ba9e0;');
+    expect(ecosystem).toContain('.orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: .02;');
+    expect(ecosystem).toContain('stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: .018;');
     expect(ecosystem).not.toContain('class="relation-layer"');
+    expect(ecosystem).toContain('.orbit-visual.orbit-highlight .orbit-path');
     expect(ecosystem).toContain('codeforge-icon.svg');
     expect(ecosystem).toContain('class="core__heart"');
     expect(ecosystem).toContain('class="core__reactor-frame core__ring core__ring--outer"');
@@ -50,19 +52,26 @@ describe('final visual evolution contract', () => {
     expect(gemsVisual).toContain('marker-end="url(#gems-stage-arrow)"');
     expect(gemsVisual).toContain('class="gems-art__sweep"');
     expect(gemsVisual).toContain('@keyframes gemsStageSweep');
-    expect(gemsVisual).toContain('.gems-system:not([data-visual-candidate=\'neural-lattice\']) .gems-art__pulse { display: none; }');
     expect(gemsVisual).toContain('Training Grounds');
     expect(gemsVisual).toContain('Evidence-gated advancement');
     expect(gemsVisual).not.toContain('fieldLinks');
-    expect(gemsVisual).toContain('class="gems-node__port"');
-    expect(gemsVisual).toContain('class="gems-art__port gems-art__port--topaz"');
-    expect(gemsVisual).toContain('.gems-art { position: absolute; z-index: 1;');
+    expect(gemsVisual).toContain('data-gem-core={gem.key}');
+    expect(gemsVisual).toContain('data-research-state={gem.state}');
+    expect(gemsVisual).toContain('data-gem-port={gem.key}');
+    expect(gemsVisual).toContain('data-conduit-for="topaz"');
+    expect(gemsVisual).toContain('data-conduit-endpoint="topaz"');
+    expect(gemsVisual).toContain('.gems-ambient { z-index: 1; }');
+    expect(gemsVisual).toContain('.gems-conduits, .gems-mobile-conduits { z-index: 2; }');
+    expect(gemsVisual).toContain('.gems-art { z-index: 3; }');
+    expect(gemsVisual).toContain('class="gems-node__facet gems-node__facet--crown"');
+    expect(gemsVisual).not.toContain('gems-node__core-frame');
+    expect(gemsVisual).not.toContain('border-radius: 0.7rem');
   });
 
   it('keeps a structural mobile GEMS layout and low-cost motion hooks', () => {
     expect(gemsVisual).toContain('@media (max-width: 640px)');
-    expect(gemsVisual).toContain('.gems-art { display: none; }');
-    expect(gemsVisual).toContain('.gems-system:not([data-visual-candidate=\'neural-lattice\']) .gems-core-wrap { width: 100%; }');
+    expect(gemsVisual).toContain('.gems-nodes {\n      position: relative; z-index: 4; display: grid; grid-row: 2;');
+    expect(gemsVisual).toContain('.gems-mobile-conduits { display: block; }');
     expect(gemsVisual).toContain('data-gems-paused');
     expect(gemsVisual).toContain('@media (prefers-reduced-motion: reduce)');
     expect(gemsVisual).not.toMatch(/feGaussianBlur|feTurbulence|will-change:\s*transform/);
