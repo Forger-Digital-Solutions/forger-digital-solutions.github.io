@@ -501,7 +501,10 @@ async function handleQuery(query: string): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: query,
-        history: getConversationHistory(),
+        // The just-rendered visitor turn is the request message; sending it
+        // again in history duplicated the newest turn for the worker and
+        // weakened follow-up resolution. History is strictly prior turns.
+        history: getConversationHistory().slice(0, -1),
         context: getPageContext()
       }),
       signal: controller.signal
@@ -541,61 +544,67 @@ async function handleQuery(query: string): Promise<void> {
         const trimmed = line.trim();
         if (!trimmed) continue;
 
+        let chunk: { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; routeMode?: string; actions?: KaylaSafeAction[]; sourceLinks?: KaylaSource[]; done?: boolean; replace?: boolean };
         try {
-          const chunk = JSON.parse(trimmed) as { type?: string; content?: string; error?: string; errorType?: string; mode?: KaylaMode; routeMode?: string; actions?: KaylaSafeAction[]; sourceLinks?: KaylaSource[]; done?: boolean; replace?: boolean };
-
-          // The server rejected the model's answer for contradicting canonical
-          // FDS data. Discard whatever streamed and show the canonical answer.
-          if (chunk.replace) {
-            streamingText = chunk.content || '';
-            responseMode = chunk.mode || 'local';
-            streamingActions = chunk.actions?.filter(a => isActionAllowed(a)) ?? streamingActions;
-            streamingSources = chunk.sourceLinks ?? streamingSources;
-            updateStreamingMessage(placeholder, streamingText, streamingActions);
-            break;
-          }
-
-          if (chunk.error) {
-            updateStreamingMessage(placeholder, chunk.errorType === 'RATE_LIMITED'
-              ? 'Kayla has answered several questions from this connection recently. Please try again in a minute.'
-              : `Kayla's conversational AI is temporarily unavailable, but I can still help with FDS knowledge.`);
-            break;
-          }
-
-          // The wire still carries mode/routeMode for the server's own tests;
-          // the UI only reads `mode` for the one visitor-visible distinction
-          // left: whether the answer came back unavailable.
-          if (chunk.mode) {
-            responseMode = chunk.mode;
-          }
-
-          if (chunk.actions) {
-            streamingActions = chunk.actions.filter(a => isActionAllowed(a));
-          }
-
-          if (chunk.sourceLinks) {
-            streamingSources = chunk.sourceLinks;
-          }
-
-          if (chunk.content) {
-            if (!streamingText) updateStatus('responding');
-            streamingText += chunk.content;
-            updateStreamingMessage(placeholder, streamingText, streamingActions);
-          }
-
-          if (chunk.done) {
-            break;
-          }
+          chunk = JSON.parse(trimmed) as typeof chunk;
         } catch {
+          // A malformed transport line cannot be trusted as a response chunk.
+          // Skip it without swallowing deliberate terminal failures below.
           continue;
+        }
+
+        // The server rejected the model's answer for contradicting canonical
+        // FDS data. Discard whatever streamed and show the canonical answer.
+        if (chunk.replace) {
+          streamingText = chunk.content || '';
+          responseMode = chunk.mode || 'local';
+          streamingActions = chunk.actions?.filter(a => isActionAllowed(a)) ?? streamingActions;
+          streamingSources = chunk.sourceLinks ?? streamingSources;
+          updateStreamingMessage(placeholder, streamingText, streamingActions);
+          break;
+        }
+
+        if (chunk.error) {
+          // Route retries and their failures are internal. Throwing here
+          // makes the one existing placeholder settle exactly once in the
+          // terminal handler below instead of leaving a partial error and
+          // then continuing to parse a dead stream.
+          throw new Error(chunk.errorType === 'RATE_LIMITED' ? 'RATE_LIMITED' : 'STREAM_FAILED');
+        }
+
+        // The wire still carries mode/routeMode for the server's own tests;
+        // the UI only reads `mode` for the one visitor-visible distinction
+        // left: whether the answer came back unavailable.
+        if (chunk.mode) {
+          responseMode = chunk.mode;
+        }
+
+        if (chunk.actions) {
+          streamingActions = chunk.actions.filter(a => isActionAllowed(a));
+        }
+
+        if (chunk.sourceLinks) {
+          streamingSources = chunk.sourceLinks;
+        }
+
+        if (chunk.content) {
+          if (!streamingText) updateStatus('responding');
+          streamingText += chunk.content;
+          updateStreamingMessage(placeholder, streamingText, streamingActions);
+        }
+
+        if (chunk.done) {
+          break;
         }
       }
     }
 
     if (!isCurrent()) { placeholder?.remove(); return; }
-    // The response completed: generic states only — the only thing the badge
-    // may carry from the wire is "temporarily unavailable", never a lane.
-    updateStatus(responseMode === 'unavailable' ? 'unavailable' : 'ready');
+    if (!streamingText) throw new Error('EMPTY_STREAM');
+    // A terminal request always gives the compact status badge back to Ready.
+    // A failure remains visible in its single assistant bubble, not as a
+    // sticky outage badge that can be mistaken for an active request.
+    updateStatus('ready');
     finalizeStreamingMessage(placeholder, streamingText, streamingActions, responseMode, streamingSources);
   } catch (error) {
     // A superseded request must stay silent: the newer turn owns the
@@ -612,7 +621,7 @@ async function handleQuery(query: string): Promise<void> {
       finalizeStreamingMessage(placeholder, 'Kayla has received several requests recently. Please try again a little later.', undefined, 'local', undefined);
       showRetryStarter(query);
     } else {
-      updateStatus('unavailable');
+      updateStatus('ready');
       finalizeStreamingMessage(placeholder, 'Kayla is temporarily unavailable. Please try again later.', undefined, 'unavailable', undefined);
       showRetryStarter(query);
     }
@@ -669,8 +678,7 @@ function updateStreamingMessage(bubble: HTMLDivElement | null, text: string, act
   scrollToBottom();
 }
 
-function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, actions: KaylaSafeAction[] | undefined, mode: KaylaMode, sources?: KaylaSource[]): void {
-  if (mode === 'unavailable') updateStatus(mode);
+function finalizeStreamingMessage(bubble: HTMLDivElement | null, text: string, actions: KaylaSafeAction[] | undefined, _mode: KaylaMode, sources?: KaylaSource[]): void {
   if (!bubble) {
     if (text) {
       addMessage('kayla', text, actions, sources);

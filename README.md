@@ -13,6 +13,20 @@ npm install
 npm run dev
 ```
 
+### Kayla local preview
+
+For a browser session that includes the real local Kayla Worker, set the free-route
+credentials and rate-limit salt in the ignored `worker/.dev.vars`, then run:
+
+```bash
+npm run dev:kayla
+```
+
+This starts the site at `http://127.0.0.1:4337` and the local Worker at
+`http://127.0.0.1:8788`. It only stops stale Astro/Wrangler processes that belong
+to this checkout; another application using either port causes it to stop with a
+clear message instead.
+
 Your site will be available at http://localhost:4321
 
 ## Production build

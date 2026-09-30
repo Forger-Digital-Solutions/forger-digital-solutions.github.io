@@ -177,7 +177,7 @@ const ringTicks = (size: number) => {
 
   <div class="fds-ecosystem__panel" id="fds-ecosystem-panel" role="status" aria-live="polite">
     <div class="fds-ecosystem__panel-default" data-panel-default>
-      <p class="fds-ecosystem__panel-hint">Hover, focus, or tap a node to inspect it — each body is a link to that project.</p>
+      <p class="fds-ecosystem__panel-hint">Explore the FDS ecosystem. Hover, focus, or tap a node to inspect it — each body is a link to that project.</p>
     </div>
     <div class="fds-ecosystem__panel-detail" data-panel-detail hidden>
       <p class="fds-ecosystem__panel-name"><span data-panel-name></span><span class="fds-ecosystem__panel-status" data-panel-status></span></p>
@@ -247,7 +247,24 @@ const ringTicks = (size: number) => {
     const panelCta = ecosystem.querySelector('[data-panel-cta]');
 
     let activeOrbit = null;
-    const showNode = (link) => {
+    let activeLink = null;
+    let pinnedLink = null;
+    let suppressTouchNavigationFor = null;
+
+    const clearSelection = (force = false) => {
+      if (pinnedLink && !force) return;
+      activeOrbit?.classList.remove('orbit-highlight');
+      activeLink?.classList.remove('planet-link--selected');
+      ecosystem.querySelectorAll('.electron-scaffold__plane').forEach((plane) => plane.classList.remove('is-active'));
+      panelDetail?.setAttribute('hidden', '');
+      panelDefault?.removeAttribute('hidden');
+      activeOrbit = null;
+      activeLink = null;
+      pinnedLink = null;
+      delete ecosystem.dataset.ecoSelection;
+    };
+
+    const showNode = (link, pin = false) => {
       if (!panelDetail || !panelDefault) return;
       panelDefault.setAttribute('hidden', '');
       panelDetail.removeAttribute('hidden');
@@ -259,17 +276,55 @@ const ringTicks = (size: number) => {
       const orbit = ecosystem.querySelector(`[data-orbit-for="${link.getAttribute('data-node-id')}"]`);
       if (activeOrbit && activeOrbit !== orbit) activeOrbit.classList.remove('orbit-highlight');
       if (orbit) orbit.classList.add('orbit-highlight');
+      if (activeLink && activeLink !== link) activeLink.classList.remove('planet-link--selected');
+      link.classList.add('planet-link--selected');
       ecosystem.querySelectorAll('.electron-scaffold__plane').forEach((plane) => plane.classList.remove('is-active'));
       const category = (link.getAttribute('data-node-category') || '').toLowerCase();
       const planeIndex = category.includes('intelligence') ? 'two' : category.includes('create') || category.includes('publishing') ? 'three' : 'one';
       ecosystem.querySelector(`[data-scaffold-plane="${planeIndex}"]`)?.classList.add('is-active');
       activeOrbit = orbit;
+      activeLink = link;
+      if (pin) {
+        pinnedLink = link;
+        ecosystem.dataset.ecoSelection = 'pinned';
+      }
     };
 
     ecosystem.querySelectorAll('.planet-link').forEach((link) => {
-      link.addEventListener('mouseover', () => showNode(link));
+      link.addEventListener('pointerenter', () => showNode(link));
+      link.addEventListener('pointerleave', () => {
+        if (pinnedLink !== link) clearSelection();
+      });
       link.addEventListener('focus', () => showNode(link));
-      link.addEventListener('pointerdown', () => showNode(link));
+      link.addEventListener('focusout', () => {
+        queueMicrotask(() => {
+          if (!pinnedLink && !ecosystem.contains(document.activeElement)) clearSelection();
+        });
+      });
+      link.addEventListener('pointerdown', (event) => {
+        const pointer = event;
+        if (pointer.pointerType === 'mouse') return;
+        // A first touch inspects and pins without unexpectedly following a
+        // moving SVG link. A second touch follows the normal project link.
+        if (pinnedLink !== link) {
+          showNode(link, true);
+          suppressTouchNavigationFor = link;
+        }
+      });
+      link.addEventListener('click', (event) => {
+        if (suppressTouchNavigationFor === link) {
+          event.preventDefault();
+          suppressTouchNavigationFor = null;
+        }
+      });
+    });
+
+    ecosystem.querySelector('.fds-ecosystem__scene')?.addEventListener('pointerdown', (event) => {
+      if (!(event.target instanceof Element) || !event.target.closest('.planet-link')) clearSelection(true);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || (!activeOrbit && !pinnedLink)) return;
+      clearSelection(true);
     });
 
     // Suspend continuous rendering work when the ecosystem is offscreen.
@@ -312,12 +367,12 @@ const ringTicks = (size: number) => {
   .electron-scaffold__electron { fill: #e2ecff; stroke: #7ea5ef; stroke-width: 1; }
   .electron-scaffold__electron--two { fill: #f0f4fc; }
   .electron-scaffold__electron--three { fill: #afc9ff; }
-  .orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: .02; vector-effect: non-scaling-stroke; transition: opacity .2s ease, stroke .2s ease, stroke-width .2s ease; }
-  .orbit-accent { fill: none; stroke: var(--planet-color); stroke-width: 1.7; stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: .018; vector-effect: non-scaling-stroke; transition: opacity .2s ease; }
-  .orbit-visual.orbit-highlight .orbit-path { stroke: var(--planet-color); opacity: .78; stroke-width: 1.7; }
-  .orbit-visual.orbit-highlight .orbit-accent { opacity: .72; }
+  .orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: 0; vector-effect: non-scaling-stroke; transition: opacity .2s ease, stroke .2s ease, stroke-width .2s ease; }
+  .orbit-accent { fill: none; stroke: var(--planet-color); stroke-width: 1.35; stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: 0; vector-effect: non-scaling-stroke; transition: opacity .2s ease; }
+  .orbit-visual.orbit-highlight .orbit-path { stroke: var(--planet-color); opacity: .58; stroke-width: 1.35; }
+  .orbit-visual.orbit-highlight .orbit-accent { opacity: .5; }
   .planet-motion { offset-path: var(--orbit-path); offset-rotate: 0deg; offset-anchor: 0 0; animation: orbit-locked var(--orbit-duration) var(--orbit-delay) linear infinite; animation-direction: var(--orbit-direction); transform-box: view-box; }
-  .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: opacity .2s ease; }.planet-link:hover .planet, .planet-link:focus-visible .planet { opacity: .95; }
+  .planet-link { color: var(--planet-color); outline: none; }.planet { color: var(--planet-color); transition: opacity .2s ease; }.planet-link:is(:hover,:focus-visible,.planet-link--selected) .planet { opacity: .95; }
   .planet__focus-ring { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 3 4; opacity: 0; }.planet-link:focus-visible .planet__focus-ring { opacity: .9; }
   .planet__atmosphere { fill: currentColor; opacity: .12; }
   .planet__signal { fill: none; stroke: currentColor; stroke-width: 1.2; opacity: .72; transition: opacity .2s ease; }
@@ -325,10 +380,10 @@ const ringTicks = (size: number) => {
   .planet__shell { fill: url(#body-face); }
   .planet__rim { fill: none; stroke: url(#body-rim); stroke-width: 1.25; opacity: .92; }
   .planet__character { pointer-events: none; transform-origin: center; transition: transform .22s cubic-bezier(.2,.8,.2,1); }
-  .planet-link:hover .planet__character, .planet-link:focus-visible .planet__character { transform: scale(1.04); }
-  .planet-link:hover .planet__signal, .planet-link:focus-visible .planet__signal { opacity: 1; }
-  .planet-link:hover .planet__atmosphere, .planet-link:focus-visible .planet__atmosphere { opacity: .22; }
-  .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:hover .planet__label, .planet-link:focus-visible .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
+  .planet-link:is(:hover,:focus-visible,.planet-link--selected) .planet__character { transform: scale(1.04); }
+  .planet-link:is(:hover,:focus-visible,.planet-link--selected) .planet__signal { opacity: 1; }
+  .planet-link:is(:hover,:focus-visible,.planet-link--selected) .planet__atmosphere { opacity: .22; }
+  .planet__label { opacity: 0; transform-box: fill-box; transform-origin: center; translate: 0 4px; pointer-events: none; transition: opacity .2s ease, translate .2s ease; }.planet-link:is(:hover,:focus-visible,.planet-link--selected) .planet__label { opacity: 1; translate: 0 0; }.planet__leader { stroke: currentColor; stroke-width: 1; opacity: .55; }.planet__label-frame { fill: rgba(3,9,22,.9); stroke: currentColor; stroke-width: .8; opacity: .88; }
   .planet__name, .planet__subtitle, .planet__tag { fill: currentColor; font-family: var(--font-mono); }.planet__name { font-size: 13px; font-weight: 800; letter-spacing: 1.8px; }.planet__subtitle { font-size: 7.5px; font-weight: 650; letter-spacing: 1.1px; opacity: .72; }.planet__tag { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1px; paint-order: stroke; stroke: rgba(3,8,18,.96); stroke-width: 4px; }
   /* Tags are decorative identity text: they sit under the planet layer so a passing
      body occludes them (depth cue) and they never intercept a click meant for a world. */

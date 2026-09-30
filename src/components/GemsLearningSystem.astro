@@ -28,12 +28,12 @@ const arc = (a0: number, a1: number, r: number) => {
   return `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
 };
 
-// Stage labels sit inside the ring band, on the core-facing side, so the four
-// lineage connectors (which stop at the ring's outer edge) never cross them.
+// Stage labels sit inside the ring band, close to the core-facing edge, so the
+// larger lineage modules and their connectors never obscure the readable cycle.
 const stages = STAGES.map((label, i) => {
   const mid = -90 + i * STEP;
-  const left = 50 + 20 * Math.cos(rad(mid));
-  const top = 50 + 20 * Math.sin(rad(mid));
+  const left = 50 + 17.5 * Math.cos(rad(mid));
+  const top = 50 + 17.5 * Math.sin(rad(mid));
   return { label, left, top, delay: i * (CYCLE_S / 7), num: String(i + 1).padStart(2, '0') };
 });
 
@@ -91,10 +91,16 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
 
       <svg class="gems-conduits" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
         <g class="gems-art__connectors">
-          <path class="gems-art__connector gems-art__connector--topaz" data-conduit-for="topaz" d="M 500 220 L 500 236"></path>
-          <path class="gems-art__connector gems-art__connector--sapphire" data-conduit-for="sapphire" d="M 220 500 L 236 500"></path>
-          <path class="gems-art__connector gems-art__connector--peridot" data-conduit-for="peridot" d="M 780 500 L 764 500"></path>
-          <path class="gems-art__connector gems-art__connector--garnet" data-conduit-for="garnet" d="M 500 780 L 500 764"></path>
+          <!-- Every conduit starts at its lineage module's visible port and
+               ends at one explicit Training Grounds reactor port. -->
+          <path class="gems-art__connector gems-art__connector--topaz" data-conduit-for="topaz" d="M 500 205 L 500 236"></path>
+          <path class="gems-art__connector gems-art__connector--sapphire" data-conduit-for="sapphire" d="M 205 500 L 236 500"></path>
+          <path class="gems-art__connector gems-art__connector--peridot" data-conduit-for="peridot" d="M 795 500 L 764 500"></path>
+          <path class="gems-art__connector gems-art__connector--garnet" data-conduit-for="garnet" d="M 500 795 L 500 764"></path>
+          <path class="gems-art__conduit-ticks gems-art__conduit-ticks--topaz" data-conduit-ticks-for="topaz" d="M494 212h12m-12 8h12m-12 8h12"></path>
+          <path class="gems-art__conduit-ticks gems-art__conduit-ticks--sapphire" data-conduit-ticks-for="sapphire" d="M212 494v12m8-12v12m8-12v12"></path>
+          <path class="gems-art__conduit-ticks gems-art__conduit-ticks--peridot" data-conduit-ticks-for="peridot" d="M788 494v12m-8-12v12m-8-12v12"></path>
+          <path class="gems-art__conduit-ticks gems-art__conduit-ticks--garnet" data-conduit-ticks-for="garnet" d="M494 788h12m-12-8h12m-12-8h12"></path>
           <circle class="gems-art__port gems-art__port--topaz" data-conduit-endpoint="topaz" cx="500" cy="236" r="5"></circle>
           <circle class="gems-art__port gems-art__port--sapphire" data-conduit-endpoint="sapphire" cx="236" cy="500" r="5"></circle>
           <circle class="gems-art__port gems-art__port--peridot" data-conduit-endpoint="peridot" cx="764" cy="500" r="5"></circle>
@@ -139,6 +145,7 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
             <path d="M100 8 164 31 190 100 164 169 100 192 36 169 10 100 36 31Z"></path>
             <path d="M100 8 100 52 164 31 M100 52 190 100 143 100 164 169 M100 52 57 100 36 31 M57 100 10 100 36 169 100 192 M57 100 100 52 143 100 100 148 57 100Z"></path>
             <path d="M100 148 100 192 M143 100 190 100 M57 100 36 169 M100 52 100 8"></path>
+            <path d="M100 52 143 100 100 148 57 100Z M100 74 126 100 100 126 74 100Z M57 100 100 100 M100 52 100 148"></path>
             <circle cx="100" cy="52" r="2.6"></circle><circle cx="143" cy="100" r="2.6"></circle>
             <circle cx="100" cy="148" r="2.6"></circle><circle cx="57" cy="100" r="2.6"></circle>
           </svg>
@@ -284,6 +291,11 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
     fill: none; stroke: rgba(132,158,205,.72); stroke-width: 1.6;
     vector-effect: non-scaling-stroke; transition: stroke .18s ease, stroke-width .18s ease;
   }
+  .gems-art__conduit-ticks {
+    fill: none; stroke: rgba(178,202,241,.62); stroke-width: 1.35;
+    stroke-linecap: round; vector-effect: non-scaling-stroke;
+    transition: stroke .18s ease, opacity .18s ease;
+  }
   .gems-art__port { fill: #a7c4ff; stroke: #070b12; stroke-width: 2; transition: fill .18s ease; }
   .gems-art__ring path { fill: none; stroke: rgba(75,105,165,.72); stroke-width: 11; stroke-linecap: butt; }
   .gems-art__sweep {
@@ -306,6 +318,7 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
   .gems-core__facets { position: absolute; z-index: 0; inset: 4%; width: 92%; height: 92%; color: #91b4f5; fill: rgba(115,157,231,.045); stroke: currentColor; stroke-width: 1; opacity: .3; pointer-events: none; }
   .gems-core__facets path:nth-child(2) { fill: none; stroke-opacity: .42; }
   .gems-core__facets path:nth-child(3) { fill: none; stroke-opacity: .28; }
+  .gems-core__facets path:nth-child(4) { fill: none; stroke-opacity: .38; }
   .gems-core__facets circle { fill: currentColor; stroke: none; }
   .gems-core__index, .gems-core__name, .gems-core__sub, .gems-core__gate { position: relative; z-index: 1; padding: 0 .2rem; background: rgba(7,14,27,.76); }
   .gems-core__index { color: #a7c4ff; font: 750 clamp(.48rem,.86vw,.58rem)/1 var(--font-mono); letter-spacing: .2em; }
@@ -335,7 +348,7 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
   .gems-node {
     position: absolute; z-index: 4; isolation: isolate;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: .08rem; width: 22%; height: 22%; box-sizing: border-box; padding: 0 .25rem;
+    gap: .08rem; width: 25%; height: 25%; box-sizing: border-box; padding: 0 .25rem;
     border: 0; background: none; box-shadow: none; text-align: center;
     outline: none;
   }
@@ -358,7 +371,7 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
     background: radial-gradient(ellipse,rgba(7,11,18,.99) 0%,rgba(7,11,18,.96) 56%,rgba(7,11,18,0) 100%);
     content: ''; pointer-events: none;
   }
-  .gems-node__gemstone { display: block; flex: none; width: 4rem; height: 4.4rem; max-width: 90%; overflow: visible; color: var(--gem-color); }
+  .gems-node__gemstone { display: block; flex: none; width: 5rem; height: 5.45rem; max-width: 90%; overflow: visible; color: var(--gem-color); }
   .gems-node__compute-ring { fill: none; stroke: var(--gem-color); stroke-width: .8; stroke-opacity: .3; stroke-dasharray: 1.5 4; transition: stroke-opacity .18s ease; }
   .gems-node__compute-ring--inner { stroke-opacity: .15; stroke-dasharray: 14 8; }
   .gems-node__micro-ticks { fill: none; stroke: var(--gem-color); stroke-width: 1; stroke-opacity: .65; }
@@ -372,17 +385,17 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
   .gems-node__gem-outline { fill: none; stroke: rgba(255,255,255,.72); stroke-width: 1; stroke-linejoin: round; }
   .gems-node__index { color: var(--gem-color); font: 700 .45rem/1 var(--font-mono); letter-spacing: .16em; }
   .gems-node__name { color: var(--gem-color); font-size: clamp(.68rem,1.2vw,.78rem); font-weight: 850; letter-spacing: .1em; line-height: 1; text-transform: uppercase; }
-  .gems-node__role { max-width: 14rem; padding: .04rem .2rem; color: var(--color-text-muted); font-size: clamp(.54rem,.82vw,.62rem); line-height: 1.24; }
+  .gems-node__role { max-width: 14rem; padding: .04rem .2rem; color: var(--color-text-muted); font-size: clamp(.56rem,.86vw,.66rem); line-height: 1.24; }
   .gems-node__state { display: inline-flex; align-items: center; gap: .28rem; color: var(--gem-color); font: 750 .48rem/1 var(--font-mono); letter-spacing: .14em; }
   .gems-node__state span { width: .28rem; height: .28rem; border-radius: 50%; background: var(--gem-color); }
-  .gems-node[data-gem='topaz'] { top: 0; left: 50%; transform: translateX(-50%); }
-  .gems-node[data-gem='sapphire'] { top: 50%; left: 0; transform: translateY(-50%); }
-  .gems-node[data-gem='peridot'] { top: 50%; right: 0; transform: translateY(-50%); }
-  .gems-node[data-gem='garnet'] { bottom: 0; left: 50%; transform: translateX(-50%); }
-  .gems-node[data-gem='topaz'] .gems-node__port { bottom: 0; left: 50%; transform: translate(-50%,50%); }
-  .gems-node[data-gem='sapphire'] .gems-node__port { right: 0; top: 50%; transform: translate(50%,-50%); }
-  .gems-node[data-gem='peridot'] .gems-node__port { left: 0; top: 50%; transform: translate(-50%,-50%); }
-  .gems-node[data-gem='garnet'] .gems-node__port { top: 0; left: 50%; transform: translate(-50%,-50%); }
+  .gems-node[data-gem='topaz'] { top: 1.5%; left: 50%; transform: translateX(-50%); }
+  .gems-node[data-gem='sapphire'] { top: 50%; left: 1.5%; transform: translateY(-50%); }
+  .gems-node[data-gem='peridot'] { top: 50%; right: 1.5%; transform: translateY(-50%); }
+  .gems-node[data-gem='garnet'] { bottom: 1.5%; left: 50%; transform: translateX(-50%); }
+  .gems-node[data-gem='topaz'] .gems-node__port { top: 76%; bottom: auto; left: 50%; transform: translate(-50%,-50%); }
+  .gems-node[data-gem='sapphire'] .gems-node__port { top: 50%; right: auto; left: 76%; transform: translate(-50%,-50%); }
+  .gems-node[data-gem='peridot'] .gems-node__port { top: 50%; right: auto; left: 24%; transform: translate(-50%,-50%); }
+  .gems-node[data-gem='garnet'] .gems-node__port { top: 24%; bottom: auto; left: 50%; transform: translate(-50%,-50%); }
   .gems-node__port { position: absolute; z-index: 5; width: .42rem; height: .42rem; border: 2px solid #070b12; border-radius: 50%; background: var(--gem-color); transition: box-shadow .18s ease, background .18s ease; }
 
   .gems-node:is(:hover,:focus-visible)::before { opacity: 1; }
@@ -395,6 +408,10 @@ const gemPalettes: Record<string, { light: string; mid: string; deep: string; ed
   .gems-system:has(.gems-node[data-gem='sapphire']:is(:hover,:focus-visible)) .gems-art__connector--sapphire { stroke: #81adff; stroke-width: 2.8; }
   .gems-system:has(.gems-node[data-gem='peridot']:is(:hover,:focus-visible)) .gems-art__connector--peridot { stroke: #77d8ad; stroke-width: 2.8; }
   .gems-system:has(.gems-node[data-gem='garnet']:is(:hover,:focus-visible)) .gems-art__connector--garnet { stroke: #d39cff; stroke-width: 2.8; }
+  .gems-system:has(.gems-node[data-gem='topaz']:is(:hover,:focus-visible)) .gems-art__conduit-ticks--topaz { stroke: #f2bd55; }
+  .gems-system:has(.gems-node[data-gem='sapphire']:is(:hover,:focus-visible)) .gems-art__conduit-ticks--sapphire { stroke: #81adff; }
+  .gems-system:has(.gems-node[data-gem='peridot']:is(:hover,:focus-visible)) .gems-art__conduit-ticks--peridot { stroke: #77d8ad; }
+  .gems-system:has(.gems-node[data-gem='garnet']:is(:hover,:focus-visible)) .gems-art__conduit-ticks--garnet { stroke: #d39cff; }
   .gems-system:has(.gems-node[data-gem='topaz']:is(:hover,:focus-visible)) .gems-art__port--topaz { fill: #f2bd55; }
   .gems-system:has(.gems-node[data-gem='sapphire']:is(:hover,:focus-visible)) .gems-art__port--sapphire { fill: #81adff; }
   .gems-system:has(.gems-node[data-gem='peridot']:is(:hover,:focus-visible)) .gems-art__port--peridot { fill: #77d8ad; }

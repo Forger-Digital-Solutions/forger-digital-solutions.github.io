@@ -42,17 +42,22 @@ test.describe('Homepage visual recovery: CodeForge atom and GEMS intelligence co
       [...document.querySelectorAll<SVGElement>('.electron-scaffold__plane, .orbit-layer .orbit-path')]
         .filter((path) => Number(getComputedStyle(path).opacity) > 0.2).length);
     expect(defaultRailCount, 'default frame has more than four prominent full rails').toBeLessThanOrEqual(4);
+    await expect(ecosystem.locator('[data-panel-default]')).toBeVisible();
+    await expect(ecosystem.locator('.orbit-highlight')).toHaveCount(0);
 
     await page.setViewportSize({ width: 1440, height: 900 });
     const codeforge = ecosystem.locator('.planet-link[data-node-id="codeforge"]');
     // The body moves continuously along its path, so use keyboard focus to
     // trigger the same exact-path reveal without relying on a moving hover target.
     await codeforge.focus();
-    await expect(ecosystem.locator('[data-orbit-for="codeforge"] .orbit-path')).toHaveCSS('opacity', '0.78');
+    await expect(ecosystem.locator('[data-orbit-for="codeforge"] .orbit-path')).toHaveCSS('opacity', '0.58');
     const activeRailCount = await page.evaluate(() =>
       [...document.querySelectorAll<SVGElement>('.electron-scaffold__plane, .orbit-layer .orbit-path')]
         .filter((path) => Number(getComputedStyle(path).opacity) > 0.2).length);
     expect(activeRailCount, 'one selected product path plus the three scaffold planes').toBeLessThanOrEqual(4);
+    await page.keyboard.press('Escape');
+    await expect(ecosystem.locator('[data-orbit-for="codeforge"] .orbit-path')).toHaveCSS('opacity', '0');
+    await expect(ecosystem.locator('[data-panel-default]')).toBeVisible();
   });
 
   test('renders four canonical lineages and all seven readable training stages', async ({ page }) => {
@@ -65,6 +70,7 @@ test.describe('Homepage visual recovery: CodeForge atom and GEMS intelligence co
     await expect(system.locator('.gems-node__port')).toHaveCount(4);
     await expect(system.locator('.gems-art__port')).toHaveCount(4);
     await expect(system.locator('.gems-conduits [data-conduit-for]')).toHaveCount(4);
+    await expect(system.locator('.gems-conduits [data-conduit-ticks-for]')).toHaveCount(4);
     await expect(system.locator('.gems-node.card, .gems-node .card')).toHaveCount(0);
     for (const gem of ['topaz', 'sapphire', 'peridot', 'garnet']) {
       const node = system.locator(`.gems-node[data-gem="${gem}"]`);
@@ -74,6 +80,17 @@ test.describe('Homepage visual recovery: CodeForge atom and GEMS intelligence co
       await expect(system.locator(`.gems-conduits [data-conduit-for="${gem}"]`)).toHaveCount(1);
       await expect(system.locator(`.gems-conduits [data-conduit-endpoint="${gem}"]`)).toHaveCount(1);
     }
+    const conduitAlignment = await system.evaluate((root) => {
+      const stage = root.querySelector('.gems-stage')!.getBoundingClientRect();
+      return ['topaz', 'sapphire', 'peridot', 'garnet'].map((gem) => {
+        const port = root.querySelector<HTMLElement>(`[data-gem-port="${gem}"]`)!.getBoundingClientRect();
+        const point = root.querySelector<SVGPathElement>(`[data-conduit-for="${gem}"]`)!.getPointAtLength(0);
+        const x = ((port.left + port.width / 2 - stage.left) / stage.width) * 1000;
+        const y = ((port.top + port.height / 2 - stage.top) / stage.height) * 1000;
+        return Math.hypot(point.x - x, point.y - y);
+      });
+    });
+    expect(conduitAlignment.every((distance) => distance < 8), 'each conduit must begin at its gem port').toBe(true);
     await expect(system.locator('.gems-cycle li')).toHaveText([
       /Curriculum/, /Teach/, /Test/, /Diagnose/, /Refine/, /Verify/, /Advance/
     ]);

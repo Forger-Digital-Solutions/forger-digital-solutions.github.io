@@ -22,8 +22,8 @@ describe('final visual evolution contract', () => {
     expect(ecosystem.match(/data-scaffold-plane="(?:one|two|three)"/g)).toHaveLength(3);
     expect(ecosystem).toContain('class="orbit-path" d={node.orbit.path}');
     expect(ecosystem).toContain('--orbit-path:path("${node.orbit.path}")');
-    expect(ecosystem).toContain('.orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: .02;');
-    expect(ecosystem).toContain('stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: .018;');
+    expect(ecosystem).toContain('.orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: 0;');
+    expect(ecosystem).toContain('stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: 0;');
     expect(ecosystem).not.toContain('class="relation-layer"');
     expect(ecosystem).toContain('.orbit-visual.orbit-highlight .orbit-path');
     expect(ecosystem).toContain('codeforge-icon.svg');

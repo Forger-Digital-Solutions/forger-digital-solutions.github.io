@@ -255,6 +255,22 @@ test.describe('Reduced motion', () => {
 });
 
 test.describe('Failure UX', () => {
+  test('a streamed terminal failure creates one message, hides Stop, and returns to Ready', async ({ page }) => {
+    await stubHealth(page);
+    await stubChat(page, ndjson({ error: 'upstream unavailable', errorType: 'SERVICE_UNAVAILABLE' }));
+    await openWidget(page);
+    await page.locator('#kayla-input').fill('Explain recursion in simple terms.');
+    await page.locator('#kayla-send').click();
+
+    const replies = page.locator('.kayla-msg--kayla');
+    // The greeting is present before any turn; the failed stream must add
+    // exactly one settled assistant bubble and never leave a second placeholder.
+    await expect(replies).toHaveCount(2);
+    await expect(replies.last()).toHaveText('Kayla is temporarily unavailable. Please try again later.');
+    await expect(page.locator('.kayla-status-text')).toHaveText('Ready');
+    await expect(page.locator('#kayla-stop')).toBeHidden();
+  });
+
   test('a rate limit shows visitor-friendly wording, not protocol internals', async ({ page }) => {
     await stubHealth(page);
     await page.route(CHAT_ROUTE, (route: Route) =>

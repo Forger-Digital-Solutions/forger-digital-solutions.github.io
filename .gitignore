@@ -2,6 +2,8 @@
 node_modules/
 .pnpm-store/
 .wrangler/
+.wrangler-config/
+.kayla-local/
 
 # Build output
 dist/
