@@ -33,9 +33,9 @@ describe('FDS Software Distribution Architecture', () => {
 
     const forgerems = products.find((p) => p.slug === 'forgerems');
     expect(forgerems).toBeDefined();
-    expect(forgerems?.version).toBe('v1.2.3-preview.1');
+    expect(forgerems?.version).toBe('v1.2.4-preview.1');
     expect(forgerems?.status).toBe('public-beta');
-    expect(forgerems?.downloadUrl).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
+    expect(forgerems?.downloadUrl).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1');
   });
 
   it('forged shelf displays verified distribution badges and layout', () => {

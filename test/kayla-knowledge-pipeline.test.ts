@@ -77,8 +77,8 @@ describe('Kayla Knowledge Pipeline - ForgerEMS', () => {
   });
 
   it('has download info', () => {
-    expect(forgerems.download).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
-    expect(forgerems.downloads).toContain('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
+    expect(forgerems.download).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1');
+    expect(forgerems.downloads).toContain('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1');
   });
 
   it('has changelog/FAQ data', () => {
@@ -102,13 +102,13 @@ describe('Kayla Knowledge Pipeline - Releases', () => {
   it('getLatestRelease returns correct release', () => {
     const latest = getLatestRelease('forgerems');
     expect(latest).toBeDefined();
-    expect(latest?.version).toBe('v1.2.3-preview.1');
+    expect(latest?.version).toBe('v1.2.4-preview.1');
   });
 
   it('getReleaseForApp returns correct release', () => {
     const release = getReleaseForApp('forgerems');
     expect(release).toBeDefined();
-    expect(release?.version).toBe('v1.2.3-preview.1');
+    expect(release?.version).toBe('v1.2.4-preview.1');
   });
 });
 
@@ -259,7 +259,7 @@ describe('Kayla Knowledge Pipeline - Source Authority', () => {
     const product = products.find(p => p.slug === 'forgerems');
     const release = releases.find(r => r.appId === 'forgerems');
     const download = downloads.find(d => d.appId === 'forgerems');
-    expect(product?.version).toBe('v1.2.3-preview.1');
+    expect(product?.version).toBe('v1.2.4-preview.1');
     expect(release?.version).toBe(product?.version);
     expect(download?.version).toBe(product?.version);
     expect(release?.downloads?.[0]).toBe(product?.downloadUrl);

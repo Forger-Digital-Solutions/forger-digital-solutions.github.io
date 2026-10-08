@@ -22,8 +22,8 @@ describe('Kayla Knowledge - Apps', () => {
 
   it('ForgerEMS installer resolves correctly', () => {
     const dl = getForgerEMSDownload();
-    expect(dl.href).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
-    expect(dl.version).toBe('v1.2.3-preview.1');
+    expect(dl.href).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1');
+    expect(dl.version).toBe('v1.2.4-preview.1');
     expect(dl.platform).toBe('Windows');
     expect(dl.kind).toBe('archive');
   });
@@ -90,7 +90,7 @@ describe('Kayla Knowledge - Downloads', () => {
   it('download registry includes ForgerEMS', () => {
     const emsDl = downloads.find(d => d.appId === 'forgerems');
     expect(emsDl).toBeDefined();
-    expect(emsDl?.href).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases');
+    expect(emsDl?.href).toBe('https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1');
   });
 });
 

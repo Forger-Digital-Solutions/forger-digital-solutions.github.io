@@ -84,10 +84,11 @@ export const products: Product[] = [
   }),
   buildProduct('forgerems', {
     description:
-      'Forger Engineering Maintenance Suite brings USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance into one technician application.',
+      'Forger Engineering Maintenance Suite brings USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first diagnostics into one Windows technician application.',
     platform: ['Windows'],
-    videoUrl: 'https://www.youtube-nocookie.com/embed/ILKWS2dNIrg',
-    videoPoster: '/images/forgerems/forgerems-preview-poster.jpg',
+    downloadUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1',
+    releaseNotesUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1',
+    docsUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS#readme',
     featured: true,
   }),
 ];

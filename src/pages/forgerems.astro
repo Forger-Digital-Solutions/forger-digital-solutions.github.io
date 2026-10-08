@@ -1,0 +1,443 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { products } from '../data/products';
+
+const product = products.find((p) => p.slug === 'forgerems');
+
+const tag = 'v1.2.4-preview.1';
+const releaseUrl = `https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/${tag}`;
+const assetBase = `https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/download/${tag}`;
+
+const assets = [
+  {
+    name: 'Portable ZIP',
+    filename: 'ForgerEMS-v1.2.4.zip',
+    href: `${assetBase}/ForgerEMS-v1.2.4.zip`,
+    sizeBytes: 81742749,
+    sha256: '61A000203FD3E866C10221856322AD318A38562B5CE9E122626205997373B137',
+    kind: 'portable',
+  },
+  {
+    name: 'Windows Installer',
+    filename: 'ForgerEMS-Setup-v1.2.4.exe',
+    href: `${assetBase}/ForgerEMS-Setup-v1.2.4.exe`,
+    sizeBytes: 61780805,
+    sha256: 'F7C3541860015A533D437CE80B8D0D8B70DD78F0DE9CF47091353C1175B8A9BB',
+    kind: 'installer',
+  },
+];
+
+const formatSize = (bytes: number): string => {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB (${bytes.toLocaleString('en-US')} bytes)`;
+  if (bytes >= 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${bytes} B`;
+};
+
+const releaseDate = '2026-10-08';
+const sourceCommit = 'fc54150844b36c2e6d6a4fd18d6ea9dd065fd4fb';
+---
+
+<BaseLayout
+  title="ForgerEMS — Windows Technician Workbench"
+  description="Download ForgerEMS v1.2.4-preview.1, a public preview Windows technician workbench for USB toolkits, drive validation, and diagnostics."
+  ogImage="/images/forgerems/forgerems-preview-poster.jpg"
+>
+  <section class="page-section" aria-labelledby="forgerems-title">
+    <SectionHeader
+      eyebrow="Public Preview"
+      title="ForgerEMS"
+      description={product?.description ?? 'Windows technician workbench for diagnostics, USB toolkit creation, drive validation, and local-first diagnostics.'}
+      align="center"
+      headingLevel="h1"
+    />
+
+    <div class="forgerems-hero">
+      <img
+        src="/images/forgerems/forgerems-preview-poster.jpg"
+        alt="ForgerEMS preview interface showing a Windows technician workbench."
+        width="1280"
+        height="720"
+        loading="eager"
+        decoding="async"
+      />
+      <p class="forgerems-hero__caption">Public preview screenshot — actual UI may evolve between builds.</p>
+    </div>
+
+    <div class="status-card">
+      <div class="status-row">
+        <span class="status-label">Release channel</span>
+        <span class="status-value status-value--preview">Public Preview</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Version</span>
+        <span class="status-value">{tag}</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Platform</span>
+        <span class="status-value">{product?.platform.join(' / ') ?? 'Windows'}</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Published</span>
+        <span class="status-value">{releaseDate}</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Signature</span>
+        <span class="status-value status-value--warning">Unsigned — Windows SmartScreen may warn</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Source commit</span>
+        <code class="status-value status-value--code">{sourceCommit}</code>
+      </div>
+    </div>
+
+    <p class="status-note">
+      This is a <strong>public preview</strong>, not a production-certified release. The binaries are unsigned and
+      installer lifecycle certification is still in progress. Verify the SHA-256 of any file you download.
+    </p>
+
+    <h2 id="downloads" class="section-title">Downloads</h2>
+    <p class="downloads-intro">
+      Start with the portable ZIP unless you specifically want an installed app. Both files are published on the
+      <a href={releaseUrl} target="_blank" rel="noopener noreferrer">GitHub Release page</a>.
+    </p>
+
+    <div class="download-grid">
+      {assets.map((asset) => (
+        <article class="download-card" data-asset-filename={asset.filename}>
+          <header class="download-card__head">
+            <span class="download-card__eyebrow">{asset.kind.toUpperCase()}</span>
+            <h3 class="download-card__name">{asset.name}</h3>
+            <p class="download-card__filename">{asset.filename}</p>
+          </header>
+          <dl class="download-card__meta">
+            <div class="download-card__row"><dt>Version</dt><dd>{tag}</dd></div>
+            <div class="download-card__row"><dt>Size</dt><dd>{formatSize(asset.sizeBytes)}</dd></div>
+          </dl>
+          <div class="download-card__checksum">
+            <p class="download-card__checksum-label">SHA-256</p>
+            <code class="download-card__sha" id={`sha-${asset.filename}`}>{asset.sha256}</code>
+          </div>
+          <div class="download-card__actions">
+            <a href={asset.href} class="btn btn-primary" download>Download {asset.name}</a>
+            <a href={releaseUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub Release</a>
+            <button
+              type="button"
+              class="btn btn-outline download-copy"
+              data-copy-sha={asset.sha256}
+              aria-label={`Copy SHA-256 for ${asset.filename}`}
+            >Copy SHA-256</button>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="verify-section" aria-labelledby="verify-title">
+      <h2 id="verify-title" class="section-title">Verify your download</h2>
+      <p>
+        Compare the SHA-256 of the downloaded file with the value above before running it.
+      </p>
+      <code class="code-block">
+        Get-FileHash .\ForgerEMS-v1.2.4.zip -Algorithm SHA256<br />
+        Get-FileHash .\ForgerEMS-Setup-v1.2.4.exe -Algorithm SHA256
+      </code>
+      <p class="verify-note">
+        On macOS or Linux, use <code>shasum -a 256 &lt;filename&gt;</code>.
+      </p>
+    </div>
+
+    <div class="links-section" aria-labelledby="links-title">
+      <h2 id="links-title" class="section-title">Documentation &amp; support</h2>
+      <ul class="links-list">
+        <li><a href={releaseUrl} target="_blank" rel="noopener noreferrer">Release notes on GitHub</a></li>
+        <li><a href="https://github.com/Forger-Digital-Solutions/ForgerEMS#readme" target="_blank" rel="noopener noreferrer">Repository README</a></li>
+        <li><a href="https://github.com/Forger-Digital-Solutions/ForgerEMS/blob/main/docs/FAQ.md" target="_blank" rel="noopener noreferrer">FAQ</a></li>
+        <li><a href="https://github.com/Forger-Digital-Solutions/ForgerEMS/blob/main/docs/TERMS_OF_USE.md" target="_blank" rel="noopener noreferrer">Terms of Use</a></li>
+        <li><a href="https://github.com/Forger-Digital-Solutions/ForgerEMS/blob/main/docs/PRIVACY_AND_DATA_HANDLING.md" target="_blank" rel="noopener noreferrer">Privacy / Data Handling</a></li>
+        <li><a href="https://github.com/Forger-Digital-Solutions/ForgerEMS/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security policy</a></li>
+      </ul>
+    </div>
+
+    <div class="preview-disclaimer" role="note">
+      <h2 class="section-title">Preview disclaimer</h2>
+      <p>
+        ForgerEMS v1.2.4-preview.1 is prerelease software. It is provided as-is for testing and technician feedback.
+        Features, packaging, and documentation may change. It is not certified as production-ready, Microsoft Verified,
+        or guaranteed safe by any third party. Use at your own risk and verify every download.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.download-copy').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const sha = button.getAttribute('data-copy-sha') || '';
+        let copied = false;
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(sha);
+            copied = true;
+          } catch {
+            copied = false;
+          }
+        }
+        if (!copied) {
+          const helper = document.createElement('textarea');
+          helper.value = sha;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'absolute';
+          helper.style.left = '-9999px';
+          document.body.appendChild(helper);
+          helper.select();
+          try { copied = document.execCommand('copy'); } catch { copied = false; }
+          document.body.removeChild(helper);
+        }
+        const original = button.textContent;
+        button.textContent = copied ? 'Copied ✓' : 'Copy failed';
+        button.disabled = true;
+        setTimeout(() => {
+          button.textContent = original;
+          button.disabled = false;
+        }, 2000);
+      });
+    });
+  });
+</script>
+
+<style>
+  .forgerems-hero {
+    margin: 2rem auto 2.5rem;
+    max-width: 52rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(13,20,32,.96), rgba(7,12,20,.96));
+    box-shadow: var(--shadow-sm);
+  }
+  .forgerems-hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .forgerems-hero__caption {
+    margin: 0;
+    padding: .75rem 1rem;
+    color: var(--color-text-subtle);
+    font-size: .82rem;
+    text-align: center;
+  }
+
+  .status-card {
+    display: grid;
+    gap: .55rem;
+    max-width: 44rem;
+    margin: 0 auto 1.5rem;
+    padding: 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: rgba(7,12,20,.72);
+  }
+  .status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem .9rem;
+    align-items: baseline;
+  }
+  .status-label {
+    flex: 0 0 9rem;
+    color: var(--color-text-subtle);
+    font: 650 .66rem/1.5 var(--font-mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .status-value {
+    color: var(--color-text-muted);
+    font-size: .92rem;
+  }
+  .status-value--preview {
+    color: #ffdda6;
+    font-weight: 700;
+  }
+  .status-value--warning {
+    color: #ffb3b3;
+    font-weight: 700;
+  }
+  .status-value--code {
+    font-family: var(--font-mono);
+    font-size: .8rem;
+  }
+  .status-note {
+    max-width: 44rem;
+    margin: 0 auto 2.5rem;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid #e0a63c;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    background: rgba(224,166,60,.08);
+    color: var(--color-text-muted);
+    font-size: .92rem;
+    line-height: 1.7;
+  }
+
+  .downloads-intro {
+    max-width: 44rem;
+    margin: 0 auto 1.4rem;
+    color: var(--color-text-muted);
+    font-size: .95rem;
+    line-height: 1.7;
+  }
+  .download-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .download-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid #e0a63c;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(150deg, rgba(14,22,35,.96), rgba(8,13,22,.96));
+    box-shadow: var(--shadow-sm);
+  }
+  .download-card__eyebrow {
+    margin: 0 0 .5rem;
+    color: #e0a63c;
+    font: 700 .64rem/1 var(--font-mono);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+  .download-card__name {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1.25rem;
+    letter-spacing: -.02em;
+  }
+  .download-card__filename {
+    margin: .25rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: .84rem;
+  }
+  .download-card__meta {
+    display: grid;
+    gap: .35rem;
+    margin: 1rem 0 0;
+  }
+  .download-card__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem .8rem;
+    align-items: baseline;
+  }
+  .download-card__row dt {
+    flex: 0 0 5rem;
+    color: var(--color-text-subtle);
+    font: 650 .66rem/1.5 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .download-card__row dd {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .88rem;
+  }
+  .download-card__checksum {
+    margin-top: 1.1rem;
+    padding: .8rem .9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(4,8,15,.85);
+  }
+  .download-card__checksum-label {
+    margin: 0 0 .35rem;
+    color: var(--color-text-subtle);
+    font: 700 .62rem/1 var(--font-mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .download-card__sha {
+    display: block;
+    color: #a8ccff;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    line-height: 1.6;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+  .download-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-top: 1.1rem;
+  }
+  .download-card__actions .btn {
+    flex: 1 1 7rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .verify-section,
+  .links-section,
+  .preview-disclaimer {
+    max-width: 44rem;
+    margin: 0 auto 2.5rem;
+  }
+  .verify-section p,
+  .links-section p,
+  .preview-disclaimer p {
+    color: var(--color-text-muted);
+    font-size: .93rem;
+    line-height: 1.7;
+  }
+  .code-block {
+    display: block;
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(4,8,15,.85);
+    color: #a8ccff;
+    font-family: var(--font-mono);
+    font-size: .82rem;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .verify-note {
+    color: var(--color-text-subtle);
+    font-size: .85rem;
+  }
+  .links-list {
+    display: grid;
+    gap: .5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links-list a {
+    color: var(--color-accent-bright);
+    text-decoration: underline;
+    text-decoration-color: rgba(120,160,255,.5);
+  }
+  .preview-disclaimer {
+    padding: 1.2rem;
+    border: 1px solid rgba(255,120,120,.25);
+    border-radius: var(--radius-lg);
+    background: rgba(255,120,120,.06);
+  }
+  .preview-disclaimer .section-title {
+    margin-top: 0;
+  }
+
+  @media (max-width: 760px) {
+    .download-grid {
+      grid-template-columns: 1fr;
+    }
+    .status-label {
+      flex: 0 0 100%;
+    }
+  }
+</style>

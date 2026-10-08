@@ -120,7 +120,7 @@ describe('Kayla Phase 2 - Handler Integration', () => {
     );
     expect(status).toBe(200);
     expect(response.answer.toLowerCase()).toContain('forgerems');
-    expect(response.answer).toContain('v1.2.3-preview.1');
+    expect(response.answer).toContain('v1.2.4-preview.1');
   });
 
   it('handles conversation history', async () => {

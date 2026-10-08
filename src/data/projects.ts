@@ -44,26 +44,28 @@ export const projects: Project[] = [
     audience: 'PC technicians, repair shops, and Windows users who need diagnostics, maintenance, and recovery tooling in one place.',
     problem: 'Technician work jumps between USB toolkit creation, drive validation, port intelligence, system inspection, driver guidance, and recovery tasks — usually across separate utilities with no shared workflow.',
     differentiation: 'ForgerEMS brings those jobs into one local-first Windows workbench built around technician workflows rather than feature sprawl.',
-    summary: 'A Windows technician workbench for diagnostics, maintenance, and repair: USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance.',
-    description: 'Forger Engineering Maintenance Suite is a local-first Windows application for diagnostics, maintenance, and repair-oriented work. It combines USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance in one technician application. The public release is a preview: capabilities and packaging may change between builds. Public preview builds are hosted on GitHub Releases.',
+    summary: 'A Windows technician workbench for diagnostics, maintenance, and repair: USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first diagnostics.',
+    description: 'Forger Engineering Maintenance Suite is a local-first Windows application for diagnostics, maintenance, and repair-oriented work. It combines USB toolkit creation, drive validation, USB and port intelligence, system information, driver guidance, and local-first diagnostics in one technician application. The public release is a preview: capabilities and packaging may change between builds, and the v1.2.4-preview.1 binaries are unsigned. Public preview builds are hosted on GitHub Releases.',
     status: 'PREVIEW / BETA', featured: false,
     stageLabel: 'Public preview',
     tags: ['Windows', 'Diagnostics', 'USB Tooling', 'Drive Validation', 'Maintenance', 'Repair'],
-    focusAreas: ['USB toolkit creation', 'Drive validation', 'USB and port intelligence', 'System information', 'Driver guidance', 'Local-first Kyra assistance'],
+    focusAreas: ['USB toolkit creation', 'Drive validation', 'USB and port intelligence', 'System information', 'Driver guidance', 'Local-first diagnostics'],
     highlights: [
-      'v1.2.3-preview.1 is a public preview for Windows.',
-      'USB Builder, Drive Validator, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance.',
-      'Preview builds may change between releases; verify checksums before running.'
+      'v1.2.4-preview.1 is the current public preview for Windows.',
+      'USB Builder, Drive Validator, USB and port intelligence, system information, driver guidance, and local-first diagnostics.',
+      'Published as a portable ZIP and an installer; both are unsigned preview artifacts.',
+      'Verify checksums before running; see the release page for SHA-256 hashes.'
     ],
     sections: [
-      { title: 'Public Preview', body: 'ForgerEMS v1.2.3-preview.1 is available for Windows as a public preview. It includes USB Builder, Drive Validator, USB and port intelligence, system information, driver guidance, and local-first Kyra assistance.', items: ['Windows application', 'USB toolkit creation', 'Drive validation', 'USB and port intelligence', 'System information and driver guidance'] },
-      { title: 'In Development', body: 'Work continues on technician workflows, recovery tooling, and repair-oriented utilities. Features shown here as in development are not necessarily part of the public preview download until it is released.' },
+      { title: 'Public Preview v1.2.4-preview.1', body: 'ForgerEMS v1.2.4-preview.1 is available for Windows as a public preview. It includes USB Builder, Drive Validator, USB and port intelligence, system information, driver guidance, and local-first diagnostics. Download the portable ZIP or the installer from the release page; both are unsigned preview artifacts.', items: ['Windows application', 'USB toolkit creation', 'Drive validation', 'USB and port intelligence', 'System information and driver guidance'] },
+      { title: 'In Development', body: 'Work continues on technician workflows, recovery tooling, and repair-oriented utilities. Features shown here as in development are not necessarily part of the public preview download until they are released.' },
       { title: 'Built for Technicians', body: 'The workbench is organized around how repair work actually happens: inspect the machine, validate media, prepare toolkits, and keep guidance close while the job is in progress.' },
-      { title: 'Local-First', body: 'ForgerEMS runs locally on the technician machine. Kyra assistance inside ForgerEMS is local-first and does not require sending the workbench state to a server.' }
+      { title: 'Local-First', body: 'ForgerEMS runs locally on the technician machine. Diagnostic data stays on the device unless you choose to export or share it.' },
+      { title: 'Preview Trust Notes', body: 'The v1.2.4-preview.1 binaries are unsigned, so Windows SmartScreen may show an unknown-publisher warning. Verify SHA-256 checksums against the release page before running. This preview is not production-certified or Microsoft Verified.' }
     ],
     githubUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS',
-    websiteUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases',
-    documentationUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS',
+    websiteUrl: '/forgerems',
+    documentationUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS#readme',
     roadmap: 'Technician workflows, recovery tooling, and repair-oriented utilities across preview releases.',
     accentColor: '#e0a63c', visualStyle: 'nodes', sortOrder: 2
   },
