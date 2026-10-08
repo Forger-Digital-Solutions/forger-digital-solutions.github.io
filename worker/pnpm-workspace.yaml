@@ -1,6 +1,5 @@
 allowBuilds:
   esbuild: true
   workerd: true
-onlyBuiltDependencies:
-  - esbuild
-  - workerd
+overrides:
+  sharp: ">=0.35.5"
