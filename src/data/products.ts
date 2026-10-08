@@ -89,6 +89,8 @@ export const products: Product[] = [
     downloadUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1',
     releaseNotesUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1',
     docsUrl: 'https://github.com/Forger-Digital-Solutions/ForgerEMS#readme',
+    videoUrl: 'https://www.youtube-nocookie.com/embed/ILKWS2dNIrg',
+    videoPoster: '/images/forgerems/forgerems-preview-poster.jpg',
     featured: true,
   }),
 ];
