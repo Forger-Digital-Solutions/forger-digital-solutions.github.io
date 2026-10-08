@@ -95,7 +95,7 @@ export function similarity(a: string, b: string): number {
 const EXTRA_ALIASES: Record<string, string[]> = {
   codeforge: ['code forge', 'codeforge cli', 'forgezero', 'forge zero'],
   'gems-training-grounds': ['gems', 'gem', 'training grounds', 'training ground', 'gems training', 'synthetic intelligence', 'ai research', 'model research'],
-  kyrablox: ['kyra blox', 'kyrablocks'],
+  kyrablox: ['kyra blox', 'kyrablocks', 'kyra'],
   'kayla-ai-publisher': ['kayla ai publisher', 'kayla publisher', 'ai publisher'],
   'we-the-people': ['we the people', 'wethepeople', 'wtp'],
   'farmstand-finder': ['farmstand finder', 'farm stand finder', 'farmstand', 'farm stand'],

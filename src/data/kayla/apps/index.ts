@@ -78,6 +78,7 @@ export const appAliases: Record<string, string> = {
   'training grounds': 'gems-training-grounds',
   'gems training': 'gems-training-grounds',
   'kyrablox': 'kyrablox',
+  'kyra': 'kyrablox',
   'kayla': 'kayla-ai-publisher',
   'kayla publisher': 'kayla-ai-publisher',
   'kayla ai': 'kayla-ai-publisher',
