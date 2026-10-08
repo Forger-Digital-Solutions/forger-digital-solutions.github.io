@@ -16,7 +16,7 @@ requireMatch(/class_name\s*=\s*"KaylaAbuseGuard"/.test(config), 'Durable Object 
 requireMatch(/new_sqlite_classes\s*=\s*\["KaylaAbuseGuard"\]/.test(config), 'SQLite Durable Object migration missing');
 requireMatch(/KAYLA_MODEL\s*=\s*"openrouter\/free"/.test(config), 'production model must be openrouter/free');
 requireMatch(!/KAYLA_ALLOWED_ORIGINS\s*=\s*"\*"/.test(config), 'wildcard production CORS is forbidden');
-requireMatch(/evaluateModelPolicy/.test(worker), 'zero-cost model policy is not wired into Worker health');
+requireMatch(/evaluate(Route|Model)Policy/.test(worker), 'zero-cost model policy is not wired into Worker health');
 requireMatch(/KAYLA_RATE_LIMIT_SALT=replace-with/.test(envExample), 'rate-limit salt placeholder missing');
 if (process.argv.includes('--require-secrets')) {
   requireMatch(Boolean(process.env.KAYLA_API_KEY), 'KAYLA_API_KEY is not present in this shell');
