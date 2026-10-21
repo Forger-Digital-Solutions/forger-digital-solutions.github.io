@@ -176,8 +176,8 @@ describe('Kayla Phase 2 - Project Knowledge', () => {
   };
 
   const testCases = [
-    { query: 'Tell me about GEMS', expected: 'gems' },
-    { query: 'What is KyraBlox?', expected: 'kyrablox' },
+    { query: 'Tell me about Forge Control', expected: 'forge control' },
+    { query: 'What is Dead Trails West?', expected: 'dead trails west' },
     { query: 'Tell me about Kayla AI Publisher', expected: 'kayla ai publisher' },
     { query: 'What is We The People?', expected: 'people' },
     { query: 'Tell me about FarmStand Finder', expected: 'farmstand' }

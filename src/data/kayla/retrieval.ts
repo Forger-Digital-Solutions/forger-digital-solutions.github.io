@@ -10,7 +10,6 @@ import { downloads } from './downloads';
 import { releases } from './releases';
 import { githubRepos } from './github';
 import { officialSites } from './sites';
-import { gems } from '../gems';
 import { matchEntity, distinctiveTokens } from './entities';
 
 export interface KaylaDocument {
@@ -428,32 +427,6 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     weight: 1.0
   });
 
-  // The four GEMS lineages, sourced from src/data/gems.ts so the site and Kayla
-  // cannot drift apart on a GEM role, state, or disclaimed capability.
-  for (const gem of gems) {
-    addDoc({
-      id: `gem-${gem.key}`,
-      type: 'app',
-      title: gem.name,
-      text: `${gem.name} is the GEMS lineage for ${gem.role}. ${gem.direction} State: ${gem.state}. ${gem.fit} ${gem.researchStatus} Not claimed: ${gem.notClaimed}`,
-      route: '/projects/gems-training-grounds',
-      entityId: `gem-${gem.key}`,
-      tags: [gem.key, gem.name.toLowerCase(), 'gem', 'gems', 'model', 'lineage', gem.state.toLowerCase()],
-      weight: 1.0
-    });
-  }
-
-  addDoc({
-    id: 'gems-family',
-    type: 'app',
-    title: 'GEMS Family Roles',
-    text: `The GEMS family has four independent research lineages: ${gems.map(g => `${g.name} for ${g.role.toLowerCase()}`).join('; ')}. Training Grounds is the environment that teaches, evaluates, and advances them. No GEM has been released, downloaded, or independently benchmarked.`,
-    route: '/projects/gems-training-grounds',
-    entityId: 'gems-training-grounds',
-    tags: ['gems', 'gem', 'family', 'topaz', 'sapphire', 'peridot', 'garnet', 'training grounds', 'roles'],
-    weight: 1.0
-  });
-
   addDoc({
     id: 'kayla-copilot',
     type: 'general',
@@ -601,4 +574,3 @@ export function getAllDocuments(): KaylaDocument[] {
 }
 
 export { entityIndex };
-

@@ -7,20 +7,11 @@ import { ecosystemNodes } from '../../src/data/ecosystem';
  * Guards the de-crowding fix without pixel-brittle screenshots: in the static
  * (prefers-reduced-motion) composition every body must be well separated from every
  * other body, clear of the FDS Core, and inside the scene bounds; the core and the
- * canonical CodeForge mark must exist; and all eight expected bodies must be present.
+ * canonical CodeForge mark must exist; and every current body must be present.
  * Positions are read from getBoundingClientRect and normalized to the 680x680 viewBox.
  */
 
-const EXPECTED_PLANETS = [
-  'codeforge',
-  'forgerems',
-  'gems',
-  'training-grounds',
-  'kyrablox',
-  'kayla-publisher',
-  'we-the-people',
-  'farmstand-finder',
-];
+const EXPECTED_PLANETS = ecosystemNodes.map((node) => node.id);
 
 // Separation / clearance floors in viewBox units. Planet bodies are ~28-34 units in
 // diameter, so 90 keeps bodies and their tags clearly apart; 140 keeps bodies off the
@@ -55,7 +46,7 @@ test('ecosystem static composition is spread, core-clear, and in bounds', async 
     const cy = sr.top + sr.height / 2;
     const toVB = (px: number, py: number) => [340 + (px - cx) / scale, 340 + (py - cy) / scale];
 
-    // [data-planet] selects the eight bodies; the matching .tag-motion groups that
+    // [data-planet] selects the bodies; the matching .tag-motion groups that
     // carry their tags on the same path are deliberately excluded here.
     const bodies: Body[] = [...document.querySelectorAll('.planet-motion[data-planet]')].map((g) => {
       const shell = g.querySelector('.planet__shell') as SVGCircleElement;
@@ -76,7 +67,7 @@ test('ecosystem static composition is spread, core-clear, and in bounds', async 
   expect(geometry, 'ecosystem scene present').not.toBeNull();
   const { bodies, core, hasCore, codeforgeHref } = geometry!;
 
-  // All eight bodies present.
+  // All canonical bodies present.
   for (const id of EXPECTED_PLANETS) {
     expect(bodies.map((b) => b.id), `expected planet ${id}`).toContain(id);
   }
@@ -86,8 +77,8 @@ test('ecosystem static composition is spread, core-clear, and in bounds', async 
   expect(hasCore, 'FDS core heart exists').toBe(true);
   expect(codeforgeHref, 'CodeForge icon embedded in core').toContain('codeforge-icon.svg');
 
-  // ONE PLANET = ONE ORBIT, asserted on what the browser actually received: eight
-  // rendered rails and eight motion paths, all distinct, on distinct periods.
+  // ONE PLANET = ONE ORBIT, asserted on what the browser actually received:
+  // rendered rails and motion paths are distinct, with distinct periods.
   // Comparing path data here rather than (rx, ry, rotation) is deliberate — the
   // rendered curve is the orbit, and that is the thing no two planets may share.
   const rails = await page.evaluate(() => {
@@ -101,10 +92,10 @@ test('ecosystem static composition is spread, core-clear, and in bounds', async 
     });
     return { paths, motion };
   });
-  expect(rails.paths).toHaveLength(8);
-  expect(new Set(rails.paths).size, 'two planets rendered on one orbital path').toBe(8);
-  expect(new Set(rails.motion.map((m) => m.path)).size, 'two planets animated on one path').toBe(8);
-  expect(new Set(rails.motion.map((m) => m.duration)).size, 'two planets share an orbital period').toBe(8);
+  expect(rails.paths).toHaveLength(EXPECTED_PLANETS.length);
+  expect(new Set(rails.paths).size, 'two planets rendered on one orbital path').toBe(EXPECTED_PLANETS.length);
+  expect(new Set(rails.motion.map((m) => m.path)).size, 'two planets animated on one path').toBe(EXPECTED_PLANETS.length);
+  expect(new Set(rails.motion.map((m) => m.duration)).size, 'two planets share an orbital period').toBe(EXPECTED_PLANETS.length);
   // The rail drawn for a planet must be the track it animates along.
   for (let i = 0; i < rails.paths.length; i++) {
     expect(rails.motion[i].path, `rail ${i} and its motion path disagree`).toBe(rails.paths[i]);
@@ -128,7 +119,7 @@ test('ecosystem static composition is spread, core-clear, and in bounds', async 
         duration: /--orbit-duration:([^;]+);/.exec(style)?.[1] ?? '',
       };
     }));
-  expect(tagMotions).toHaveLength(8);
+  expect(tagMotions).toHaveLength(EXPECTED_PLANETS.length);
   for (const t of tagMotions) {
     const body = rails.motion.find((m) => m.id === t.id);
     expect(t.path, `tag for ${t.id} rides a different path than its planet`).toBe(body?.path);
@@ -228,8 +219,8 @@ test('every orbital period divides the master cycle exactly, with no global lock
   await eco.scrollIntoViewIfNeeded();
   const durations = await page.evaluate(() =>
     [...document.querySelectorAll('.planet-motion[data-planet]')].map((g) => Number(g.getAttribute('data-duration'))));
-  expect(durations).toHaveLength(8);
-  expect(new Set(durations).size, 'two planets share a period').toBe(8);
+  expect(durations).toHaveLength(EXPECTED_PLANETS.length);
+  expect(new Set(durations).size, 'two planets share a period').toBe(EXPECTED_PLANETS.length);
   const laps = durations.map((d) => MASTER_CYCLE / d);
   for (const n of laps) expect(Number.isInteger(n), 'a period does not divide the master cycle').toBe(true);
   const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
@@ -322,7 +313,7 @@ test('every world carries an explicit label anchor in the rendered markup', asyn
       y: t.getAttribute('y'),
       anchor: t.getAttribute('text-anchor'),
     })));
-  expect(anchors).toHaveLength(8);
+  expect(anchors).toHaveLength(EXPECTED_PLANETS.length);
   const positions = ['below', 'below-left', 'below-right', 'left', 'right', 'above', 'above-left', 'above-right'];
   for (const a of anchors) {
     expect(positions, `unknown label position ${a.position}`).toContain(a.position);

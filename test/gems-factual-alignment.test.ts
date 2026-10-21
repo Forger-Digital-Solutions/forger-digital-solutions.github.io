@@ -20,15 +20,14 @@ describe('GEMS public alignment', () => {
     expect(gems.every((gem) => !/OLMo|Qwen|Mathstral|SmolVLM|FLUX/i.test(gem.researchStatus))).toBe(true);
   });
 
-  it('does not claim every GEM begins from scratch', () => {
+  it('keeps historical model research out of the current public project catalog', () => {
     // The obsolete blanket claim — that all lineages are from-scratch and none
     // begins from a pretrained checkpoint — must not return.
     const serialized = JSON.stringify(gems).toLowerCase();
     expect(serialized).not.toContain('no lineage begins from an acquired pretrained checkpoint');
     expect(serialized).not.toContain('from-scratch model research and evaluation');
     expect(gemsCurrentStatus.phase).not.toMatch(/from-scratch/i);
-    // Current strategy language must be present on the GEMS project record.
-    expect(projectsData).toContain('strong open or pretrained foundations where appropriate');
+    expect(projectsData).not.toContain('gems-training-grounds');
   });
 
   it('does not claim Sapphire checkpoints were never trained or evaluated', () => {

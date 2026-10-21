@@ -40,14 +40,10 @@ const has = (text: string, needle: string) => text.toLowerCase().includes(needle
 const codeforgeVersion = products.find((p) => p.slug === 'codeforge')!.version!;
 
 describe('Multi-turn: follow-ups inherit their subject', () => {
-  it('carries a research lineage through a pronoun', async () => {
-    const [, isPublic, , different] = await converse([
-      'What is Sapphire?', 'Is it public yet?', 'What about Topaz?', 'How is that different?'
-    ]);
-    expect(has(isPublic, 'Sapphire')).toBe(true);
-    expect(has(isPublic, 'not downloadable') || has(isPublic, 'research')).toBe(true);
-    expect(has(different, 'Topaz')).toBe(true);
-    expect(has(different, 'Sapphire')).toBe(true);
+  it('does not promote retired research lineages', async () => {
+    const [answer] = await converse(['What is Sapphire?']);
+    expect(answer).toContain('not part of the current public FDS portfolio');
+    expect(answer).not.toContain('/projects/gems-training-grounds');
   });
 
   it('carries a released product through a pronoun', async () => {
@@ -62,18 +58,19 @@ describe('Multi-turn: follow-ups inherit their subject', () => {
 
   it('corrects a false premise raised by a pronoun', async () => {
     const [, , , beats] = await converse([
-      'What is GEMS?', 'Which GEM focuses on coding?', 'How far along is it?', 'So it already beats Claude?'
+      'What is CodeForge?', 'What does it do?', 'How far along is it?', 'So it already beats Claude?'
     ]);
-    expect(has(beats, 'not a claim of current parity') || has(beats, 'does not claim')).toBe(true);
+    expect(has(beats, 'does not publish independent benchmark results')).toBe(true);
+    expect(has(beats, 'cannot confirm that claim')).toBe(true);
   });
 
   it('does not bleed the previous entity after the subject changes', async () => {
     const [, fsf, , kyra] = await converse([
-      'Tell me about FarmStand Finder.', 'Is it downloadable?', 'Okay, what about KyraBlox?', 'Is that downloadable?'
+      'Tell me about FarmStand Finder.', 'Is it downloadable?', 'Okay, what about Dead Trails West?', 'Is that downloadable?'
     ]);
     expect(has(fsf, 'FarmStand Finder')).toBe(true);
     expect(has(fsf, 'KyraBlox')).toBe(false);
-    expect(has(kyra, 'KyraBlox')).toBe(true);
+    expect(has(kyra, 'Dead Trails West')).toBe(true);
     expect(has(kyra, 'FarmStand Finder')).toBe(false);
   });
 
@@ -87,8 +84,8 @@ describe('Page context supplies the subject and nothing more', () => {
   const onPage = (slug: string): KaylaPageContext => ({ route: `/projects/${slug}`, pageType: 'project', entity: slug });
 
   it('resolves "this project" on a project page', async () => {
-    const [answer] = await converse(['What does this project do?'], onPage('gems-training-grounds'));
-    expect(has(answer, 'GEMS')).toBe(true);
+    const [answer] = await converse(['What does this project do?'], onPage('forge-control'));
+    expect(has(answer, 'Forge Control')).toBe(true);
   });
 
   it('resolves "this" for availability on a released product page', async () => {
@@ -98,9 +95,9 @@ describe('Page context supplies the subject and nothing more', () => {
   });
 
   it('resolves "this" for availability on an unreleased project page', async () => {
-    const [available, launch] = await converse(['Is this available?', 'When does it launch?'], onPage('kyrablox'));
+    const [available, launch] = await converse(['Is this available?', 'When does it launch?'], onPage('dead-trails-west'));
     expect(has(available, 'no')).toBe(true);
-    expect(has(available, projects.find((p) => p.slug === 'kyrablox')!.status)).toBe(true);
+    expect(has(available, projects.find((p) => p.slug === 'dead-trails-west')!.status)).toBe(true);
     expect(has(launch, 'has not launched') || has(launch, 'no launch date')).toBe(true);
   });
 
@@ -110,8 +107,8 @@ describe('Page context supplies the subject and nothing more', () => {
   });
 
   it('never lets page context override an entity named in the question', async () => {
-    const [answer] = await converse(['Can I download KyraBlox?'], onPage('codeforge'));
-    expect(has(answer, 'KyraBlox')).toBe(true);
+    const [answer] = await converse(['Can I download Dead Trails West?'], onPage('codeforge'));
+    expect(has(answer, 'Dead Trails West')).toBe(true);
     expect(has(answer, 'no')).toBe(true);
   });
 });

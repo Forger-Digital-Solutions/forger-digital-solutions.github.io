@@ -1,8 +1,6 @@
 ---
 import { gems, gemsCurrentStatus, learningStages, capabilityRoadmap, affordability } from '../data/gems';
 import type { CapabilityStatus } from '../data/gems';
-import VisualEvidence from './VisualEvidence.astro';
-import { visualAssets } from '../data/visuals';
 
 const groups: { status: CapabilityStatus; label: string; note: string }[] = [
   { status: 'in-development', label: 'In Development', note: 'Actively being researched and built, not yet shipped as finished standalone capabilities.' },
@@ -90,8 +88,6 @@ const byStatus = (status: CapabilityStatus) => capabilityRoadmap.filter((c) => c
     <li>Checkpoint gating</li>
     <li>Model lineage boundaries</li>
   </ul>
-  <VisualEvidence {...visualAssets.trainingGrounds} />
-
   <h2 id="gems-cap-title" class="gems-deep__h2">Capability direction</h2>
   <p class="gems-deep__intro">
     This is research, not a shipped product catalog. The lists below distinguish what is being developed from where the work is headed. Nothing here

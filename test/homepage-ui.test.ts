@@ -19,7 +19,9 @@ describe('homepage ecosystem UI contract', () => {
     expect(homepage).toContain('class="silver">DIGITAL</span>');
     expect(homepage).toContain('class="accent">SOLUTIONS</span>');
     // The hero headline states what FDS builds; support is not a hero CTA.
-    expect(homepage).toContain('AI systems and software built to do real work.');
+    expect(homepage).toContain('Software engineered for the real world.');
+    expect(homepage).toContain('CodeForge and its Forge AAA architecture');
+    expect(homepage).toContain('Dead Trails West');
     expect(homepage).toContain('Explore Products');
     expect(homepage).toContain('Get CodeForge');
     expect(homepage).not.toContain('hero__support');

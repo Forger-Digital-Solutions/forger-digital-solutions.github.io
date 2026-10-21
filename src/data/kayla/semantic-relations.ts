@@ -1,5 +1,4 @@
 import { projects } from '../projects';
-import { gems } from '../gems';
 import { productRelationships } from './relationships';
 
 /**
@@ -46,34 +45,13 @@ export interface DeniedRelation {
   reason: string;
 }
 
-const GEM_IDS = gems.map((gem) => `gem-${gem.key}`);
-
 /**
  * Relationships the published site establishes.
  *
  * The product-relationship table is the site's own machine-readable source, so
- * it is mapped rather than restated. The GEMS entries encode what the project
- * page and each lineage's `fit` text say about Training Grounds owning the
- * teaching and evaluation discipline.
+ * it is mapped rather than restated.
  */
 export const canonicalRelations: CanonicalRelation[] = [
-  // Training Grounds is the environment that teaches and evaluates every GEM.
-  // projects.ts: "Training Grounds owns the shared teaching, evaluation, and
-  // advancement discipline"; gems.ts (Peridot): "Training Grounds—not Peridot
-  // itself—owns the shared evaluation and advancement discipline".
-  ...GEM_IDS.map((gemId): CanonicalRelation => ({
-    subject: 'gems-training-grounds',
-    predicate: 'trains',
-    object: gemId,
-    source: 'projects.ts gems-training-grounds sections; gems.ts fit'
-  })),
-  // Each lineage belongs to the GEMS family.
-  ...GEM_IDS.map((gemId): CanonicalRelation => ({
-    subject: gemId,
-    predicate: 'part-of',
-    object: 'gems-training-grounds',
-    source: 'gems.ts family definition'
-  })),
   // Every public project belongs to the FDS ecosystem.
   ...projects.map((project): CanonicalRelation => ({
     subject: project.slug,
@@ -100,77 +78,12 @@ export const canonicalRelations: CanonicalRelation[] = [
  */
 export const deniedRelations: DeniedRelation[] = [
   {
-    subject: 'gem-sapphire',
-    predicate: 'powers',
-    object: 'codeforge',
-    reason: 'no Sapphire capability is presented as shipping in CodeForge'
-  },
-  {
-    subject: 'gem-sapphire',
-    predicate: 'contains',
-    object: 'codeforge',
-    reason: 'no Sapphire capability is presented as shipping in CodeForge'
-  },
-  {
-    subject: 'gem-sapphire',
-    predicate: 'same-as',
-    object: 'codeforge',
-    reason: "Sapphire's role is distinct from CodeForge, which is already a public engineering product"
-  },
-  {
-    subject: 'gem-garnet',
-    predicate: 'powers',
-    object: 'kayla-ai-publisher',
-    reason: 'Garnet has potential relevance to Kayla Publisher while remaining a separate research lineage and system'
-  },
-  {
-    subject: 'gem-garnet',
-    predicate: 'contains',
-    object: 'kayla-ai-publisher',
-    reason: 'Garnet remains a separate research lineage and system'
-  },
-  {
-    subject: 'gem-garnet',
-    predicate: 'powers',
-    object: 'kayla-copilot',
-    reason: 'no trained Garnet model is available, and Kayla Copilot is the site guide rather than a GEMS deployment'
-  },
-  {
-    subject: 'gem-garnet',
-    predicate: 'contains',
-    object: 'kayla-copilot',
-    reason: 'no trained Garnet model is available'
-  },
-  {
-    subject: 'gems-training-grounds',
-    predicate: 'same-as',
-    object: 'codeforge',
-    reason: 'GEMS / Training Grounds is AI research; CodeForge is a released engineering product'
-  },
-  {
     subject: 'kayla-copilot',
     predicate: 'same-as',
     object: 'kayla-ai-publisher',
     reason: 'they share a name and nothing else'
   },
-  {
-    subject: 'kayla-ai-publisher',
-    predicate: 'trains',
-    object: 'gem-sapphire',
-    reason: 'Training Grounds owns GEMS teaching and evaluation; Kayla AI Publisher is a creative product'
-  },
-  {
-    subject: 'gem-topaz',
-    predicate: 'part-of',
-    object: 'gem-sapphire',
-    reason: 'Topaz is not a shared base that every other GEM inherits'
-  }
 ];
-
-/** Every GEM is a research lineage, so none of them powers a shipping product. */
-export function isResearchLineage(entityId: string): boolean {
-  return GEM_IDS.includes(entityId);
-}
 
 export function findCanonicalRelation(
   subject: string,

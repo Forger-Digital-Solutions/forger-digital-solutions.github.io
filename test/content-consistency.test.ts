@@ -67,23 +67,27 @@ describe('content consistency guards (Phase 28)', () => {
   it('keeps the homepage status strip fed from the manifest', () => {
     expect(homepage).toContain('statusStripEntries');
     expect(homepage).toContain('canonicalStatusLabels');
-    expect(statusStripEntries.map((e) => e.id)).toEqual(['codeforge', 'forgerems', 'gems', 'kyrablox']);
+    expect(statusStripEntries.map((e) => e.id)).toEqual(['codeforge', 'forgerems', 'forge-control', 'dead-trails-west']);
   });
 
-  it('contains no obsolete GEMS claims anywhere in site data or pages', () => {
+  it('keeps retired projects out of the current public catalog and navigation', () => {
+    for (const retired of ['gems-training-grounds', 'kyrablox']) {
+      expect(projectSlugs).not.toContain(retired);
+      expect(manifestByProjectSlug[retired]).toBeUndefined();
+      expect(ecosystemNodes.some((node) => node.href === `/projects/${retired}`)).toBe(false);
+    }
+    expect(homepage).not.toMatch(/GEMS|KyraBlox|Training Grounds/);
+    expect(header).not.toMatch(/GEMS|KyraBlox|Training Grounds/);
+    expect(footer).not.toMatch(/GEMS|KyraBlox|Training Grounds/);
+  });
+
+  it('keeps historical GEMS notes marked as superseded instead of current status', () => {
     const sources = [
-      read('src/data/gems.ts'),
-      read('src/data/projects.ts'),
-      read('src/data/kayla/answers.ts'),
-      read('src/data/kayla/index.ts'),
-      read('src/data/kayla/company/fds.ts'),
-      read('src/lib/kayla/task-planner.ts'),
-      read('src/components/GemsStory.astro'),
-      homepage
+      read('src/content/notes/gems-foundation-strategy.md'),
+      read('src/content/notes/gems-training-and-evaluation.md')
     ];
     for (const source of sources) {
-      expect(source).not.toContain('none begins from an acquired pretrained checkpoint');
-      expect(source).not.toContain('No checkpoint has been trained or evaluated');
+      expect(source).toMatch(/draft:\s*true/i);
     }
   });
 
@@ -127,7 +131,7 @@ describe('content consistency guards (Phase 28)', () => {
   it('marks superseded notes and keeps historical GEMS framing out of current status', () => {
     const strategyNote = read('src/content/notes/gems-foundation-strategy.md');
     expect(strategyNote).toContain('state: "superseded"');
-    expect(strategyNote).toContain('current GEMS work builds on strong open or pretrained foundations');
+    expect(strategyNote).toContain('Historical note');
   });
 
   it('keeps support secondary on the homepage', () => {
@@ -143,8 +147,9 @@ describe('content consistency guards (Phase 28)', () => {
   });
 
   it('navigates company-first without the old nav labels', () => {
-    expect(header).toContain("label: 'Products'");
-    expect(header).toContain("label: 'AI Research'");
+    expect(header).toContain("label: 'Portfolio'");
+    expect(header).toContain("label: 'Forge Control'");
+    expect(header).toContain("label: 'Dead Trails West'");
     expect(header).toContain("label: 'Releases'");
     expect(header).toContain("label: 'Engineering'");
     expect(header).toContain('Get CodeForge');

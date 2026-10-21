@@ -1,6 +1,5 @@
 import { projects } from '../projects';
 import { products } from '../products';
-import { gems } from '../gems';
 import { statusMeta } from '../status';
 import { siteConfig } from '../../config/site';
 import { canonicalRelations, deniedRelations } from './semantic-relations';
@@ -18,7 +17,6 @@ import type { ProjectStatusValue } from '../../types';
  * read directly or derived from the repository's canonical owners:
  *   - src/data/projects.ts   -> project identity, status, routes, descriptions
  *   - src/data/products.ts   -> released/downloadable software & versions
- *   - src/data/gems.ts       -> GEMS family lineages & research metadata
  *   - src/data/status.ts     -> status semantics & descriptions
  *   - src/config/site.ts     -> site URLs, founder, donation channels
  *   - semantic-relations.ts  -> explicit allowed and denied relationships
@@ -26,7 +24,7 @@ import type { ProjectStatusValue } from '../../types';
 
 export interface CanonicalEntity {
   id: string;
-  kind: 'project' | 'product' | 'gem' | 'company' | 'assistant' | 'page';
+  kind: 'project' | 'product' | 'company' | 'assistant' | 'page';
   name: string;
   shortName?: string;
   status?: string;
@@ -71,8 +69,8 @@ export const CANONICAL_INTERNAL_ROUTES = [
   '/projects',
   '/projects/codeforge',
   '/projects/forgerems',
-  '/projects/gems-training-grounds',
-  '/projects/kyrablox',
+  '/projects/forge-control',
+  '/projects/dead-trails-west',
   '/projects/kayla-ai-publisher',
   '/projects/we-the-people',
   '/projects/farmstand-finder',
@@ -162,20 +160,6 @@ function buildCanonicalEntities(): CanonicalEntity[] {
         tags: [prod.category.toLowerCase(), ...prod.platform.map(plat => plat.toLowerCase())]
       });
     }
-  }
-
-  // GEMS research lineages
-  for (const g of gems) {
-    result.push({
-      id: `gem-${g.key}`,
-      kind: 'gem',
-      name: g.name,
-      status: g.state,
-      category: 'Research Lineage',
-      route: '/projects/gems-training-grounds',
-      downloadable: false,
-      tags: [g.key, 'gem', 'gems', 'research', g.role.toLowerCase()]
-    });
   }
 
   // Core pages
@@ -268,14 +252,6 @@ export function getCanonicalKnowledgeManifest() {
       downloadUrl: p.downloadUrl ?? null,
       docsUrl: p.docsUrl ?? null,
       projectSlug: p.projectSlug ?? null
-    })),
-    gems: gems.map((g) => ({
-      key: g.key,
-      id: `gem-${g.key}`,
-      name: g.name,
-      role: g.role,
-      state: g.state,
-      notClaimed: g.notClaimed
     })),
     statuses: Object.entries(statusMeta).map(([status, meta]) => ({
       status,

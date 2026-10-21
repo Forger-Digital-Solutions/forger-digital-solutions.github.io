@@ -71,14 +71,11 @@ export const apps: KaylaApp[] = [
 ];
 
 export const appAliases: Record<string, string> = {
-  'gems': 'gems-training-grounds',
   'codeforge': 'codeforge',
   'code forge': 'codeforge',
   'software engineering': 'codeforge',
-  'training grounds': 'gems-training-grounds',
-  'gems training': 'gems-training-grounds',
-  'kyrablox': 'kyrablox',
-  'kyra': 'kyrablox',
+  'forge control': 'forge-control',
+  'dead trails west': 'dead-trails-west',
   'kayla': 'kayla-ai-publisher',
   'kayla publisher': 'kayla-ai-publisher',
   'kayla ai': 'kayla-ai-publisher',

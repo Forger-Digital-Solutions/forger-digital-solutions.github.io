@@ -399,22 +399,6 @@ export function runDriftCheck(options: DriftDetectorOptions = {}): DriftReport {
     }
   }
 
-  for (const g of gems) {
-    const gemId = `gem-${g.key}`;
-    const hasDoc = retrievalDocs.some(d => d.id === gemId || d.entityId === gemId);
-    if (!hasDoc) {
-      addError({
-        code: 'MISSING_RETRIEVAL_DOCUMENT',
-        entity: gemId,
-        field: 'retrieval',
-        expected: `at least one retrieval document for GEMS lineage ${g.name}`,
-        actual: 'none found',
-        message: `GEMS lineage ${g.name} has no retrieval document in KNOWLEDGE_BASE`,
-        action: 'Ensure retrieval.ts indexes all GEMS lineages from gems.ts'
-      });
-    }
-  }
-
   // 9. RETRIEVAL DUPLICATION
   const seenDocIds = new Set<string>();
   for (const doc of retrievalDocs) {

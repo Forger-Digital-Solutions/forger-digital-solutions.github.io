@@ -57,16 +57,18 @@ describe('Kayla Ecosystem - Founder', () => {
 describe('Kayla Ecosystem - Primary Projects', () => {
   const provider = createProvider();
 
-  it('knows GEMS / Training Grounds', async () => {
+  it('does not promote retired GEMS research', async () => {
     const results = await provider.search('Explain GEMS');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].snippet.toLowerCase()).toContain('gems');
+    expect(results[0].snippet.toLowerCase()).toContain('not part of the current public fds portfolio');
+    expect(results[0].actions?.[0]?.href).toBe('/projects');
   });
 
-  it('knows KyraBlox', async () => {
+  it('does not promote retired KyraBlox', async () => {
     const results = await provider.search('Explain KyraBlox');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].snippet.toLowerCase()).toContain('kyrablox');
+    expect(results[0].snippet.toLowerCase()).toContain('not part of the current public fds portfolio');
+    expect(results[0].actions?.[0]?.href).toBe('/projects');
   });
 
   it('knows Kayla AI Publisher', async () => {
@@ -135,7 +137,7 @@ describe('Kayla Ecosystem - Roadmap', () => {
     const provider = createProvider();
     const results = await provider.search('What is on the roadmap?');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].snippet).toContain('GEMS');
+    expect(results[0].snippet).toContain('CodeForge');
   });
 
   it('distinguishes released vs active vs experimental vs planned', async () => {
@@ -176,7 +178,7 @@ describe('Kayla Ecosystem - Product Relationships', () => {
     const results = await provider.search('Which FDS app should I use for game development?');
     expect(results.length).toBeGreaterThan(0);
     const combined = results.map(r => r.snippet.toLowerCase()).join(' ');
-    expect(combined).toContain('kyrablox');
+    expect(combined).toContain('dead trails west');
   });
 
   it('recommends ForgerEMS for toolkit needs', async () => {
@@ -202,7 +204,7 @@ describe('Kayla Ecosystem - Synthesis', () => {
     const results = await provider.search('Explain all of FDS to me');
     expect(results.length).toBeGreaterThan(0);
     const combined = results.map(r => r.snippet).join(' ');
-    expect(combined).toContain('GEMS');
+    expect(combined).toContain('Forge Control');
     expect(combined).toContain('ForgerEMS');
     expect(combined).toContain('Forged');
   });

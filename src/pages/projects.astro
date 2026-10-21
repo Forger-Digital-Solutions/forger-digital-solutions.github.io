@@ -15,10 +15,11 @@ const statusOf = (slug: string): CanonicalStatus =>
 
 const codeForge = ordered.find((p) => p.slug === 'codeforge')!;
 const forgerEms = ordered.find((p) => p.slug === 'forgerems')!;
-const gems = ordered.find((p) => p.slug === 'gems-training-grounds')!;
+const forgeControl = ordered.find((p) => p.slug === 'forge-control')!;
+const deadTrailsWest = ordered.find((p) => p.slug === 'dead-trails-west')!;
 const codeForgeProduct = products.find((p) => p.projectSlug === 'codeforge');
 
-const spotlightSlugs = ['codeforge', 'forgerems', 'gems-training-grounds'];
+const spotlightSlugs = ['codeforge', 'forgerems', 'forge-control', 'dead-trails-west'];
 const byStatus = (status: CanonicalStatus) =>
   ordered.filter((p) => statusOf(p.slug) === status && !spotlightSlugs.includes(p.slug));
 const activeDev = byStatus('active-development');
@@ -46,7 +47,7 @@ const privateDev = byStatus('private-development');
     <p class="projects-hero__kicker">FDS // PRODUCT PORTFOLIO</p>
     <h1 class="projects-hero__title">Products &amp; Projects</h1>
     <p class="projects-hero__description">
-      The software and research FDS builds — AI systems, developer tools, technician software, creative technology,
+      The products and projects FDS builds — software engineering, technician tools, creative technology,
       and practical applications — grouped by availability. Released products are downloadable through{' '}
       <a href="/forged">Releases</a>; research is described exactly as far as the evidence goes.
     </p>
@@ -56,25 +57,23 @@ const privateDev = byStatus('private-development');
     <h2 id="ecosystem-heading" class="sr-only">FDS Product Layers</h2>
     <div class="ecosystem-overview__content">
       <p class="ecosystem-intro">
-        Projects are what FDS is building. Some are research programs, some are private products, and some are already released through Forged.
+        Released products, active development, and private projects are separated so planned work is never confused with available software.
       </p>
       <div class="ecosystem-grid">
         <a href="#codeforge" class="ecosystem-item" data-ecosystem="engineering">
           <span class="ecosystem-dot" aria-hidden="true"></span><div class="ecosystem-text"><h3>Engineering</h3><p>Autonomous repository work</p></div>
         </a>
-        <a href="#gems-training-grounds" class="ecosystem-item" data-ecosystem="intelligence">
+        <a href="/projects/codeforge#forge-aaa" class="ecosystem-item" data-ecosystem="engineering">
           <span class="ecosystem-dot" aria-hidden="true"></span>
-          <div class="ecosystem-text">
-            <h3>Intelligence</h3>
-            <p>AI research, training systems</p>
-          </div>
+          <div class="ecosystem-text"><h3>Forge AAA</h3><p>CodeForge architecture workstream</p></div>
         </a>
-        <a href="#kyrablox" class="ecosystem-item" data-ecosystem="gaming">
+        <a href="#forge-control" class="ecosystem-item" data-ecosystem="engineering">
           <span class="ecosystem-dot" aria-hidden="true"></span>
-          <div class="ecosystem-text">
-            <h3>Gaming</h3>
-            <p>Game development tooling</p>
-          </div>
+          <div class="ecosystem-text"><h3>Forge Control</h3><p>Active development</p></div>
+        </a>
+        <a href="#dead-trails-west" class="ecosystem-item" data-ecosystem="gaming">
+          <span class="ecosystem-dot" aria-hidden="true"></span>
+          <div class="ecosystem-text"><h3>Dead Trails West</h3><p>Private game development</p></div>
         </a>
         <a href="#kayla-ai-publisher" class="ecosystem-item" data-ecosystem="publishing">
           <span class="ecosystem-dot" aria-hidden="true"></span>
@@ -118,9 +117,14 @@ const privateDev = byStatus('private-development');
       <ProjectSpotlight project={forgerEms} tier="Public preview for Windows technicians" />
     </div>
 
-    <div class="directory-tier">
-      <p class="directory-tier__label">{canonicalStatusLabels['active-ai-research']}</p>
-      <ProjectSpotlight project={gems} tier="Flagship AI research program" />
+    <div class="directory-tier" id="forge-control">
+      <p class="directory-tier__label">{canonicalStatusLabels['active-development']}</p>
+      <ProjectSpotlight project={forgeControl} tier="Active development · no public release" />
+    </div>
+
+    <div class="directory-tier" id="dead-trails-west">
+      <p class="directory-tier__label">{canonicalStatusLabels['private-development']}</p>
+      <ProjectSpotlight project={deadTrailsWest} tier="Private game development · no public build" />
     </div>
 
     <div class="directory-tier">

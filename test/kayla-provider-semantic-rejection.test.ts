@@ -52,30 +52,30 @@ async function askWithModelSaying(lie: string, question: string) {
 }
 
 describe('A provider inventing a relationship is overruled', () => {
-  it('rejects "Sapphire powers CodeForge" and replaces it with canonical text', async () => {
+  it('rejects an invented project-to-product dependency', async () => {
     const { body, diagnostics } = await askWithModelSaying(
-      'Sapphire is the model powering the current free CodeForge release.',
-      'How do GEMS and CodeForge relate?'
+      'Dead Trails West powers the current CodeForge release.',
+      'How do the FDS apps fit together?'
     );
-    expect(body.answer).not.toMatch(/Sapphire is the model powering/i);
+    expect(body.answer).not.toMatch(/Dead Trails West powers the current CodeForge/i);
     expect(body.routeMode).toBe('provider_replaced');
     expect(diagnostics.providerOutcome).toBe('rejected_replaced');
     expect(diagnostics.verificationOutcome).toBe('rejected');
   });
 
-  it('rejects "Garnet is built into Kayla"', async () => {
+  it('rejects "Forge Control is built into Kayla"', async () => {
     const { body } = await askWithModelSaying(
-      'Garnet is built into Kayla Copilot and powers this chat.',
-      'What is Garnet?'
+      'Forge Control is built into Kayla Copilot and powers this chat.',
+      'What FDS products work together?'
     );
     expect(body.answer).not.toMatch(/built into Kayla Copilot/i);
     expect(body.routeMode).toBe('provider_replaced');
   });
 
-  it('rejects "Training Grounds is another name for CodeForge"', async () => {
+  it('rejects "Dead Trails West is another name for CodeForge"', async () => {
     const { body, diagnostics } = await askWithModelSaying(
-      'Training Grounds is another name for CodeForge.',
-      'How are GEMS and Training Grounds related?'
+      'Dead Trails West is another name for CodeForge.',
+      'How do the FDS apps fit together?'
     );
     expect(body.answer).not.toMatch(/another name for CodeForge/i);
     expect(diagnostics.verificationKinds).toContain('false_equivalence');
@@ -83,18 +83,18 @@ describe('A provider inventing a relationship is overruled', () => {
 
   it('rejects an invented external download mirror', async () => {
     const { body } = await askWithModelSaying(
-      'KyraBlox is downloadable from its official mirror at https://kyrablox-mirror.example/setup.exe',
-      'Can I download KyraBlox?'
+      'Dead Trails West is downloadable from its official mirror at https://dead-trails-mirror.example/setup.exe',
+      'Can I download Dead Trails West?'
     );
-    expect(body.answer).not.toContain('kyrablox-mirror.example');
+    expect(body.answer).not.toContain('dead-trails-mirror.example');
   });
 
   it('holds the same line on the streaming path, with no unsafe text emitted', async () => {
-    scriptedReply = 'Sapphire powers CodeForge and ships inside the released build.';
+    scriptedReply = 'Dead Trails West powers CodeForge and ships inside the released build.';
     let emitted = '';
     let replaced = false;
     for await (const chunk of streamKaylaChat(
-      { message: 'How do GEMS and CodeForge relate?', history: [], context: { route: '/', pageType: 'home' } },
+      { message: 'How do the FDS apps fit together?', history: [], context: { route: '/', pageType: 'home' } },
       aiEndpoint()
     )) {
       const parsed = JSON.parse(chunk) as { content?: string; replace?: boolean; routeMode?: string };
@@ -102,7 +102,7 @@ describe('A provider inventing a relationship is overruled', () => {
       else if (parsed.content) emitted += parsed.content;
     }
     expect(replaced).toBe(true);
-    expect(emitted).not.toMatch(/Sapphire powers CodeForge/i);
+    expect(emitted).not.toMatch(/Dead Trails West powers CodeForge/i);
   });
 });
 

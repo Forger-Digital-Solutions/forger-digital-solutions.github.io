@@ -4,7 +4,6 @@ import { projects, exploreNextBySlug } from '../../data/projects';
 import ProjectStatus from '../../components/ProjectStatus.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
 import NoteCard from '../../components/NoteCard.astro';
-import GemsDeep from '../../components/GemsDeep.astro';
 import ExploreNext from '../../components/ExploreNext.astro';
 import { statusMeta } from '../../data/status';
 import { getPublishedNotes } from '../../lib/notes';
@@ -28,7 +27,6 @@ const exploreLinks = exploreNextBySlug[project.slug] ?? [
     .map((item) => ({ label: item.shortName || item.name, href: `/projects/${item.slug}`, note: item.category })),
   { label: 'All Projects', href: '/projects', note: 'Full directory' }
 ];
-const isGems = project.slug === 'gems-training-grounds';
 // The four private-development projects render a signature composition
 // (project-intelligence loop, creative thread, source trace, discovery
 // radius) instead of the generic section loop. Copy still comes from the
@@ -98,7 +96,7 @@ const softwareSchema = releaseProduct ? {
   
   <article class="project-page" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'};--eco-color: ${ecoColor}`}>
     <!-- Hero Section -->
-    <header class="project-hero" class:list={[isGems ? 'project-hero--flagship' : '']}>
+    <header class="project-hero" class:list={[project.flagship ? 'project-hero--flagship' : '']}>
       {signatureKind === 'loop' && (
         <svg class="project-hero__motif" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
           <g class="hero-motif-stroke" opacity=".4">
@@ -274,8 +272,8 @@ const softwareSchema = releaseProduct ? {
     <div class="project-layout">
       <div class="project-content">
         {project.sections && project.sections.map((section, index) => (
-          <section class="project-section" aria-labelledby={`project-section-${index}`}>
-            <h2 id={`project-section-${index}`} class="section-title">{section.title}</h2>
+          <section class="project-section" aria-labelledby={section.id ?? `project-section-${index}`}>
+            <h2 id={section.id ?? `project-section-${index}`} class="section-title">{section.title}</h2>
             {section.body && <p class="section-text">{section.body}</p>}
             {section.items && section.items.length > 0 && (
               <ul class="building-grid section-items">
@@ -406,15 +404,6 @@ const softwareSchema = releaseProduct ? {
         )}
       </aside>
     </div>
-    )}
-
-    <!-- GEMS Special Section -->
-    {isGems && (
-      <section id="training-grounds" class="gems-section" aria-labelledby="gems-systems">
-        <p class="gems-kicker">The Model Family</p>
-        <h2 id="gems-systems" class="gems-title">Meet the GEMS and Training Grounds</h2>
-        <GemsDeep />
-      </section>
     )}
 
     <!-- Gallery -->

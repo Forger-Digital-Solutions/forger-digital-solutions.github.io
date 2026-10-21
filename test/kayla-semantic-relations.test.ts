@@ -19,7 +19,7 @@ describe('Valid nouns, invented linkage', () => {
   it('rejects "Sapphire powers CodeForge" even though both entities are real', () => {
     const text = 'Sapphire is the free model powering the current CodeForge release.';
     expect(rejects(text)).toBe(true);
-    expect(relationKinds(text)).toContain('denied_relation');
+    expect(relationKinds(text)).toContain('unsupported_relation');
   });
 
   it('rejects Sapphire shipping inside CodeForge', () => {
@@ -71,8 +71,8 @@ describe('Partial truth cannot rescue a fabricated fact', () => {
 });
 
 describe('Canonical relationships are accepted', () => {
-  it('accepts Training Grounds teaching the GEMS lineages', () => {
-    expect(verifyRelationsInText('Training Grounds teaches Sapphire and evaluates its progress.')).toEqual([]);
+  it('rejects a retired Training Grounds relationship as current portfolio evidence', () => {
+    expect(relationKinds('Training Grounds teaches Sapphire and evaluates its progress.')).toContain('unsupported_relation');
   });
 
   it('accepts a project belonging to the FDS ecosystem', () => {
@@ -83,8 +83,8 @@ describe('Canonical relationships are accepted', () => {
     expect(verifyRelationsInText('Kayla Copilot is built into the Forger Digital Solutions website.')).toEqual([]);
   });
 
-  it('accepts a lineage belonging to the GEMS family', () => {
-    expect(verifyRelationsInText('Sapphire is part of GEMS.')).toEqual([]);
+  it('does not keep retired lineage membership in the current relationship registry', () => {
+    expect(canonicalRelations.some((relation) => relation.subject.startsWith('gem-') || relation.object.startsWith('gem-'))).toBe(false);
   });
 });
 

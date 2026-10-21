@@ -4,7 +4,6 @@ import { gems } from '../../data/gems';
 import {
   findCanonicalRelation,
   findDeniedRelation,
-  isResearchLineage,
   type RelationPredicate
 } from '../../data/kayla/semantic-relations';
 
@@ -12,9 +11,8 @@ import {
  * Relationship verification.
  *
  * Phase 6's verifier validated facts in isolation, so a sentence assembled from
- * individually true nouns could still assert an invented linkage — "Sapphire is
- * the model powering the free CodeForge release" contains no false noun and no
- * false price, yet the site explicitly denies the connection.
+ * individually true nouns could still assert an invented linkage between
+ * current public projects.
  *
  * This finds subject/predicate/object triples between recognised FDS entities
  * and rejects the ones canonical data does not support. It is deliberately
@@ -43,7 +41,7 @@ interface EntityMention {
 /**
  * The company itself is the umbrella every project sits under, not a peer
  * product. "Kayla Copilot is built into the Forger Digital Solutions website"
- * and "GEMS is part of FDS" are ordinary true statements, so linkage claims
+ * is an ordinary true statement, so linkage claims
  * involving FDS carry none of the hallucination risk this check exists for.
  */
 const UMBRELLA_ENTITIES = new Set(['fds']);
@@ -58,8 +56,9 @@ const ENTITY_NAMES: { id: string; patterns: string[] }[] = [
     .filter((product) => !projects.some((project) => project.slug === (product.projectSlug || product.slug)))
     .map((product) => ({ id: product.slug, patterns: [product.name] })),
   ...gems.map((gem) => ({ id: `gem-${gem.key}`, patterns: [gem.name] })),
+  { id: 'retired-gems', patterns: ['GEMS', 'Training Grounds'] },
+  { id: 'retired-kyrablox', patterns: ['KyraBlox'] },
   { id: 'kayla-copilot', patterns: ['Kayla Copilot'] },
-  { id: 'gems-training-grounds', patterns: ['Training Grounds', 'GEMS'] },
   { id: 'fds', patterns: ['Forger Digital Solutions', 'FDS'] }
 ];
 
@@ -164,14 +163,9 @@ export function verifyRelationsInText(text: string): RelationViolation[] {
       if (UMBRELLA_ENTITIES.has(subject.id) || UMBRELLA_ENTITIES.has(object.id)) continue;
       if (findCanonicalRelation(subject.id, predicate, object.id)) continue;
 
-      // A research lineage cannot be asserted to power or ship inside anything:
-      // no GEM has been trained to release, so any such claim is invented.
-      const researchClaim = (predicate === 'powers' || predicate === 'contains') && isResearchLineage(subject.id);
       violations.push({
         kind: predicate === 'same-as' ? 'false_equivalence' : 'unsupported_relation',
-        detail: researchClaim
-          ? `${subject.name} is a GEMS research lineage with no released model, so it cannot ${predicate === 'powers' ? 'power' : 'ship inside'} ${object.name}`
-          : `FDS does not publish a "${predicate}" relationship between ${subject.name} and ${object.name}`,
+        detail: `FDS does not publish a "${predicate}" relationship between ${subject.name} and ${object.name}`,
         sentence
       });
     }

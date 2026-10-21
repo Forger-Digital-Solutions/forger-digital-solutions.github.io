@@ -22,7 +22,7 @@ function trackIdentity(orbit: { rx: number; ry: number; rotation: number }) {
 /**
  * The animated cycle, replayed in pure maths.
  *
- * A static frame cannot certify eight independently tilted planes: the whole point
+ * A static frame cannot certify seven independently tilted planes: the whole point
  * of separate orbits is that bodies reach the same neighbourhood at different
  * times, so "do they ever arrive together?" needs the timeline swept. This walks
  * the same construction the browser walks — position by arc length along the
@@ -34,7 +34,7 @@ function trackIdentity(orbit: { rx: number; ry: number; rotation: number }) {
 const ARC_SAMPLES = 4000;
 /**
  * The finite master cycle the shipped data is built on, in seconds. Every period is
- * an exact divisor of it, so at t = MASTER_CYCLE all eight bodies have completed a
+ * an exact divisor of it, so at t = MASTER_CYCLE all seven bodies have completed a
  * whole number of laps and the configuration is exactly where it started. Sweeping
  * [0, MASTER_CYCLE] is therefore a proof about ALL future time, not a sample of it —
  * which is why this test no longer stops at an arbitrary 300s window.
@@ -113,17 +113,17 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
       expect(node.statusLabel).not.toBe('');
       expect(node.purpose.length).toBeGreaterThan(10);
     }
-    expect(ecosystemNodes.map((n) => n.manifestId)).toEqual(expect.arrayContaining([
-      'codeforge', 'forgerems', 'gems', 'training-grounds', 'kyrablox', 'kayla-publisher', 'we-the-people', 'farmstand-finder'
-    ]));
+    expect(ecosystemNodes.map((n) => n.manifestId)).toEqual([
+      'codeforge', 'forgerems', 'forge-control', 'dead-trails-west', 'kayla-publisher', 'we-the-people', 'farmstand-finder'
+    ]);
   });
 
   it('gives every planet its own orbital plane — one planet, one orbit', () => {
-    expect(ecosystemNodes).toHaveLength(8);
+    expect(ecosystemNodes).toHaveLength(7);
     const identities = ecosystemNodes.map((node) => trackIdentity(node.orbit));
-    expect(new Set(identities).size, 'two planets share one orbital plane').toBe(8);
+    expect(new Set(identities).size, 'two planets share one orbital plane').toBe(7);
     const paths = ecosystemNodes.map((node) => node.orbit.path);
-    expect(new Set(paths).size, 'two planets share one rendered path').toBe(8);
+    expect(new Set(paths).size, 'two planets share one rendered path').toBe(7);
     expect(paths.every((path) => path.startsWith('M ') && path.endsWith(' Z'))).toBe(true);
     // Same guard the design tooling uses: two planes within 8u of each other on both
     // axes are one visually shared belt whatever the maths says.
@@ -171,7 +171,7 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
 
   it('runs every plane on a period that exactly divides one finite master cycle', () => {
     const durations = ecosystemNodes.map((node) => node.orbit.duration);
-    expect(new Set(durations).size, 'two planets share a period and lock formation').toBe(8);
+    expect(new Set(durations).size, 'two planets share a period and lock formation').toBe(7);
     // The master cycle is the whole point: each world completes a whole number of laps
     // in it, so the configuration at t = MASTER_CYCLE is bit-identical to t = 0 and one
     // dense sweep of the cycle proves the clearance for all future time.
@@ -190,8 +190,8 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
     for (let i = 1; i < sorted.length; i++) {
       expect(sorted[i] / sorted[i - 1], `${sorted[i]}s paces ${sorted[i - 1]}s`).toBeGreaterThanOrEqual(1.1);
     }
-    expect(sorted[7] / sorted[0]).toBeGreaterThanOrEqual(2.5);
-    expect(sorted[7] / sorted[0]).toBeLessThanOrEqual(4.5);
+    expect(sorted[6] / sorted[0]).toBeGreaterThanOrEqual(2.5);
+    expect(sorted[6] / sorted[0]).toBeLessThanOrEqual(4.5);
     const byRadius = [...ecosystemNodes].sort(
       (x, y) => (x.orbit.rx + x.orbit.ry) - (y.orbit.rx + y.orbit.ry)
     );
@@ -231,7 +231,7 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
       .sort((a, b) => a - b);
     // Two worlds on the same bearing from the nucleus read as one column of lights,
     // however far apart their planes are, so no two may start that way.
-    expect(new Set(angles.map((a) => Math.round(a * 10))).size).toBe(8);
+    expect(new Set(angles.map((a) => Math.round(a * 10))).size).toBe(7);
     let widest = 0;
     for (let i = 0; i < angles.length; i++) {
       const next = i + 1 < angles.length ? angles[i + 1] : angles[0] + 360;
@@ -313,15 +313,15 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
     expect(ecosystemNodes.map((node) => node.href)).toEqual(expect.arrayContaining([
       '/projects/codeforge',
       '/projects/forgerems',
-      '/projects/gems-training-grounds',
-      '/projects/kyrablox',
+      '/projects/forge-control',
+      '/projects/dead-trails-west',
       '/projects/kayla-ai-publisher',
       '/projects/we-the-people',
       '/projects/farmstand-finder'
     ]));
   });
 
-  it('keeps eight reserved product paths hidden beneath the three-plane CodeForge scaffold', () => {
+  it('keeps seven product paths hidden beneath the three-plane CodeForge scaffold', () => {
     expect(component).toContain('d={node.orbit.path}');
     expect(component).toContain('--orbit-path:path("${node.orbit.path}")');
     expect(component).toContain('offset-path: var(--orbit-path)');
@@ -361,7 +361,7 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
   });
 
   it('verifies that every configured ecosystem node has an optimized, non-empty 8-Bit asset', () => {
-    expect(ecosystemNodes).toHaveLength(8);
+    expect(ecosystemNodes).toHaveLength(7);
     for (const node of ecosystemNodes) {
       expect(node.character).toMatch(/^\/images\/ecosystem\/8bit\/.+-8bit\.webp$/);
       const diskPath = new URL(`../public${node.character}`, import.meta.url);
@@ -376,9 +376,8 @@ describe('FDS ecosystem orbital model (Ecosystem 2.0)', () => {
     const expectedCharacters: Record<string, string> = {
       codeforge: 'forged',
       forgerems: 'forgerems',
-      gems: 'intelligence',
-      'training-grounds': 'applications',
-      kyrablox: 'gaming',
+      'forge-control': 'systems',
+      'dead-trails-west': 'gaming',
       'kayla-publisher': 'publishing',
       'we-the-people': 'civic',
       'farmstand-finder': 'foraging',

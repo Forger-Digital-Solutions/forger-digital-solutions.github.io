@@ -2,7 +2,6 @@ import { entities as catalogue, matchEntities, getKaylaEntity, normalize } from 
 import { classifyIntent, type KaylaIntent } from '../../data/kayla/intents';
 import type { KaylaConversationMessage, KaylaPageContext } from '../../data/kayla/types';
 import { isPromptInjectionAttempt } from './validate';
-import { canonicalAnswer } from '../../data/kayla/answers';
 
 export interface ConversationContext {
   rawQuery: string;
@@ -30,7 +29,7 @@ export interface ConversationContext {
 // alone, precedes an evaluative adjective, or heads a short modifier chain
 // ending in a referential noun.
 const DEMO_BLOCKED = /^(?:have|has|is|are|was|were|can|could|will|would|do|does|did|includes?|contains?|works?|runs?|supports?)$/i;
-const DEMO_RESOLVES = /^(?:one|thing|project|gems?|lineage|tool|apps?|applications?|product|version|option|model|platform|page|site|downloads?|release|build|feature|idea|approach|available|free|public|released|out|ready|safe|real|correct|true|right|good|better|different|same|enough|possible|downloadable|supported|open|working|live|useful|usable|yet|now|still|there|here|too)$/i;
+const DEMO_RESOLVES = /^(?:one|thing|project|tool|apps?|applications?|product|version|option|model|platform|page|site|downloads?|release|build|feature|idea|approach|available|free|public|released|out|ready|safe|real|correct|true|right|good|better|different|same|enough|possible|downloadable|supported|open|working|live|useful|usable|yet|now|still|there|here|too)$/i;
 
 function demonstrativeReferential(text: string): boolean {
   const tokens = normalize(text).split(' ').filter(Boolean);
@@ -60,16 +59,11 @@ function positiveClause(text: string): string {
 }
 
 function mentioned(text: string): string[] {
-  const q = positiveClause(text).replace(/\bG\.?E\.?M\.?S\./gi, 'GEMS');
+  const q = positiveClause(text);
   const hits = matchEntities(q);
   // Preserve mention order for first/second selection, rather than alias length.
   const found = hits.sort((a, b) => normalize(q).indexOf(a.matched) - normalize(q).indexOf(b.matched)).map(m => m.entityId);
-  if (/\bwhich gems?\b/i.test(q)) {
-    const selected = canonicalAnswer(q)?.entityId;
-    if (selected?.startsWith('gem-')) return [selected];
-  }
   if (!found.length && /\b(?:the )?coding (?:one|project|thing|tool)\b/i.test(q)) found.push('codeforge');
-  if (!found.length && /\b(?:the )?(?:model|training) (?:one|project|thing)\b/i.test(q)) found.push('gems-training-grounds');
   return [...new Set(found)].slice(0, 4);
 }
 
@@ -160,9 +154,9 @@ export function resolveConversation(message: string, supplied: KaylaConversation
       if (other.length === 1) ids = other;
       else candidates = other.length ? other : recent;
     } else if (!ids.length && /\b(?:the )?ai (?:one|thing|side|project)\b/i.test(query)) {
-      const ai = [...new Set([...active, ...recent])].filter(id => ['codeforge', 'gems-training-grounds', 'kayla-copilot', 'kayla-ai-publisher', 'kyrablox'].includes(id));
+      const ai = [...new Set([...active, ...recent])].filter(id => ['codeforge', 'kayla-copilot', 'kayla-ai-publisher'].includes(id));
       if (ai.length === 1) ids = ai;
-      else candidates = ai.length ? ai : ['codeforge', 'gems-training-grounds'];
+      else candidates = ai.length ? ai : ['codeforge'];
     } else if (!ids.length && followUp) {
       const scope = (plural || comparison) && recent.length > 1 ? recent.slice(0, 2) : active;
       if (scope.length === 1 || ((plural || comparison) && scope.length > 1)) ids = scope;

@@ -5,12 +5,12 @@ export const fds: KaylaCompany = {
   name: siteConfig.name,
   shortName: siteConfig.shortName,
   description: siteConfig.description,
-  mission: 'Independent software and AI engineering across autonomous development, model research, game creation, publishing, civic information, local discovery, and technician tools.',
+  mission: 'Independent software and AI engineering across autonomous development, technician tools, game development, publishing, civic information, and local discovery.',
   vision: {
-    current: 'Shipping and testing focused products: autonomous repository engineering, model specialization research, project-aware game development, long-form publishing, civic information, local-food discovery, and Windows technician workflows.',
-    activeDevelopment: 'Active work spans CodeForge, GEMS / Training Grounds, KyraBlox, Kayla AI Publisher, FarmStand Finder, private civic technology, and the ForgerEMS public preview.',
-    research: 'GEMS / Training Grounds studies how specialized model intelligence can be developed through curriculum design, controlled training, evaluation, tool use, governance, and compute-aware execution — building on strong open or pretrained foundations where appropriate.',
-    planned: 'Near-term product work covers CodeForge verification and routing, KyraBlox project integrations, multilingual publishing workflows, official-source civic navigation, and better local-food discovery. Community programs remain concepts.',
+    current: 'Shipping and testing focused products: autonomous repository engineering, engineering governance, a historically grounded game, long-form publishing, civic information, local-food discovery, and Windows technician workflows.',
+    activeDevelopment: 'Active work spans CodeForge, Forge Control, Dead Trails West, Kayla AI Publisher, FarmStand Finder, private civic technology, and the ForgerEMS public preview.',
+    research: 'FDS research explores engineering reliability, evaluation, adaptive computation, and evidence-driven development. Work is described publicly only where its status and evidence are verified.',
+    planned: 'Near-term product work covers CodeForge verification and routing, Forge Control implementation, Dead Trails West world systems, publishing workflows, official-source civic navigation, and local-food discovery. Community programs remain concepts.',
     aspirational: 'Exploring affordable-community concepts, community gardens, technology reuse programs, and open planning tools that help people understand and manage shared infrastructure.',
     longTerm: 'Let lessons from shipped engineering tools, model experiments, creative products, and community-facing software improve one another while each product keeps its own purpose and technical boundaries.'
   },
@@ -22,8 +22,8 @@ export const fds: KaylaCompany = {
   ],
   productEcosystem: [
     'CodeForge — free-first autonomous software-engineering platform',
-    'GEMS / Training Grounds — specialized model research and learning environment',
-    'KyraBlox — project-aware game-development platform',
+    'Forge Control — active development; no public release or integrations verified',
+    'Dead Trails West — private Unreal Engine game development',
     'Kayla AI Publisher — continuous creative-project and publishing workspace',
     'We The People — private-development civic technology platform',
     'FarmStand Finder — community-focused local discovery application',
@@ -31,15 +31,15 @@ export const fds: KaylaCompany = {
   ],
   currentProjects: [
     'CodeForge (RELEASED + ACTIVE DEVELOPMENT)',
-    'GEMS / Training Grounds (RESEARCH)',
-    'KyraBlox (ACTIVE DEVELOPMENT)',
+    'Forge Control (ACTIVE DEVELOPMENT)',
+    'Dead Trails West (PRIVATE DEVELOPMENT)',
     'Kayla AI Publisher (ACTIVE DEVELOPMENT)',
     'We The People (PRIVATE DEVELOPMENT)',
     'FarmStand Finder (ACTIVE DEVELOPMENT)'
   ],
   futurePlans: [
-    'Continued GEMS research, evaluation, and adaptive-compute experimentation.',
-    'Deeper project-aware game-development workflows and editor integrations for KyraBlox.',
+    'Continued engineering verification and adaptive-compute experimentation.',
+    'World systems and playable development for Dead Trails West.',
     'Publishing and multilingual workflow development for Kayla AI Publisher.',
     'Continued private platform development for We The People.',
     'Local discovery features and application development for FarmStand Finder.'

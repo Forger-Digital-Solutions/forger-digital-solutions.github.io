@@ -37,6 +37,11 @@ export interface CanonicalAnswer {
 
 const GEM_PREFIX = 'gem-';
 
+function distinctive(text: string): string[] {
+  const skip = new Set(['the', 'for', 'is', 'are', 'which', 'what', 'who', 'does', 'do', 'handles', 'handle', 'one', 'and', 'with', 'that', 'this', 'about', 'you', 'your', 'work', 'works']);
+  return normalize(text).split(' ').filter((token) => token.length >= 4 && !skip.has(token));
+}
+
 function project(slug: string) {
   return projects.find((entry) => entry.slug === slug);
 }
@@ -398,7 +403,23 @@ function relationshipAnswer(query: string, entityIds: string[]): CanonicalAnswer
 function statusTaxonomyAnswer(query: string): CanonicalAnswer {
   const text = normalize(query);
   const inUse = statusesInUse();
+  const namedStatuses = Object.keys(statusMeta).filter((status) => text.includes(normalize(status)));
   const named = inUse.find((entry) => text.includes(normalize(entry.status)));
+
+  if (namedStatuses.length > 1 || namedStatuses.some((status) => !inUse.some((entry) => entry.status === status))) {
+    const descriptions = namedStatuses.map((status) => {
+      const current = inUse.find((entry) => entry.status === status);
+      const meta = statusMeta[status as keyof typeof statusMeta];
+      return `• ${status} means ${meta.description.charAt(0).toLowerCase()}${meta.description.slice(1)}${current?.projects.length ? ` Currently: ${current.projects.join(', ')}.` : ' No current public FDS project is classified this way.'}`;
+    });
+    return {
+      text: descriptions.join('\n\n'),
+      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
+      sources: ['status-taxonomy'],
+      intent: 'status_taxonomy',
+      settled: true
+    };
+  }
 
   // "Is being on the Projects page the same as being released?" and friends.
   if (/\bprojects page\b|\bgithub repo|\brepository\b/.test(text)) {
@@ -442,7 +463,10 @@ function statusTaxonomyAnswer(query: string): CanonicalAnswer {
   }
 
   return {
-    text: `FDS labels each project with the stage it is actually in:\n\n${inUse.map((entry) => `• ${entry.status} — ${entry.short.charAt(0).toLowerCase()}${entry.short.slice(1)} (${entry.projects.join(', ')})`).join('\n')}\n\nA project page existing does not mean the software is downloadable; Forged lists what you can actually use today.`,
+    text: `FDS labels each project with the stage it is actually in:\n\n${Object.entries(statusMeta).map(([status, meta]) => {
+      const current = inUse.find((entry) => entry.status === status);
+      return `• ${status} — ${meta.short}${current?.projects.length ? ` (${current.projects.join(', ')})` : ' (no current public project)'}`;
+    }).join('\n')}\n\nA project page existing does not mean the software is downloadable; Forged lists what you can actually use today.`,
     actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }, { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
     sources: ['status-taxonomy'],
     intent: 'status_taxonomy',
@@ -611,8 +635,10 @@ function filteredListAnswer(query: string): CanonicalAnswer | undefined {
 
   if (matching.length === 0 && standalone.length === 0) {
     return {
-      text: `Nothing is ${filter.label} right now.`,
-      actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }],
+      text: filter.label === 'still in research'
+        ? 'No current public FDS project is listed as a research program. The Projects page shows the current portfolio.'
+        : `Nothing is ${filter.label} right now.`,
+      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
       sources: ['fds-ecosystem'],
       intent: 'list'
     };
@@ -962,47 +988,6 @@ function boundaryAnswer(intent: KaylaIntent, query: string): CanonicalAnswer | u
   return undefined;
 }
 
-/**
- * "Which GEM is for coding?" names a role, not a GEM. Resolve it by scoring the
- * question against each lineage's own role and direction text.
- */
-function gemByRole(query: string): string | undefined {
-  const text = normalize(query);
-  if (!/\bgems?\b/.test(text)) return undefined;
-  // Only a selector question picks a lineage by role. "What is GEMS / Training
-  // Grounds?" is about the programme, and used to resolve to Peridot because
-  // that lineage's own text mentions Training Grounds.
-  if (!/\b(which|what)\s+gems?\b/.test(text) && !/\bwhich\b/.test(text)) return undefined;
-  const words = new Set(distinctive(text));
-  if (words.size === 0) return undefined;
-
-  // Stem-tolerant so "codes" matches "coding", "math" matches "mathematics",
-  // and "orchestrates" matches "orchestration". An exact hit outranks a stem
-  // hit, so "publishing" picks Garnet over Sapphire's "public engineering".
-  const relatedness = (a: string, b: string): number => {
-    if (a === b) return 3;
-    if (a.length < 4 || b.length < 4) return 0;
-    if (a.startsWith(b) || b.startsWith(a)) return 2;
-    return a.slice(0, 5) === b.slice(0, 5) ? 1 : 0;
-  };
-
-  let best: { key: string; score: number } | undefined;
-  for (const gem of gems) {
-    const haystack = distinctive(normalize(`${gem.role} ${gem.direction} ${gem.fit}`));
-    let score = 0;
-    for (const word of words) {
-      score += haystack.reduce((max, candidate) => Math.max(max, relatedness(word, candidate)), 0);
-    }
-    if (score > 0 && (!best || score > best.score)) best = { key: gem.key, score };
-  }
-  return best && best.score >= 1 ? `${GEM_PREFIX}${best.key}` : undefined;
-}
-
-function distinctive(text: string): string[] {
-  const skip = new Set(['gem', 'gems', 'the', 'for', 'is', 'are', 'which', 'what', 'who', 'does', 'do', 'handles', 'handle', 'one', 'and', 'with', 'that', 'this', 'about', 'you', 'your', 'work', 'works']);
-  return normalize(text).split(' ').filter((token) => token.length >= 4 && !skip.has(token));
-}
-
 /** Does the question lean on something already named in the conversation? */
 function hasAnaphor(query: string): boolean {
   return /\b(it|its|it's|that|this|these|those|they|them|their|the same|one)\b/i.test(normalize(query));
@@ -1075,6 +1060,16 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
       actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
       sources: ['gems-family'],
       intent: 'capability'
+    };
+  }
+
+  if (/\b(as (smart|good|capable|powerful|strong) as|better than|smarter than|beats?|outperforms?|surpass(es|ed)?|competitive with)\b/.test(text)) {
+    return {
+      text: 'FDS does not publish independent benchmark results or verified performance comparisons for its projects, so I cannot confirm that claim.',
+      actions: [{ type: 'SHOW_APPS', label: 'View Projects' }],
+      sources: ['scope-boundary'],
+      intent: 'capability',
+      entityId: primary
     };
   }
 
@@ -1195,7 +1190,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   }
 
   // A cancellation that did not happen.
-  if (/\b(cancell?ed|cancel|killed|discontinued|abandoned|scrapped|shut down|shelved|dead|defunct)\b/.test(text)) {
+  if (/\b(cancell?ed|cancel|killed|discontinued|abandoned|scrapped|shut down|shelved|dead(?!\s+trails\s+west)|defunct)\b/.test(text)) {
     const gem = gemFor(primary);
     if (gem) {
       return {
@@ -1337,16 +1332,39 @@ export function canonicalAnswer(
   context?: KaylaPageContext,
   history: KaylaConversationMessage[] = []
 ): CanonicalAnswer | undefined {
+  const mentionsCurrentProject = matchEntities(query).some(({ entityId }) => Boolean(project(entityId)));
+  if (/\b(?:g\.?e\.?m\.?s?|training grounds?|kyra blox|kyrablox|topaz|sapphire|peridot|garnet)\b/i.test(query)
+    || /\bwhich gem\b.{0,40}\b(coding|math|publish\w*|orchestrat\w*|research|model)\b/i.test(query)) {
+    const retiredMatch = query.match(/\b(Training Grounds|Kyra\s?Blox|Sapphire|Topaz|Peridot|Garnet|GEMS)\b/i)?.[0];
+    const retiredName = retiredMatch
+      ? /^kyra/i.test(retiredMatch) ? 'KyraBlox' : retiredMatch
+      : /\bwhich gem\b/i.test(query) ? 'GEMS' : 'That project';
+    return {
+      text: `${retiredName} is not part of the current public FDS portfolio, and no public download is listed for it. The Projects page lists current work and its availability.`,
+      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
+      sources: ['portfolio-status'],
+      intent: 'navigation',
+      settled: true
+    };
+  }
+
+  if (/\b(ai|artificial intelligence|synthetic intelligence|models?)\b/i.test(query)
+    && /\b(research|training|work|program)\b/i.test(query)
+    && !mentionsCurrentProject) {
+    return {
+      text: 'No current public FDS project is listed as an AI research or model-training program. The Projects page shows the current portfolio, including CodeForge for software engineering.',
+      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
+      sources: ['portfolio-status'],
+      intent: 'navigation',
+      settled: true
+    };
+  }
+
   const intents = classifyIntents(query).map((match) => match.intent);
   const entityMatches = matchEntities(query);
   let entityIds = entityMatches.map((match) => match.entityId);
 
   // "Which GEM is for coding?" names a role rather than a lineage.
-  if (!entityIds.some((id) => id.startsWith(GEM_PREFIX))) {
-    const byRole = gemByRole(query);
-    if (byRole) entityIds = [byRole, ...entityIds];
-  }
-
   // "Is it public yet?" carries its subject from the previous turn. Without
   // this, follow-up questions fell back to a generic answer because the
   // deterministic path never looked at the conversation.
@@ -1461,7 +1479,7 @@ export function canonicalAnswer(
     if (filtered) return filtered;
   }
 
-  if (has('recommendation') && !entityIds.some((id) => getKaylaEntity(id)?.kind === 'project' || getKaylaEntity(id)?.kind === 'product' || getKaylaEntity(id)?.kind === 'gem')) {
+  if (has('recommendation') && !entityIds.some((id) => getKaylaEntity(id)?.kind === 'project' || getKaylaEntity(id)?.kind === 'product')) {
     const answer = recommendationAnswer(query);
     if (answer) return answer;
   }

@@ -4,7 +4,6 @@ import { matchEntity, entities } from '../src/data/kayla/entities';
 import { canonicalAnswer } from '../src/data/kayla/answers';
 import { projects } from '../src/data/projects';
 import { products } from '../src/data/products';
-import { gems } from '../src/data/gems';
 import { statusMeta } from '../src/data/status';
 
 /**
@@ -26,18 +25,13 @@ describe('every canonical entity is reachable', () => {
     expect(matchEntity(name as string)).toBe(slug);
   });
 
-  it.each(gems.map((g) => [g.name, `gem-${g.key}`]))('resolves the GEM %s', (name, id) => {
-    expect(matchEntity(name as string)).toBe(id);
-  });
-
   it.each(products.map((p) => [p.name]))('resolves the product %s', (name) => {
     expect(matchEntity(name as string)).toBeDefined();
   });
 
-  it('registers an entity for every project, product, and GEM', () => {
+  it('registers an entity for every current project and product', () => {
     const ids = new Set(entities.map((entry) => entry.id));
     for (const project of projects) expect(ids, project.slug).toContain(project.slug);
-    for (const gem of gems) expect(ids, gem.key).toContain(`gem-${gem.key}`);
     for (const product of products) {
       const covered = ids.has(product.slug) || projects.some((p) => p.slug === (product.projectSlug || product.slug));
       expect(covered, product.slug).toBe(true);
@@ -78,18 +72,12 @@ describe('every project answers the core intents from its own record', () => {
   });
 });
 
-describe('every GEM answers from gems.ts', () => {
-  it.each(gems.map((g) => [g.name, g.key]))('%s reports its role and research state', async (name, key) => {
-    const gem = gems.find((g) => g.key === key)!;
-    const answer = await answerFor(`What is ${name}?`);
-    expect(has(answer, gem.name)).toBe(true);
-    expect(has(answer, gem.role.split(' ')[0])).toBe(true);
-    expect(has(answer, gem.state)).toBe(true);
-  });
-
-  it.each(gems.map((g) => [g.name]))('%s is never offered as a download', async (name) => {
-    const answer = await answerFor(`Where can I download ${name}?`);
-    expect(has(answer, 'not downloadable') || has(answer, 'no ' + (name as string).toLowerCase() + ' release')).toBe(true);
+describe('retired projects are not promoted as current', () => {
+  it.each(['GEMS', 'Training Grounds', 'KyraBlox'])('%s receives a current-catalog answer', async (name) => {
+    const result = (await provider.search(`What is ${name}?`))[0];
+    expect(result?.settled).toBe(true);
+    expect(result?.snippet).toContain('not part of the current public FDS portfolio');
+    expect(result?.actions?.[0]?.href).toBe('/projects');
   });
 });
 
@@ -123,7 +111,7 @@ describe('no canonical fact is hard-coded into the answer layer', () => {
     for (const project of projects) {
       const answer = canonicalAnswer(`What is the status of ${project.name}?`);
       expect(answer, project.slug).toBeDefined();
-      expect(answer!.text).toContain(project.status);
+      expect(answer!.text.toLowerCase()).toContain(project.status.toLowerCase());
     }
   });
 });

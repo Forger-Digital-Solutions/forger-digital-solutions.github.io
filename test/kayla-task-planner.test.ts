@@ -57,14 +57,14 @@ describe('Kayla Task Planner (Phase 11)', () => {
     expect(plan.recommendedActions.some(a => a.href === '/forged')).toBe(true);
   });
 
-  it('resolves AI download conflicts with explicit tradeoff guidance', () => {
-    const plan = buildTaskPlan('Where can I download the GEMS AI model binary right now?');
+  it('resolves AI download conflicts without promoting retired research', () => {
+    const plan = buildTaskPlan('Where can I download a public AI model binary right now?');
     expect(plan.goal).toBe('FIND_RELEASED_SOFTWARE');
     expect(plan.tradeoffExplanation).toBeDefined();
-    expect(plan.tradeoffExplanation).toContain('GEMS');
-    expect(plan.requiredFacts).toContain('GEMS has no public downloads');
+    expect(plan.tradeoffExplanation).toContain('does not currently list a public AI research model');
+    expect(plan.requiredFacts).toContain('Current public project catalog');
     expect(plan.recommendedActions.some(a => a.href === '/forged')).toBe(true);
-    expect(plan.recommendedActions.some(a => a.href === '/projects/gems-training-grounds')).toBe(true);
+    expect(plan.recommendedActions.some(a => a.href === '/projects/codeforge')).toBe(true);
   });
 
   it('provides multi-step guidance with sequential steps for complex goals', () => {

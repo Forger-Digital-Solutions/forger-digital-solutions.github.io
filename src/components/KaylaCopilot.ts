@@ -293,7 +293,7 @@ export function getStartersForContext(): string[] {
       'Where should I start?',
       'What can I use now?',
       'Explore the projects',
-      'Learn about GEMS',
+      'What is Forge Control?',
       'Try CodeForge',
       'Support FDS'
     ],
@@ -306,7 +306,7 @@ export function getStartersForContext(): string[] {
     projects: [
       'Which FDS project should I explore?',
       'Tell me about CodeForge',
-      'What is GEMS?',
+      'What is Dead Trails West?',
       'Where do I start?'
     ],
     support: [
@@ -330,7 +330,7 @@ export function getStartersForContext(): string[] {
       'codeforge': [
         'How do I install CodeForge?',
         'Where do I download CodeForge?',
-        'How does CodeForge compare to GEMS?',
+        'What is Forge AAA?',
         'What version is CodeForge?'
       ],
       'forgerems': [
@@ -339,14 +339,15 @@ export function getStartersForContext(): string[] {
         'How do I install it?',
         'What version is this?'
       ],
-      'gems-training-grounds': [
-        'What is GEMS?',
-        'What does GEMS do?',
-        'How is GEMS being built?'
+      'forge-control': [
+        'What is Forge Control?',
+        'Is Forge Control available?',
+        'Explore the projects'
       ],
-      'kyrablox': [
-        'What is KyraBlox?',
-        'What engines does it support?'
+      'dead-trails-west': [
+        'What is Dead Trails West?',
+        'Is there a public game build?',
+        'Explore the projects'
       ],
       'kayla-ai-publisher': [
         'What is Kayla AI Publisher?',
@@ -384,9 +385,6 @@ function computeFollowUpSuggestions(q: string, actions?: KaylaSafeAction[]): str
   if (q.includes('codeforge')) {
     return ['See the release', 'How does it compare?', 'Explore other projects'];
   }
-  if (q.includes('gems') || q.includes('training grounds')) {
-    return ['Is GEMS available to download?', 'Explore all projects', 'How can I support FDS?'];
-  }
   if (q.includes('support') || q.includes('donate') || q.includes('contribute') || q.includes('hardware')) {
     return ['What hardware can I donate?', 'Explore active projects', 'Where should I start?'];
   }
@@ -394,12 +392,12 @@ function computeFollowUpSuggestions(q: string, actions?: KaylaSafeAction[]): str
     return ['What can I use now?', 'Explore the projects', 'How can I support FDS?'];
   }
   if (q.includes('download') || q.includes('release') || q.includes('use now') || q.includes('available')) {
-    return ['Try CodeForge', 'Learn about GEMS', 'Where should I start?'];
+    return ['Try CodeForge', 'What is Forge Control?', 'Where should I start?'];
   }
   if (actions && actions.length > 0) {
     const hasProjectsAction = actions.some(a => a.href === '/projects');
     if (hasProjectsAction) {
-      return ['What can I use now?', 'Learn about GEMS', 'Support FDS'];
+      return ['What can I use now?', 'What is Dead Trails West?', 'Support FDS'];
     }
     return ['See the release', 'What can I use now?', 'Explore the projects'];
   }

@@ -11,18 +11,18 @@ import { manifestById, canonicalStatusLabels, type CanonicalStatus, type Product
  *
  * Orbit rules — ONE PLANET = ONE ORBIT:
  * - Every node owns exactly one ellipse and no two of them are the same plane:
- *   radii, eccentricity and tilt all differ, so the eight tracks read as an atomic
+ *   radii, eccentricity and tilt all differ, so the tracks read as an atomic
  *   system of intersecting orbits rather than as concentric rings or shared belts.
  *   Two bodies 180 degrees apart on one ellipse would still be sharing an orbit,
  *   which is why the geometry is per-body and not per-layer.
  * - Every plane has its own period, an exact divisor of the 1080s master cycle,
  *   shortest for the innermost world, so nothing locks into formation and the
  *   system repeats exactly at t = 1080s — one dense sweep certifies all future time.
- * - All eight planes run prograde. Mixed/retrograde layouts were measured and are
+ * - All product planes run prograde. Mixed/retrograde layouts were measured and are
  *   deliberately rejected: any counter-rotating plane at these world sizes cost
  *   25-32u of closest-approach margin, and collision safety plus legibility
  *   outrank CW/CCW symmetry.
- * - The eight planes were laid out and verified offline against closest approach
+ * - The product planes were laid out and verified offline against closest approach
  *   across the whole animated cycle, with every plane kept clear of the nucleus
  *   and inside the scene; see scripts/eco-orbit-solver.cjs.
  * - Motion is pure CSS offset-path and freezes at a configured position under
@@ -33,7 +33,6 @@ import { manifestById, canonicalStatusLabels, type CanonicalStatus, type Product
  */
 
 export type EcosystemIcon =
-  | 'intelligence'
   | 'forged'
   | 'publishing'
   | 'applications'
@@ -166,11 +165,10 @@ const orbit = (
   opacity: number
 ): EcosystemOrbit => ({ rx, ry, rotation, duration, direction, start, opacity, path: buildEllipsePath(rx, ry, rotation) });
 
-/** The four conceptual layers of Ecosystem 2.0, inner to outer. */
+/** The three conceptual portfolio layers, inner to outer. */
 export const ecosystemGroups: EcosystemGroup[] = [
   { id: 'build', name: 'Build & Engineering', short: 'BUILD', blurb: 'Software that plans, edits, tests, and repairs.', color: '#5a82e8' },
-  { id: 'intelligence', name: 'Intelligence & Research', short: 'INTELLIGENCE', blurb: 'Specialized model research and evaluation.', color: '#4f8fff' },
-  { id: 'create', name: 'Create', short: 'CREATE', blurb: 'Tools for game development and publishing.', color: '#b487ff' },
+  { id: 'create', name: 'Create', short: 'CREATE', blurb: 'Games and creative products in development.', color: '#b487ff' },
   { id: 'knowledge', name: 'Knowledge & Community', short: 'KNOWLEDGE', blurb: 'Practical information and local discovery.', color: '#61d7a1' },
 ];
 
@@ -184,13 +182,13 @@ type NodeSpec = Omit<EcosystemNode, 'name' | 'href' | 'category' | 'status' | 's
 };
 
 /**
- * Eight worlds, eight planes, listed inner to outer. Nothing here is generated:
+ * Seven worlds, seven planes, listed inner to outer. Nothing here is generated:
  * each ellipse was laid out for the shape of the system it contributes — a compact
  * ground-state orbit, a broad horizontal plane, a tall near-vertical one, shallow
  * and steep diagonals, a wide outer fence — and then verified offline against every
  * other plane for closest approach across the whole animated cycle.
  *
- * All eight run prograde and every period divides the 1080s master cycle, so the
+ * All product planes run prograde and every period divides the 1080s master cycle, so the
  * full state at t=1080 is bit-identical to t=0 and the offline certificate covers
  * all future time. The counter-rotating alternative was measured and rejected: at
  * this planet size family (33-37u) any retrograde plane cost 25-32u of clearance.
@@ -215,30 +213,19 @@ const specs: NodeSpec[] = [
     orbit: orbit(242, 202, 6, 45, 'normal', 46.972, .46),
   },
   {
-    id: 'gems', manifestId: 'gems', tag: 'GEMS', group: 'intelligence',
+    id: 'forge-control', manifestId: 'forge-control', tag: 'FORGE CONTROL', tagLines: ['FORGE', 'CONTROL'], group: 'build',
     labelPosition: 'below-left', labelDx: -3.2, labelDy: 32.3, labelAnchor: 'end',
-    icon: 'intelligence',
-    character: ecosystemCharacterMap.intelligence,
-    color: '#4f8fff', glow: '#1f63ff', size: 33, labelSide: 'left',
-    // Mid field, shallow negative tilt.
+    icon: 'systems',
+    character: ecosystemCharacterMap.systems,
+    color: '#36b8ba', glow: '#13777a', size: 33, labelSide: 'left',
     orbit: orbit(208, 167, -12, 36, 'normal', 0, .42),
   },
   {
-    id: 'training-grounds', manifestId: 'training-grounds', tag: 'TRAINING GROUNDS', tagLines: ['TRAINING', 'GROUNDS'], group: 'intelligence',
-    labelPosition: 'left', labelDx: -45.4, labelDy: -13.4, labelAnchor: 'end',
-    icon: 'applications',
-    character: ecosystemCharacterMap.applications,
-    color: '#38b6e0', glow: '#0f7fae', size: 33, labelSide: 'right',
-    // Medium eccentricity on a steep negative diagonal.
-    orbit: orbit(264, 228, -66, 54, 'normal', 87.75, .38),
-  },
-  {
-    id: 'kyrablox', manifestId: 'kyrablox', tag: 'KYRABLOX', group: 'create',
+    id: 'dead-trails-west', manifestId: 'dead-trails-west', tag: 'DEAD TRAILS WEST', tagLines: ['DEAD TRAILS', 'WEST'], group: 'create',
     labelPosition: 'below-left', labelDx: -27.8, labelDy: 15.3, labelAnchor: 'end',
     icon: 'gaming',
     character: ecosystemCharacterMap.gaming,
-    color: '#b487ff', glow: '#7b3df0', size: 36, labelSide: 'left',
-    // Wide plane on the opposing diagonal.
+    color: '#c47c4f', glow: '#82411f', size: 36, labelSide: 'left',
     orbit: orbit(285, 232, 63, 60, 'normal', 46.266, .34),
   },
   {

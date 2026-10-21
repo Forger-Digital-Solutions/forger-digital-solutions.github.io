@@ -3,8 +3,10 @@ title: "On GEMS: training and evaluation as connected work"
 description: "Why the GEMS research direction treats a training run and the evidence it produces as one piece of work, not two."
 date: 2026-08-21
 category: "Research"
-projectSlug: "gems-training-grounds"
+
 tags: ["GEMS", "Research", "Evaluation"]
+draft: true
+state: "superseded"
 ---
 
 GEMS / Training Grounds is FDS's flagship research initiative, and the idea underneath it is simple to state and hard to practice: **training and evaluation are the same job.**
