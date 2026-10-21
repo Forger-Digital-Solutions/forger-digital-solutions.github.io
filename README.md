@@ -280,6 +280,14 @@ secrets to run any of these features.
 
 This site is automatically deployed via GitHub Actions when changes are pushed to the main branch. The workflow is defined in `.github/workflows/deploy.yml`.
 
+## GitHub-first development
+
+The GitHub repository is the source of truth; development does not depend on the original `FDSWebsite` folder or a full checkout on the owner's Windows drive. When GitHub Codespaces is available for the repository, open a Codespace from `main`, create a feature branch, and use its terminal for the project commands above. For lightweight edits, `github.dev` can edit files in a branch, but it does not provide the terminal needed to run the full validation suite.
+
+Open a pull request into `main` for each change. The deployment workflow runs its dependency security gate, production build/unit gates, and Playwright browser certification on pull requests; the Pages deploy job is skipped for pull requests. Merge only after those checks pass. A push to `main` then runs the same gates and publishes the tested `dist/` site through GitHub Actions. No Pages credentials or Cloudflare Worker secrets are needed to build the static website.
+
+Protect `main` in repository settings: require pull requests, require the `Dependency Security Gate`, `Unit, Kayla Gates & Production Build`, and `Playwright Browser Certification` checks, dismiss stale approvals after new commits, require conversation resolution, and block force pushes and branch deletion. Keep administrators subject to these rules where practical. Git history and GitHub Actions are not independent backups; periodically mirror the repository or create an encrypted `git bundle` backup in storage outside the GitHub organization, and verify that a restore works.
+
 ## License
 
 MIT
