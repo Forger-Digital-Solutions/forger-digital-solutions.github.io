@@ -6,8 +6,8 @@ describe('Kayla Page Context', () => {
     expect(getPageType('/')).toBe('home');
   });
 
-  it('detects project page', () => {
-    expect(getPageType('/projects/gems-training-grounds')).toBe('project');
+  it('detects a current project page', () => {
+    expect(getPageType('/projects/forge-control')).toBe('project');
   });
 
   it('detects projects list', () => {
@@ -30,8 +30,13 @@ describe('Kayla Page Context', () => {
     expect(getPageType('/community-impact')).toBe('community');
   });
 
-  it('extracts entity from project slug', () => {
-    expect(getEntity('/projects/gems-training-grounds')).toBe('gems-training-grounds');
+  it('extracts a current entity from project slug', () => {
+    expect(getEntity('/projects/forge-control')).toBe('forge-control');
+  });
+
+  it('does not treat retired project URLs as current entities', () => {
+    expect(getEntity('/projects/gems-training-grounds')).toBeUndefined();
+    expect(getEntity('/projects/kyrablox')).toBeUndefined();
   });
 
   it('extracts entity from notes slug', () => {
@@ -39,9 +44,9 @@ describe('Kayla Page Context', () => {
   });
 
   it('builds complete page context', () => {
-    const ctx = buildPageContext('/projects/kyrablox');
-    expect(ctx.route).toBe('/projects/kyrablox');
+    const ctx = buildPageContext('/projects/dead-trails-west');
+    expect(ctx.route).toBe('/projects/dead-trails-west');
     expect(ctx.pageType).toBe('project');
-    expect(ctx.entity).toBe('kyrablox');
+    expect(ctx.entity).toBe('dead-trails-west');
   });
 });

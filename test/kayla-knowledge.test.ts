@@ -29,8 +29,10 @@ describe('Kayla Knowledge - Apps', () => {
   });
 
   it('app aliases resolve correctly', () => {
-    expect(resolveAppId('gems')).toBe('gems-training-grounds');
-    expect(resolveAppId('kyrablox')).toBe('kyrablox');
+    expect(resolveAppId('forge control')).toBe('forge-control');
+    expect(resolveAppId('dead trails west')).toBe('dead-trails-west');
+    expect(resolveAppId('gems')).toBeUndefined();
+    expect(resolveAppId('kyrablox')).toBeUndefined();
     expect(resolveAppId('kayla')).toBe('kayla-ai-publisher');
     expect(resolveAppId('we the people')).toBe('we-the-people');
     expect(resolveAppId('farmstand')).toBe('farmstand-finder');

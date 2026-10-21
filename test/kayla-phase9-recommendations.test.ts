@@ -14,12 +14,12 @@ import { canonicalAnswer } from '../src/data/kayla/answers';
 const ctx = { route: '/', pageType: 'home' } as const;
 
 describe('Phase 9 Grounded Recommendations', () => {
-  it('recommends KyraBlox for game development and disclaims public release', () => {
+  it('recommends Dead Trails West for game development and disclaims public release', () => {
     const answer = canonicalAnswer('Which app should I use for game development?', ctx, []);
     expect(answer).toBeDefined();
-    expect(answer!.text).toContain('KyraBlox');
-    expect(answer!.text).toMatch(/ACTIVE DEVELOPMENT|active development/i);
-    expect(answer!.actions?.[0]?.href).toBe('/projects/kyrablox');
+    expect(answer!.text).toContain('Dead Trails West');
+    expect(answer!.text).toMatch(/PRIVATE DEVELOPMENT|private development/i);
+    expect(answer!.actions?.[0]?.href).toBe('/projects/dead-trails-west');
   });
 
   it('recommends ForgerEMS for technician and drive maintenance', () => {
@@ -48,14 +48,14 @@ describe('Phase 9 Grounded Recommendations', () => {
     const answer = canonicalAnswer('Which tool helps with autonomous software engineering repositories?', ctx, []);
     expect(answer).toBeDefined();
     expect(answer!.text).toContain('CodeForge');
-    expect(answer!.text).toMatch(/available now|released/i);
+    expect(answer!.text).toMatch(/released/i);
+    expect(answer!.text).toMatch(/downloads are temporarily paused/i);
   });
 
-  it('recommends GEMS / Training Grounds for AI model training and evaluation', () => {
+  it('does not promote retired AI research lineages as current', () => {
     const answer = canonicalAnswer('What FDS project is focused on model research and training?', ctx, []);
     expect(answer).toBeDefined();
-    expect(answer!.text).toMatch(/GEMS|Training Grounds/i);
-    expect(answer!.text).toMatch(/RESEARCH|research/i);
+    expect(answer!.text).toMatch(/no current public fds project is listed as an ai research or model-training program/i);
   });
 
   it('gracefully handles ambiguous recommendation queries by listing all areas', () => {

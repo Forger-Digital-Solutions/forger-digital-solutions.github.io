@@ -1,8 +1,7 @@
 ---
 /**
  * ONE FDS ECOSYSTEM
- * Explains how CodeForge (build foundation), GEMS (intelligence research), and the
- * specialized FDS domains fit together — a system-architecture view, not a solar system.
+ * Explains how CodeForge and the specialized FDS product areas fit together.
  * Each node carries its FDS system sigil (src/components/icons/SystemSigil.astro);
  * CodeForge carries the recovered CodeForge emblem.
  */
@@ -13,13 +12,24 @@ const domains = [
   {
     key: 'gaming',
     name: 'Gaming',
-    product: 'KyraBlox',
-    href: '/projects/kyrablox',
+    product: 'Dead Trails West',
+    href: '/projects/dead-trails-west',
     verb: 'BUILD WORLDS',
     color: '#b487ff',
     micro: 'GAMING',
-    role: 'Project-aware help for scripts, gameplay systems, debugging, validation, and game creation.',
-    apply: 'Understands the game project, not only the prompt.'
+    role: 'A private, historically grounded Western game in Unreal Engine 4.27 development.',
+    apply: 'An 1882 world in active development.'
+  },
+  {
+    key: 'systems',
+    name: 'Engineering Governance',
+    product: 'Forge Control',
+    href: '/projects/forge-control',
+    verb: 'GOVERN',
+    color: '#36b8ba',
+    micro: 'ENGINEERING',
+    role: 'An active FDS development project with no public release or verified integrations.',
+    apply: 'Capabilities are published only after verification.'
   },
   {
     key: 'publishing',
@@ -73,15 +83,15 @@ const domains = [
   <header class="one-eco__head">
     <p class="one-eco__eyebrow"><span aria-hidden="true"></span>ONE FDS ECOSYSTEM</p>
     <h2 id="one-eco-title" class="one-eco__title">Different systems. One connected direction.</h2>
-    <p class="one-eco__lead">FDS connects autonomous software engineering, AI model research, game creation, publishing, civic information, local discovery, and technician software. Each product keeps its own purpose while sharing engineering lessons, research methods, and reusable foundations.</p>
+    <p class="one-eco__lead">FDS builds autonomous software engineering, technician software, a historically grounded game, creative tools, civic information, and local discovery. Each project keeps a distinct purpose while sharing a disciplined approach to engineering and verification.</p>
   </header>
 
   <p class="one-eco__principle">
     <span class="one-eco__principle-mark" aria-hidden="true">//</span>
-    Shared foundations do not mean one interface—or that every product must become a GEMS wrapper. Different problems deserve different tools and independent technical choices.
+    Shared engineering foundations do not mean one interface. Different problems deserve different tools and independent technical choices.
   </p>
 
-  <div class="one-eco__diagram" role="group" aria-label="Relationships across CodeForge, GEMS and Training Grounds, KyraBlox, Kayla AI Publisher, We The People, FarmStand Finder, and ForgerEMS.">
+  <div class="one-eco__diagram" role="group" aria-label="Relationships across CodeForge, Forge AAA, Forge Control, ForgerEMS, Dead Trails West, Kayla Publisher, We The People, and FarmStand Finder.">
     <p class="one-eco__micro one-eco__micro--top">FDS // CONNECTED SYSTEMS</p>
 
     <!-- FOUNDATION -->
@@ -102,19 +112,19 @@ const domains = [
 
     <div class="eco-line" aria-hidden="true"><span class="eco-pulse"></span></div>
 
-    <!-- INTELLIGENCE -->
+    <!-- CODEFORGE ARCHITECTURE -->
     <div class="eco-tier">
-      <article class="eco-node eco-node--intelligence" tabindex="0" aria-label="GEMS / Training Grounds, intelligence and research layer">
+      <article class="eco-node eco-node--architecture" tabindex="0" aria-label="Forge AAA, an architecture workstream within CodeForge">
         <div class="eco-node__ident">
-          <span class="eco-node__sigil eco-node__sigil--gems" aria-hidden="true"><SystemSigil system="intelligence" /></span>
+          <span class="eco-node__sigil eco-node__sigil--architecture" aria-hidden="true"><SystemSigil system="systems" /></span>
           <div>
-            <p class="eco-node__micro">INTELLIGENCE</p>
-            <h3 class="eco-node__name">GEMS / Training Grounds</h3>
-            <p class="eco-node__verb">LEARN</p>
+            <p class="eco-node__micro">CODEFORGE ARCHITECTURE</p>
+            <h3 class="eco-node__name">Forge AAA</h3>
+            <p class="eco-node__verb">ENGINEER</p>
           </div>
         </div>
-        <p class="eco-node__role">GEMS develops specialized model intelligence through Training Grounds curriculum, trials, evaluation, and advancement checkpoints.</p>
-        <p class="eco-node__note">Its research can inform other products without defining their entire architecture.</p>
+        <p class="eco-node__role">Forge AAA is part of the CodeForge ecosystem—not a separate public product or release.</p>
+        <p class="eco-node__note">Public claims remain tied to the released CodeForge build.</p>
       </article>
     </div>
 
@@ -153,7 +163,7 @@ const domains = [
   <!-- CLOSING -->
   <div class="one-eco__close">
     <h3 class="one-eco__closetitle">One foundation. Specialized systems. A growing ecosystem.</h3>
-    <p class="one-eco__closebody">Intelligence strengthens development. Development enables products. Products expose new problems worth solving. What is learned in one part of FDS can inform what we build next — without erasing the purpose that makes each system different.</p>
+    <p class="one-eco__closebody">Engineering enables products. Products expose new problems worth solving. What is learned in one part of FDS can inform what we build next — without erasing the purpose that makes each system different.</p>
     <a class="btn btn-primary" href="/projects">Explore the Projects <span aria-hidden="true">→</span></a>
   </div>
 </section>

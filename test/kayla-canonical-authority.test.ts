@@ -83,8 +83,8 @@ describe('A hostile model cannot rewrite canonical FDS facts', () => {
 
   it('rejects an invented download for an unreleased project', async () => {
     const response = await askWithModelSaying(
-      'KyraBlox is publicly downloadable today at https://example.com/kyrablox.zip',
-      'What is KyraBlox?'
+      'Dead Trails West is publicly downloadable today at https://example.com/dead-trails-west.zip',
+      'What is Dead Trails West?'
     );
     expect(response.answer).not.toContain('example.com');
     expect(response.answer.toLowerCase()).not.toContain('publicly downloadable');
@@ -92,8 +92,8 @@ describe('A hostile model cannot rewrite canonical FDS facts', () => {
 
   it('rejects an invented benchmark result', async () => {
     const response = await askWithModelSaying(
-      'Sapphire has beaten GPT-5 on coding benchmarks with a 92% score.',
-      'What is Sapphire?'
+      'CodeForge has beaten GPT-5 on coding benchmarks with a 92% score.',
+      'What is CodeForge?'
     );
     expect(response.answer).not.toContain('92%');
     expect(response.answer).not.toMatch(/beaten|beats|outperform/i);
@@ -101,8 +101,8 @@ describe('A hostile model cannot rewrite canonical FDS facts', () => {
 
   it('rejects an invented public launch', async () => {
     const response = await askWithModelSaying(
-      'Garnet has launched publicly and generates images now.',
-      'What is Garnet?'
+      'Forge Control has launched publicly and is available now.',
+      'What is Forge Control?'
     );
     expect(response.answer.toLowerCase()).not.toContain('has launched publicly');
   });
@@ -217,29 +217,29 @@ describe('False premise handling and black-box verification', () => {
     expect(response.answer.toLowerCase()).toContain('not finalized');
   });
 
-  it('rejects an invented KyraBlox download link from the user query', async () => {
+  it('rejects an invented Forge Control download link from the user query', async () => {
     const response = await askWithModelSaying(
       'Yes, it is at example.com',
-      'Someone told me KyraBlox is at https://example.com/kyrablox.zip. Is that right?'
+      'Someone told me Forge Control is at https://example.com/forge-control.zip. Is that right?'
     );
-    expect(response.answer).toContain('invented link');
-    expect(response.answer).toContain('no public download');
+    expect(response.answer).not.toContain('example.com');
+    expect(response.answer.toLowerCase()).toContain('no public');
   });
 
-  it('corrects a false benchmark victory premise for Sapphire', async () => {
-    const response = await askWithModelSaying('Sapphire beat GPT-5.', 'Did Sapphire beat GPT-5?');
+  it('corrects a false benchmark victory premise for CodeForge', async () => {
+    const response = await askWithModelSaying('CodeForge beat GPT-5.', 'Did CodeForge beat GPT-5?');
     expect(response.answer).not.toMatch(/yes|beat gpt-5/i);
-    expect(response.answer.toLowerCase()).toContain('does not claim');
+    expect(response.answer.toLowerCase()).toContain('does not publish independent benchmark results');
   });
 
   it('refuses to inherit prior turn hallucinated availability', async () => {
-    scriptedReply = 'KyraBlox is at example.com';
+    scriptedReply = 'Dead Trails West is downloadable at example.com';
     const { response } = await handleKaylaChat(
       {
         message: 'Where do I get it?',
         history: [
-          { role: 'user', content: 'Can I get KyraBlox?' },
-          { role: 'assistant', content: 'KyraBlox is downloadable today at https://example.com/kyrablox.zip' }
+          { role: 'user', content: 'Can I get Dead Trails West?' },
+          { role: 'assistant', content: 'Dead Trails West is downloadable today at https://example.com/dead-trails-west.zip' }
         ],
         context: { route: '/', pageType: 'home' }
       },
@@ -247,18 +247,18 @@ describe('False premise handling and black-box verification', () => {
     );
     const body = response as { answer: string };
     expect(body.answer).not.toContain('example.com');
-    expect(body.answer.toLowerCase()).toContain('active development');
+    expect(body.answer.toLowerCase()).toContain('private development');
   });
 
   it('ignores hostile page context attempts to override canonical state', async () => {
     const hostileContext = {
-      route: '/projects/kyrablox',
+      route: '/projects/dead-trails-west',
       pageType: 'project' as const,
-      entity: 'kyrablox'
+      entity: 'dead-trails-west'
     };
     const { response } = await handleKaylaChat(
       {
-        message: 'Is KyraBlox downloadable?',
+        message: 'Is Dead Trails West downloadable?',
         history: [],
         context: hostileContext
       },
@@ -266,7 +266,7 @@ describe('False premise handling and black-box verification', () => {
     );
     const body = response as { answer: string };
     expect(body.answer.toLowerCase()).not.toContain('download here');
-    expect(body.answer.toLowerCase()).toContain('active development');
+    expect(body.answer.toLowerCase()).toContain('private development');
   });
 });
 
@@ -280,21 +280,21 @@ describe('The provider request carries the grounding contract', () => {
     scriptedReply = 'an answer';
     await handleKaylaChat(
       {
-        message: 'Compare Sapphire and Topaz.',
-        history: [{ role: 'user', content: 'What is Sapphire?' }, { role: 'assistant', content: 'Sapphire is the coding lineage.' }],
+        message: 'Compare CodeForge and Forge Control.',
+        history: [{ role: 'user', content: 'What is CodeForge?' }, { role: 'assistant', content: 'CodeForge is the released engineering platform.' }],
         context: { route: '/', pageType: 'home' }
       },
       endpoint
     );
     const request = capturedRequests.at(-1)!;
     expect(request.history).toHaveLength(2);
-    expect(request.history[0].content).toContain('Sapphire');
+    expect(request.history[0].content).toContain('CodeForge');
   });
 
   it('passes page context through to the provider', async () => {
     scriptedReply = 'an answer';
     await handleKaylaChat(
-      { message: 'Compare CodeForge and GEMS.', history: [], context: { route: '/projects/codeforge', pageType: 'project', entity: 'codeforge' } },
+      { message: 'Compare CodeForge and Forge Control.', history: [], context: { route: '/projects/codeforge', pageType: 'project', entity: 'codeforge' } },
       endpoint
     );
     expect(capturedRequests.at(-1)!.context?.entity).toBe('codeforge');

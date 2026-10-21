@@ -50,7 +50,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
   if (q.includes('what is codeforge') || q === 'codeforge') {
     const app = apps.find(a => a.id === 'codeforge');
     return {
-      text: `${app?.name || 'CodeForge'} is a released free-first autonomous software-engineering platform for Windows, CLI, and editor work. It inspects repositories, plans changes, uses controlled tools, runs verification, and refuses silent paid or local-model fallback through ForgeZero.`,
+      text: `${app?.name || 'CodeForge'} is a free-first autonomous software-engineering platform for Windows, CLI, and editor work. It inspects repositories, plans changes, uses controlled tools, runs verification, and refuses silent paid or local-model fallback through ForgeZero. Downloads are temporarily paused while its release is updated.`,
       actions: [{ type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }],
       sources: ['app-codeforge', 'release-codeforge']
     };
@@ -169,8 +169,9 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     return {
       text: `FDS builds a coherent ecosystem of practical software:\n\n` +
         `• CodeForge engineers repositories and also contributes shared engineering foundations across FDS.\n` +
-        `• GEMS develops specialized model intelligence; Training Grounds teaches and evaluates it.\n` +
-        `• KyraBlox understands game projects, scripts, engines, approvals, and validation.\n` +
+        `• Forge AAA is an architecture workstream within CodeForge.\n` +
+        `• Forge Control is an active development project; no public release or feature set is claimed here.\n` +
+        `• Dead Trails West is a private game project with no public playable build.\n` +
         `• Kayla AI Publisher keeps a complete creative project connected from manuscript toward publication.\n` +
         `• FarmStand Finder helps people find nearby farms, stands, markets, growers, and seasonal food.\n` +
         `• We The People makes public information and services easier to understand and navigate.\n` +
@@ -189,25 +190,19 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     };
   }
 
-  if (q.includes('gems') || q.includes('training grounds')) {
-    const app = apps.find(a => a.id === 'gems-training-grounds');
-    if (app) {
-      return {
-        text: `${app.name}: ${app.tagline} ${app.description}`,
-        title: app.name,
-        actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: app.url! }],
-        sources: [`app-${app.id}`]
-      };
-    }
-  }
-
   if (q.includes('what version is this') || q.includes('current version') || q.includes('latest version') || q.includes('what version')) {
     const appId = q.includes('forgerems') ? 'forgerems' : q.includes('codeforge') ? 'codeforge' : context?.entity;
     const release = appId ? releases.find(r => r.appId === appId) : releases[0];
     if (release) {
+      const download = release.downloads?.[0];
+      const isPaused = release.status === 'paused';
       return {
-        text: `The current version is ${release.version} (${release.status}).`,
-        actions: [{ type: 'OPEN_DOWNLOAD', label: 'Download', href: release.downloads?.[0] || forgerems.download! }],
+        text: isPaused
+          ? `The last version listed on this website was ${release.version}. CodeForge downloads are temporarily paused while its release is updated.`
+          : `The current version is ${release.version} (${release.status}).`,
+        actions: download
+          ? [{ type: 'OPEN_DOWNLOAD', label: 'Download', href: download }]
+          : [{ type: 'OPEN_APP', label: 'Check CodeForge availability', href: '/projects/codeforge' }],
         sources: [`release-${release.appId}`]
       };
     }
@@ -219,12 +214,12 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
 function recommendApp(query: string): { text: string; title?: string; actions?: KaylaSafeAction[]; sources: string[] } {
   const q = normalize(query);
 
-  if (q.includes('game') || q.includes('development tool') || q.includes('engine') || q.includes('roblox') || q.includes('unreal') || q.includes('unity')) {
-    const app = apps.find(a => a.id === 'kyrablox');
+  if (q.includes('game') || q.includes('unreal') || q.includes('unity')) {
+    const app = apps.find(a => a.id === 'dead-trails-west');
     return {
-      text: `For project-aware game development, ${app?.name || 'KyraBlox'} inspects the game project, plans against its state, and governs proposed changes, validation, and recovery. Roblox has the deepest current integration; other engines have clearly labeled limits.`,
-      actions: [{ type: 'OPEN_APP', label: 'View KyraBlox', href: '/projects/kyrablox' }],
-      sources: ['app-kyrablox']
+      text: `${app?.name || 'Dead Trails West'} is a private Unreal Engine 4.27 game project, not a public game-development tool. Its development status is documented on the project page.`,
+      actions: [{ type: 'OPEN_APP', label: 'View Dead Trails West', href: '/projects/dead-trails-west' }],
+      sources: ['app-dead-trails-west']
     };
   }
 
@@ -238,11 +233,10 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   }
 
   if (q.includes('research') || q.includes('training') || q.includes('evaluation') || q.includes('ai model') || q.includes('adaptive compute')) {
-    const app = apps.find(a => a.id === 'gems-training-grounds');
     return {
-      text: `For model learning and evaluation, ${app?.name || 'GEMS / Training Grounds'} develops specialized intelligences through curriculum, controlled training, trials, and checkpoints, building on strong foundations where appropriate.`,
-      actions: [{ type: 'OPEN_APP', label: 'View GEMS', href: '/projects/gems-training-grounds' }],
-      sources: ['app-gems-training-grounds']
+      text: 'FDS does not currently list a public AI research program. The current public portfolio and project availability are on the Projects page.',
+      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
+      sources: ['portfolio-status']
     };
   }
 
@@ -265,7 +259,7 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   }
 
   return {
-    text: 'It depends on the job. Choose CodeForge for repository engineering, GEMS / Training Grounds for model research, KyraBlox for game projects, Kayla AI Publisher for long-form creative work, FarmStand Finder for nearby food, We The People for civic information, or ForgerEMS for technician diagnostics and maintenance.',
+    text: 'It depends on the job. CodeForge is the released engineering platform, but its downloads are temporarily paused; Forge Control and Dead Trails West are in development. Kayla AI Publisher supports creative work, FarmStand Finder local food discovery, We The People civic information, and ForgerEMS technician workflows. The Projects page lists current status and availability.',
     actions: [{ type: 'OPEN_PAGE', label: 'View Projects', href: '/projects' }],
     sources: apps.map(a => `app-${a.id}`)
   };
@@ -273,23 +267,6 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
 
 function compareApps(query: string): { text: string; title?: string; actions?: KaylaSafeAction[]; sources: string[] } {
   const q = normalize(query);
-
-  if (q.includes('gems') && q.includes('kayla')) {
-    return {
-      text: `GEMS / Training Grounds vs Kayla AI Publisher:\n\n` +
-        `• GEMS is a model family and learning program built around specialization, curriculum, trials, and evaluation.\n` +
-        `• Kayla AI Publisher is a standalone creative-project workspace for manuscripts, revision, visual storytelling, and publishing preparation.\n` +
-        `GEMS research may inform future model capability, but Kayla remains its own product.`,
-      sources: ['app-gems-training-grounds', 'app-kayla-ai-publisher']
-    };
-  }
-
-  if (q.includes('kyrablox') && q.includes('game')) {
-    return {
-      text: `KyraBlox is a local-first, project-aware game-development platform. Roblox has an integrated guarded transaction path; Unreal has a fixture-validated bridge; Unity and Godot are currently planning or file-workflow paths. It does not claim equal live integration across every engine.`,
-      sources: ['app-kyrablox']
-    };
-  }
 
   if (q.includes('farmstand') && q.includes('we the people')) {
     return {
@@ -312,7 +289,7 @@ function compareApps(query: string): { text: string; title?: string; actions?: K
   }
 
   return {
-    text: 'FDS products serve different jobs. CodeForge engineers repositories. GEMS learns through Training Grounds. KyraBlox understands game projects. Kayla AI Publisher carries creative works toward publication. FarmStand Finder handles nearby food discovery. ForgerEMS is a technician workbench. We The People focuses on civic information.',
+    text: 'FDS projects serve different jobs. CodeForge engineers repositories, Forge Control and Dead Trails West are in development, Kayla AI Publisher supports creative works, FarmStand Finder handles nearby food discovery, ForgerEMS is a technician workbench, and We The People focuses on civic information.',
     sources: apps.slice(0, 3).map(a => `app-${a.id}`)
   };
 }
@@ -321,9 +298,10 @@ function synthesizeEcosystem(): { text: string; title?: string; actions?: KaylaS
   return {
     text: `Forger Digital Solutions (FDS) is an independent AI and software company.\n\n` +
       `Current products:\n` +
-      `• CodeForge — released free-first autonomous software engineering for Windows.\n` +
-      `• GEMS / Training Grounds — model specialization, curriculum, and evaluation research.\n` +
-      `• KyraBlox — project-aware game development with honestly labeled engine maturity.\n` +
+      `• CodeForge — released free-first autonomous software engineering for Windows; downloads are temporarily paused.\n` +
+      `• Forge AAA — a CodeForge architecture workstream, not a separate product.\n` +
+      `• Forge Control — active development; no public release or feature set is claimed here.\n` +
+      `• Dead Trails West — private Unreal Engine 4.27 game development, with no public build.\n` +
       `• Kayla AI Publisher — one connected workspace for long-form creative projects.\n` +
       `• FarmStand Finder — Community-focused local food discovery.\n` +
       `• We The People — Private civic technology platform.\n` +

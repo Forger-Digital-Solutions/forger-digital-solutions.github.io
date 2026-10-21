@@ -19,7 +19,7 @@ import generatedArchives from './generated-archives.json' with { type: 'json' };
  * - Do not invent versions, prices, partners, or availability here.
  */
 
-export type ProductGroup = 'build' | 'intelligence' | 'create' | 'knowledge';
+export type ProductGroup = 'build' | 'create' | 'knowledge';
 
 /** Canonical public statuses. `label` is the display wording used site-wide. */
 export type CanonicalStatus =
@@ -85,6 +85,9 @@ export interface ProductManifestEntry {
   /** Short statement of the current engineering focus (not necessarily shipped). */
   currentFocus?: string;
   version?: string;
+  /** Public release distribution can be paused without erasing release history. */
+  distributionPaused?: boolean;
+  distributionNotice?: string;
   /** Ordered nodes for the homepage product-status strip. */
   homepageStrip?: boolean;
   capabilities: string[];
@@ -142,10 +145,12 @@ export const productManifest: ProductManifestEntry[] = [
       'Inspects repositories, plans engineering work, edits code through controlled tools, runs checks, and reviews the result while refusing paid inference.',
     canonicalStatus: 'public-release',
     developmentStatus:
-      'v0.2.0 is released for Windows 10/11 x64 as installer and portable builds. Active development continues on a separate line.',
+      'The last version listed on this website was v0.2.0 for Windows 10/11 x64. Installer and portable downloads are temporarily paused while the release is updated; active development continues on a separate line.',
     currentFocus:
-      '8-Bit dynamic model routing and failover, ForgeGreen runtime efficiency, cloud services, and deeper repository intelligence.',
+      'Forge AAA architecture, model-routing reliability, runtime efficiency, and deeper repository intelligence.',
     version: 'v0.2.0',
+    distributionPaused: true,
+    distributionNotice: 'CodeForge downloads are temporarily paused while the release is updated. This website does not provide the current installer.',
     homepageStrip: true,
     capabilities: [
       'Repository understanding and inspection',
@@ -170,11 +175,10 @@ export const productManifest: ProductManifestEntry[] = [
     ],
     technologies: ['TypeScript', 'Node.js', 'Electron', 'React', 'SQLite', 'Git', 'VS Code'],
     projectUrl: '/projects/codeforge',
-    releaseUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest',
     githubUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
     docsUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge#readme',
     archive: generated('codeforge'),
-    lastVerified: VERIFIED,
+    lastVerified: '2026-10-19',
   },
   {
     id: 'forgerems',
@@ -222,109 +226,63 @@ export const productManifest: ProductManifestEntry[] = [
     lastVerified: '2026-10-08',
   },
   {
-    id: 'gems',
-    name: 'GEMS',
-    shortName: 'GEMS',
-    group: 'intelligence',
-    category: 'AI Model Research',
-    tagline: 'Specialized intelligence research, advanced through Training Grounds.',
+    id: 'forge-control',
+    name: 'Forge Control',
+    shortName: 'Forge Control',
+    group: 'build',
+    category: 'Engineering Governance',
+    tagline: 'A separate FDS development effort focused on governed software delivery.',
     oneLineDescription:
-      'A family of AI research lineages — Topaz, Sapphire, Peridot, and Garnet — developed and evaluated through the Training Grounds process.',
-    canonicalStatus: 'active-ai-research',
-    developmentStatus:
-      'Active research program. Curriculum, post-training, evaluation, and checkpoint work run through Training Grounds; no GEMS model is publicly released.',
-    currentFocus:
-      'Specialization on strong foundations where appropriate, governed advancement through Training Grounds evaluation.',
-    homepageStrip: true,
-    capabilities: [
-      'Curriculum-driven specialization',
-      'Model post-training',
-      'Candidate training and evaluation',
-      'Failure diagnosis and remediation',
-      'Controlled advancement and promotion',
-    ],
-    limitations: [
-      'No GEMS model is publicly released or downloadable',
-      'No protected or internal benchmark numbers are published',
-    ],
-    nonClaims: [
-      'No GEM is presented as a shipping model in any FDS product',
-      'Not a claim of parity with frontier models',
-    ],
-    technologies: ['Python', 'Model post-training', 'Evaluation systems', 'CUDA/GPU environments'],
-    projectUrl: '/projects/gems-training-grounds',
-    archive: archiveNotPublished(
-      'private',
-      'Private AI research; model weights, training data, and source are not public.'
-    ),
-    lastVerified: VERIFIED,
-  },
-  {
-    id: 'training-grounds',
-    name: 'Training Grounds',
-    shortName: 'Training Grounds',
-    group: 'intelligence',
-    category: 'AI Evaluation Environment',
-    tagline: 'The governed environment that teaches, evaluates, and advances GEMS lineages.',
-    oneLineDescription:
-      'Curriculum creation, candidate training, evaluation, failure diagnosis, remediation, and advancement for GEMS research lineages.',
-    canonicalStatus: 'active-ai-research',
-    developmentStatus:
-      'Active as the operational research environment of the GEMS program.',
-    capabilities: [
-      'Curriculum creation',
-      'Model post-training',
-      'Candidate training',
-      'Evaluation, including protected evaluation where appropriate',
-      'Failure diagnosis and remediation',
-      'Advancement and promotion',
-      'Specialization',
-      'Architecture experimentation',
-    ],
-    limitations: ['An internal research process; not a public product or service'],
-    nonClaims: ['Evaluation outcomes and protected benchmark numbers are not published'],
-    technologies: ['Evaluation systems', 'Curriculum systems', 'Held-out evaluation'],
-    projectUrl: '/projects/gems-training-grounds',
-    archive: archiveNotPublished(
-      'private',
-      'Private research infrastructure; evaluation and curriculum systems are not public.'
-    ),
-    lastVerified: VERIFIED,
-  },
-  {
-    id: 'kyrablox',
-    name: 'KyraBlox',
-    shortName: 'KyraBlox',
-    group: 'create',
-    category: 'Project-Aware Game Development',
-    tagline: 'Project-aware game development assistance, Roblox-first.',
-    oneLineDescription:
-      'Understands the game project — scripts, engine state, plans, approvals, and validation — and proposes bounded changes the creator approves.',
+      'Forge Control is in active development; no public release, integration, or specific user-facing capability is verified for this website.',
     canonicalStatus: 'active-development',
+    developmentStatus: 'Active development; implementation details and integrations are not publicly verified.',
+    currentFocus: 'Product definition and implementation.',
     homepageStrip: true,
-    developmentStatus:
-      'Private 0.3.0-preview.2 development line. No public release or download is currently available.',
-    currentFocus: 'Deeper live engine validation, provider certification, and focused-agent packaging.',
-    capabilities: [
-      'Project and file inspection',
-      'Gameplay and system planning',
-      'Bounded script proposals with exact diff review',
-      'Testing and validation',
-      'Rollback and recovery state',
-    ],
+    capabilities: [],
     limitations: [
-      'Roblox has the deepest current integration; live mutation requires a paired Studio session',
-      'Unreal has a fixture-validated bridge and plugin without certified live editor mutation',
-      'Unity and Godot paths currently support planning or file-oriented work',
+      'No public release or download is available',
+      'Specific integrations and user-facing capabilities have not been verified from an accessible source repository',
     ],
     nonClaims: [
-      'No public KyraBlox release or download is currently available',
-      'GEMS production integration is not claimed',
+      'No live service or public integration is claimed',
+      'No specific feature is represented as shipped',
     ],
-    technologies: ['Roblox', 'Unreal Engine', 'Unity', 'Godot'],
-    projectUrl: '/projects/kyrablox',
-    archive: archiveNotPublished('private', 'Private development; source is not public.'),
-    lastVerified: VERIFIED,
+    technologies: ['Software engineering', 'Governance', 'Verification'],
+    projectUrl: '/projects/forge-control',
+    archive: archiveNotPublished('private', 'Active development; no public source archive is published.'),
+    lastVerified: '2026-10-20',
+  },
+  {
+    id: 'dead-trails-west',
+    name: 'Dead Trails West',
+    shortName: 'Dead Trails West',
+    group: 'create',
+    category: 'Historically Grounded Game',
+    tagline: 'A historically grounded Western game in active private development.',
+    oneLineDescription:
+      'A story-driven Western game project targeting Unreal Engine 4.27; owner-reported persistent-world simulation work has not been independently verified for this website.',
+    canonicalStatus: 'private-development',
+    developmentStatus: 'Private development; no public release or downloadable build is available.',
+    currentFocus: 'World simulation, playable systems, and evidence-based Unreal integration.',
+    homepageStrip: true,
+    capabilities: [
+      'An 1882 setting documented in current project records',
+      'Unreal Engine 4.27 is the stated target engine',
+    ],
+    limitations: [
+      'No public release or download is available',
+      'Persistent-world simulation work and live engine behavior have not been independently verified',
+    ],
+    nonClaims: [
+      'No release date or playable public build is claimed',
+      'Owner-reported simulation work is not presented as verified or finished gameplay',
+    ],
+    technologies: ['Unreal Engine 4.27', 'Blender'],
+    projectUrl: '/projects/dead-trails-west',
+    githubUrl: 'https://github.com/Forger-Digital-Solutions/DeadTrailsWest',
+    docsUrl: 'https://github.com/Forger-Digital-Solutions/DeadTrailsWest',
+    archive: archiveNotPublished('private', 'Private game development; source and assets are not distributed from this site.'),
+    lastVerified: '2026-10-21',
   },
   {
     id: 'kayla-publisher',
@@ -428,8 +386,7 @@ export const statusStripEntries = productManifest.filter((entry) => entry.homepa
 /** Entries grouped by ecosystem layer for the portfolio and Ecosystem 2.0. */
 export const groupLabels: Record<ProductGroup, { title: string; short: string; blurb: string }> = {
   build: { title: 'Build & Engineering', short: 'BUILD', blurb: 'Software that plans, edits, tests, and repairs.' },
-  intelligence: { title: 'Intelligence & Research', short: 'INTELLIGENCE', blurb: 'Specialized model research and evaluation.' },
-  create: { title: 'Create', short: 'CREATE', blurb: 'Tools for game development and publishing.' },
+  create: { title: 'Create', short: 'CREATE', blurb: 'Games and creative products in development.' },
   knowledge: { title: 'Knowledge & Community', short: 'KNOWLEDGE', blurb: 'Practical information and local discovery.' },
 };
 

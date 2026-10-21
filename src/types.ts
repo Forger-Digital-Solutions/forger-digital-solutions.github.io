@@ -7,6 +7,7 @@ export type ProjectStatusValue =
   | "RELEASED";
 
 export interface ProjectSection {
+  id?: string;
   title: string;
   body?: string;
   items?: string[];

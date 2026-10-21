@@ -38,20 +38,21 @@ describe('Phase 9 Multi-turn: Referent carryover and topic shift', () => {
     const [t1, t2, t3, t4] = await converse([
       'Tell me about CodeForge.',
       'Can I download it?',
-      'What about KyraBlox?',
+      'What about Dead Trails West?',
       'Is it downloadable?'
     ]);
 
     expect(has(t1, 'CodeForge')).toBe(true);
-    expect(has(t2, 'yes')).toBe(true);
+    expect(has(t2, 'no')).toBe(true);
+    expect(has(t2, 'temporarily paused')).toBe(true);
     expect(has(t2, codeforgeVersion)).toBe(true);
 
-    // Topic shift to KyraBlox
-    expect(has(t3, 'KyraBlox')).toBe(true);
-    // Subsequent pronoun "it" must refer to KyraBlox (not downloadable), NOT CodeForge
-    expect(has(t4, 'KyraBlox')).toBe(true);
+    // Topic shift to Dead Trails West
+    expect(has(t3, 'Dead Trails West')).toBe(true);
+    // Subsequent pronoun "it" must refer to Dead Trails West, NOT CodeForge
+    expect(has(t4, 'Dead Trails West')).toBe(true);
     expect(has(t4, 'CodeForge')).toBe(false);
-    expect(has(t4, 'no') || has(t4, 'active development')).toBe(true);
+    expect(has(t4, 'no') || has(t4, 'private development')).toBe(true);
   });
 
   it('handles multi-turn comparison and follow-up referents', async () => {

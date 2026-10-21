@@ -66,6 +66,9 @@ const notDownloadable = new Set<string>([
   ...projects
     .filter((entry) => !products.some((product) => (product.projectSlug || product.slug) === entry.slug && product.downloadUrl))
     .map((entry) => entry.name.toLowerCase()),
+  'kyrablox',
+  'gems',
+  'training grounds',
   ...gems.map((gem) => gem.name.toLowerCase())
 ]);
 
@@ -99,6 +102,9 @@ const entityNames: string[] = [
   ...projects.map((p) => p.name),
   ...projects.flatMap((p) => (p.shortName ? [p.shortName] : [])),
   ...products.map((p) => p.name),
+  'KyraBlox',
+  'GEMS',
+  'Training Grounds',
   ...gems.map((g) => g.name)
 ];
 
@@ -133,7 +139,7 @@ function checkVersions(sentence: string, violations: CanonViolation[]): void {
   const matches = [
     ...sentence.matchAll(/\bv(\d+(?:\.\d+){1,3}[a-z0-9.\-]*)/gi),
     ...sentence.matchAll(/\b(?:version|release|build)\s+v?(\d+(?:\.\d+){0,3}[a-z0-9.\-]*)/gi),
-    ...sentence.matchAll(/\b(?:codeforge|forgerems|kyrablox|we the people|gems)\s+v?(\d+(?:\.\d+){1,3}[a-z0-9.\-]*)/gi)
+    ...sentence.matchAll(/\b(?:codeforge|forgerems|kyrablox|we the people|gems|training grounds)\s+v?(\d+(?:\.\d+){1,3}[a-z0-9.\-]*)/gi)
   ];
   for (const match of matches) {
     const claimed = normalizeVersion(match[1]);
@@ -216,7 +222,7 @@ function checkBenchmarks(sentence: string, violations: CanonViolation[]): void {
 }
 
 function checkCancellation(sentence: string, violations: CanonViolation[]): void {
-  if (!/\b(cancell?ed|discontinued|abandoned|shut down|scrapped|defunct|no longer (being )?(developed|maintained)|dead|shelved|terminated|killed|sunsetted?)\b/i.test(sentence)) return;
+  if (!/\b(cancell?ed|discontinued|abandoned|shut down|scrapped|defunct|no longer (being )?(developed|maintained)|dead(?!\s+trails\s+west)|shelved|terminated|killed|sunsetted?)\b/i.test(sentence)) return;
   if (deniesCancellation(sentence)) return;
   for (const name of entitiesIn(sentence)) {
     violations.push({ kind: 'cancellation', detail: `${name} is not cancelled in canonical data`, sentence });

@@ -12,7 +12,7 @@ Most of what happens at FDS lives in code, experiments, and long feedback loops.
 
 ## What to expect here
 
-- **Build logs** — progress on projects like GEMS, KyraBlox, and the rest.
+- **Build logs** — progress on released products and projects in development.
 - **Research notes** — ideas we're testing, and what the evidence actually says.
 - **Process** — how we think about tooling, evaluation, and shipping.
 

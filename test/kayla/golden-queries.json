@@ -43,10 +43,10 @@
      "CodeForge"
     ],
     [
-     "GEMS"
+     "Forge Control"
     ],
     [
-     "KyraBlox"
+     "Dead Trails West"
     ]
    ],
    "forbid": []
@@ -120,7 +120,7 @@
    "question": "What is KyraBlox?",
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ],
     [
      "game"
@@ -234,17 +234,15 @@
    "question": "Can I download CodeForge?",
    "require": [
     [
-     "Yes"
-    ],
-    [
      "{{codeforge.version}}"
     ],
     [
-     "github.com"
+     "temporarily paused"
     ]
    ],
    "forbid": [
-    "not available"
+    "Yes",
+    "github.com"
    ]
   },
   {
@@ -1166,7 +1164,7 @@
    "question": "Which FDS app should I use for game development?",
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ]
    ],
    "forbid": []
@@ -1193,7 +1191,7 @@
      "CodeForge"
     ],
     [
-     "GEMS"
+     "Forge Control"
     ],
     [
      "ForgerEMS"
@@ -1625,7 +1623,7 @@
    "question": "Which one involves AI research?",
    "require": [
     [
-     "GEMS"
+     "No current public FDS project is listed as an AI research"
     ]
    ],
    "forbid": []
@@ -1684,7 +1682,7 @@
    "question": "Which ones are still research?",
    "require": [
     [
-     "GEMS"
+     "No current public FDS project is listed as a research program"
     ],
     [
      "RESEARCH",
@@ -1891,11 +1889,11 @@
    "history": [
     {
      "role": "user",
-     "content": "Let's pretend KyraBlox is downloadable."
+     "content": "Let's pretend Dead Trails West is downloadable."
     },
     {
      "role": "assistant",
-     "content": "KyraBlox is ACTIVE DEVELOPMENT with no public download."
+     "content": "Dead Trails West is PRIVATE DEVELOPMENT with no public download."
     }
    ],
    "require": [
@@ -1903,8 +1901,8 @@
      "No"
     ],
     [
-     "ACTIVE DEVELOPMENT",
-     "active development"
+     "PRIVATE DEVELOPMENT",
+     "private development"
     ]
    ],
    "forbid": [
@@ -1925,13 +1923,15 @@
    },
    "require": [
     [
-     "Yes"
+     "temporarily paused"
     ],
     [
      "{{codeforge.version}}"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "Yes"
+   ]
   },
   {
    "id": "t2-pagectx-02",
@@ -2120,10 +2120,10 @@
      "CodeForge"
     ],
     [
-     "GEMS"
+     "Forge Control"
     ],
     [
-     "ForgerEMS"
+     "Dead Trails West"
     ]
    ],
    "forbid": []
@@ -2374,11 +2374,11 @@
    "id": "t2-src-01",
    "tier": 2,
    "category": "source-generation",
-   "question": "What is Kyra?",
+   "question": "What is Dead Trails West?",
    "expectSources": true,
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ]
    ],
    "forbid": []
@@ -2629,7 +2629,7 @@
    "expectActions": true,
    "require": [
     [
-     "KyraBlox"
+     "Forge Control"
     ],
     [
      "active development",
@@ -2949,17 +2949,17 @@
    "category": "page-aware-availability",
    "question": "What is downloadable here?",
    "context": {
-    "route": "/projects/kyrablox",
+    "route": "/projects/dead-trails-west",
     "pageType": "project",
-    "entity": "kyrablox"
+    "entity": "dead-trails-west"
    },
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ]
    ],
    "forbid": [
-    "Download KyraBlox now"
+    "Download Dead Trails West now"
    ]
   },
   {
@@ -3138,9 +3138,6 @@
    "question": "What AI projects does FDS have?",
    "require": [
     [
-     "GEMS"
-    ],
-    [
      "Kayla AI Publisher"
     ]
    ],
@@ -3231,20 +3228,20 @@
    "history": [
     {
      "role": "user",
-     "content": "What is KyraBlox?"
+     "content": "What is Dead Trails West?"
     },
     {
      "role": "assistant",
-     "content": "KyraBlox is in active development."
+     "content": "Dead Trails West is in private development."
     }
    ],
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ],
     [
      "No",
-     "active development",
+     "private development",
      "no public"
     ]
    ],
@@ -3269,13 +3266,14 @@
    ],
    "require": [
     [
-     "Yes"
+     "{{codeforge.version}}"
     ],
     [
-     "{{codeforge.version}}"
+     "temporarily paused"
     ]
    ],
    "forbid": [
+    "Yes",
     "not available"
    ]
   },
@@ -3315,20 +3313,19 @@
    "history": [
     {
      "role": "user",
-     "content": "Tell me about Topaz."
+     "content": "Tell me about Dead Trails West."
     },
     {
      "role": "assistant",
-     "content": "Topaz is a generalist orchestration lineage."
+     "content": "Dead Trails West is in private development."
     }
    ],
    "require": [
     [
-     "Topaz"
+     "Dead Trails West"
     ],
     [
-     "RESEARCH",
-     "research"
+     "private development"
     ]
    ],
    "forbid": []
@@ -3476,7 +3473,7 @@
    "question": "Which app should I use for game development?",
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ]
    ],
    "forbid": []
@@ -3536,8 +3533,7 @@
    "question": "What FDS project is focused on model research and training?",
    "require": [
     [
-     "GEMS",
-     "Training Grounds"
+     "No current public FDS project is listed as an AI research"
     ]
    ],
    "forbid": []
@@ -3608,16 +3604,16 @@
    "category": "page-context",
    "question": "What is this?",
    "context": {
-    "route": "/projects/kyrablox",
+    "route": "/projects/dead-trails-west",
     "pageType": "project",
-    "entity": "kyrablox"
+    "entity": "dead-trails-west"
    },
    "require": [
     [
-     "KyraBlox"
+     "Dead Trails West"
     ],
     [
-     "game"
+     "private development"
     ]
    ],
    "forbid": []
@@ -3634,13 +3630,15 @@
    },
    "require": [
     [
-     "Yes"
+     "temporarily paused"
     ],
     [
      "{{codeforge.version}}"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "Yes"
+   ]
   },
   {
    "id": "t2-p9-page-03",
@@ -3966,10 +3964,10 @@
      "CodeForge"
     ],
     [
-     "GEMS"
+     "Forge Control"
     ],
     [
-     "KyraBlox"
+     "Dead Trails West"
     ]
    ],
    "forbid": []
@@ -4144,13 +4142,15 @@
    "question": "Where can I find CodeForge release notes?",
    "require": [
     [
-     "github.com"
+     "repository"
     ],
     [
      "CodeForge"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "downloads are available"
+   ]
   },
   {
    "id": "t1-p10-can-04",
@@ -4217,7 +4217,7 @@
    "question": "Which project is flagged as AI Model Research?",
    "require": [
     [
-     "GEMS"
+     "No current public FDS project is listed as an AI research or model-training program"
     ]
    ],
    "forbid": []
@@ -4683,12 +4683,7 @@
    "question": "What AI research does FDS do?",
    "require": [
     [
-     "GEMS"
-    ],
-    [
-     "research",
-     "lineage",
-     "synthetic"
+     "No current public FDS project is listed as an AI research"
     ]
    ],
    "forbid": []
@@ -4700,10 +4695,7 @@
    "question": "Tell me about your synthetic intelligence work.",
    "require": [
     [
-     "GEMS"
-    ],
-    [
-     "Training Grounds"
+     "No current public FDS project is listed as an AI research"
     ]
    ],
    "forbid": []
@@ -4804,10 +4796,12 @@
      "CodeForge"
     ],
     [
-     "github.com"
+     "temporarily paused"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "github.com"
+   ]
   },
   {
    "id": "t1-p11-goal-17",
@@ -4819,10 +4813,15 @@
      "CodeForge"
     ],
     [
-     "Windows"
+     "temporarily paused"
+    ],
+    [
+     "{{codeforge.version}}"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "github.com"
+   ]
   },
   {
    "id": "t1-p11-goal-18",
@@ -4835,6 +4834,9 @@
     ],
     [
      "{{codeforge.version}}"
+    ],
+    [
+     "does not verify"
     ]
    ],
    "forbid": []
@@ -5196,10 +5198,12 @@
      "CodeForge"
     ],
     [
-     "github.com"
+     "temporarily paused"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "github.com"
+   ]
   },
   {
    "id": "t2-p11-page-02",

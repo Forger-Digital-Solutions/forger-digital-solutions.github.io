@@ -23,6 +23,8 @@ export interface Product {
   visual?: ProductVisual;
   projectSlug?: string;
   downloadUrl?: string;
+  distributionPaused?: boolean;
+  distributionNotice?: string;
   upgradeUrl?: string;
   purchaseUrl?: string;
   docsUrl?: string;
@@ -64,7 +66,9 @@ const buildProduct = (
     version: entry.version,
     pricingModel: 'free',
     projectSlug: entry.projectUrl?.replace('/projects/', ''),
-    downloadUrl: entry.releaseUrl,
+    downloadUrl: entry.distributionPaused ? undefined : entry.releaseUrl,
+    distributionPaused: entry.distributionPaused,
+    distributionNotice: entry.distributionNotice,
     docsUrl: entry.docsUrl,
     featured: false,
     comingSoon: false,
@@ -78,7 +82,7 @@ export const products: Product[] = [
       'CodeForge inspects repositories, plans engineering work, edits code through controlled tools, runs checks, and reviews the result. Dynamic routing selects only verified zero-cost cloud models, and ForgeZero fails closed instead of silently falling back to paid or local-model inference.',
     platform: ['Windows', 'CLI', 'VS Code'],
     upgradeUrl: '/codeforge/upgrade',
-    releaseNotesUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0',
+    releaseNotesUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
     visual: visualAssets.codeforgeWorkspace,
     featured: true,
   }),

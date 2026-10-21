@@ -48,19 +48,19 @@ describe('Entity resolution rejects non-distinctive words', () => {
     expect(matchEntity('codeforge')).toBe('codeforge');
     expect(matchEntity('Forger EMS')).toBe('forgerems');
     expect(matchEntity('farm stand finder')).toBe('farmstand-finder');
-    expect(matchEntity('kyra blox')).toBe('kyrablox');
+    expect(matchEntity('kyra blox')).toBeUndefined();
     expect(matchEntity('wethepeople')).toBe('we-the-people');
     expect(matchEntity('Kayla Publisher')).toBe('kayla-ai-publisher');
-    expect(matchEntity('Training Ground')).toBe('gems-training-grounds');
+    expect(matchEntity('Training Ground')).toBeUndefined();
   });
 
   it('prefers the longer alias when names overlap', () => {
     expect(matchEntity('What is Kayla AI Publisher?')).toBe('kayla-ai-publisher');
   });
 
-  it('resolves every GEM by name', () => {
+  it('does not register retired GEMS lineages as current entities', () => {
     for (const gem of gems) {
-      expect(matchEntity(`What is ${gem.name}?`)).toBe(`gem-${gem.key}`);
+      expect(matchEntity(`What is ${gem.name}?`)).toBeUndefined();
     }
   });
 });
@@ -110,35 +110,33 @@ describe('Availability is derived from canonical data, never asserted', () => {
     expect(contains(result.snippet, codeforge.version!)).toBe(true);
   });
 
-  it('never offers a GEM as a download', async () => {
+  it('does not promote retired GEM downloads', async () => {
     for (const gem of gems) {
       const result = await ask(`Where can I download ${gem.name}?`);
-      expect(contains(result.snippet, 'not downloadable') || contains(result.snippet, 'no ' + gem.name.toLowerCase() + ' release')).toBe(true);
+      expect(contains(result.snippet, 'not part of the current public FDS portfolio')).toBe(true);
+      expect(result.actions?.[0]?.href).toBe('/projects');
     }
   });
 });
 
-describe('GEM identities come from the site data', () => {
-  it('gives each GEM its canonical role', async () => {
+describe('retired GEMS names are not promoted', () => {
+  it('direct lineage questions point visitors to the current portfolio', async () => {
     for (const gem of gems) {
       const result = await ask(`What is ${gem.name}?`);
-      const firstRoleWord = gem.role.split(' ')[0].toLowerCase();
-      expect(contains(result.snippet, gem.name), gem.name).toBe(true);
-      expect(contains(result.snippet, firstRoleWord), `${gem.name} role`).toBe(true);
-      expect(contains(result.snippet, 'research'), `${gem.name} state`).toBe(true);
+      expect(contains(result.snippet, 'not part of the current public FDS portfolio'), gem.name).toBe(true);
     }
   });
 
-  it('resolves a GEM from its role rather than its name', async () => {
-    expect(contains((await ask('Which GEM is for coding?')).snippet, 'Sapphire')).toBe(true);
-    expect(contains((await ask('Which GEM is for math?')).snippet, 'Peridot')).toBe(true);
-    expect(contains((await ask('Which GEM orchestrates?')).snippet, 'Topaz')).toBe(true);
-    expect(contains((await ask('Which GEM does publishing?')).snippet, 'Garnet')).toBe(true);
+  it('does not answer role queries with retired lineage details', async () => {
+    const result = await ask('Which GEM is for coding?');
+    expect(result.snippet).toMatch(/not part of the current public fds portfolio/i);
+    expect(result.actions?.[0]?.href).toBe('/projects');
+    expect(result.snippet).not.toMatch(/Sapphire|Topaz|Peridot|Garnet/i);
   });
 
-  it('refuses frontier-parity claims', async () => {
+  it('does not make current benchmark claims from retired names', async () => {
     const result = await ask('Are GEMS as smart as GPT-5 or Claude?');
-    expect(contains(result.snippet, 'not a claim of current parity') || contains(result.snippet, 'does not claim')).toBe(true);
+    expect(contains(result.snippet, 'not part of the current public FDS portfolio')).toBe(true);
   });
 });
 
@@ -151,7 +149,7 @@ describe('False premises are corrected', () => {
 
   it('rejects a cancellation that did not happen', async () => {
     const result = await ask('Why did FDS cancel Garnet?');
-    expect(contains(result.snippet, 'not been cancelled')).toBe(true);
+    expect(contains(result.snippet, 'not part of the current public FDS portfolio')).toBe(true);
   });
 
   it('rejects a launch that did not happen', async () => {
@@ -255,7 +253,7 @@ describe('Retrieval does not answer confidently from an unrelated document', () 
   it('does not answer a benchmark question with contact details', async () => {
     const result = await ask('How well does Sapphire perform on coding benchmarks?');
     expect(contains(result.snippet, siteConfig.supportEmail)).toBe(false);
-    expect(contains(result.snippet, 'Sapphire')).toBe(true);
+    expect(contains(result.snippet, 'not part of the current public FDS portfolio')).toBe(true);
   });
 });
 
@@ -339,8 +337,8 @@ describe('Injection guard refuses attacks without blocking ordinary questions', 
 
 describe('Page context supplies the subject for a bare question', () => {
   it('answers about the project whose page the visitor is on', async () => {
-    const result = await ask('Is it available?', { route: '/projects/kyrablox', pageType: 'project', entity: 'kyrablox' });
-    expect(contains(result.snippet, 'KyraBlox')).toBe(true);
+    const result = await ask('Is it available?', { route: '/projects/dead-trails-west', pageType: 'project', entity: 'dead-trails-west' });
+    expect(contains(result.snippet, 'Dead Trails West')).toBe(true);
   });
 });
 

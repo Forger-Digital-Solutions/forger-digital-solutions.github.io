@@ -1,4 +1,5 @@
 import type { KaylaPageContext } from '../../data/kayla/types';
+import { getKaylaEntity } from '../../data/kayla/entities';
 
 export function getPageType(pathname: string): KaylaPageContext['pageType'] {
   if (pathname === '/') return 'home';
@@ -20,7 +21,8 @@ export function getPageType(pathname: string): KaylaPageContext['pageType'] {
 
 export function getEntity(pathname: string): string | undefined {
   if (pathname.startsWith('/projects/')) {
-    return pathname.replace('/projects/', '').split('/')[0];
+    const slug = pathname.replace('/projects/', '').split('/')[0];
+    return getKaylaEntity(slug) ? slug : undefined;
   }
   if (pathname.startsWith('/notes/')) {
     return pathname.replace('/notes/', '').split('/')[0];

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { projects } from '../../src/data/projects';
 
 /**
  * R4.1 release-critical site coverage for the CI deployment gate.
@@ -7,8 +8,7 @@ import AxeBuilder from '@axe-core/playwright';
  * R4's e2e suite was heavily Kayla-focused; the surfaces here — site
  * navigation, the mobile menu aria contract, ecosystem keyboard inspection,
  * the Forged archive integrity flow (full SHA display, Copy SHA, Download
- * ZIP), and the GEMS mobile/desktop diagram switch — only had static unit
- * coverage, so browser-level regressions could deploy unchecked.
+ * ZIP), and every current project detail route — receive browser coverage.
  */
 
 test.describe('Site release-critical surfaces', () => {
@@ -17,7 +17,9 @@ test.describe('Site release-critical surfaces', () => {
   test('A. primary navigation reaches every release-critical page', async ({ page }) => {
     const navTargets = [
       { label: 'Products', href: '/projects', marker: 'main' },
-      { label: 'AI Research', href: '/projects/gems-training-grounds', marker: 'picture' },
+      { label: 'CodeForge', href: '/projects/codeforge', marker: 'main' },
+      { label: 'Forge Control', href: '/projects/forge-control', marker: 'main' },
+      { label: 'Dead Trails West', href: '/projects/dead-trails-west', marker: 'main' },
       { label: 'Releases', href: '/forged', marker: '.product-card' },
       { label: 'Engineering', href: '/lab', marker: 'main' },
       { label: 'Company', href: '/about', marker: 'main' },
@@ -53,33 +55,19 @@ test.describe('Site release-critical surfaces', () => {
     await expect(nav).not.toHaveClass(/active/);
   });
 
-  test('C. ecosystem nodes are visible and keyboard-inspectable', async ({ page }) => {
+  test('C. portfolio map links and product relationships are keyboard-inspectable', async ({ page }) => {
     await page.goto('/');
 
-    const diagram = page.locator('.one-eco__diagram');
-    await expect(diagram).toBeVisible();
-
-    // Tier nodes (CodeForge foundation + GEMS intelligence) and the
-    // specialized-domain rail render with their connection lines.
-    expect(await page.locator('.eco-node').count()).toBeGreaterThanOrEqual(2);
-    expect(await page.locator('.eco-domain').count()).toBeGreaterThanOrEqual(4);
-    expect(await page.locator('.eco-line').count()).toBeGreaterThanOrEqual(2);
-
-    // Each tier node is reachable by keyboard, and focus reveals its role text.
-    const inspectable = page.locator('.eco-node[tabindex="0"]').first();
+    const map = page.locator('.portfolio-map');
+    await expect(map).toBeVisible();
+    const links = map.locator('a[href^="/projects/"]');
+    await expect(links).toHaveCount(projects.length + 1);
+    const inspectable = map.locator('a[href="/projects/codeforge"]').first();
     await inspectable.focus();
     await expect(inspectable).toBeFocused();
-    await expect(inspectable.locator('.eco-node__role')).toBeVisible();
-
-    // Rail domains are keyboard-inspectable too.
-    const domain = page.locator('.eco-domain[tabindex="0"]').first();
-    await domain.focus();
-    await expect(domain).toBeFocused();
-    await expect(domain.locator('.eco-node__role')).toBeVisible();
-
-    // Links inside the diagram keep working navigation.
-    const codeforgeNode = page.locator('a.eco-node[href="/projects/codeforge"]');
-    await expect(codeforgeNode).toBeVisible();
+    await expect(map.locator('a[href="/projects/codeforge#forge-aaa"]')).toContainText('CodeForge architecture');
+    await expect(map.locator('a[href="/projects/forge-control"]')).toContainText('Forge Control');
+    await expect(map.locator('a[href="/projects/dead-trails-west"]')).toContainText('Dead Trails West');
   });
 
   test('D. Forged archive flow: exact full SHA, Copy SHA, Download ZIP', async ({ page, request }) => {
@@ -103,31 +91,16 @@ test.describe('Site release-critical surfaces', () => {
     expect(zip.headers()['content-type']).toMatch(/zip/);
   });
 
-  test('E. GEMS diagram switches between mobile and desktop compositions', async ({ page }) => {
-    const picture = page.locator('picture', { has: page.locator('source[srcset*="gems-training-grounds-family-mobile"]') }).first();
-
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto('/projects/gems-training-grounds');
-    await expect(picture).toBeVisible();
-    await expect(picture.locator('source')).toHaveAttribute('media', '(max-width: 640px)');
-    const desktopSrc = await picture.locator('img').getAttribute('src');
-    expect(desktopSrc).toContain('gems-training-grounds-family.svg');
-
-    await page.setViewportSize({ width: 390, height: 844 });
-    await picture.scrollIntoViewIfNeeded();
-    const image = picture.locator('img');
-    await expect.poll(
-      () => image.evaluate((img) => (img as HTMLImageElement).currentSrc),
-      { message: 'the mobile GEMS illustration should be selected and loaded' }
-    ).toContain('gems-training-grounds-family-mobile.svg');
-
-    // The narrow composition must not introduce horizontal overflow.
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-    expect(overflow).toBeLessThanOrEqual(1);
+  test('E. every current portfolio project detail page renders', async ({ page }) => {
+    for (const project of projects) {
+      await page.goto(`/projects/${project.slug}`);
+      await expect(page.locator('main h1').first(), `${project.name} page heading`).toBeVisible();
+      await expect(page.locator('main')).toContainText(project.name);
+    }
   });
 
-  test('F. accessibility smoke on the GEMS project page', async ({ page }) => {
-    await page.goto('/projects/gems-training-grounds');
+  test('F. accessibility smoke on the current portfolio page', async ({ page }) => {
+    await page.goto('/projects');
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
       .exclude('iframe')
@@ -136,6 +109,6 @@ test.describe('Site release-critical surfaces', () => {
     const criticalViolations = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'
     );
-    expect(criticalViolations, 'Critical/Serious a11y issues on /projects/gems-training-grounds').toEqual([]);
+    expect(criticalViolations, 'Critical/Serious a11y issues on /projects').toEqual([]);
   });
 });

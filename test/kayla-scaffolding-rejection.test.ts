@@ -60,7 +60,7 @@ describe('scaffolding never reaches the visitor', () => {
   it('replaces the exact output that reached production', async () => {
     const { body, diagnostics } = await askWithModelSaying(
       OBSERVED_LIVE,
-      'How are GEMS and Training Grounds related?'
+      'How do the FDS products fit together?'
     );
     expect(body.answer).not.toMatch(/tool_call_start|FDS_Knowledge\(/);
     expect(body.answer.length).toBeGreaterThan(20);
@@ -89,7 +89,7 @@ describe('scaffolding never reaches the visitor', () => {
     scriptedReply = OBSERVED_LIVE;
     let final: Record<string, unknown> = {};
     for await (const raw of streamKaylaChat(
-      { message: 'How are GEMS and Training Grounds related?', history: [], context: { route: '/', pageType: 'home' } },
+      { message: 'How do the FDS products fit together?', history: [], context: { route: '/', pageType: 'home' } },
       aiEndpoint()
     )) {
       const chunk = JSON.parse(raw);

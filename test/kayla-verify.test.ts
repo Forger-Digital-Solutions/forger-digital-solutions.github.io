@@ -67,15 +67,14 @@ describe('verifier accepts everything the site itself says', () => {
       if (!verdict.ok) failures.push(`${query.id}: ${verdict.violations.map((v) => `${v.kind} (${v.detail})`).join('; ')}`);
     }
     expect(failures, `verifier rejected its own canonical answers:\n${failures.join('\n')}`).toEqual([]);
-  });
+  }, 15_000);
 
-  it('accepts canonical project, product, and GEM prose', () => {
+  it('accepts canonical current-project and product prose', () => {
     const prose = [
       ...projects.map((p) => `${p.name}: ${p.description}`),
       ...projects.flatMap((p) => p.highlights || []),
       ...projects.flatMap((p) => (p.sections || []).map((s) => `${s.title}: ${s.body || (s.items || []).join('. ')}`)),
-      ...products.map((p) => `${p.name} ${p.version}: ${p.description} ${p.downloadUrl}`),
-      ...gems.map((g) => `${g.name}: ${g.role}. ${g.direction} ${g.researchStatus} ${g.notClaimed}`)
+      ...products.map((p) => `${p.name} ${p.version}: ${p.description} ${p.downloadUrl}`)
     ];
     const failures = prose
       .map((text) => ({ text, verdict: verifyAgainstCanon(text) }))

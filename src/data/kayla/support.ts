@@ -15,11 +15,11 @@ export const supportInfo = {
 export const faqs: { q: string; a: string }[] = [
   {
     q: 'What is Forger Digital Solutions?',
-    a: 'FDS is an independent AI and software company building developer tools, model research, game-creation software, publishing tools, civic information, local discovery, and technician applications.'
+    a: 'FDS is an independent software company building developer tools, technician software, game projects, publishing tools, civic information, and local discovery.'
   },
   {
     q: 'What does FDS build?',
-    a: 'Work spans CodeForge, GEMS and Training Grounds, KyraBlox, Kayla AI Publisher, We The People, FarmStand Finder, and ForgerEMS.'
+    a: 'Work spans CodeForge and its Forge AAA architecture workstream, Forge Control, Dead Trails West, Kayla AI Publisher, We The People, FarmStand Finder, and ForgerEMS.'
   },
   {
     q: 'Are FDS projects open source?',

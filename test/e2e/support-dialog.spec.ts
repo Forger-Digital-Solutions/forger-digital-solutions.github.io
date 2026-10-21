@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
  * R4.2H-R2 live visual audit caught it; the ecosystem's Maintenance domain also
  * pointed at /forged (the CodeForge storefront) instead of the ForgerEMS page.
  * These tests certify the mounted dialog's trigger/dedupe/dismissal behavior
- * and the corrected ecosystem destination so neither can silently regress.
+ * and the portfolio map's ForgerEMS destination so neither can regress.
  */
 
 // Fresh visit: clear any prior dismissal, then reload so the dialog script
@@ -60,8 +60,8 @@ test('support dialog dismisses via ESC', async ({ page }) => {
   await expect(dialog).not.toBeVisible();
 });
 
-test('ecosystem Maintenance domain links to the ForgerEMS project page', async ({ page }) => {
+test('homepage portfolio map links ForgerEMS to its project page', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
-  const link = page.locator('.eco-domain--maintenance');
+  const link = page.locator('.portfolio-domain--4 a[href="/projects/forgerems"]');
   await expect(link).toHaveAttribute('href', '/projects/forgerems');
 });

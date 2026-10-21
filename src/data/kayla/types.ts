@@ -111,7 +111,7 @@ export interface KaylaDownload {
 export interface KaylaRelease {
   appId: string;
   version: string;
-  status: 'stable' | 'preview' | 'beta' | 'experimental';
+  status: 'stable' | 'preview' | 'beta' | 'experimental' | 'paused';
   date?: string;
   notes?: string;
   downloads?: string[];

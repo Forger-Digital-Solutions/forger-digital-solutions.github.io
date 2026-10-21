@@ -511,8 +511,14 @@ export async function handleKaylaChat(
     // continuity, multi-entity synthesis, high-risk overrides); every other
     // turn falls through undefined and the standalone canonical/retrieval
     // lane below remains authoritative.
-    sources = composed && composed.length ? composed : (retrieved.length ? retrieved : []);
-    const actions = rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
+    sources = retrieved[0]?.settled && retrieved[0]?.id === 'portfolio-status'
+      ? retrieved
+      : composed && composed.length
+        ? composed
+        : (retrieved.length ? retrieved : []);
+    const actions = sources[0]?.id === 'portfolio-status'
+      ? (sources[0].actions || [])
+      : rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
     taskPlan.recommendedActions = actions;
     if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };
   } catch {

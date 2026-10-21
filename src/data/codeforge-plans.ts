@@ -2,8 +2,8 @@
  * CodeForge Commercial Plan Model
  *
  * POLICY:
- * - CodeForge Free is the active, freely available tier ($0/forever) with
- *   ForgeZero fail-closed zero-cost routing.
+ * - CodeForge remains a free-first product ($0/forever) with ForgeZero
+ *   fail-closed zero-cost routing; its current website distribution is paused.
  * - Expanded commercial plans are IN DEVELOPMENT. Until final tiers are
  *   approved, the public presentation stays intentionally simple: no plan
  *   names, no prices, no limits, no billing terms, and no checkout.
@@ -28,7 +28,7 @@ export interface CodeForgePlan {
   targetAudience: string;
   features: string[];
   ctaText: string;
-  ctaAction: 'download' | 'in_development_notice' | 'checkout';
+  ctaAction: 'download' | 'in_development_notice' | 'distribution_paused' | 'checkout';
   ctaHref?: string;
   badge?: string;
   highlight?: boolean;
@@ -51,12 +51,11 @@ export const codeForgePlans: CodeForgePlan[] = [
       'Developer approvals, steering, and execution history',
       'Local CLI and VS Code integration from one core runtime',
       'Dynamic routing across verified zero-cost cloud model providers',
-      'Public GitHub release downloads and community issue tracking',
+      'Community issue tracking',
     ],
-    ctaText: 'Download Free Build',
-    ctaAction: 'download',
-    ctaHref: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest',
-    badge: 'Available Now',
+    ctaText: 'Downloads Temporarily Paused',
+    ctaAction: 'distribution_paused',
+    badge: 'Release Update In Progress',
     highlight: true,
   },
   {

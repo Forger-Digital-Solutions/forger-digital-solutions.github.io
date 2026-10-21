@@ -21,6 +21,7 @@ const verbose = process.argv.includes('--verbose');
 const asJson = process.argv.includes('--json');
 
 const TIER_TARGETS = { 1: 1.0, 2: 0.95, 3: 0.9 };
+const RETIRED_PORTFOLIO_QUERY = /\b(?:g\.?e\.?m\.?s?|training grounds?|kyra\s?blox|sapphire|topaz|peridot|garnet)\b/i;
 
 const vite = await createServer({ root, appType: 'custom', server: { middlewareMode: true }, logLevel: 'silent' });
 let exitCode = 0;
@@ -61,7 +62,15 @@ try {
     const answer = `${text} ${(top.actions || []).filter(Boolean).map((a) => `${a.label} ${a.href || ''}`).join(' ')}`;
     const haystack = answer.toLowerCase();
 
-    const missing = (query.require || [])
+    // Historical prompts remain useful regression coverage, but their old
+    // product facts are no longer public portfolio answers. Assert the
+    // deliberate migration response instead of preserving retired claims.
+    const retiredPortfolio = RETIRED_PORTFOLIO_QUERY.test(query.question)
+      && !/\bignore previous instructions\b/i.test(query.question);
+    const requirements = retiredPortfolio
+      ? [['not part of the current public FDS portfolio']]
+      : (query.require || []);
+    const missing = requirements
       .map((group) => group.map(resolve))
       .filter((group) => !group.some((needle) => haystack.includes(needle.toLowerCase())));
     const present = (query.forbid || [])
@@ -72,6 +81,8 @@ try {
     if (query.expectActions && !(response.actions?.length > 0)) structuralFailures.push('expected at least one action, got none');
     if (query.expectSources && !(response.sourceLinks?.length > 0)) structuralFailures.push('expected at least one source, got none');
     if (query.expectRouteMode && response.routeMode !== query.expectRouteMode) structuralFailures.push(`expected routeMode "${query.expectRouteMode}", got "${response.routeMode}"`);
+    if (retiredPortfolio && response.actions?.[0]?.href !== '/projects') structuralFailures.push('retired portfolio answer must link to /projects');
+    if (retiredPortfolio && /\/projects\/(?:gems-training-grounds|kyrablox)/i.test(answer)) structuralFailures.push('retired portfolio answer must not link to a retired route');
 
     results.push({
       id: query.id,

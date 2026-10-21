@@ -103,10 +103,10 @@ describe('Failure matrix', () => {
 
   it('provider times out: bounded, grounded fallback', async () => {
     behaviour = { kind: 'throw', error: 'TIMEOUT' };
-    const { response } = await ask('What is KyraBlox?');
+    const { response } = await ask('What is Dead Trails West?');
     const body = response as KaylaChatResponse;
     expect(body.mode).toBe('local');
-    expect(body.answer).toContain('KyraBlox');
+    expect(body.answer).toContain('Dead Trails West');
     expect(body.answer).not.toContain('TIMEOUT');
   });
 
@@ -135,11 +135,11 @@ describe('Failure matrix', () => {
 
   it('AI budget exhausted: canonical answer instead of an error', async () => {
     behaviour = { kind: 'ok', text: 'unused' };
-    const { status, response } = await ask('What is KyraBlox?', { consumeAIAllowance: async () => false });
+    const { status, response } = await ask('What is Dead Trails West?', { consumeAIAllowance: async () => false });
     const body = response as KaylaChatResponse;
     expect(status).toBe(200);
     expect(body.mode).toBe('local');
-    expect(body.answer).toContain('KyraBlox');
+    expect(body.answer).toContain('Dead Trails West');
   });
 
   it('empty prompt is rejected', async () => {
@@ -179,9 +179,9 @@ describe('Streaming failure behaviour', () => {
 
   it('empty stream is treated as a failure, not an empty answer', async () => {
     behaviour = { kind: 'empty-stream' };
-    const { text } = await askStream('What is KyraBlox?');
+    const { text } = await askStream('What is Dead Trails West?');
     expect(text.length).toBeGreaterThan(20);
-    expect(text).toContain('KyraBlox');
+    expect(text).toContain('Dead Trails West');
   });
 
   it('a false claim mid-stream never reaches the transcript', async () => {

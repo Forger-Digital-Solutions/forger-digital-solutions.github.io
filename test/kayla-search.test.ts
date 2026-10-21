@@ -4,10 +4,11 @@ import { createProvider } from '../src/lib/kayla/provider';
 describe('Kayla Search', () => {
   const provider = createProvider();
 
-  it('app lookup returns GEMS for "gems"', async () => {
+  it('does not promote a retired project name', async () => {
     const results = await provider.search('gems');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].title).toContain('GEMS');
+    expect(results[0].snippet).toContain('not part of the current public FDS portfolio');
+    expect(results[0].actions?.[0]?.href).toBe('/projects');
   });
 
   it('ForgerEMS lookup returns ForgerEMS info', async () => {
@@ -33,7 +34,7 @@ describe('Kayla Search', () => {
   it('roadmap lookup returns roadmap info', async () => {
     const results = await provider.search('what is on the roadmap');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].snippet).toContain('GEMS');
+    expect(results[0].snippet).toContain('CodeForge');
   });
 
   it('unknown query returns no results message', async () => {

@@ -1,173 +1,90 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
-  test('Ecosystem suspends animation work when offscreen and resumes when visible', async ({ page }) => {
+  test('portfolio map and product showcases do not start continuous animation work', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
+    const animationNames = await page.locator('.portfolio-map, .product-showcase, .showcase-art').evaluateAll((elements) =>
+      elements.map((element) => getComputedStyle(element).animationName)
+    );
+    expect(animationNames.length).toBeGreaterThan(5);
+    expect(animationNames.every((name) => name === 'none')).toBe(true);
 
-    const ecosystem = page.locator('.fds-ecosystem');
-    await expect(ecosystem).toBeAttached();
-
-    // 1. When ecosystem is in viewport, it should not be paused
-    await ecosystem.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(300);
-    await expect(ecosystem).not.toHaveAttribute('data-eco-paused');
-
-    const isRunning = await page.evaluate(() => {
-      const el = document.querySelector('.planet-motion');
-      return el ? getComputedStyle(el).animationPlayState : null;
-    });
-    expect(isRunning).toBe('running');
-
-    // 2. Scroll far past the ecosystem (to the bottom of the page)
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(500);
-
-    // Attribute data-eco-paused should now be set by IntersectionObserver
-    await expect(ecosystem).toHaveAttribute('data-eco-paused', '', { timeout: 3000 });
-
-    const isPaused = await page.evaluate(() => {
-      const el = document.querySelector('.planet-motion');
-      return el ? getComputedStyle(el).animationPlayState : null;
-    });
-    expect(isPaused).toBe('paused');
-
-    // 3. Scroll back into view — should smoothly resume without snapping or phase reset
-    await ecosystem.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(300);
-
-    await expect(ecosystem).not.toHaveAttribute('data-eco-paused', { timeout: 3000 });
-
-    const resumedState = await page.evaluate(() => {
-      const el = document.querySelector('.planet-motion');
-      return el ? getComputedStyle(el).animationPlayState : null;
-    });
-    expect(resumedState).toBe('running');
+    await page.waitForTimeout(150);
+    await page.locator('.portfolio-map').scrollIntoViewIfNeeded();
+    const restored = await page.locator('.portfolio-map').evaluate((element) => getComputedStyle(element).animationName);
+    expect(restored).toBe('none');
   });
 
-  test('Page visibility API suspends decorative background animations on hidden tab', async ({ page }) => {
+  test('Page visibility API suspends decorative background and footer animations on hidden tab', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
-
-    // Initially visible
     await expect(page.locator('html')).not.toHaveAttribute('data-bg-paused');
 
-    // Simulate tab becoming hidden
     await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', { get: () => true, configurable: true });
       document.dispatchEvent(new Event('visibilitychange'));
     });
-
     await expect(page.locator('html')).toHaveAttribute('data-bg-paused');
 
     const hiddenStates = await page.evaluate(() => {
-      const planet = document.querySelector('.planet-motion');
-      const constellation = document.querySelector('.constellation__node');
       const systemNode = document.querySelector('.system-node');
+      const footerPulse = document.querySelector('.footer-kicker span');
       return {
-        planet: planet ? getComputedStyle(planet).animationPlayState : null,
-        constellation: constellation ? getComputedStyle(constellation).animationPlayState : null,
         systemNode: systemNode ? getComputedStyle(systemNode).animationPlayState : null,
+        footerPulse: footerPulse ? getComputedStyle(footerPulse).animationPlayState : null,
       };
     });
-
-    expect(hiddenStates.planet).toBe('paused');
-    expect(hiddenStates.constellation).toBe('paused');
     expect(hiddenStates.systemNode).toBe('paused');
+    expect(hiddenStates.footerPulse).toBe('paused');
 
-    // Simulate tab returning to visible
     await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', { get: () => false, configurable: true });
       document.dispatchEvent(new Event('visibilitychange'));
     });
-
     await expect(page.locator('html')).not.toHaveAttribute('data-bg-paused');
   });
 
-  test('Reduced motion mode eliminates continuous animation cost', async ({ browser }) => {
-    const context = await browser.newContext({
-      reducedMotion: 'reduce',
-    });
+  test('Reduced motion disables ambient animation', async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
     await page.goto('/', { waitUntil: 'networkidle' });
-
-    const motionStyles = await page.evaluate(() => {
-      const planet = document.querySelector('.planet-motion');
-      const coreHalo = document.querySelector('.core__heart-halo');
-      const constellation = document.querySelector('.constellation__node');
-      const systemNode = document.querySelector('.system-node');
-
-      return {
-        planetAnimation: planet ? getComputedStyle(planet).animationName : null,
-        planetWillChange: planet ? getComputedStyle(planet).willChange : null,
-        pulseCount: document.querySelectorAll('.orbit-pulse').length,
-        coreHaloAnimation: coreHalo ? getComputedStyle(coreHalo).animationName : null,
-        constellationAnimation: constellation ? getComputedStyle(constellation).animationName : null,
-        systemNodeAnimation: systemNode ? getComputedStyle(systemNode).animationName : null,
-      };
+    const motionStyles = await page.evaluate(() => ({
+      systemNode: getComputedStyle(document.querySelector('.system-node')!).animationName,
+      footerPulse: getComputedStyle(document.querySelector('.footer-kicker span')!).animationName,
+      portfolioMap: getComputedStyle(document.querySelector('.portfolio-map')!).animationName,
+      showcase: getComputedStyle(document.querySelector('.showcase-art')!).animationName,
+    }));
+    expect(motionStyles).toEqual({
+      systemNode: 'none',
+      footerPulse: 'none',
+      portfolioMap: 'none',
+      showcase: 'none',
     });
-
-    expect(motionStyles.planetAnimation).toBe('none');
-    expect(motionStyles.planetWillChange).toBe('auto');
-    expect(motionStyles.pulseCount).toBe(0);
-    expect(motionStyles.coreHaloAnimation).toBe('none');
-    expect(motionStyles.constellationAnimation).toBe('none');
-    expect(motionStyles.systemNodeAnimation).toBe('none');
-
     await context.close();
   });
 
-  test('Mobile viewports strictly pause desktop orbital SVG animations', async ({ browser }) => {
-    const context = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-    });
-    const page = await context.newPage();
+  test('Mobile portfolio layouts remain stacked and do not overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
-
-    const mobileState = await page.evaluate(() => {
-      const sceneWrap = document.querySelector('.fds-ecosystem__scene-wrap');
-      const planet = document.querySelector('.fds-ecosystem__scene-wrap .planet-motion');
-      const ring = document.querySelector('.fds-ecosystem__scene-wrap .core__ring');
-
-      return {
-        display: sceneWrap ? getComputedStyle(sceneWrap).display : null,
-        planetPlayState: planet ? getComputedStyle(planet).animationPlayState : null,
-        pulseCount: document.querySelectorAll('.orbit-pulse').length,
-        ringPlayState: ring ? getComputedStyle(ring).animationPlayState : null,
-      };
-    });
-
-    expect(mobileState.display).toBe('none');
-    expect(mobileState.planetPlayState).toBe('paused');
-    expect(mobileState.pulseCount).toBe(0);
-    expect(mobileState.ringPlayState).toBe('paused');
-
-    await context.close();
+    const map = page.locator('.portfolio-map');
+    await expect(map).toBeVisible();
+    await expect(map.locator('.portfolio-domain')).toHaveCount(4);
+    const columns = await map.locator('.portfolio-map__grid').evaluate((element) => getComputedStyle(element).gridTemplateColumns);
+    expect(columns.trim().split(/\s+/)).toHaveLength(1);
+    await expect(page.locator('.portfolio-showcases > .product-showcase')).toHaveCount(5);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
   });
 
   test('Pointer lighting is throttled and does not update continuously on touch/coarse devices', async ({ browser }) => {
-    // Touch/coarse context (mobile)
-    const touchContext = await browser.newContext({
-      hasTouch: true,
-      viewport: { width: 390, height: 844 },
-    });
+    const touchContext = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
     const touchPage = await touchContext.newPage();
     await touchPage.goto('/', { waitUntil: 'networkidle' });
-
-    // Initial CSS variable state
-    const initialPointer = await touchPage.evaluate(() => {
-      return document.documentElement.style.getPropertyValue('--pointer-x');
-    });
-
-    // Dispatch touch/pointermove
+    const initialPointer = await touchPage.evaluate(() => document.documentElement.style.getPropertyValue('--pointer-x'));
     await touchPage.touchscreen.tap(200, 300);
     await touchPage.waitForTimeout(100);
-
-    const postTouchPointer = await touchPage.evaluate(() => {
-      return document.documentElement.style.getPropertyValue('--pointer-x');
-    });
-
-    // Touch device should NOT set inline CSS variable
+    const postTouchPointer = await touchPage.evaluate(() => document.documentElement.style.getPropertyValue('--pointer-x'));
     expect(postTouchPointer).toBe(initialPointer);
-
     await touchContext.close();
   });
 });

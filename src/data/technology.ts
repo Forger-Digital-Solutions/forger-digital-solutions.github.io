@@ -34,8 +34,8 @@ export const tierLabels: Record<TechnologyTier, string> = {
 export const projectTechnologies: ProjectTechnology[] = [
   { system: 'CodeForge', href: '/projects/codeforge', areas: 'TypeScript, Node.js, Electron, React, SQLite, Git, VS Code, model/provider APIs', purpose: 'Repository intelligence, autonomous task execution, desktop/CLI/editor surfaces, and free-first model routing.' },
   { system: 'ForgerEMS', href: '/projects/forgerems', areas: 'C#, .NET, WPF, Windows APIs, PowerShell, USB and hardware interfaces', purpose: 'Technician diagnostics, drive validation, USB tooling, system information, and local-first assistance.' },
-  { system: 'GEMS / Training Grounds', href: '/projects/gems-training-grounds', areas: 'Python, model post-training, evaluation, curriculum systems, CUDA/GPU environments', purpose: 'Specialization, teaching, held-out evaluation, checkpoints, and hardware-aware model research.' },
-  { system: 'KyraBlox', href: '/projects/kyrablox', areas: 'C#, .NET 8, WPF, Luau/Roblox, C++/Unreal, engine plugins, local protocols', purpose: 'Project inspection, governed missions, engine integration, approvals, validation, and recovery.' },
+  { system: 'Forge Control', href: '/projects/forge-control', areas: 'Engineering governance and verification', purpose: 'Active development; no specific integration or shipped capability is publicly verified.' },
+  { system: 'Dead Trails West', href: '/projects/dead-trails-west', areas: 'Unreal Engine 4.27, Blender', purpose: 'A private game project; owner-reported persistent-world simulation work has not been independently verified.' },
   { system: 'FDS Website', areas: 'Astro, TypeScript, Vitest, Cloudflare Workers, GitHub Pages', purpose: 'Static public publishing plus the separately deployed Kayla site-guide runtime.' }
 ];
 
@@ -60,13 +60,9 @@ export const technologyGroups: TechnologyGroup[] = [
   },
   {
     tier: 'core',
-    name: 'Intelligence & verification core',
-    description: 'The AI and quality disciplines FDS builds on, in products and research alike.',
+    name: 'Engineering & verification core',
+    description: 'The engineering disciplines that carry current FDS products.',
     items: [
-      'Model post-training',
-      'Evaluation systems',
-      'Curriculum systems',
-      'Held-out evaluation',
       'Agentic execution',
       'Repository intelligence',
       'Automated testing',

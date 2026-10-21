@@ -12,11 +12,11 @@ export const projects: Project[] = [
     summary: 'A free-first autonomous software-engineering platform for Windows, CLI, and editor work. CodeForge can inspect repositories, plan changes, use tools, run checks, and review results under developer control.',
     description: 'CodeForge owns an engineering task across planning, implementation, testing, review, and verification. Its Windows desktop app, CLI, and VS Code experience share a core runtime, while repository boundaries, approvals, secret scanning, and command-risk rules keep execution governed. Dynamic routing selects only verified zero-cost cloud models; ForgeZero fails closed instead of silently falling back to paid or local inference.',
     status: 'RELEASED', secondaryStatus: 'ACTIVE DEVELOPMENT', featured: true, flagship: true,
-    stageLabel: 'Public product and FDS engineering foundation',
+    stageLabel: 'Released product; downloads temporarily paused',
     tags: ['Autonomous Engineering', 'Windows', 'CLI', 'VS Code', 'ForgeZero', 'Repository Tools'],
     focusAreas: ['Repository inspection', 'Planning and implementation', 'Specialized agents', 'Tool execution', 'Testing and review', 'Developer approvals'],
     highlights: [
-      'Released for Windows with installer and portable builds through GitHub Releases.',
+      'The previously listed Windows installer and portable builds are temporarily unavailable while the release is updated.',
       'ForgeZero rejects paid, local, unknown-cost, and unverified routes rather than creating a billing surprise.',
       'The public product and FDS engineering role are complementary, not separate identities.'
     ],
@@ -27,12 +27,25 @@ export const projects: Project[] = [
       { title: 'Specialized Agents', body: 'Engineering roles cover planning, implementation, testing, review, verification, security, documentation, architecture, and other focused work. The director coordinates them against one task and shared repository state.' },
       { title: 'Verification & Safety', items: ['Workspace and path isolation', 'Command risk classification and approval', 'Secret scanning before model context leaves the machine', 'Testing and review inside the task lifecycle', 'Fail-closed model and cost eligibility'] },
       { title: 'Developer Control', body: 'Autonomy does not remove oversight. Repository scope, permissions, provider eligibility, and execution controls remain visible, and CodeForge reports failures or blocked routes rather than disguising them as success.' },
-      { title: 'Current Availability', body: 'CodeForge v0.2.0 is released for Windows 10/11 x64 as an installer and portable executable. Builds are currently unsigned, so Windows may show an unknown-publisher warning; SHA-256 checksums are published with the release.', items: ['Desktop application', 'Command-line interface', 'VS Code integration', 'Installer and portable Windows builds'] },
-      { title: 'Routing Systems in Development', body: 'Active development continues beyond the released v0.2.0 binary on a distinct set of model-control systems. They are part of current engineering work, not backported claims about the public release.', items: ['ForgeAuto — the automatic selection mode that routes free-experience work across verified zero-cost models', '8-Bit — a dynamic model-routing and failover core that keeps sessions working as free-model availability, quotas, and health change; routing authority only, with no path into permissions, approvals, or verification', 'ForgeZero — the fail-closed zero-cost boundary those systems operate inside', 'ForgeGreen — runtime efficiency research that reduces wasted work without weakening verification'] },
+      { title: 'Current Availability', body: 'The last version listed on this website was v0.2.0 for Windows 10/11 x64. Downloads are temporarily paused while the release is updated; this site does not provide an installer at this time.', items: ['Desktop application', 'Command-line interface', 'VS Code integration', 'Installer download temporarily paused'] },
+      {
+        id: 'forge-aaa',
+        title: 'Forge AAA: game-development architecture',
+        body: 'Forge AAA is the advanced game-development direction within CodeForge, not a separate executable, product, or release. The intended architecture is to help coordinate complex development tasks across game engines, content tools, asset and animation workflows, code, and verification while keeping the developer in control.',
+        items: [
+          'Unreal Engine project assistance and game-system implementation',
+          'Blender-centered 3D asset and animation workflows',
+          'Character development and animation integration',
+          'Asset validation, automated testing, and performance investigation',
+          'Coordinated specialist roles for bounded engineering tasks'
+        ],
+        note: 'These are development goals, not a claim that each integration is implemented in CodeForge v0.2.0. Forge AAA does not generate complete AAA games.'
+      },
+      { title: 'Routing Systems in Development', body: 'Active development continues beyond the released v0.2.0 binary on model-control and runtime-efficiency work. These efforts are not backported claims about the public release.', items: ['ForgeAuto — automatic selection across verified zero-cost models', '8-Bit — dynamic model-routing and failover under changing provider health and quotas', 'ForgeZero — the fail-closed zero-cost boundary', 'ForgeGreen — runtime-efficiency research'] },
       { title: 'Where It Fits Inside FDS', body: 'CodeForge is both public software and an engineering foundation used across FDS. Its repository intelligence, agent coordination, verification discipline, and controlled execution inform how other FDS products are developed.' }
     ],
     githubUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
-    websiteUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest',
+    websiteUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
     documentationUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge#readme',
     roadmap: 'Broader repository intelligence, editor integration, verified provider coverage, and autonomous engineering depth.',
     accentColor: '#5a82e8', visualStyle: 'nodes', sortOrder: 1,
@@ -70,60 +83,62 @@ export const projects: Project[] = [
     accentColor: '#e0a63c', visualStyle: 'nodes', sortOrder: 2
   },
   {
-    id: 'gems-training-grounds', slug: 'gems-training-grounds', name: 'GEMS / Training Grounds', shortName: 'GEMS',
-    category: 'AI Model Research & Capability Development', ecosystem: 'Intelligence',
-    audience: 'People following practical AI model specialization, evaluation, curriculum design, agentic learning, and affordable intelligence research.',
-    problem: 'Useful intelligence requires more than a capable foundation model. It needs deliberate curriculum, trustworthy evaluation, controlled advancement, and a path from research checkpoints to specialized real-world performance.',
-    differentiation: 'GEMS is a family of developing intelligences, while Training Grounds is the environment that teaches, challenges, evaluates, and advances them. The program specializes on strong open or pretrained foundations where a role benefits from them, and keeps fully from-scratch FDS-developed model development as longer-term research.',
-    summary: 'Four independent AI research lineages—generalist, software engineering, quantitative reasoning, and multimodal—plus the Training Grounds used to teach, evaluate, and advance them.',
-    description: 'GEMS combines four developing model identities with a governed learning environment. Current strategy builds on strong open or pretrained foundations where appropriate; fully from-scratch FDS-developed foundations remain longer-term research. Training Grounds organizes curriculum, controlled training, trials, checkpoints, and evaluation so advancement depends on demonstrated learning, not activity.',
-    status: 'RESEARCH', featured: true, flagship: true, stageLabel: 'Flagship AI research',
-    tags: ['Specialized Intelligence', 'Curriculum', 'Evaluation', 'Agentic Learning', 'Model Lineages', 'Affordable AI'],
-    focusAreas: ['Specialized model research', 'Training Grounds evaluation discipline', 'Curriculum design', 'Agentic and tool-use learning', 'Evaluation checkpoints', 'Multimodal systems'],
+    id: 'forge-control', slug: 'forge-control', name: 'Forge Control',
+    category: 'Multi-Agent Engineering Orchestration', ecosystem: 'Engineering',
+    audience: 'Developers coordinating substantial software work across multiple subscription-authenticated coding agents.',
+    problem: 'Separate coding agents can leave a developer manually splitting tasks, tracking state, avoiding conflicting edits, and recovering work when capacity changes.',
+    differentiation: 'Forge Control is intended to coordinate eligible connected agents in one governed workflow. Its direction is automatic discovery, task decomposition, parallel work where safe, shared progress, and continuation—not a chatbot that asks the user to appoint one replacement agent.',
+    summary: 'A separate FDS product in active development: intended to coordinate eligible coding agents, distribute safe independent work, and track verification. No public release or working provider integration is currently verified.',
+    description: 'Forge Control is a separate development project focused on multi-agent software-work coordination. Its intended architecture discovers connected eligible agents, checks supported availability signals, decomposes substantial work, dispatches safe independent tasks concurrently, coordinates shared resources, records progress, and continues or resumes unfinished tasks as capacity changes. These describe product direction; this website does not verify that the workflow or any integration is shipped.',
+    status: 'ACTIVE DEVELOPMENT', featured: true, stageLabel: 'Active development · no public release',
+    tags: ['Agent Orchestration', 'Task Distribution', 'Progress Tracking', 'Verification'],
+    focusAreas: ['Discover eligible connected agents', 'Decompose substantial engineering work', 'Dispatch safe independent tasks concurrently', 'Coordinate shared resources and task state', 'Rebalance, pause, and resume unfinished work', 'Return clear verification evidence'],
     highlights: [
-      'GEMS is a family of four independent research lineages, not one model wearing different hats.',
-      'Training Grounds separates activity from demonstrated learning through held-out evaluation and checkpoints.',
-      'Affordable frontier-like usefulness is a long-term target, not a claim of current parity.'
+      'The intended product coordinates agents automatically; users should not have to designate one special agent to replace another.',
+      'Quota-aware continuation is an architectural goal, not a claim of quota access or account pooling.',
+      'Potential integrations include OpenAI Codex, Claude Code, GitHub Copilot, and Antigravity; none is claimed as a verified working integration.',
+      'Owner-reported Windows Electron/NSIS installer acceptance testing is in progress. V23 certification evidence is not available to this public site.'
     ],
     sections: [
-      { title: 'Current Research', items: ['Topaz: broad language, reasoning, planning, and orchestration', 'Sapphire: coding, repair, repository reasoning, and engineering tools — experimental research checkpoints have been evaluated through Training Grounds', 'Peridot: mathematics, science, formal reasoning, and verification', 'Garnet: document and visual understanding, with image generation kept as a separate module', 'Curriculum design, held-out evaluation, and learning-versus-memorization checks', 'Hardware-aware training and evaluation'] },
-      { title: 'Training Grounds', items: ['Curriculum creation', 'Model post-training and candidate training', 'Evaluation, including protected evaluation where appropriate', 'Failure diagnosis and remediation', 'Advancement, promotion, and specialization', 'Architecture experimentation'] },
-      { title: 'Foundation Strategy', body: 'Current GEMS work may begin from strong open or pretrained foundations where a role benefits from them. Fully from-scratch, FDS-developed model foundations remain longer-term research as datasets, compute, and capacity allow. Neither path changes the rule that no GEM is presented as a public production model.' },
-      { title: 'Long-Term Direction', body: 'As datasets, compute, funding, and research capacity expand, GEMS continues toward deeper FDS-developed foundations. Those are research directions—not shipped capability claims.' }
+      { title: 'The coordination problem', body: 'Using more than one coding agent can multiply the work around the work: dividing tasks, checking which agent can accept a task, avoiding conflicting edits, preserving shared context, and recovering unfinished work. Forge Control is being designed around coordinating that workflow rather than presenting another standalone chat surface.' },
+      { title: 'Intended orchestration workflow', body: 'The product direction is to discover connected eligible agents, inspect supported availability signals, break a substantial request into bounded work, and dispatch independent tasks in parallel when shared resources allow it. A coordinator would track task state, manage dependencies, and present the evidence needed to review the result.', items: ['Discover connected eligible agents', 'Decompose and assign independent work', 'Coordinate shared files and resources', 'Track progress and verification', 'Rebalance and resume work when capacity changes'], note: 'This is the intended architecture. The website does not claim these steps are implemented or certified.' },
+      { title: 'Potential integrations', body: 'The owner has identified OpenAI Codex, Claude Code, GitHub Copilot, and Antigravity as potential integration targets. Their current API, subscription, availability, and authentication compatibility has not been verified for this page; they must not be read as supported integrations.' },
+      { title: 'Recovery and continuity', body: 'The product goal is to preserve task state and continue eligible unfinished work when an agent reaches a limit or becomes unavailable, then resume when capacity returns. This does not imply access to private subscription quotas, account pooling, or bypassing provider controls.' },
+      { title: 'Security and human oversight', body: 'The intended workflow is governed engineering, not unreviewed parallel writes: task boundaries, shared-resource conflicts, permissions, and verification need to remain inspectable. Implementation and security certification details are not yet verified for public claims.' },
+      { id: 'forge-control-availability', title: 'Development and availability', body: 'Forge Control is in active development. The owner reports a Windows Electron/NSIS development installer undergoing installed-application acceptance testing; the website has not verified V23 certification or completed acceptance evidence. No public installer, beta, live service, or supported integration is available to claim.' },
+      { title: 'Relationship to CodeForge', body: 'Forge Control is a distinct FDS product direction. CodeForge is the released software-engineering product; Forge AAA is a game-development architecture workstream within CodeForge. This relationship does not mean Forge Control is a CodeForge feature or that all products share one executable.' }
     ],
-    roadmap: 'Specialized model research, controlled capability advancement, and Training Grounds evaluation discipline as the program matures.',
-    accentColor: '#2f6bff', visualStyle: 'gem', sortOrder: 3,
-    heroImage: visualAssets.gemsFamily
-    // trainingGrounds visual now lives inside the Training Grounds subsection
-    // of GemsDeep, not a generic end-of-page gallery.
+    roadmap: 'Automatic agent discovery, safe parallel task distribution, durable coordination, recovery, and evidence-backed verification are intended direction, not confirmed shipped capabilities.',
+    accentColor: '#36b8ba', visualStyle: 'nodes', sortOrder: 3
   },
   {
-    id: 'kyrablox', slug: 'kyrablox', name: 'KyraBlox',
-    category: 'Project-Aware Game Development', ecosystem: 'Gaming',
-    audience: 'Game creators and developers who need an assistant to understand the project, engine, scripts, plan, approvals, and validation—not just answer isolated questions.',
-    problem: 'Game work spans project structure, scripts, objects, engine state, debugging, testing, and iteration. A generic chatbot cannot see enough of that connected state to own a development mission safely.',
-    differentiation: 'KyraBlox is local-first, provider-neutral, and inspect-first. One governed runtime attaches to the project, builds an understanding snapshot, plans against that state, proposes bounded changes, validates results, and preserves approval and recovery history.',
-    summary: 'A local-first, project-aware game-development platform that understands repositories, scripts, engines, plans, approvals, and validation. Roblox has the deepest current integration; other engine paths have explicitly limited maturity.',
-    description: 'KyraBlox keeps one mission, conversation, plan lifecycle, approval model, execution history, and recovery path around the game project being developed. Kyra is the cross-engine primary intelligence; focused agents cover Roblox, Unreal, Unity, Godot, desktop/web/2D, and systems domains. Current engine support is labeled honestly so planning-only paths are not presented as live editor control.',
-    status: 'ACTIVE DEVELOPMENT', featured: false, stageLabel: 'Private 0.3.0-preview.2 development line',
-    tags: ['Game Projects', 'Roblox', 'Project Intelligence', 'Guarded Execution', 'Multi-Engine', 'Local-First'],
-    focusAreas: ['Project inspection', 'Scripts and systems', 'Plans and approvals', 'Guarded file changes', 'Validation and review', 'Engine-specific capability'],
+    id: 'dead-trails-west', slug: 'dead-trails-west', name: 'Dead Trails West',
+    category: 'Historical Open-World Game', ecosystem: 'Gaming',
+    audience: 'Players drawn to character-led historical worlds, exploration, survival, and communities that respond to player choices.',
+    problem: 'Historical immersion is more than a set of period props. People, property, animals, seasons, work, law, and the consequences of a player’s choices should belong to the same evolving world.',
+    differentiation: 'Dead Trails West is being developed around an 1882–1900 historical span and the initial region of Sundance, New Jersey; owner-reported persistent-world simulation work has not been independently verified for this website.',
+    summary: 'An original historical open-world game in private development, set across 1882–1900 with an initial region in Sundance, New Jersey. Built for Unreal Engine 4.27; no public playable build is available.',
+    description: 'Dead Trails West is an original game about the people and places of a changing late-19th-century world. The initial setting is Sundance, New Jersey, and central characters George Bauer and Edward Bauer. The design combines historical storytelling and open-world exploration with settlement life, wildlife, survival, weather and seasons, farming and ranching, hunting and fishing, property, construction, transportation, law, and long-term progression. These are design goals, not a blanket claim that each system is complete. The project uses Unreal Engine 4.27 with Blender-centered asset workflows; no public playable build or release date is available.',
+    status: 'PRIVATE DEVELOPMENT', featured: true, stageLabel: 'Private game development · no public build',
+    tags: ['Western', '1882', 'Unreal Engine 4.27', 'Persistent World'],
+    focusAreas: ['Historical story and open-world exploration', 'Living settlements and character interactions', 'Wildlife, survival, weather, and seasons', 'Farming, ranching, hunting, and fishing', 'Property, construction, and transportation', 'Law, consequence, and long-term world progression'],
     highlights: [
-      'No public KyraBlox release or download is currently available.',
-      'Roblox has an integrated guarded transaction path; live mutation requires a paired Studio session.',
-      'Unreal has a fixture-validated bridge and plugin; Unity and Godot are currently planning/file-workflow paths.',
-      'Provider authentication is fixture-tested, not publicly certified as a live subscription service.'
+      'Private development; no public playable build or release date is available.',
+      'The persistent-world simulation has not been independently verified; this is not full-game certification.',
+      'Owner-reported integration checks cover selected travel, store, empty-wallet purchase refusal, and return-route scenarios.'
     ],
     sections: [
-      { title: 'Build With Project Context', body: 'KyraBlox attaches to a project and inspects its structure, source, version control, tests, engine adapter, and available provider routes. Questions and plans begin from that project state instead of asking the creator to re-explain the game every session.' },
-      { title: 'Game-Aware Intelligence', body: 'The platform connects scripts, gameplay systems, engine state, mission history, approvals, validation, and recovery. That is the difference between advice about a hypothetical game and assistance grounded in the game being made.' },
-      { title: 'Roblox First', body: 'Roblox is the most developed engine path, with guarded file transactions and a separately approved Studio transaction route. Publishing, uploads, purchases, and unrestricted execution remain outside the current boundary.' },
-      { title: 'Scripts, Systems & Iteration', items: ['Project and file inspection', 'Gameplay and system planning', 'Bounded script proposals', 'Exact diff review and approval', 'Testing and validation', 'Rollback and recovery state'] },
-      { title: 'Multi-Engine Direction', body: 'Unreal currently has a fixture-validated bridge and plugin without certified live editor mutation. Unity, Godot, desktop/web/2D, and custom-engine paths support planning or file-oriented work at different maturity levels. Broader live integration remains in development.' }
+      { id: 'dead-trails-setting', title: 'Sundance, 1882–1900', body: 'The story begins in Sundance, New Jersey, in 1882 and is designed to span the years through 1900. George Bauer and Edward Bauer are central characters. This public overview leaves unreleased story scripts and private canon details unpublished.' },
+      { title: 'A world with many kinds of play', body: 'The project is not framed as gunfights alone. Its design brings historical storytelling and open-world exploration together with settlement relationships, survival, wildlife, seasons, work, property, and consequences.', items: ['Living settlements and character interactions', 'Wildlife and survival, with dynamic weather and seasonal simulation as design goals', 'Farming, ranching, hunting, and fishing', 'Property development, construction, and transportation', 'Law, consequences, and long-term world progression'], note: 'These are design pillars and planned systems. This list does not assert that all features are currently implemented or playable.' },
+      { title: 'Selected integration checks', body: 'Owner-reported development evidence describes automated travel between locations, a general-store interaction, purchase refusal when the player wallet is empty, and a return-route test. These are specific integration scenarios, not a certification of the whole game, a visual-quality review, or evidence of public release.', note: 'The owner-reported test summary has not been independently reproduced in this website repository.' },
+      { title: 'Unreal and asset pipeline', body: 'The project targets Unreal Engine 4.27 and uses Blender with associated asset workflows. The development pipeline is intended to connect character work, materials, animation, collisions, validation, and in-engine integration. No gameplay screenshots are available in this public website repository, so the site uses no fabricated in-game imagery.' },
+      { title: 'Availability', body: 'Dead Trails West is in private development. There is no public download, playable build, or announced release date.' }
     ],
-    roadmap: 'Deeper live engine validation, provider certification, focused-agent product packaging, and broader project-aware development coverage.',
-    accentColor: '#b487ff', visualStyle: 'blocks', sortOrder: 4,
-    heroImage: visualAssets.kyrabloxCommandCenter,
+    privacyNotice: 'Private-development source and assets are not distributed through this website.',
+    roadmap: 'World simulation, playable systems, historical world-building, and in-engine verification.',
+    githubUrl: 'https://github.com/Forger-Digital-Solutions/DeadTrailsWest',
+    documentationUrl: 'https://github.com/Forger-Digital-Solutions/DeadTrailsWest',
+    accentColor: '#c47c4f', visualStyle: 'blocks', sortOrder: 4
   },
   {
     id: 'kayla-ai-publisher', slug: 'kayla-ai-publisher', name: 'Kayla AI Publisher', shortName: 'Kayla Publisher',
@@ -201,22 +216,22 @@ export const projects: Project[] = [
  */
 export const exploreNextBySlug: Record<string, { label: string; href: string; note: string }[]> = {
   codeforge: [
-    { label: 'GEMS', href: '/projects/gems-training-grounds', note: 'AI model research the engineering supports' },
+    { label: 'Forge Control', href: '/projects/forge-control', note: 'A separate active FDS engineering project' },
+    { label: 'Forge AAA', href: '/projects/codeforge#forge-aaa', note: 'An architecture workstream within CodeForge' },
     { label: 'Forged', href: '/forged', note: 'The FDS release shelf' },
     { label: 'All Projects', href: '/projects', note: 'Full directory' }
   ],
-  'gems-training-grounds': [
-    { label: 'CodeForge', href: '/projects/codeforge', note: 'Released FDS engineering software' },
-    { label: 'Lab', href: '/lab', note: 'How FDS establishes what is true' },
+  'forge-control': [
+    { label: 'CodeForge', href: '/projects/codeforge', note: 'Engineering foundation behind FDS tooling' },
+    { label: 'Dead Trails West', href: '/projects/dead-trails-west', note: 'A private FDS game project' },
     { label: 'All Projects', href: '/projects', note: 'Full directory' }
   ],
-  kyrablox: [
-    { label: 'CodeForge', href: '/projects/codeforge', note: 'Engineering foundation behind FDS tooling' },
-    { label: 'GEMS', href: '/projects/gems-training-grounds', note: 'Model research behind game intelligence' },
+  'dead-trails-west': [
+    { label: 'Forge Control', href: '/projects/forge-control', note: 'A separate active FDS engineering project' },
     { label: 'All Projects', href: '/projects', note: 'Full directory' }
   ],
   'kayla-ai-publisher': [
-    { label: 'GEMS', href: '/projects/gems-training-grounds', note: 'Publishing-intelligence research lineage' },
+    { label: 'CodeForge', href: '/projects/codeforge', note: 'Released FDS engineering software' },
     { label: 'Notes', href: '/notes', note: 'Build and research field notes' },
     { label: 'All Projects', href: '/projects', note: 'Full directory' }
   ],

@@ -83,13 +83,13 @@ describe('A model that obeys hostile retrieved text is still overruled', () => {
 
     // The model "followed" the hostile instruction embedded in retrieved
     // content and asserted the fabricated availability claim as its answer.
-    scriptedReply = 'KyraBlox is publicly available today — you can download it right now.';
+    scriptedReply = 'Dead Trails West is publicly available today — you can download it right now.';
     const { response } = await handleKaylaChat(
-      { message: 'What is KyraBlox?', history: [], context: { route: '/', pageType: 'home' } },
+      { message: 'What is Dead Trails West?', history: [], context: { route: '/', pageType: 'home' } },
       endpoint
     );
     const body = response as { answer: string };
     expect(body.answer.toLowerCase()).not.toContain('publicly available today');
-    expect(body.answer.toLowerCase()).toContain('active development');
+    expect(body.answer.toLowerCase()).toContain('private development');
   });
 });

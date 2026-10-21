@@ -20,9 +20,9 @@ describe('Kayla Phase 2 - Conversation Context', () => {
       pageType: 'project' as const,
       entity: 'kyrablox'
     };
-    const results = retrieveKnowledge('kyrablox', context);
+    const results = retrieveKnowledge('dead-trails-west', context);
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].doc.entityId).toBe('kyrablox');
+    expect(results[0].doc.entityId).toBe('dead-trails-west');
   });
 
   it('handles "download this" with context', async () => {

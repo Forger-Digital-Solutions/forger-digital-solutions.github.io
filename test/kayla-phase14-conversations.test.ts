@@ -40,12 +40,12 @@ describe('Phase 14 conversation goldens', () => {
 describe('context bounds and isolation', () => {
   for (const count of [10, 25, 50]) it(`${count} simultaneous independent conversations`, async () => {
     await Promise.all(Array.from({ length: count }, async (_, i) => {
-      const name = i % 2 ? 'GEMS' : 'CodeForge';
+      const name = i % 2 ? 'Forge Control' : 'CodeForge';
       const history: KaylaConversationMessage[] = [{ role: 'user', content: `Tell me about ${name}.` }];
       const result = await handleKaylaChat({ message: 'Can I download it?', history }, endpoint());
       const response = result.response as KaylaChatResponse;
       expect(response.answer).toContain(name);
-      expect(response.actions?.[0]?.href).toBe(i % 2 ? '/projects/gems-training-grounds' : '/forged');
+      expect(response.actions?.[0]?.href).toBe(i % 2 ? '/projects/forge-control' : '/projects/codeforge');
     }));
   });
   it('forgets entities outside the bounded window', () => {
@@ -59,11 +59,11 @@ describe('context bounds and isolation', () => {
     expect(resolved.needsClarification).toBe(true);
   });
   it('normalizes a duplicate current user turn sent by older clients', () => {
-    const history: KaylaConversationMessage[] = [{ role: 'user', content: 'CodeForge and GEMS' }, { role: 'assistant', content: 'CodeForge and GEMS are FDS projects.' }, { role: 'user', content: 'Can I download it?' }];
+    const history: KaylaConversationMessage[] = [{ role: 'user', content: 'CodeForge and Forge Control' }, { role: 'assistant', content: 'CodeForge and Forge Control are FDS projects.' }, { role: 'user', content: 'Can I download it?' }];
     expect(resolveConversation('Can I download it?', history).needsClarification).toBe(true);
   });
   it('stream and JSON clarify consistently and never spend allowance', async () => {
-    const body = { message: 'Can I download it?', history: [{ role: 'user', content: 'CodeForge and GEMS' }] };
+    const body = { message: 'Can I download it?', history: [{ role: 'user', content: 'CodeForge and Forge Control' }] };
     let allowances = 0;
     const config = { ...endpoint(), consumeAIAllowance: async () => { allowances++; return false; } };
     const json = await handleKaylaChat(body, config);
@@ -76,25 +76,22 @@ describe('context bounds and isolation', () => {
 
 describe('comparison stays within the resolved subjects', () => {
   // Production canary: "Which one should I start with?" over CodeForge and
-  // GEMS opened with a Peridot comparison, because the relationship lookup
+  // Forge Control must only compare those resolved subjects.
   // matched a neighbouring record by query text rather than by subject.
   it('never introduces an entity the visitor did not raise', async () => {
     const history: KaylaConversationMessage[] = [
       { role: 'user', content: "I'm a developer. What should I look at?" },
       { role: 'assistant', content: 'CodeForge — a free-first autonomous software-engineering platform.' },
-      { role: 'user', content: 'What about GEMS?' },
-      { role: 'assistant', content: 'GEMS / Training Grounds — four independent AI research lineages.' }
+      { role: 'user', content: 'What about Forge Control?' },
+      { role: 'assistant', content: 'Forge Control is an active development project.' }
     ];
     const resolved = resolveConversation('Which one should I start with?', history);
-    expect(resolved.entities).toEqual(['gems-training-grounds', 'codeforge']);
+    expect(resolved.entities).toEqual(['forge-control', 'codeforge']);
     const result = await handleKaylaChat({ message: 'Which one should I start with?', history }, endpoint());
     const answer = (result.response as KaylaChatResponse).answer;
     expect(answer).toContain('CodeForge');
-    expect(answer).toContain('GEMS');
-    // A lineage may still be named inside a canonical GEMS answer; what must
-    // never happen is the response being framed as a comparison of a pair the
-    // visitor never raised.
-    for (const uninvited of ['Peridot', 'Topaz', 'Garnet', 'KyraBlox', 'FarmStand Finder']) {
+    expect(answer).toContain('Forge Control');
+    for (const uninvited of ['GEMS', 'KyraBlox', 'FarmStand Finder']) {
       expect(answer, `${uninvited} was never raised as a subject`).not.toMatch(new RegExp(`${uninvited} vs|vs ${uninvited}`, 'i'));
     }
   });
@@ -105,7 +102,7 @@ describe('grounded slot guard', () => {
     id: 'codeforge',
     sourceType: 'canonical',
     title: 'CodeForge',
-    snippet: 'CodeForge is a released, downloadable developer tool for Windows, with public documentation.',
+    snippet: 'CodeForge is a released developer tool for Windows. Its last website-listed version was v0.2.0; downloads are temporarily paused.',
     route: '/projects/codeforge'
   }]);
   it.each([

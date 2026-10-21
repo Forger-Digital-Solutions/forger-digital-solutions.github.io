@@ -52,7 +52,7 @@ export function buildTaskPlan(
     recommendedSources = [{ label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }];
     recommendedActions = [
       { type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' },
-      { type: 'OPEN_DOWNLOAD', label: 'Download CodeForge (Free)', href: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest' },
+      { type: 'OPEN_APP', label: 'Check CodeForge availability', href: '/projects/codeforge' },
       { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }
     ];
     return {
@@ -72,25 +72,22 @@ export function buildTaskPlan(
     (/\b(ai|gems|model)\b/i.test(query) && /\b(download|run|use|install)\b/i.test(query) && !/codeforge/i.test(query)) ||
     (match.isMultiGoal && match.primaryGoal === 'FIND_RELEASED_SOFTWARE' && match.secondaryGoals?.includes('EXPLORE_AI_RESEARCH'))
   ) {
-    tradeoffExplanation = 'FDS AI research (GEMS) is specialized model research and evaluation; there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS, and ForgerEMS has a public preview download.';
-    requiredFacts = ['GEMS has no public downloads', 'CodeForge is released and free on Forged'];
-    recommendedSources = [
-      { label: 'Forged', kind: 'page', route: '/forged' },
-      { label: 'GEMS Training Grounds', kind: 'project', route: '/projects/gems-training-grounds' }
-    ];
+    tradeoffExplanation = 'FDS does not currently list a public AI research model. Forged lists software that is publicly available, including CodeForge and the ForgerEMS preview.';
+    requiredFacts = ['Current public software releases', 'Current public project catalog'];
+    recommendedSources = [{ label: 'Forged', kind: 'page', route: '/forged' }];
     recommendedActions = [
       { type: 'OPEN_FORGED', label: 'See Released Software', href: '/forged' },
-      { type: 'OPEN_APP', label: 'Explore GEMS Research', href: '/projects/gems-training-grounds' }
+      { type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }
     ];
     return {
       goal: 'FIND_RELEASED_SOFTWARE',
       secondaryGoals: ['EXPLORE_AI_RESEARCH'],
-      entities: ['gems-training-grounds', 'codeforge'],
+      entities: ['codeforge'],
       requiredFacts,
       recommendedSources,
       recommendedActions: filterSafe(recommendedActions),
       tradeoffExplanation,
-      reason: 'AI + download conflict: GEMS is research; CodeForge is downloadable',
+      reason: 'AI + download conflict: no public AI research model is listed; current software releases are available through Forged',
       providerNeeded: false
     };
   }
@@ -141,7 +138,15 @@ export function buildTaskPlan(
     case 'DOWNLOAD_SOFTWARE': {
       const targetEntity = entities[0] || 'codeforge';
       const prod = product(targetEntity);
-      if (prod?.downloadUrl && !prod.comingSoon) {
+      if (prod?.distributionPaused) {
+        const ent = getKaylaEntity(targetEntity);
+        const name = ent?.name || prod.name;
+        requiredFacts = [`${name} downloads are temporarily paused`, 'Last version listed on this website'];
+        recommendedSources = [{ label: name, kind: 'project', route: `/projects/${targetEntity}` }];
+        recommendedActions = [{ type: 'OPEN_APP', label: `Check ${name} availability`, href: `/projects/${targetEntity}` }];
+        guidanceSteps = ['Do not install the previously listed CodeForge build from this website.', 'Check the CodeForge project page for an updated availability notice.'];
+        tradeoffExplanation = `${name} installer and portable downloads are paused while the release is updated.`;
+      } else if (prod?.downloadUrl && !prod.comingSoon) {
         requiredFacts = [`${prod.name} version ${prod.version}`, 'Download URL on GitHub Releases'];
         recommendedSources = [
           { label: 'Forged', kind: 'page', route: '/forged' },
@@ -174,19 +179,19 @@ export function buildTaskPlan(
     }
 
     case 'VIEW_RELEASE':
-      requiredFacts = ['CodeForge latest release v0.2.0', 'Forged catalogue'];
+      requiredFacts = ['CodeForge downloads are temporarily paused', 'Forged catalogue'];
       recommendedSources = [
         { label: 'Forged', kind: 'page', route: '/forged' },
         { label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }
       ];
       recommendedActions = [
         { type: 'OPEN_FORGED', label: 'View Releases on Forged', href: '/forged' },
-        { type: 'OPEN_DOWNLOAD', label: 'GitHub Releases', href: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest' }
+        { type: 'OPEN_APP', label: 'Check CodeForge availability', href: '/projects/codeforge' }
       ];
       break;
 
     case 'FIND_RELEASED_SOFTWARE':
-      requiredFacts = ['CodeForge is released and downloadable', 'ForgerEMS has technician preview', 'Available on Forged'];
+      requiredFacts = ['CodeForge downloads are temporarily paused', 'ForgerEMS has technician preview', 'Available on Forged'];
       recommendedSources = [{ label: 'Forged', kind: 'page', route: '/forged' }];
       recommendedActions = [
         { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' },
@@ -194,13 +199,13 @@ export function buildTaskPlan(
       ];
       guidanceSteps = [
         'Open Forged, which catalogs all software with public builds.',
-        'Choose the software you want to run (e.g. CodeForge).',
-        'Use the official download link to get the latest release.'
+        'Choose currently available software from the list.',
+        'CodeForge downloads will return after its release has been updated.'
       ];
       break;
 
     case 'FIND_DEVELOPER_PROJECTS':
-      requiredFacts = ['CodeForge is the developer IDE / coding tool', 'CodeForge is free and available'];
+      requiredFacts = ['CodeForge is the developer engineering platform', 'CodeForge downloads are temporarily paused'];
       recommendedSources = [
         { label: 'CodeForge', kind: 'project', route: '/projects/codeforge' },
         { label: 'Forged', kind: 'page', route: '/forged' }
@@ -218,20 +223,12 @@ export function buildTaskPlan(
 
     case 'EXPLORE_AI_RESEARCH':
     case 'LEARN_GEMS':
-      requiredFacts = ['GEMS Training Grounds', 'Topaz, Sapphire, Peridot, Garnet lineages', 'Evaluation framework'];
-      recommendedSources = [
-        { label: 'GEMS Training Grounds', kind: 'project', route: '/projects/gems-training-grounds' },
-        { label: 'Lab Notes', kind: 'page', route: '/notes' }
-      ];
+      requiredFacts = ['Current public project catalog', 'Published research availability'];
+      recommendedSources = [{ label: 'Projects', kind: 'page', route: '/projects' }];
       recommendedActions = [
-        { type: 'OPEN_APP', label: 'Explore GEMS', href: '/projects/gems-training-grounds' },
-        { type: 'OPEN_PAGE', label: 'Read Research Notes', href: '/notes' }
+        { type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }
       ];
-      guidanceSteps = [
-        'Open the GEMS Training Grounds project page.',
-        'Learn about the 4 specialized GEM lineages and Training Grounds.',
-        'Explore technical research notes in the FDS Notes section.'
-      ];
+      guidanceSteps = ['Review the current Projects page for public project status and availability.'];
       break;
 
     case 'FIND_COMMUNITY_PROJECT':
@@ -296,7 +293,7 @@ export function buildTaskPlan(
       break;
 
     case 'EXPLORE_PROJECTS':
-      requiredFacts = ['6 public projects across developer, AI, community, and publishing'];
+      requiredFacts = ['Current project catalog and availability'];
       recommendedSources = [{ label: 'Projects', kind: 'page', route: '/projects' }];
       recommendedActions = [
         { type: 'SHOW_APPS', label: 'View All Projects', href: '/projects' },
@@ -306,7 +303,7 @@ export function buildTaskPlan(
 
     case 'EXPLORE_FDS':
     default:
-      requiredFacts = ['FDS overview', 'Forged released software', 'GEMS AI research', 'Projects index'];
+      requiredFacts = ['FDS overview', 'Forged released software', 'Current projects index'];
       recommendedSources = [
         { label: 'Forged', kind: 'page', route: '/forged' },
         { label: 'Projects', kind: 'page', route: '/projects' }
@@ -318,8 +315,7 @@ export function buildTaskPlan(
       ];
       guidanceSteps = [
         'If you want software you can run right now, start with Forged (/forged).',
-        'If you are interested in AI foundation models and research, explore GEMS (/projects/gems-training-grounds).',
-        'If you want to see everything FDS is actively building, browse Projects (/projects).',
+        'Browse Projects (/projects) for the current portfolio and availability.',
         'If you want the mission and story behind FDS, read About (/about).'
       ];
       break;
@@ -333,15 +329,15 @@ export function buildTaskPlan(
     ) {
       recommendedSources = [
         { label: 'CodeForge', kind: 'project', route: '/projects/codeforge' },
-        { label: 'GEMS Training Grounds', kind: 'project', route: '/projects/gems-training-grounds' }
+        { label: 'Projects', kind: 'page', route: '/projects' }
       ];
       recommendedActions = [
         { type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' },
-        { type: 'OPEN_APP', label: 'Explore GEMS', href: '/projects/gems-training-grounds' }
+        { type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }
       ];
       guidanceSteps = [
         'For developer tooling: Check out CodeForge, FDS’s free-first developer workbench.',
-        'For AI research: Explore GEMS and Training Grounds to see FDS model lineages.'
+        'For current project status, review the Projects page.'
       ];
       providerNeeded = true;
     }

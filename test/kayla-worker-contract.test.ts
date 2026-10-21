@@ -171,7 +171,8 @@ describe('Kayla Worker - answers without a provider', () => {
     expect(response.status).toBe(200);
     const body = await response.json() as { answer: string; mode: string };
     expect(body.mode).toBe('local');
-    expect(body.answer.toLowerCase()).toContain('yes');
+    expect(body.answer.toLowerCase()).toContain('temporarily paused');
+    expect(body.answer.toLowerCase()).toContain('v0.2.0');
   });
 
   it('refuses an injection attempt before any routing', async () => {

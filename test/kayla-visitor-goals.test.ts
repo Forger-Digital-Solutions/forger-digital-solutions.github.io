@@ -83,8 +83,9 @@ describe('Kayla Visitor Goal Classification (Phase 11)', () => {
     expect(codeforgeFollowUps).toContain('See the release');
     expect(codeforgeFollowUps).toContain('How does it compare?');
 
-    const gemsFollowUps = getFollowUpSuggestions('What is GEMS?');
-    expect(gemsFollowUps).toContain('Is GEMS available to download?');
+    const retiredPortfolioFollowUps = getFollowUpSuggestions('What is GEMS?');
+    expect(retiredPortfolioFollowUps).toContain('Explore the projects');
+    expect(retiredPortfolioFollowUps.some((suggestion) => /GEMS|Training Grounds|KyraBlox/i.test(suggestion))).toBe(false);
 
     const supportFollowUps = getFollowUpSuggestions('How can I support FDS?');
     expect(supportFollowUps).toContain('What hardware can I donate?');

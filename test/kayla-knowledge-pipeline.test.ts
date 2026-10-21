@@ -17,8 +17,8 @@ import { kaylaKnowledge } from '../src/data/kayla/index';
 import { products } from '../src/data/products';
 
 describe('Kayla Knowledge Pipeline - Apps', () => {
-  it('has every current project plus the ForgerEMS product', () => {
-    const requiredIds = ['gems-training-grounds', 'kyrablox', 'kayla-ai-publisher', 'we-the-people', 'farmstand-finder', 'forgerems'];
+  it('has every current public project and product', () => {
+    const requiredIds = ['codeforge', 'forge-control', 'dead-trails-west', 'kayla-ai-publisher', 'we-the-people', 'farmstand-finder', 'forgerems'];
     for (const id of requiredIds) {
       const app = apps.find(a => a.id === id);
       expect(app).toBeDefined();
@@ -57,8 +57,10 @@ describe('Kayla Knowledge Pipeline - Apps', () => {
   });
 
   it('resolves aliases correctly', () => {
-    expect(resolveAppId('gems')).toBe('gems-training-grounds');
-    expect(resolveAppId('kyrablox')).toBe('kyrablox');
+    expect(resolveAppId('forge control')).toBe('forge-control');
+    expect(resolveAppId('dead trails west')).toBe('dead-trails-west');
+    expect(resolveAppId('gems')).toBeUndefined();
+    expect(resolveAppId('kyrablox')).toBeUndefined();
     expect(resolveAppId('kayla')).toBe('kayla-ai-publisher');
     expect(resolveAppId('we the people')).toBe('we-the-people');
     expect(resolveAppId('farmstand')).toBe('farmstand-finder');
@@ -93,7 +95,7 @@ describe('Kayla Knowledge Pipeline - Releases', () => {
   });
 
   it('release statuses are valid', () => {
-    const validStatuses = new Set(['stable', 'preview', 'beta', 'experimental']);
+    const validStatuses = new Set(['stable', 'preview', 'beta', 'experimental', 'paused']);
     for (const release of releases) {
       expect(validStatuses.has(release.status)).toBe(true);
     }
@@ -177,7 +179,7 @@ describe('Kayla Knowledge Pipeline - Product Relationships', () => {
   });
 
   it('getRelationshipsForApp returns correct relationships', () => {
-    const rels = getRelationshipsForApp('gems-training-grounds');
+    const rels = getRelationshipsForApp('forgerems');
     expect(rels.length).toBeGreaterThan(0);
   });
 });

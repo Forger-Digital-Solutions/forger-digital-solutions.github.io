@@ -1,6 +1,5 @@
 import { projects } from '../projects';
 import { products } from '../products';
-import { gems } from '../gems';
 
 /**
  * Entity resolution for Kayla.
@@ -13,7 +12,7 @@ import { gems } from '../gems';
  * distinctive rather than common English words.
  */
 
-export type KaylaEntityKind = 'project' | 'product' | 'gem' | 'page' | 'company' | 'assistant';
+export type KaylaEntityKind = 'project' | 'product' | 'page' | 'company' | 'assistant';
 
 export interface KaylaEntity {
   id: string;
@@ -94,8 +93,6 @@ export function similarity(a: string, b: string): number {
 /** Extra aliases people actually type. Deliberately distinctive: no generic nouns. */
 const EXTRA_ALIASES: Record<string, string[]> = {
   codeforge: ['code forge', 'codeforge cli', 'forgezero', 'forge zero'],
-  'gems-training-grounds': ['gems', 'gem', 'training grounds', 'training ground', 'gems training', 'synthetic intelligence', 'ai research', 'model research'],
-  kyrablox: ['kyra blox', 'kyrablocks', 'kyra'],
   'kayla-ai-publisher': ['kayla ai publisher', 'kayla publisher', 'ai publisher'],
   'we-the-people': ['we the people', 'wethepeople', 'wtp'],
   'farmstand-finder': ['farmstand finder', 'farm stand finder', 'farmstand', 'farm stand'],
@@ -139,16 +136,6 @@ function projectEntity(project: typeof projects[number]): KaylaEntity {
   };
 }
 
-function gemEntity(gem: typeof gems[number]): KaylaEntity {
-  return {
-    id: `gem-${gem.key}`,
-    kind: 'gem',
-    name: gem.name,
-    aliases: [gem.name, `${gem.name} gem`],
-    route: '/projects/gems-training-grounds'
-  };
-}
-
 export const entities: KaylaEntity[] = [
   COMPANY_ENTITY,
   ASSISTANT_ENTITY,
@@ -162,7 +149,6 @@ export const entities: KaylaEntity[] = [
       aliases: [product.name, product.slug, ...(EXTRA_ALIASES[product.slug] || [])],
       route: '/forged'
     })),
-  ...gems.map(gemEntity),
   ...PAGE_ENTITIES
 ];
 
@@ -305,4 +291,3 @@ export function resolveEntityWithContext(
 
   return undefined;
 }
-

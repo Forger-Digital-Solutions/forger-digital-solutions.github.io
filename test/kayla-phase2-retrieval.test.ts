@@ -15,10 +15,10 @@ describe('Kayla Phase 2 - Fuzzy Retrieval', () => {
     expect(results[0].doc.text.toLowerCase()).toContain('forgerems');
   });
 
-  it('handles KyraBlox typo', () => {
-    const results = retrieveKnowledge('Kyrablox');
+  it('handles Forge Control alias', () => {
+    const results = retrieveKnowledge('Forge Control');
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].doc.text.toLowerCase()).toContain('kyrablox');
+    expect(results[0].doc.text.toLowerCase()).toContain('forge control');
   });
 
   it('handles FarmStand Finder variations', () => {
@@ -42,7 +42,7 @@ describe('Kayla Phase 2 - Fuzzy Retrieval', () => {
   });
 
   it('resolves entity aliases', () => {
-    expect(resolveEntity('gems')).toBe('gems-training-grounds');
+    expect(resolveEntity('gems')).toBeUndefined();
     expect(resolveEntity('forger ems')).toBe('forgerems');
     expect(resolveEntity('ems')).toBe('forgerems');
   });
@@ -62,13 +62,13 @@ describe('Kayla Phase 2 - Fuzzy Retrieval', () => {
 
   it('boosts results based on page context', () => {
     const context: KaylaPageContext = {
-      route: '/projects/gems-training-grounds',
+      route: '/projects/forge-control',
       pageType: 'project',
-      entity: 'gems-training-grounds'
+      entity: 'forge-control'
     };
-    const results = retrieveKnowledge('gems training', context);
+    const results = retrieveKnowledge('forge control', context);
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].doc.entityId).toBe('gems-training-grounds');
+    expect(results[0].doc.entityId).toBe('forge-control');
   });
 });
 

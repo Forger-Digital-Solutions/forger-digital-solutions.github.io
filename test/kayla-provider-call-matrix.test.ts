@@ -86,7 +86,7 @@ describe('Adaptive routing matrix: settled facts never attempt the provider', ()
 describe('Adaptive routing matrix: synthesis questions reach the provider', () => {
   const synthesis = [
     'Compare CodeForge and Kayla AI Publisher.',
-    'How are GEMS and Training Grounds related?',
+    'Compare Dead Trails West and CodeForge.',
     'How do the FDS apps fit together?',
     'CodeForge vs ForgerEMS'
   ];

@@ -25,7 +25,7 @@ const ringTicks = (size: number) => {
   <div class="fds-ecosystem__scene-wrap">
     <svg class="fds-ecosystem__scene" viewBox="0 0 680 680" role="group" aria-labelledby="fds-ecosystem-svg-title fds-ecosystem-svg-desc">
       <title id="fds-ecosystem-svg-title">FDS ecosystem map</title>
-      <desc id="fds-ecosystem-svg-desc">Eight FDS projects travel on eight distinct product paths around a central FDS core. Three crossing electron planes echo the CodeForge emblem. CodeForge and ForgerEMS are on the Build layer, GEMS and Training Grounds on Intelligence, KyraBlox and Kayla Publisher on Create, and We The People Library plus FarmStand Finder on Knowledge. Each body links to its project's page.</desc>
+      <desc id="fds-ecosystem-svg-desc">Seven FDS projects travel on seven distinct product paths around a central FDS core. CodeForge, Forge Control, and ForgerEMS are engineering projects; Dead Trails West and Kayla Publisher are creative projects; We The People Library and FarmStand Finder focus on knowledge and local discovery. Each body links to its project's page.</desc>
       <defs>
         <radialGradient id="body-face" cx="36%" cy="30%" r="78%">
           <stop offset="0" stop-color="#2b3444" /><stop offset=".55" stop-color="#141b28" /><stop offset="1" stop-color="#070b13" />
@@ -280,7 +280,7 @@ const ringTicks = (size: number) => {
       link.classList.add('planet-link--selected');
       ecosystem.querySelectorAll('.electron-scaffold__plane').forEach((plane) => plane.classList.remove('is-active'));
       const category = (link.getAttribute('data-node-category') || '').toLowerCase();
-      const planeIndex = category.includes('intelligence') ? 'two' : category.includes('create') || category.includes('publishing') ? 'three' : 'one';
+      const planeIndex = category.includes('create') || category.includes('publishing') ? 'three' : 'one';
       ecosystem.querySelector(`[data-scaffold-plane="${planeIndex}"]`)?.classList.add('is-active');
       activeOrbit = orbit;
       activeLink = link;

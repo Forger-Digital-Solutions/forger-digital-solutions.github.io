@@ -1,0 +1,139 @@
+---
+interface Props {
+  id: string;
+  eyebrow: string;
+  title: string;
+  summary: string;
+  status: string;
+  statusTone: 'released' | 'preview' | 'development' | 'private' | 'planned';
+  href: string;
+  cta: string;
+  visual: 'codeforge' | 'control' | 'forge-aaa' | 'dead-trails-west' | 'forgerems';
+  points: string[];
+  reverse?: boolean;
+}
+
+const { id, eyebrow, title, summary, status, statusTone, href, cta, visual, points, reverse = false } = Astro.props;
+---
+
+<section class:list={['product-showcase', reverse && 'product-showcase--reverse']} id={id} aria-labelledby={`${id}-title`}>
+  <div class="product-showcase__copy">
+    <p class="product-showcase__eyebrow">{eyebrow}</p>
+    <h2 id={`${id}-title`}>{title}</h2>
+    <span class={`product-showcase__status product-showcase__status--${statusTone}`}>{status}</span>
+    <p class="product-showcase__summary">{summary}</p>
+    <ul class="product-showcase__points">
+      {points.map((point) => <li><span aria-hidden="true">+</span>{point}</li>)}
+    </ul>
+    <a class="product-showcase__link" href={href}>{cta}<span aria-hidden="true">→</span></a>
+  </div>
+
+  <div
+    class={`showcase-art showcase-art--${visual}`}
+    role={visual === 'codeforge' || visual === 'forgerems' ? undefined : 'img'}
+    aria-label={visual === 'codeforge'
+      ? 'CodeForge v0.2.0 product interface screenshot'
+      : visual === 'forgerems'
+        ? 'ForgerEMS product presentation image; see the dedicated page for the video demonstration'
+        : `${title} illustrative design visualization, not a product screenshot`}
+  >
+    {visual === 'codeforge' && (
+      <figure class="showcase-art__image">
+        <img src="/images/codeforge/codeforge-workspace-v0-2.png" alt="CodeForge v0.2.0 desktop workspace with repository context, task navigation, verification tabs, and free-model routing controls." loading="lazy" decoding="async" width="1600" height="900" />
+        <figcaption>CodeForge v0.2.0 · released product interface</figcaption>
+      </figure>
+    )}
+    {visual === 'forgerems' && (
+      <figure class="showcase-art__image">
+        <img src="/images/forgerems/forgerems-preview-poster.jpg" alt="ForgerEMS public-preview video poster." loading="lazy" decoding="async" width="1280" height="720" />
+        <figcaption>ForgerEMS preview media · current release remains a preview</figcaption>
+      </figure>
+    )}
+    {visual === 'control' && (
+      <div class="control-diagram">
+        <p class="showcase-art__micro">INTENDED WORKFLOW <span>· DEVELOPMENT DIRECTION</span></p>
+        <div class="control-diagram__flow" aria-label="Planned coordination workflow">
+          <span>Discover eligible agents</span><i aria-hidden="true">↓</i>
+          <span>Decompose a substantial task</span><i aria-hidden="true">↓</i>
+          <span>Distribute safe independent work</span><i aria-hidden="true">↓</i>
+          <span>Track, rebalance, verify, resume</span>
+        </div>
+        <div class="control-diagram__providers" aria-label="Potential integrations, not verified as working">
+          <span>Potential integrations · unverified</span>
+          <div>{['Codex', 'Claude Code', 'GitHub Copilot', 'Antigravity'].map((name) => <b>{name}</b>)}</div>
+        </div>
+      </div>
+    )}
+    {visual === 'forge-aaa' && (
+      <div class="aaa-diagram">
+        <p class="showcase-art__micro">CODEFORGE ARCHITECTURE <span>· INTENDED GAME-DEVELOPMENT DIRECTION</span></p>
+        <div class="aaa-diagram__hub"><strong>CodeForge</strong><small>shared engineering runtime</small></div>
+        <div class="aaa-diagram__connectors" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="aaa-diagram__tools">
+          <div><b>Unreal Engine</b><small>game systems</small></div>
+          <div><b>Blender</b><small>3D assets & animation</small></div>
+          <div><b>Validation</b><small>tests & performance</small></div>
+        </div>
+        <p class="aaa-diagram__note">A development direction, not a claim of complete-game generation or shipped integration.</p>
+      </div>
+    )}
+    {visual === 'dead-trails-west' && (
+      <div class="western-art">
+        <div class="western-art__sky"></div><div class="western-art__ridge western-art__ridge--far"></div><div class="western-art__ridge western-art__ridge--near"></div>
+        <div class="western-art__town"><i></i><i></i><i></i><i></i><i></i></div>
+        <p class="western-art__stamp"><strong>SUNDANCE</strong><span>NEW JERSEY · 1882</span></p>
+        <p class="western-art__caption">Atmospheric setting study · illustrative CSS, not gameplay footage</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .product-showcase { position: relative; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: clamp(1.5rem, 5vw, 4.5rem); align-items: center; padding: clamp(2.5rem, 6vw, 5rem) 0; }
+  .product-showcase + .product-showcase { border-top: 1px solid var(--color-border); }
+  .product-showcase--reverse { grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); }
+  .product-showcase--reverse .product-showcase__copy { order: 2; }
+  .product-showcase--reverse .showcase-art { order: 1; }
+  .product-showcase__copy { min-width: 0; }
+  .product-showcase__eyebrow, .showcase-art__micro { margin: 0 0 .7rem; color: #92b1ff; font: 700 .64rem/1.5 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .product-showcase__copy h2 { margin: 0; color: var(--color-text); font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.02; letter-spacing: -.05em; text-wrap: balance; }
+  .product-showcase__status { display: inline-flex; margin-top: .9rem; padding: .33rem .55rem; border: 1px solid currentColor; border-radius: 999px; font: 700 .58rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .product-showcase__status--released { color: #72d5a1; }.product-showcase__status--preview { color: #8eb0ff; }.product-showcase__status--development { color: #7acdc8; }.product-showcase__status--private { color: #d1a483; }.product-showcase__status--planned { color: #c3a9eb; }
+  .product-showcase__summary { max-width: 39rem; margin: .8rem 0 0; color: var(--color-text-muted); font-size: 1rem; line-height: 1.7; }
+  .product-showcase__points { display: grid; gap: .45rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+  .product-showcase__points li { display: flex; gap: .55rem; align-items: baseline; color: var(--color-text-muted); font-size: .84rem; line-height: 1.5; }
+  .product-showcase__points li > span { flex: 0 0 auto; color: #8eb0ff; font: 700 .75rem/1 var(--font-mono); }
+  .product-showcase__link { display: inline-flex; gap: .55rem; align-items: center; margin-top: 1.3rem; color: #b5caff; font-size: .86rem; font-weight: 750; }
+  .product-showcase__link:hover { color: white; }.product-showcase__link span { transition: transform .2s ease; }.product-showcase__link:hover span { transform: translateX(.2rem); }
+  .showcase-art { position: relative; min-width: 0; min-height: 18rem; overflow: hidden; border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl); background: linear-gradient(145deg, #101b2c, #080c12 74%); box-shadow: var(--shadow-panel), inset 0 1px rgba(255,255,255,.06); }
+  .showcase-art__image { margin: 0; }.showcase-art__image img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }.showcase-art__image figcaption { padding: .65rem .8rem; border-top: 1px solid var(--color-border); color: var(--color-text-subtle); font: 600 .58rem/1.4 var(--font-mono); letter-spacing: .04em; }
+  .showcase-art__micro { margin: 0; font-size: .55rem; }.showcase-art__micro span { color: var(--color-text-subtle); }
+  .control-diagram, .aaa-diagram { position: relative; display: flex; min-height: 18rem; flex-direction: column; justify-content: center; padding: clamp(1rem, 3vw, 2rem); background-image: linear-gradient(rgba(106,149,218,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(106,149,218,.06) 1px, transparent 1px); background-size: 26px 26px; }
+  .control-diagram__flow { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .4rem; margin-top: 1.2rem; }
+  .control-diagram__flow span { display: flex; min-height: 5rem; align-items: center; justify-content: center; padding: .6rem; border: 1px solid rgba(112,195,190,.3); border-radius: var(--radius-sm); background: rgba(14,32,38,.84); color: #d7e8e8; text-align: center; font-size: .7rem; font-weight: 700; line-height: 1.4; }
+  .control-diagram__flow i { display: none; }
+  .control-diagram__providers { margin-top: 1.1rem; padding-top: .8rem; border-top: 1px solid var(--color-border); }
+  .control-diagram__providers > span { color: var(--color-text-subtle); font: 650 .55rem/1.4 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .control-diagram__providers > div { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
+  .control-diagram__providers b { padding: .3rem .45rem; border: 1px dashed var(--color-border-strong); border-radius: 999px; color: var(--color-text-muted); font-size: .58rem; font-weight: 600; }
+  .aaa-diagram { background-image: radial-gradient(circle at 50% 45%, rgba(47,107,255,.2), transparent 45%), linear-gradient(rgba(106,149,218,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(106,149,218,.05) 1px, transparent 1px); }
+  .aaa-diagram__hub { display: grid; justify-items: center; margin: 1rem auto 0; padding: .7rem 1.1rem; border: 1px solid rgba(119,159,255,.48); border-radius: var(--radius-md); background: #101d35; box-shadow: 0 0 35px rgba(53,102,204,.18); text-align: center; }
+  .aaa-diagram__hub strong { font-size: .86rem; }.aaa-diagram__hub small { margin-top: .15rem; color: var(--color-text-muted); font-size: .58rem; }
+  .aaa-diagram__connectors { display: flex; justify-content: space-around; height: 1.1rem; margin: 0 16%; border-bottom: 1px solid rgba(119,159,255,.35); }.aaa-diagram__connectors span { width: 1px; height: 100%; background: rgba(119,159,255,.35); }
+  .aaa-diagram__tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45rem; }
+  .aaa-diagram__tools > div { display: grid; justify-items: center; gap: .25rem; padding: .65rem .3rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: rgba(8,13,21,.87); text-align: center; }
+  .aaa-diagram__tools b { font-size: .66rem; }.aaa-diagram__tools small { color: var(--color-text-subtle); font-size: .55rem; }
+  .aaa-diagram__note { margin: .7rem 0 0; color: var(--color-text-subtle); font-size: .6rem; line-height: 1.5; text-align: center; }
+  .western-art { position: relative; min-height: 21rem; overflow: hidden; background: linear-gradient(180deg, #122139, #536477 48%, #c39165 49%, #593c32); }
+  .western-art__sky { position: absolute; inset: 0; background: radial-gradient(ellipse at 76% 26%, rgba(250,214,164,.28), transparent 22%), linear-gradient(180deg, rgba(4,12,25,.15), transparent 48%); }
+  .western-art__ridge { position: absolute; right: -8%; bottom: 24%; left: -8%; height: 46%; clip-path: polygon(0 76%, 18% 38%, 31% 65%, 49% 21%, 64% 59%, 79% 33%, 100% 74%, 100% 100%, 0 100%); }
+  .western-art__ridge--far { background: #333d48; opacity: .9; }.western-art__ridge--near { bottom: 9%; height: 35%; background: #171d22; clip-path: polygon(0 64%, 21% 30%, 37% 70%, 56% 23%, 73% 64%, 89% 38%, 100% 69%, 100% 100%, 0 100%); }
+  .western-art__town { position: absolute; right: 10%; bottom: 20%; left: 18%; display: flex; justify-content: space-around; align-items: end; height: 5rem; border-bottom: 1px solid rgba(247,208,159,.45); }
+  .western-art__town i { display: block; width: 17%; height: 55%; border: 1px solid rgba(240,202,157,.22); background: linear-gradient(160deg, #55443a, #221e1b); clip-path: polygon(0 26%, 50% 0, 100% 26%, 100% 100%, 0 100%); }
+  .western-art__town i:nth-child(2) { height: 78%; }.western-art__town i:nth-child(4) { height: 66%; }
+  .western-art__stamp { position: absolute; top: 1.1rem; left: 1.1rem; display: grid; gap: .25rem; margin: 0; color: #f1ddc3; text-shadow: 0 2px 16px rgba(0,0,0,.75); }.western-art__stamp strong { font: 700 clamp(1rem, 2.5vw, 1.5rem)/1 var(--font-mono); letter-spacing: .12em; }.western-art__stamp span { font: 650 .58rem/1 var(--font-mono); letter-spacing: .12em; }
+  .western-art__caption { position: absolute; right: .8rem; bottom: .65rem; left: .8rem; margin: 0; color: #f2e9db; font: 600 .55rem/1.4 var(--font-mono); text-shadow: 0 1px 6px #000; }
+  @media (max-width: 760px) { .product-showcase, .product-showcase--reverse { grid-template-columns: 1fr; gap: 1.3rem; }.product-showcase--reverse .product-showcase__copy, .product-showcase--reverse .showcase-art { order: initial; }.showcase-art { min-height: 0; }.control-diagram, .aaa-diagram { min-height: 16rem; }.control-diagram__flow { grid-template-columns: 1fr; gap: .3rem; }.control-diagram__flow span { min-height: auto; padding: .5rem; }.control-diagram__flow i { display: block; color: var(--color-text-subtle); text-align: center; font-style: normal; font-size: .7rem; line-height: .8; } }
+  @media (max-width: 430px) { .product-showcase { padding: 2.1rem 0; }.aaa-diagram__tools { gap: .25rem; }.aaa-diagram__tools > div { padding-inline: .15rem; }.aaa-diagram__tools b { font-size: .57rem; }.aaa-diagram__tools small { font-size: .5rem; }.western-art__caption { right: 4rem; } }
+  @media (prefers-reduced-motion: reduce) { .product-showcase__link span { transition: none; } }
+</style>

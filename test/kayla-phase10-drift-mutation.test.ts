@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { runDriftCheck, formatActionableDriftMessage } from '../src/data/kayla/drift-detector';
 import { projects } from '../src/data/projects';
 import { products } from '../src/data/products';
-import { gems } from '../src/data/gems';
 import { statusMeta } from '../src/data/status';
 import { canonicalRelations, deniedRelations } from '../src/data/kayla/semantic-relations';
 import { releases } from '../src/data/kayla/releases';
@@ -14,16 +13,16 @@ import { sha256 } from '../src/lib/kayla/hash';
 describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
   it('detects a mutated/stale release version', () => {
     const mutatedProducts = products.map(p =>
-      p.slug === 'codeforge' ? { ...p, version: 'v0.9.9' } : p
+      p.slug === 'forgerems' ? { ...p, version: 'v0.9.9' } : p
     );
 
     const report = runDriftCheck({ products: mutatedProducts });
     expect(report.passed).toBe(false);
     const issue = report.errors.find(e => e.code === 'VERSION_METADATA_MISMATCH');
     expect(issue).toBeDefined();
-    expect(issue?.entity).toBe('codeforge');
+    expect(issue?.entity).toBe('forgerems');
     expect(issue?.expected).toBe('v0.9.9');
-    expect(issue?.actual).toBe('v0.2.0');
+    expect(issue?.actual).toBe('v1.2.4-preview.1');
 
     const formatted = formatActionableDriftMessage(issue!);
     expect(formatted).toContain('KAYLA_CANONICAL_DRIFT');
@@ -33,14 +32,14 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
 
   it('detects an unknown or typo project status', () => {
     const mutatedProjects = projects.map(p =>
-      p.slug === 'kyrablox' ? { ...p, status: 'IN_PROGRESS' as any } : p
+      p.slug === 'dead-trails-west' ? { ...p, status: 'IN_PROGRESS' as any } : p
     );
 
     const report = runDriftCheck({ projects: mutatedProjects });
     expect(report.passed).toBe(false);
     const issue = report.errors.find(e => e.code === 'UNKNOWN_PROJECT_STATUS');
     expect(issue).toBeDefined();
-    expect(issue?.entity).toBe('kyrablox');
+    expect(issue?.entity).toBe('dead-trails-west');
     expect(issue?.actual).toBe('IN_PROGRESS');
   });
 
@@ -58,7 +57,7 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
 
   it('detects when a project marked RELEASED has no download URL', () => {
     const mutatedProducts = products.map(p =>
-      p.slug === 'codeforge' ? { ...p, downloadUrl: undefined } : p
+      p.slug === 'codeforge' ? { ...p, downloadUrl: undefined, distributionPaused: false } : p
     );
 
     const report = runDriftCheck({ products: mutatedProducts });
@@ -68,16 +67,16 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
     expect(issue?.entity).toBe('codeforge');
   });
 
-  it('detects when a RESEARCH project is improperly marked downloadable', () => {
+  it('detects when a PRIVATE DEVELOPMENT project is improperly marked downloadable', () => {
     const mutatedProducts = [
       ...products,
       {
-        name: 'GEMS Download',
-        slug: 'gems-training-grounds',
-        tagline: 'Research',
-        description: 'Research',
-        category: 'AI',
-        platform: ['Linux'],
+        name: 'Dead Trails West Download',
+        slug: 'dead-trails-west',
+        tagline: 'Private game development',
+        description: 'Private game development',
+        category: 'Game',
+        platform: ['Windows'],
         status: 'released' as const,
         pricingModel: 'free' as const,
         downloadUrl: 'https://github.com/Forger-Digital-Solutions/fake-download'
@@ -86,9 +85,9 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
 
     const report = runDriftCheck({ products: mutatedProducts });
     expect(report.passed).toBe(false);
-    const issue = report.errors.find(e => e.code === 'RESEARCH_PROJECT_CANNOT_BE_DOWNLOADABLE');
+    const issue = report.errors.find(e => e.code === 'PRIVATE_DEV_CANNOT_BE_DOWNLOADABLE');
     expect(issue).toBeDefined();
-    expect(issue?.entity).toBe('gems-training-grounds');
+    expect(issue?.entity).toBe('dead-trails-west');
   });
 
   it('detects when a PRIVATE DEVELOPMENT project has a public download route', () => {
@@ -133,13 +132,13 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
   });
 
   it('detects a collision between allowed and denied relations', () => {
-    // Inject "gem-sapphire powers codeforge" into canonical relations (which is denied)
+    const denied = deniedRelations[0];
     const mutatedRelations = [
       ...canonicalRelations,
       {
-        subject: 'gem-sapphire',
-        predicate: 'powers' as const,
-        object: 'codeforge',
+        subject: denied.subject,
+        predicate: denied.predicate,
+        object: denied.object,
         source: 'test assertion'
       }
     ];
@@ -148,29 +147,24 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
     expect(report.passed).toBe(false);
     const issue = report.errors.find(e => e.code === 'CONTRADICTORY_RELATION');
     expect(issue).toBeDefined();
-    expect(issue?.message).toContain('powers');
+    expect(issue?.message).toContain(denied.predicate);
   });
 
   it('detects a missing retrieval document for a public project', () => {
     const allDocs = getAllDocuments();
-    // Filter out all documents referencing kyrablox
-    const mutatedDocs = allDocs.filter(d => d.entityId !== 'kyrablox' && d.id !== 'app-kyrablox');
+    // Filter out all documents referencing Dead Trails West
+    const mutatedDocs = allDocs.filter(d => d.entityId !== 'dead-trails-west' && d.id !== 'app-dead-trails-west');
 
     const report = runDriftCheck({ retrievalDocs: mutatedDocs });
     expect(report.passed).toBe(false);
-    const issue = report.errors.find(e => e.code === 'MISSING_RETRIEVAL_DOCUMENT' && e.entity === 'kyrablox');
+    const issue = report.errors.find(e => e.code === 'MISSING_RETRIEVAL_DOCUMENT' && e.entity === 'dead-trails-west');
     expect(issue).toBeDefined();
   });
 
-  it('detects a missing retrieval document for a GEMS lineage', () => {
+  it('does not require public retrieval documents for retired GEMS lineages', () => {
     const allDocs = getAllDocuments();
-    // Filter out all documents referencing gem-garnet
-    const mutatedDocs = allDocs.filter(d => d.entityId !== 'gem-garnet' && d.id !== 'gem-garnet');
-
-    const report = runDriftCheck({ retrievalDocs: mutatedDocs });
-    expect(report.passed).toBe(false);
-    const issue = report.errors.find(e => e.code === 'MISSING_RETRIEVAL_DOCUMENT' && e.entity === 'gem-garnet');
-    expect(issue).toBeDefined();
+    expect(allDocs.some(d => d.entityId?.startsWith('gem-') || d.id.startsWith('gem-'))).toBe(false);
+    expect(runDriftCheck().passed).toBe(true);
   });
 
   it('disambiguates ambiguous alias "Kayla" using query keywords, page context, and history', () => {

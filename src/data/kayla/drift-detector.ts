@@ -239,7 +239,7 @@ export function runDriftCheck(options: DriftDetectorOptions = {}): DriftReport {
       });
     }
 
-    if (p.status === 'RELEASED' && !prod?.downloadUrl) {
+    if (p.status === 'RELEASED' && !prod?.downloadUrl && !prod?.distributionPaused) {
       addError({
         code: 'RELEASED_PROJECT_MISSING_DOWNLOAD_URL',
         entity: p.slug,
@@ -395,22 +395,6 @@ export function runDriftCheck(options: DriftDetectorOptions = {}): DriftReport {
         actual: 'none found',
         message: `Public project ${p.name} has no retrieval document in KNOWLEDGE_BASE`,
         action: 'Ensure retrieval.ts indexes all projects dynamically from apps'
-      });
-    }
-  }
-
-  for (const g of gems) {
-    const gemId = `gem-${g.key}`;
-    const hasDoc = retrievalDocs.some(d => d.id === gemId || d.entityId === gemId);
-    if (!hasDoc) {
-      addError({
-        code: 'MISSING_RETRIEVAL_DOCUMENT',
-        entity: gemId,
-        field: 'retrieval',
-        expected: `at least one retrieval document for GEMS lineage ${g.name}`,
-        actual: 'none found',
-        message: `GEMS lineage ${g.name} has no retrieval document in KNOWLEDGE_BASE`,
-        action: 'Ensure retrieval.ts indexes all GEMS lineages from gems.ts'
       });
     }
   }

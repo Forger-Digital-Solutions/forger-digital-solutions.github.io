@@ -98,7 +98,7 @@ export function verifyGroundedSlots(text: string, packet: GroundingPacket): { ok
       for (const id of ids) {
         const record = getCanonicalEntity(id);
         if (!record || ['company', 'page', 'assistant'].includes(record.kind)) continue;
-        if (!record.downloadable && /\b(downloadable|released|publicly available|available (?:now|today|for download)|you can (?:download|install|use)|free to (?:use|download)|public (?:beta|preview)|production ready)\b/i.test(sentence)) kinds.add('availability');
+        if (!record.downloadable && /\b(downloadable|publicly available|available (?:now|today|for download)|you can (?:download|install|use)|free to (?:use|download)|public (?:beta|preview)|production ready)\b/i.test(sentence)) kinds.add('availability');
         if (!record.downloadable && /\b(?:is|will be|costs?)\s+(?:completely\s+)?free\b/i.test(sentence)) kinds.add('price');
         for (const status of ['private development', 'active development', 'research', 'released', 'concept']) {
           if (new RegExp(`\\b(?:is|remains|status is|currently in|still in)\\s+(?:in\\s+)?${status}\\b`, 'i').test(plain) && !authority.includes(status)) kinds.add('status');
