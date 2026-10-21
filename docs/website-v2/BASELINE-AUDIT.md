@@ -40,10 +40,9 @@ The V2 pull request is not a production deployment. Keep the Pages workflow, art
 
 Release-readiness review:
 
-- The latest completed GitHub Actions run at review time tested commit `08773c4ef12698c3745f627e313239e179943b92` on `feature/fds-website-v2`, PR #3, base `main`.
-- A subsequent narrow source follow-up removes remaining unsupported Dead Trails West simulation-verification wording from the FAQ, canonical manifest, technology map, lab page, and product detail; local validation passes and a regression test guards the canonical/public copy.
+- The latest source commit, `b081d4ccd15d3d0ef708f434e576607e7768694d`, is on `feature/fds-website-v2`, PR #3, base `main`. It removes unsupported Dead Trails West simulation-verification wording from the FAQ, canonical manifest, technology map, lab page, and product detail; a regression test guards the canonical/public copy.
 - GitHub Actions run `39619113254` tested the preceding commit `cdcb33fa961b24c0e9dd19a1b363d4e04c605f77`. Its workflow/check suite concluded success, but the `Playwright Browser Certification` check-run remained `in_progress` after its test, artifact-upload, and cleanup steps reported success. This run does not validate commit `08773c4`.
-- Follow-up run `39624480634` tested `08773c4` and all security, build/Kayla, and Playwright checks passed; Pages deployment was skipped. This cleared the PR's current check state (`CLEAN`). The older `39619113254` check-run discrepancy remains historical only.
-- The narrow source follow-up is newer than `08773c4`; its own PR Actions run must pass before owner approval.
+- Follow-up run `39624480634` tested `08773c4` and all security, build/Kayla, and Playwright checks passed; Pages deployment was skipped. The PR check state was `CLEAN` at that head. The older `39619113254` check-run discrepancy remains historical only.
+- Run [`39627371915`](https://github.com/Forger-Digital-Solutions/forger-digital-solutions.github.io/actions/runs/39627371915) tested exact source commit `b081d4c`; Dependency Security Gate, Unit/Kayla/Build, and Playwright all passed, and GitHub Pages deployment was skipped. The exact-head PR check rollup was `CLEAN`. The Playwright job completed successfully in 7m46s; it was running normally, not left stale or unresolved.
 - Repository API inspection returned no `main` branch protection and no repository/inherited rulesets. The organization ruleset endpoint was unavailable; do not infer organization-level policy from that response.
 - No V2 deployment, Pages setting change, DNS change, or live-domain verification is claimed.
