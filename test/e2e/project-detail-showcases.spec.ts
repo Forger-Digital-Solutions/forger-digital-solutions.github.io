@@ -61,6 +61,12 @@ test.describe('Product detail showcase behavior', () => {
     }
   });
 
+  test('Dead Trails West does not present its simulation as verified', async ({ page }) => {
+    await page.goto('/projects/dead-trails-west');
+    await expect(page.locator('main')).toContainText('The persistent-world simulation has not been independently verified');
+    await expect(page.locator('main')).not.toContainText('partially verified');
+  });
+
   test('detail-page illustrations have no serious accessibility violations', async ({ page }) => {
     for (const product of productPages) {
       await page.goto(product.route);
