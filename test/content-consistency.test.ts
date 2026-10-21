@@ -129,7 +129,12 @@ describe('content consistency guards (Phase 28)', () => {
 
   it('gives every download an appropriate public status', () => {
     for (const product of products) {
-      expect(product.downloadUrl, `${product.slug} download must exist`).toBeDefined();
+      if (product.distributionPaused) {
+        expect(product.downloadUrl, `${product.slug} paused download must be withheld`).toBeUndefined();
+        expect(product.distributionNotice).toContain('temporarily paused');
+      } else {
+        expect(product.downloadUrl, `${product.slug} download must exist`).toBeDefined();
+      }
       expect(['released', 'public-beta']).toContain(product.status);
     }
   });

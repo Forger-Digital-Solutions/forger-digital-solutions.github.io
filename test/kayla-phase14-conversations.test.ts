@@ -45,7 +45,7 @@ describe('context bounds and isolation', () => {
       const result = await handleKaylaChat({ message: 'Can I download it?', history }, endpoint());
       const response = result.response as KaylaChatResponse;
       expect(response.answer).toContain(name);
-      expect(response.actions?.[0]?.href).toBe(i % 2 ? '/projects/forge-control' : '/forged');
+      expect(response.actions?.[0]?.href).toBe(i % 2 ? '/projects/forge-control' : '/projects/codeforge');
     }));
   });
   it('forgets entities outside the bounded window', () => {
@@ -102,7 +102,7 @@ describe('grounded slot guard', () => {
     id: 'codeforge',
     sourceType: 'canonical',
     title: 'CodeForge',
-    snippet: 'CodeForge is a released, downloadable developer tool for Windows, with public documentation.',
+    snippet: 'CodeForge is a released developer tool for Windows. Its last website-listed version was v0.2.0; downloads are temporarily paused.',
     route: '/projects/codeforge'
   }]);
   it.each([

@@ -50,7 +50,7 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
   if (q.includes('what is codeforge') || q === 'codeforge') {
     const app = apps.find(a => a.id === 'codeforge');
     return {
-      text: `${app?.name || 'CodeForge'} is a released free-first autonomous software-engineering platform for Windows, CLI, and editor work. It inspects repositories, plans changes, uses controlled tools, runs verification, and refuses silent paid or local-model fallback through ForgeZero.`,
+      text: `${app?.name || 'CodeForge'} is a free-first autonomous software-engineering platform for Windows, CLI, and editor work. It inspects repositories, plans changes, uses controlled tools, runs verification, and refuses silent paid or local-model fallback through ForgeZero. Downloads are temporarily paused while its release is updated.`,
       actions: [{ type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' }],
       sources: ['app-codeforge', 'release-codeforge']
     };
@@ -194,9 +194,15 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
     const appId = q.includes('forgerems') ? 'forgerems' : q.includes('codeforge') ? 'codeforge' : context?.entity;
     const release = appId ? releases.find(r => r.appId === appId) : releases[0];
     if (release) {
+      const download = release.downloads?.[0];
+      const isPaused = release.status === 'paused';
       return {
-        text: `The current version is ${release.version} (${release.status}).`,
-        actions: [{ type: 'OPEN_DOWNLOAD', label: 'Download', href: release.downloads?.[0] || forgerems.download! }],
+        text: isPaused
+          ? `The last version listed on this website was ${release.version}. CodeForge downloads are temporarily paused while its release is updated.`
+          : `The current version is ${release.version} (${release.status}).`,
+        actions: download
+          ? [{ type: 'OPEN_DOWNLOAD', label: 'Download', href: download }]
+          : [{ type: 'OPEN_APP', label: 'Check CodeForge availability', href: '/projects/codeforge' }],
         sources: [`release-${release.appId}`]
       };
     }
@@ -253,7 +259,7 @@ function recommendApp(query: string): { text: string; title?: string; actions?: 
   }
 
   return {
-    text: 'It depends on the job. CodeForge is the released engineering platform; Forge Control and Dead Trails West are in development. Kayla AI Publisher supports creative work, FarmStand Finder local food discovery, We The People civic information, and ForgerEMS technician workflows. The Projects page lists current status and availability.',
+    text: 'It depends on the job. CodeForge is the released engineering platform, but its downloads are temporarily paused; Forge Control and Dead Trails West are in development. Kayla AI Publisher supports creative work, FarmStand Finder local food discovery, We The People civic information, and ForgerEMS technician workflows. The Projects page lists current status and availability.',
     actions: [{ type: 'OPEN_PAGE', label: 'View Projects', href: '/projects' }],
     sources: apps.map(a => `app-${a.id}`)
   };
@@ -292,7 +298,7 @@ function synthesizeEcosystem(): { text: string; title?: string; actions?: KaylaS
   return {
     text: `Forger Digital Solutions (FDS) is an independent AI and software company.\n\n` +
       `Current products:\n` +
-      `• CodeForge — released free-first autonomous software engineering for Windows.\n` +
+      `• CodeForge — released free-first autonomous software engineering for Windows; downloads are temporarily paused.\n` +
       `• Forge AAA — a CodeForge architecture workstream, not a separate product.\n` +
       `• Forge Control — active development; no public release or feature set is claimed here.\n` +
       `• Dead Trails West — private Unreal Engine 4.27 game development, with no public build.\n` +

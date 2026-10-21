@@ -7,7 +7,7 @@ import { siteConfig } from '../../config/site';
 
 <BaseLayout
   title="CodeForge Plans"
-  description="CodeForge Free is available now. Expanded commercial plans are in development; pricing and tiers are not published yet."
+  description="CodeForge downloads are temporarily paused while its release is updated. Expanded commercial plans are in development."
   noindex={true}
 >
   <div class="upgrade-page">
@@ -15,7 +15,7 @@ import { siteConfig } from '../../config/site';
       <SectionHeader
         eyebrow="CodeForge // Plans"
         title="CodeForge Plans & Availability"
-        description="CodeForge Free is available now. Expanded commercial plans are in development — final tier names, prices, limits, and billing terms will be published only when approved."
+        description="CodeForge downloads are temporarily paused while its release is updated. Expanded commercial plans are in development — final tier names, prices, limits, and billing terms will be published only when approved."
         align="center"
         headingLevel="h1"
       />
@@ -25,7 +25,7 @@ import { siteConfig } from '../../config/site';
         <p class="architecture-notice__text">
           <strong>ForgeZero Assurance:</strong> CodeForge Free is engineered to operate at zero cost. It never
           routes to paid inference, never runs local LLMs, and refuses unverified or unknown-cost routes instead of
-          falling back silently. Upgrading is purely optional and is not required to use the public release.
+          falling back silently. Upgrading is purely optional. CodeForge downloads are temporarily paused while the release is updated.
         </p>
       </div>
 
@@ -59,6 +59,8 @@ import { siteConfig } from '../../config/site';
                 <a href={plan.ctaHref} class="btn btn-primary plan-card__btn">
                   {plan.ctaText} <span aria-hidden="true">↓</span>
                 </a>
+              ) : plan.ctaAction === 'distribution_paused' ? (
+                <p class="plan-card__availability" role="status">{plan.ctaText}</p>
               ) : (
                 <button
                   type="button"
@@ -125,9 +127,9 @@ import { siteConfig } from '../../config/site';
           <div class="faq-item">
             <h3 class="faq-item__q">Where can I get CodeForge now?</h3>
             <p class="faq-item__a">
-              CodeForge Free v0.2.0 is available on the <a href="/forged">Releases</a> page and via
-              <a href="https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest" target="_blank" rel="noopener noreferrer">GitHub Releases</a>,
-              with SHA-256 checksums published alongside each build.
+              CodeForge downloads are temporarily paused while the release is updated. The last version listed
+              on this website was v0.2.0; check the <a href="/projects/codeforge">CodeForge project page</a> for
+              current availability.
             </p>
           </div>
         </div>

@@ -13,7 +13,8 @@ describe('CodeForge Commerce & Upgrade Architecture', () => {
     expect(freePlan?.displayPrice).toBe('$0');
     expect(freePlan?.status).toBe('active');
     expect(freePlan?.checkoutEnabled).toBe(true);
-    expect(freePlan?.ctaAction).toBe('download');
+    expect(freePlan?.ctaAction).toBe('distribution_paused');
+    expect(freePlan?.ctaHref).toBeUndefined();
     expect(isPlanCheckoutActive('free')).toBe(false); // $0 does not invoke checkout
 
     const expandedPlan = getPlanById('expanded');
@@ -24,6 +25,11 @@ describe('CodeForge Commerce & Upgrade Architecture', () => {
     expect(expandedPlan?.checkoutEnabled).toBe(false);
     expect(expandedPlan?.ctaAction).toBe('in_development_notice');
     expect(isPlanCheckoutActive('expanded')).toBe(false);
+  });
+
+  it('does not expose the stale CodeForge release from the availability page', () => {
+    expect(getPlanById('free')?.ctaText).toBe('Downloads Temporarily Paused');
+    expect(upgradePage).not.toContain('CodeForge/releases/latest');
   });
 
   it('keeps the commercial presentation intentionally simple (no obsolete plan taxonomy)', () => {

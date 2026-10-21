@@ -146,7 +146,8 @@ describe('History is bounded', () => {
       content: 'Tell me about CodeForge.'
     }));
     const { body } = await ask('Can I download it?', history);
-    expect(body.answer.toLowerCase()).toContain('yes');
+    expect(body.answer.toLowerCase()).toContain('temporarily paused');
+    expect(body.answer.toLowerCase()).toContain('v0.2.0');
   });
 
   it('rejects an oversized payload outright', () => {

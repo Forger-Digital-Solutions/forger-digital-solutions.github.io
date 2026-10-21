@@ -28,7 +28,9 @@ describe('FDS Software Distribution Architecture', () => {
     expect(codeforge?.version).toBe('v0.2.0');
     expect(codeforge?.status).toBe('released');
     expect(codeforge?.pricingModel).toBe('free');
-    expect(codeforge?.downloadUrl).toBe('https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest');
+    expect(codeforge?.downloadUrl).toBeUndefined();
+    expect(codeforge?.distributionPaused).toBe(true);
+    expect(codeforge?.distributionNotice).toContain('temporarily paused');
     expect(codeforge?.upgradeUrl).toBe('/codeforge/upgrade');
 
     const forgerems = products.find((p) => p.slug === 'forgerems');
@@ -47,6 +49,8 @@ describe('FDS Software Distribution Architecture', () => {
     expect(forgedPage).toContain('Application downloads');
     expect(forgedPage).toContain('Project archives');
     expect(forgedPage).toContain('SHA-256 Checksums Published');
+    expect(forgedPage).toContain('no CodeForge installer is offered here');
+    expect(forgedPage).not.toContain('CodeForge/releases/latest');
   });
 
   it('separates download action from commercial upgrade action in ProductCard', () => {
@@ -54,5 +58,12 @@ describe('FDS Software Distribution Architecture', () => {
     expect(productCard).toContain('Download {product.name}');
     expect(productCard).toContain('product.upgradeUrl');
     expect(productCard).toContain('Upgrade & Licensing');
+  });
+
+  it('keeps the CodeForge release out of canonical download records while paused', () => {
+    const codeforgeRelease = products.find((product) => product.slug === 'codeforge');
+    expect(codeforgeRelease?.distributionPaused).toBe(true);
+    expect(codeforgeRelease?.downloadUrl).toBeUndefined();
+    expect(codeforgeRelease?.releaseNotesUrl).not.toContain('/releases/');
   });
 });

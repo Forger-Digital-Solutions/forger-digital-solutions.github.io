@@ -12,11 +12,11 @@ export const projects: Project[] = [
     summary: 'A free-first autonomous software-engineering platform for Windows, CLI, and editor work. CodeForge can inspect repositories, plan changes, use tools, run checks, and review results under developer control.',
     description: 'CodeForge owns an engineering task across planning, implementation, testing, review, and verification. Its Windows desktop app, CLI, and VS Code experience share a core runtime, while repository boundaries, approvals, secret scanning, and command-risk rules keep execution governed. Dynamic routing selects only verified zero-cost cloud models; ForgeZero fails closed instead of silently falling back to paid or local inference.',
     status: 'RELEASED', secondaryStatus: 'ACTIVE DEVELOPMENT', featured: true, flagship: true,
-    stageLabel: 'Public product and FDS engineering foundation',
+    stageLabel: 'Released product; downloads temporarily paused',
     tags: ['Autonomous Engineering', 'Windows', 'CLI', 'VS Code', 'ForgeZero', 'Repository Tools'],
     focusAreas: ['Repository inspection', 'Planning and implementation', 'Specialized agents', 'Tool execution', 'Testing and review', 'Developer approvals'],
     highlights: [
-      'Released for Windows with installer and portable builds through GitHub Releases.',
+      'The previously listed Windows installer and portable builds are temporarily unavailable while the release is updated.',
       'ForgeZero rejects paid, local, unknown-cost, and unverified routes rather than creating a billing surprise.',
       'The public product and FDS engineering role are complementary, not separate identities.'
     ],
@@ -27,7 +27,7 @@ export const projects: Project[] = [
       { title: 'Specialized Agents', body: 'Engineering roles cover planning, implementation, testing, review, verification, security, documentation, architecture, and other focused work. The director coordinates them against one task and shared repository state.' },
       { title: 'Verification & Safety', items: ['Workspace and path isolation', 'Command risk classification and approval', 'Secret scanning before model context leaves the machine', 'Testing and review inside the task lifecycle', 'Fail-closed model and cost eligibility'] },
       { title: 'Developer Control', body: 'Autonomy does not remove oversight. Repository scope, permissions, provider eligibility, and execution controls remain visible, and CodeForge reports failures or blocked routes rather than disguising them as success.' },
-      { title: 'Current Availability', body: 'CodeForge v0.2.0 is released for Windows 10/11 x64 as an installer and portable executable. Builds are currently unsigned, so Windows may show an unknown-publisher warning; SHA-256 checksums are published with the release.', items: ['Desktop application', 'Command-line interface', 'VS Code integration', 'Installer and portable Windows builds'] },
+      { title: 'Current Availability', body: 'The last version listed on this website was v0.2.0 for Windows 10/11 x64. Downloads are temporarily paused while the release is updated; this site does not provide an installer at this time.', items: ['Desktop application', 'Command-line interface', 'VS Code integration', 'Installer download temporarily paused'] },
       {
         id: 'forge-aaa',
         title: 'Forge AAA: game-development architecture',
@@ -45,7 +45,7 @@ export const projects: Project[] = [
       { title: 'Where It Fits Inside FDS', body: 'CodeForge is both public software and an engineering foundation used across FDS. Its repository intelligence, agent coordination, verification discipline, and controlled execution inform how other FDS products are developed.' }
     ],
     githubUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
-    websiteUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest',
+    websiteUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
     documentationUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge#readme',
     roadmap: 'Broader repository intelligence, editor integration, verified provider coverage, and autonomous engineering depth.',
     accentColor: '#5a82e8', visualStyle: 'nodes', sortOrder: 1,

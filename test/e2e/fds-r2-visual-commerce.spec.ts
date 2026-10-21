@@ -74,16 +74,24 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
     await expect(badgeBar).toContainText('Verified Public Builds');
     await expect(badgeBar).toContainText('Free-First Architecture');
 
-    // CodeForge card must clearly separate download and upgrade
+    // CodeForge's stale installer is paused; preserve its non-download project actions.
     const cfCard = page.locator('.product-card').filter({ hasText: 'CodeForge' });
     await expect(cfCard).toBeVisible();
     const cfDownload = cfCard.locator('a.btn-primary').filter({ hasText: 'Download CodeForge' });
-    await expect(cfDownload).toBeVisible();
-    await expect(cfDownload).toHaveAttribute('href', /github\.com.*releases/);
+    await expect(cfDownload).toHaveCount(0);
+    await expect(cfCard).toContainText('temporarily paused');
+    await expect(cfCard.locator('a[href*="CodeForge/releases"]')).toHaveCount(0);
+    await page.goto('/projects/codeforge');
+    await expect(page.locator('.release-strip')).toContainText('DOWNLOADS PAUSED');
+    await expect(page.locator('.release-strip a[href*="CodeForge/releases"]')).toHaveCount(0);
+    await expect(page.locator('.release-strip a.btn-primary')).toHaveCount(0);
 
     const cfUpgrade = cfCard.locator('a.btn-outline').filter({ hasText: 'Upgrade & Licensing' });
-    await expect(cfUpgrade).toBeVisible();
-    await expect(cfUpgrade).toHaveAttribute('href', '/codeforge/upgrade');
+    await page.goto('/forged');
+    const refreshedCfCard = page.locator('.product-card').filter({ hasText: 'CodeForge' });
+    const refreshedCfUpgrade = refreshedCfCard.locator('a.btn-outline').filter({ hasText: 'Upgrade & Licensing' });
+    await expect(refreshedCfUpgrade).toBeVisible();
+    await expect(refreshedCfUpgrade).toHaveAttribute('href', '/codeforge/upgrade');
 
     // ForgerEMS card
     const emsCard = page.locator('.product-card').filter({ hasText: 'ForgerEMS' });
@@ -99,11 +107,12 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
     const robots = page.locator('meta[name="robots"]');
     await expect(robots).toHaveAttribute('content', 'noindex, nofollow');
 
-    // Verify Free tier is $0 and has active download
+    // Verify the free tier is still $0, but its stale download is unavailable.
     const freeCard = page.locator('#plan-free');
     await expect(freeCard).toBeVisible();
     await expect(freeCard.locator('.plan-card__price')).toHaveText('$0');
-    await expect(freeCard.locator('a.plan-card__btn')).toContainText('Download Free Build');
+    await expect(freeCard.locator('.plan-card__availability')).toContainText('Downloads Temporarily Paused');
+    await expect(freeCard.locator('a.plan-card__btn')).toHaveCount(0);
 
     // Verify the expanded tier is in development and displays "Not yet published"
     const expandedCard = page.locator('#plan-expanded');

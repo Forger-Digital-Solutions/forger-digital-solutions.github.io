@@ -97,6 +97,16 @@ function availabilityAnswer(entityId: string): CanonicalAnswer | undefined {
   const record = project(entityId);
   const productRecord = productFor(entityId);
 
+  if (productRecord?.distributionPaused) {
+    return {
+      text: `No — ${productRecord.name} downloads are temporarily paused while the release is updated. The product remains marked released, but the last version listed on this website was ${productRecord.version || 'not recorded here'} for ${productRecord.platform.join(', ')}; no installer or portable download is offered here right now.`,
+      actions: [projectPageAction(entityId)],
+      sources: [`product-${productRecord.slug}`],
+      intent: 'availability',
+      entityId
+    };
+  }
+
   if (productRecord?.downloadUrl && !productRecord.comingSoon) {
     const version = productRecord.version ? ` The current public version is ${productRecord.version}.` : '';
     const platform = productRecord.platform.length ? ` It runs on ${productRecord.platform.join(', ')}.` : '';
@@ -138,7 +148,7 @@ function versionAnswer(entityId: string): CanonicalAnswer | undefined {
   const productRecord = productFor(entityId);
   if (productRecord?.version) {
     return {
-      text: `${productRecord.name} is at ${productRecord.version}${productRecord.status === 'public-beta' ? ' (public preview)' : ''}. Canonical packages and version history live on GitHub Releases.`,
+      text: `${productRecord.name} was last listed on this website at ${productRecord.version}${productRecord.status === 'public-beta' ? ' (public preview)' : ''}.${productRecord.distributionPaused ? ' Downloads are temporarily paused while the release is updated.' : ' Canonical packages and version history live on GitHub Releases.'}`,
       actions: productRecord.downloadUrl
         ? [{ type: 'OPEN_DOWNLOAD', label: `Download ${productRecord.name}`, href: productRecord.downloadUrl }]
         : undefined,
@@ -213,8 +223,11 @@ function statusAnswer(entityId: string): CanonicalAnswer | undefined {
   const release = productRecord?.downloadUrl && productRecord.version
     ? ` The public build is ${productRecord.version}.`
     : '';
+  const distribution = productRecord?.distributionPaused
+    ? ` Downloads are temporarily paused while the release is updated; the last version listed here was ${productRecord.version || 'not recorded here'}.`
+    : '';
   return {
-    text: `${record.name} is ${record.status}. ${meta.description}${release}`,
+    text: `${record.name} is ${record.status}. ${meta.description}${release}${distribution}`,
     actions: [projectPageAction(entityId)],
     sources: [`app-${entityId}`],
     intent: 'status',
@@ -239,7 +252,9 @@ function identityAnswer(entityId: string): CanonicalAnswer | undefined {
   if (record) {
     const productRecord = productFor(entityId);
     const downloadable = Boolean(productRecord?.downloadUrl && !productRecord.comingSoon);
-    const availability = downloadable
+    const availability = productRecord?.distributionPaused
+      ? ` It remains a released product, but website installer and portable downloads are temporarily paused. The last version listed here was ${productRecord.version || 'not recorded here'}.`
+      : downloadable
       ? ` It is publicly available${productRecord?.version ? ` at ${productRecord.version}` : ''} and free — downloads and version history are hosted on GitHub Releases.`
       : ` ${statusSentence(entityId)}`;
     return {
@@ -489,6 +504,7 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
   // Signals: "visible/listed/public/page" combined with explicit negation of release.
   // "no download", "no public download", "no release", "not released", "not downloadable"
   // are all caught. The ordering ensures this fires before the download branch.
+  const explicitlyUnreleased = /\b(not released|unreleased|not yet released)\b/.test(text);
   const publicButNotReleased =
     (/\b(visible|listed|viewable|shown|pages?|on the site|publicly|projects?)\b/.test(text) &&
       (
@@ -498,17 +514,19 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
       )) ||
     (/\b(show|list|which|what)\b/.test(text) && /\b(no|without)\s+(public\s+)?downloads?\b/.test(text));
   if (publicButNotReleased) {
-    const notReleased = projects.filter((entry) =>
-      !products.some((prod) =>
+    const notReleased = projects.filter((entry) => explicitlyUnreleased
+      ? entry.status !== 'RELEASED'
+      : !products.some((prod) =>
         (prod.projectSlug || prod.slug) === entry.slug && Boolean(prod.downloadUrl) && !prod.comingSoon
-      )
-    );
+      ));
     const lines = notReleased
       .sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99))
       .map((entry) => `• ${entry.name} (${naturalStatus(entry.status)}): ${entry.summary}`)
       .join('\n');
     return {
-      text: `Every FDS project has a public page, but a page is not a release. These projects are publicly listed but have no download today:\n\n${lines}\n\nOnly software on Forged has a public build you can actually run.`,
+      text: explicitlyUnreleased
+        ? `Every FDS project has a public page, but a page is not a release. These projects are publicly listed but not marked as released:\n\n${lines}\n\nOnly software on Forged has a public build you can actually run.`
+        : `Every FDS project has a public page, but a page is not a release. These projects are publicly listed but have no product download today:\n\n${lines}\n\nOnly software on Forged has a public build you can actually run. CodeForge remains released, but its installer and portable downloads are temporarily paused.`,
       actions: [{ type: 'SHOW_APPS', label: 'View All Projects' }, { type: 'OPEN_FORGED', label: 'See what is available now', href: '/forged' }],
       sources: notReleased.map((entry) => `app-${entry.slug}`),
       intent: 'availability',
@@ -521,7 +539,7 @@ function availabilityListAnswer(query: string): CanonicalAnswer | undefined {
     return {
       // The download link for each build lives on its own action button, not
       // pasted into the prose — the visitor already has a one-tap route to it.
-      text: `${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''}`).join('\n')}\n\nThose are the only FDS builds with a public download right now. Everything else is in development or research with no public build. Forged is where released software is listed.`,
+      text: `${downloads.map((entry) => `• ${entry.name}${entry.version ? ` (${entry.version})` : ''}`).join('\n')}\n\nThose are the only FDS builds with a public download right now. CodeForge remains a released product, but installer and portable downloads are temporarily paused while its release is updated. Other projects are in development or research with no public build. Forged is where currently available software is listed.`,
       actions: [
         ...downloads.slice(0, 2).map((entry) => ({ type: 'OPEN_DOWNLOAD' as const, label: `Download ${entry.name}`, href: entry.route })),
         { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }
@@ -651,13 +669,18 @@ function filteredListAnswer(query: string): CanonicalAnswer | undefined {
     }),
     ...standalone.map((entry) => `• ${entry.name} (${naturalStatus(entry.status)})${entry.version ? ` — ${entry.version}` : ''}: ${entry.tagline}`)
   ].join('\n');
+  const pausedNote = filter.label === 'available to use today'
+    ? products.filter((entry) => entry.distributionPaused)
+      .map((entry) => `${entry.name} remains a released product, but downloads are temporarily paused while its release is updated.`)
+      .join(' ')
+    : '';
 
   const heading = filter.label === 'available to use today'
     ? 'These are the FDS projects you can use today'
     : `These FDS projects are ${filter.label}`;
 
   return {
-    text: `${heading}:\n\n${lines}`,
+    text: `${heading}:\n\n${lines}${pausedNote ? `\n\n${pausedNote}` : ''}`,
     actions: filter.label === 'available to use today'
       ? [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }]
       : [{ type: 'SHOW_APPS', label: 'View All Projects' }],
@@ -748,10 +771,10 @@ function recommendationAnswer(query: string): CanonicalAnswer | undefined {
     const codeforge = project('codeforge');
     const codeforgeProduct = productFor('codeforge');
     return {
-      text: `Start with ${codeforge?.name || 'CodeForge'} — the flagship FDS product: a free-first autonomous software-engineering platform for Windows, CLI, and VS Code.${codeforgeProduct?.version ? ` It is released and free at ${codeforgeProduct.version}.` : ''} Downloads are on the Forged releases page. If you want the research side, GEMS / Training Grounds is the program to follow.`,
+      text: `Start with ${codeforge?.name || 'CodeForge'} — the flagship FDS product: a free-first autonomous software-engineering platform for Windows, CLI, and VS Code.${codeforgeProduct?.distributionPaused ? ` Downloads are temporarily paused while its release is updated; the last version listed here was ${codeforgeProduct.version}.` : codeforgeProduct?.version ? ` It is released and free at ${codeforgeProduct.version}.` : ''} If you want the research side, GEMS / Training Grounds is the program to follow.`,
       actions: [
         ...(codeforgeProduct?.downloadUrl ? [{ type: 'OPEN_DOWNLOAD' as const, label: `Download ${codeforge?.name || 'CodeForge'}`, href: codeforgeProduct.downloadUrl }] : []),
-        { type: 'OPEN_FORGED' as const, label: 'See Released Software', href: '/forged' },
+        { type: 'OPEN_APP' as const, label: 'Check CodeForge availability', href: '/projects/codeforge' },
       ],
       sources: ['app-codeforge'],
       intent: 'recommendation'
@@ -822,7 +845,9 @@ function recommendationAnswer(query: string): CanonicalAnswer | undefined {
   }
 
   const productRecord = productFor(best.entry.slug);
-  const availability = productRecord?.downloadUrl
+  const availability = productRecord?.distributionPaused
+    ? ` It remains a released product, but website installer and portable downloads are temporarily paused. The last version listed here was ${productRecord.version || 'not recorded here'}.`
+    : productRecord?.downloadUrl
     ? ` It is available now at ${productRecord.version}.`
     : ` ${statusSentence(best.entry.slug)}`;
   return {
@@ -857,7 +882,7 @@ function navigationAnswer(entityId?: string, query?: string): CanonicalAnswer | 
   }
   if (query && /\b(start here|where (should|do) i start|new (here|to fds)|newcomer|give me a tour|best place to start|tour of fds)\b/i.test(query)) {
     return {
-      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Software you can use now: Forged (/forged) has current public builds, starting with CodeForge (free-first developer workbench).\n• AI research: GEMS Training Grounds (/projects/gems-training-grounds) covers our 4 specialized foundation lineages.\n• Full catalog: Projects (/projects) displays everything FDS is building across developer tools, AI, publishing, and community.\n• Company story: About (/about) explains the engineering philosophy and founder background.',
+      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Software you can use now: Forged (/forged) has the current public ForgerEMS preview build. CodeForge remains a released free-first developer workbench, but its website installer and portable downloads are temporarily paused.\n• AI research: GEMS Training Grounds (/projects/gems-training-grounds) covers our 4 specialized foundation lineages.\n• Full catalog: Projects (/projects) displays everything FDS is building across developer tools, AI, publishing, and community.\n• Company story: About (/about) explains the engineering philosophy and founder background.',
       actions: [
         { type: 'OPEN_FORGED', label: 'See Available Software', href: '/forged' },
         { type: 'SHOW_APPS', label: 'Explore Projects', href: '/projects' },
@@ -973,7 +998,7 @@ function boundaryAnswer(intent: KaylaIntent, query: string): CanonicalAnswer | u
     }
     if (/\b(download|install|run|execute|launch)\b.{0,40}\b(on my|device|machine|pc|laptop|for me)\b/.test(text)) {
       return {
-        text: 'I cannot download, install, or run executables on your device — I am a read-only browser assistant. You can download CodeForge and other released software yourself directly from GitHub Releases or the Forged page.',
+        text: 'I cannot download, install, or run executables on your device — I am a read-only browser assistant. ForgerEMS remains available on the Forged page. CodeForge installer downloads are temporarily paused while its release is updated.',
         actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
         sources: ['scope-boundary'],
         intent
@@ -1135,7 +1160,7 @@ function premiseAnswer(query: string, entityIds: string[], history: KaylaConvers
   const hasSpecificNonGemProject = entityIds.some((id) => !id.startsWith(GEM_PREFIX) && id !== 'gems-training-grounds' && Boolean(project(id)));
   if (!hasSpecificNonGemProject && /\b(ai|gems|model)\b/i.test(text) && /\b(download|run|install)\b/i.test(text) && !/codeforge/i.test(text)) {
     return {
-      text: 'FDS AI research (GEMS) is specialized model research and evaluation — there are no downloadable model binaries. CodeForge is currently the only downloadable software release from FDS, and ForgerEMS has a public preview download. Current GEMS strategy builds on strong open or pretrained foundations where appropriate; fully from-scratch FDS-developed model development remains longer-term research.',
+      text: 'FDS AI research (GEMS) is specialized model research and evaluation — there are no downloadable model binaries. ForgerEMS has a public preview download; CodeForge downloads are temporarily paused while its release is updated. Current GEMS strategy builds on strong open or pretrained foundations where appropriate; fully from-scratch FDS-developed model development remains longer-term research.',
       actions: [
         { type: 'OPEN_FORGED', label: 'See Released Software', href: '/forged' },
         { type: 'OPEN_APP', label: 'Explore GEMS Research', href: '/projects/gems-training-grounds' }
@@ -1386,6 +1411,45 @@ export function canonicalAnswer(
 
   const primaryEntity = entityIds[0];
   const has = (intent: KaylaIntent) => intents.includes(intent);
+  const codeforgeProduct = productFor('codeforge');
+
+  if (primaryEntity === 'codeforge' && codeforgeProduct?.distributionPaused) {
+    if (/\b(release notes|changelog)\b/i.test(query)) {
+      return {
+        text: `CodeForge downloads are paused. The last version listed on this website was ${codeforgeProduct.version}; project documentation is in the CodeForge repository.`,
+        actions: codeforgeProduct.docsUrl
+          ? [{ type: 'OPEN_GITHUB', label: 'CodeForge project repository', href: codeforgeProduct.docsUrl }]
+          : [projectPageAction('codeforge')],
+        sources: ['product-codeforge'],
+        intent: 'navigation',
+        settled: true
+      };
+    }
+    if (/\b(latest\b.{0,30}\brelease|latest version|official release version|release version)\b/i.test(query)) {
+      if (/\b(where|find|see)\b/i.test(query)) {
+        return {
+          text: `This website's last listed CodeForge version was ${codeforgeProduct.version}; it does not verify whether that is the latest upstream release. Website installer and portable downloads are paused. Check the CodeForge project repository for current release information.`,
+          actions: codeforgeProduct.docsUrl
+            ? [{ type: 'OPEN_GITHUB', label: 'CodeForge project repository', href: codeforgeProduct.docsUrl }]
+            : [projectPageAction('codeforge')],
+          sources: ['product-codeforge'],
+          intent: 'navigation',
+          settled: true
+        };
+      }
+      const answer = versionAnswer('codeforge');
+      if (answer) return { ...answer, settled: true };
+    }
+    if (/\b(out yet|released yet|shipped yet)\b/i.test(query)) {
+      return {
+        text: `Yes, CodeForge has had a public release. The last version listed on this website was ${codeforgeProduct.version}; installer and portable downloads are temporarily paused while the release is updated.`,
+        actions: [projectPageAction('codeforge')],
+        sources: ['product-codeforge'],
+        intent: 'availability',
+        settled: true
+      };
+    }
+  }
 
   // Boundaries win over everything: never let an entity match turn a weather
   // question into a product pitch.
@@ -1558,7 +1622,7 @@ export function canonicalAnswer(
   if (has('availability') && !primaryEntity
     && /\b(downloads?|installs?|software|apps?|applications?|releases?|programs?|tools?|builds?|binar\w+|forged)\b/.test(normalize(query))) {
     return {
-      text: `Downloadable FDS software lives on Forged: ${products.filter((entry) => entry.downloadUrl).map((entry) => `${entry.name} (${entry.version})`).join(', ')}. Everything else is still in development or research and has no public build.`,
+      text: `Downloadable FDS software lives on Forged: ${products.filter((entry) => entry.downloadUrl).map((entry) => `${entry.name} (${entry.version})`).join(', ')}. CodeForge remains a released product, but website downloads are temporarily paused; other projects are in development or research with no public build.`,
       actions: [{ type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
       sources: ['forged-page'],
       intent: 'availability'

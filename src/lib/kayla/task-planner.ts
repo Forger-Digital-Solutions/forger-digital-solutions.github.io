@@ -52,7 +52,7 @@ export function buildTaskPlan(
     recommendedSources = [{ label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }];
     recommendedActions = [
       { type: 'OPEN_APP', label: 'View CodeForge', href: '/projects/codeforge' },
-      { type: 'OPEN_DOWNLOAD', label: 'Download CodeForge (Free)', href: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest' },
+      { type: 'OPEN_APP', label: 'Check CodeForge availability', href: '/projects/codeforge' },
       { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }
     ];
     return {
@@ -138,7 +138,15 @@ export function buildTaskPlan(
     case 'DOWNLOAD_SOFTWARE': {
       const targetEntity = entities[0] || 'codeforge';
       const prod = product(targetEntity);
-      if (prod?.downloadUrl && !prod.comingSoon) {
+      if (prod?.distributionPaused) {
+        const ent = getKaylaEntity(targetEntity);
+        const name = ent?.name || prod.name;
+        requiredFacts = [`${name} downloads are temporarily paused`, 'Last version listed on this website'];
+        recommendedSources = [{ label: name, kind: 'project', route: `/projects/${targetEntity}` }];
+        recommendedActions = [{ type: 'OPEN_APP', label: `Check ${name} availability`, href: `/projects/${targetEntity}` }];
+        guidanceSteps = ['Do not install the previously listed CodeForge build from this website.', 'Check the CodeForge project page for an updated availability notice.'];
+        tradeoffExplanation = `${name} installer and portable downloads are paused while the release is updated.`;
+      } else if (prod?.downloadUrl && !prod.comingSoon) {
         requiredFacts = [`${prod.name} version ${prod.version}`, 'Download URL on GitHub Releases'];
         recommendedSources = [
           { label: 'Forged', kind: 'page', route: '/forged' },
@@ -171,19 +179,19 @@ export function buildTaskPlan(
     }
 
     case 'VIEW_RELEASE':
-      requiredFacts = ['CodeForge latest release v0.2.0', 'Forged catalogue'];
+      requiredFacts = ['CodeForge downloads are temporarily paused', 'Forged catalogue'];
       recommendedSources = [
         { label: 'Forged', kind: 'page', route: '/forged' },
         { label: 'CodeForge', kind: 'project', route: '/projects/codeforge' }
       ];
       recommendedActions = [
         { type: 'OPEN_FORGED', label: 'View Releases on Forged', href: '/forged' },
-        { type: 'OPEN_DOWNLOAD', label: 'GitHub Releases', href: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest' }
+        { type: 'OPEN_APP', label: 'Check CodeForge availability', href: '/projects/codeforge' }
       ];
       break;
 
     case 'FIND_RELEASED_SOFTWARE':
-      requiredFacts = ['CodeForge is released and downloadable', 'ForgerEMS has technician preview', 'Available on Forged'];
+      requiredFacts = ['CodeForge downloads are temporarily paused', 'ForgerEMS has technician preview', 'Available on Forged'];
       recommendedSources = [{ label: 'Forged', kind: 'page', route: '/forged' }];
       recommendedActions = [
         { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' },
@@ -191,13 +199,13 @@ export function buildTaskPlan(
       ];
       guidanceSteps = [
         'Open Forged, which catalogs all software with public builds.',
-        'Choose the software you want to run (e.g. CodeForge).',
-        'Use the official download link to get the latest release.'
+        'Choose currently available software from the list.',
+        'CodeForge downloads will return after its release has been updated.'
       ];
       break;
 
     case 'FIND_DEVELOPER_PROJECTS':
-      requiredFacts = ['CodeForge is the developer IDE / coding tool', 'CodeForge is free and available'];
+      requiredFacts = ['CodeForge is the developer engineering platform', 'CodeForge downloads are temporarily paused'];
       recommendedSources = [
         { label: 'CodeForge', kind: 'project', route: '/projects/codeforge' },
         { label: 'Forged', kind: 'page', route: '/forged' }

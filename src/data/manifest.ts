@@ -85,6 +85,9 @@ export interface ProductManifestEntry {
   /** Short statement of the current engineering focus (not necessarily shipped). */
   currentFocus?: string;
   version?: string;
+  /** Public release distribution can be paused without erasing release history. */
+  distributionPaused?: boolean;
+  distributionNotice?: string;
   /** Ordered nodes for the homepage product-status strip. */
   homepageStrip?: boolean;
   capabilities: string[];
@@ -142,10 +145,12 @@ export const productManifest: ProductManifestEntry[] = [
       'Inspects repositories, plans engineering work, edits code through controlled tools, runs checks, and reviews the result while refusing paid inference.',
     canonicalStatus: 'public-release',
     developmentStatus:
-      'v0.2.0 is released for Windows 10/11 x64 as installer and portable builds. Active development continues on a separate line.',
+      'The last version listed on this website was v0.2.0 for Windows 10/11 x64. Installer and portable downloads are temporarily paused while the release is updated; active development continues on a separate line.',
     currentFocus:
       'Forge AAA architecture, model-routing reliability, runtime efficiency, and deeper repository intelligence.',
     version: 'v0.2.0',
+    distributionPaused: true,
+    distributionNotice: 'CodeForge downloads are temporarily paused while the release is updated. This website does not provide the current installer.',
     homepageStrip: true,
     capabilities: [
       'Repository understanding and inspection',
@@ -170,7 +175,6 @@ export const productManifest: ProductManifestEntry[] = [
     ],
     technologies: ['TypeScript', 'Node.js', 'Electron', 'React', 'SQLite', 'Git', 'VS Code'],
     projectUrl: '/projects/codeforge',
-    releaseUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest',
     githubUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge',
     docsUrl: 'https://github.com/Forger-Digital-Solutions/CodeForge#readme',
     archive: generated('codeforge'),

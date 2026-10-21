@@ -234,17 +234,15 @@
    "question": "Can I download CodeForge?",
    "require": [
     [
-     "Yes"
-    ],
-    [
      "{{codeforge.version}}"
     ],
     [
-     "github.com"
+     "temporarily paused"
     ]
    ],
    "forbid": [
-    "not available"
+    "Yes",
+    "github.com"
    ]
   },
   {
@@ -1925,13 +1923,15 @@
    },
    "require": [
     [
-     "Yes"
+     "temporarily paused"
     ],
     [
      "{{codeforge.version}}"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "Yes"
+   ]
   },
   {
    "id": "t2-pagectx-02",
@@ -3266,13 +3266,14 @@
    ],
    "require": [
     [
-     "Yes"
+     "{{codeforge.version}}"
     ],
     [
-     "{{codeforge.version}}"
+     "temporarily paused"
     ]
    ],
    "forbid": [
+    "Yes",
     "not available"
    ]
   },
@@ -3629,13 +3630,15 @@
    },
    "require": [
     [
-     "Yes"
+     "temporarily paused"
     ],
     [
      "{{codeforge.version}}"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "Yes"
+   ]
   },
   {
    "id": "t2-p9-page-03",
@@ -4139,13 +4142,15 @@
    "question": "Where can I find CodeForge release notes?",
    "require": [
     [
-     "github.com"
+     "repository"
     ],
     [
      "CodeForge"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "downloads are available"
+   ]
   },
   {
    "id": "t1-p10-can-04",
@@ -4791,10 +4796,12 @@
      "CodeForge"
     ],
     [
-     "github.com"
+     "temporarily paused"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "github.com"
+   ]
   },
   {
    "id": "t1-p11-goal-17",
@@ -4806,10 +4813,15 @@
      "CodeForge"
     ],
     [
-     "Windows"
+     "temporarily paused"
+    ],
+    [
+     "{{codeforge.version}}"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "github.com"
+   ]
   },
   {
    "id": "t1-p11-goal-18",
@@ -4822,6 +4834,9 @@
     ],
     [
      "{{codeforge.version}}"
+    ],
+    [
+     "does not verify"
     ]
    ],
    "forbid": []
@@ -5183,10 +5198,12 @@
      "CodeForge"
     ],
     [
-     "github.com"
+     "temporarily paused"
     ]
    ],
-   "forbid": []
+   "forbid": [
+    "github.com"
+   ]
   },
   {
    "id": "t2-p11-page-02",

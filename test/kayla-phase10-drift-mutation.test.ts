@@ -13,16 +13,16 @@ import { sha256 } from '../src/lib/kayla/hash';
 describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
   it('detects a mutated/stale release version', () => {
     const mutatedProducts = products.map(p =>
-      p.slug === 'codeforge' ? { ...p, version: 'v0.9.9' } : p
+      p.slug === 'forgerems' ? { ...p, version: 'v0.9.9' } : p
     );
 
     const report = runDriftCheck({ products: mutatedProducts });
     expect(report.passed).toBe(false);
     const issue = report.errors.find(e => e.code === 'VERSION_METADATA_MISMATCH');
     expect(issue).toBeDefined();
-    expect(issue?.entity).toBe('codeforge');
+    expect(issue?.entity).toBe('forgerems');
     expect(issue?.expected).toBe('v0.9.9');
-    expect(issue?.actual).toBe('v0.2.0');
+    expect(issue?.actual).toBe('v1.2.4-preview.1');
 
     const formatted = formatActionableDriftMessage(issue!);
     expect(formatted).toContain('KAYLA_CANONICAL_DRIFT');
@@ -57,7 +57,7 @@ describe('Phase 10 — Intentional Knowledge Drift Mutations', () => {
 
   it('detects when a project marked RELEASED has no download URL', () => {
     const mutatedProducts = products.map(p =>
-      p.slug === 'codeforge' ? { ...p, downloadUrl: undefined } : p
+      p.slug === 'codeforge' ? { ...p, downloadUrl: undefined, distributionPaused: false } : p
     );
 
     const report = runDriftCheck({ products: mutatedProducts });

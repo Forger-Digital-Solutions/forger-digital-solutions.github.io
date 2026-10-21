@@ -239,7 +239,7 @@ export function runDriftCheck(options: DriftDetectorOptions = {}): DriftReport {
       });
     }
 
-    if (p.status === 'RELEASED' && !prod?.downloadUrl) {
+    if (p.status === 'RELEASED' && !prod?.downloadUrl && !prod?.distributionPaused) {
       addError({
         code: 'RELEASED_PROJECT_MISSING_DOWNLOAD_URL',
         entity: p.slug,

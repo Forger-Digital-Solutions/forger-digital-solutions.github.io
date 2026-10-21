@@ -95,7 +95,7 @@ describe('Kayla Knowledge Pipeline - Releases', () => {
   });
 
   it('release statuses are valid', () => {
-    const validStatuses = new Set(['stable', 'preview', 'beta', 'experimental']);
+    const validStatuses = new Set(['stable', 'preview', 'beta', 'experimental', 'paused']);
     for (const release of releases) {
       expect(validStatuses.has(release.status)).toBe(true);
     }

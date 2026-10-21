@@ -14,4 +14,4 @@ The v0.2.0 release includes installer and portable Windows builds plus published
 
 Its free-first boundary is architectural. ForgeZero accepts only verified zero-cost cloud routes and fails closed instead of silently switching to paid inference, unknown-cost models, or local LLMs. Free provider capacity can still be quota-limited; the promise is no hidden billing fallback, not unlimited inference.
 
-[Download the current release](https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest) or [read the repository documentation](https://github.com/Forger-Digital-Solutions/CodeForge).
+CodeForge installer and portable downloads are temporarily paused while the release is updated. See the [CodeForge project page](/projects/codeforge) for current availability, or [read the repository documentation](https://github.com/Forger-Digital-Solutions/CodeForge).

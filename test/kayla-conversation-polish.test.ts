@@ -25,12 +25,12 @@ describe('action labels name the entity actually being discussed', () => {
     if (forgedAction) expect(forgedAction.label).toContain('ForgerEMS');
   });
 
-  it('still offers a correctly-named download action for CodeForge itself', () => {
+  it('routes CodeForge download questions to its paused availability page', () => {
     const context = resolveConversation('Can I download CodeForge?', []);
     const composed = conversationAnswer(context) || [];
     const actions = rankConversationActions(context, composed[0]?.actions || []);
-    const forgedAction = actions.find((a) => a.href === '/forged');
-    expect(forgedAction?.label).toContain('CodeForge');
+    expect(actions.some((a) => a.href === '/forged')).toBe(false);
+    expect(actions.find((a) => a.href === '/projects/codeforge')?.label).toContain('CodeForge');
   });
 });
 

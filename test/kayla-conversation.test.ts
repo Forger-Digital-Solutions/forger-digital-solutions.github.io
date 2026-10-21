@@ -50,7 +50,8 @@ describe('Multi-turn: follow-ups inherit their subject', () => {
     const [, download, cost] = await converse([
       'Tell me about CodeForge.', 'Can I download it?', 'What does it cost?'
     ]);
-    expect(has(download, 'yes')).toBe(true);
+    expect(has(download, 'no')).toBe(true);
+    expect(has(download, 'temporarily paused')).toBe(true);
     expect(has(download, codeforgeVersion)).toBe(true);
     expect(has(cost, 'free')).toBe(true);
     expect(cost).not.toMatch(/\$\s?\d/);
@@ -90,7 +91,8 @@ describe('Page context supplies the subject and nothing more', () => {
 
   it('resolves "this" for availability on a released product page', async () => {
     const [answer] = await converse(['Can I download this?'], onPage('codeforge'));
-    expect(has(answer, 'yes')).toBe(true);
+    expect(has(answer, 'no')).toBe(true);
+    expect(has(answer, 'temporarily paused')).toBe(true);
     expect(has(answer, codeforgeVersion)).toBe(true);
   });
 

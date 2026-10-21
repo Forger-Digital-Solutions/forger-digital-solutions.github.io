@@ -48,7 +48,8 @@ describe('Phase 9 Grounded Recommendations', () => {
     const answer = canonicalAnswer('Which tool helps with autonomous software engineering repositories?', ctx, []);
     expect(answer).toBeDefined();
     expect(answer!.text).toContain('CodeForge');
-    expect(answer!.text).toMatch(/available now|released/i);
+    expect(answer!.text).toMatch(/released/i);
+    expect(answer!.text).toMatch(/downloads are temporarily paused/i);
   });
 
   it('does not promote retired AI research lineages as current', () => {

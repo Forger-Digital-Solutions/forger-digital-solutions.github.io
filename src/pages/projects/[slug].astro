@@ -41,7 +41,8 @@ const heroEvidenceState = project.slug === 'codeforge'
 const status = statusMeta[project.status];
 // Released products get a canonical release strip (version, platform, download)
 // straight from the product record — the page must lead with "you can get this".
-const releaseProduct = products.find((p) => p.projectSlug === project.slug && p.downloadUrl);
+const productRecord = products.find((p) => p.projectSlug === project.slug);
+const releaseProduct = productRecord?.downloadUrl ? productRecord : undefined;
 const projectNotes = (await getPublishedNotes())
   .filter((note) => note.data.projectSlug === project.slug)
   .slice(0, 3);
@@ -184,25 +185,30 @@ const softwareSchema = releaseProduct ? {
       </div>
     </header>
 
-    {releaseProduct && (
-      <section class="release-strip" aria-label={`Get ${releaseProduct.name}`}>
+    {(releaseProduct || productRecord?.distributionPaused) && (
+      <section class="release-strip" aria-label={`${productRecord?.name} availability`}>
         <p class="release-strip__meta">
-          <span class="release-strip__state">{releaseProduct.status === 'released' ? 'RELEASED' : releaseProduct.status === 'public-beta' ? 'PUBLIC PREVIEW' : 'AVAILABLE'}</span>
-          {releaseProduct.version && <span class="release-strip__version">{releaseProduct.version}</span>}
-          <span class="release-strip__platform">{releaseProduct.platform.join(' · ')}</span>
+          <span class="release-strip__state">{productRecord?.distributionPaused ? 'DOWNLOADS PAUSED' : releaseProduct?.status === 'released' ? 'RELEASED' : releaseProduct?.status === 'public-beta' ? 'PUBLIC PREVIEW' : 'AVAILABLE'}</span>
+          {productRecord?.version && <span class="release-strip__version">{productRecord.distributionPaused ? 'LAST LISTED' : ''} {productRecord.version}</span>}
+          <span class="release-strip__platform">{productRecord?.platform.join(' · ')}</span>
         </p>
         <div class="release-strip__ctas">
-          <a href={releaseProduct.downloadUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-            Get {releaseProduct.name}<span aria-hidden="true">→</span>
-          </a>
+          {releaseProduct && (
+            <a href={releaseProduct.downloadUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              Get {releaseProduct.name}<span aria-hidden="true">→</span>
+            </a>
+          )}
+          {productRecord?.distributionPaused && (
+            <p class="release-strip__notice" role="status">{productRecord.distributionNotice}</p>
+          )}
           {project.slug === 'codeforge' && (
             <a href="/codeforge/sign-in" class="btn btn-outline">Sign in to CodeForge</a>
           )}
-          {releaseProduct.docsUrl && (
-            <a href={releaseProduct.docsUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Documentation</a>
+          {productRecord?.docsUrl && (
+            <a href={productRecord.docsUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Documentation</a>
           )}
-          {releaseProduct.releaseNotesUrl && (
-            <a href={releaseProduct.releaseNotesUrl} target="_blank" rel="noopener noreferrer" class="release-strip__notes">Release notes</a>
+          {productRecord?.releaseNotesUrl && (
+            <a href={productRecord.releaseNotesUrl} target="_blank" rel="noopener noreferrer" class="release-strip__notes">Release notes and project information</a>
           )}
         </div>
       </section>

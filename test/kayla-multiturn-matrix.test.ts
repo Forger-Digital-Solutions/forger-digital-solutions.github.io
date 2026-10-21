@@ -37,7 +37,8 @@ describe('Subject carryover', () => {
   it('CodeForge -> can I download it (subject inherited)', async () => {
     const [, download] = await converse(['What is CodeForge?', 'Can I download it?']);
     expect(has(download.answer, 'CodeForge')).toBe(true);
-    expect(has(download.answer, 'yes')).toBe(true);
+    expect(has(download.answer, 'no')).toBe(true);
+    expect(has(download.answer, 'temporarily paused')).toBe(true);
   });
 });
 

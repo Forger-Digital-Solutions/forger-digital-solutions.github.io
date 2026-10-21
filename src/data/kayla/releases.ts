@@ -8,11 +8,11 @@ export const releases: KaylaRelease[] = [
   {
     appId: 'codeforge',
     version: codeforgeProduct?.version || 'v0.2.0',
-    status: 'stable',
+    status: 'paused',
     date: '2026-08-29',
-    notes: 'Released Windows build of the free-first autonomous software-engineering platform.',
-    downloads: codeforgeProduct?.downloadUrl ? [codeforgeProduct.downloadUrl] : ['https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest'],
-    changelog: 'Installer and portable builds with published SHA-256 checksums.'
+    notes: 'The last version listed on this website was v0.2.0. Downloads are temporarily paused while the release is updated.',
+    downloads: [],
+    changelog: 'No current installer or portable build is offered on this website.'
   },
   {
     appId: 'forgerems',

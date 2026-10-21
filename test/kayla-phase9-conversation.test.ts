@@ -43,7 +43,8 @@ describe('Phase 9 Multi-turn: Referent carryover and topic shift', () => {
     ]);
 
     expect(has(t1, 'CodeForge')).toBe(true);
-    expect(has(t2, 'yes')).toBe(true);
+    expect(has(t2, 'no')).toBe(true);
+    expect(has(t2, 'temporarily paused')).toBe(true);
     expect(has(t2, codeforgeVersion)).toBe(true);
 
     // Topic shift to Dead Trails West

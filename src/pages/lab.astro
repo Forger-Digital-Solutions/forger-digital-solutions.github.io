@@ -27,9 +27,9 @@ const releaseHistory = releases
     name: release.appId === 'codeforge' ? 'CodeForge' : 'ForgerEMS',
     version: release.version,
     date: release.date,
-    state: release.status === 'stable' ? 'Stable release' : 'Public preview',
+    state: release.status === 'stable' ? 'Stable release' : release.status === 'paused' ? 'Downloads paused' : 'Public preview',
     href: release.appId === 'codeforge'
-      ? 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/tag/v0.2.0'
+      ? '/projects/codeforge'
       : 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases',
   }));
 
@@ -44,7 +44,7 @@ const evidence = [
   },
   {
     title: 'Packaged-app validation',
-    body: 'CodeForge releases are built and consumer-verified on GitHub-hosted Windows runners, with SHA-256 checksums published alongside every installer and portable build.',
+    body: 'Earlier CodeForge release artifacts were built and consumer-verified on GitHub-hosted Windows runners. Current installer and portable downloads are paused while the release is updated.',
   },
   {
     title: 'Fail-closed reliability engineering',
@@ -71,7 +71,7 @@ const evidence = [
   </section>
 
   <section class="release-evidence" aria-labelledby="release-evidence-title">
-    <SectionHeader eyebrow="Public Release History" title="Shipped software" description="The canonical release record. Details, assets, and checksums live on each project's GitHub Releases page." />
+    <SectionHeader eyebrow="Public Release History" title="Shipped software" description="Release history is shown with its current distribution status. Availability can change while release records remain preserved." />
     <ul class="release-list" role="list">
       {releaseHistory.map((release) => (
         <li class="release-row">

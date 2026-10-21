@@ -92,7 +92,6 @@ export const CANONICAL_EXTERNAL_LINKS: CanonicalExternalLink[] = [
   { id: 'github-org', label: 'GitHub Organization', url: siteConfig.githubUrl, kind: 'github' },
   { id: 'github-codeforge', label: 'CodeForge Repository', url: 'https://github.com/Forger-Digital-Solutions/CodeForge', kind: 'github' },
   { id: 'github-forgerems', label: 'ForgerEMS Repository', url: 'https://github.com/forger-digital-solutions/ForgerEMS', kind: 'github' },
-  { id: 'codeforge-release-latest', label: 'CodeForge Latest Release', url: 'https://github.com/Forger-Digital-Solutions/CodeForge/releases/latest', kind: 'release' },
   { id: 'forgerems-releases', label: 'ForgerEMS Releases', url: 'https://github.com/Forger-Digital-Solutions/ForgerEMS/releases', kind: 'release' },
   { id: 'support-cashapp', label: 'Cash App', url: `https://cash.app/${siteConfig.cashAppHandle}`, kind: 'donation' },
   { id: 'support-kofi', label: 'Ko-fi', url: 'https://ko-fi.com/forgerdigitalsolutions', kind: 'donation' }

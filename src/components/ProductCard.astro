@@ -100,6 +100,9 @@ const statusLabel = {
     {product.docsUrl && <a href={product.docsUrl} class="text-link">Documentation <span aria-hidden="true">→</span></a>}
     {product.releaseNotesUrl && <a href={product.releaseNotesUrl} class="text-link">Release Notes <span aria-hidden="true">→</span></a>}
   </div>
+  {product.distributionPaused && product.distributionNotice && (
+    <p class="product-card__availability" role="status">{product.distributionNotice}</p>
+  )}
   </article>
 
 <script>
@@ -330,5 +333,14 @@ const statusLabel = {
     margin: -.2rem 0 0;
     color: var(--color-text-subtle);
     font: .68rem/1.45 var(--font-mono);
+  }
+  .product-card__availability {
+    margin: .8rem 0 0;
+    padding: .65rem .75rem;
+    border: 1px solid rgba(237, 190, 111, .28);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-subtle);
+    font-size: .82rem;
+    line-height: 1.5;
   }
 </style>
