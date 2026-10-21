@@ -1,70 +1,79 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { ecosystemNodes } from '../../src/data/ecosystem';
+import { projects } from '../../src/data/projects';
 
 test.describe('Homepage portfolio visual system', () => {
-  test('renders one distinct, linked orbital body for every current project', async ({ page }) => {
+  test('shows the product hierarchy, current catalog, and canonical states', async ({ page }) => {
     await page.goto('/');
-    const ecosystem = page.locator('.fds-ecosystem');
-    await ecosystem.scrollIntoViewIfNeeded();
-    await expect(ecosystem).toHaveAttribute('data-visual-candidate', 'codeforge-reactor');
-    await expect(ecosystem.locator('[data-scaffold-plane]')).toHaveCount(3);
-    await expect(ecosystem.locator('.planet-motion[data-planet]')).toHaveCount(ecosystemNodes.length);
-    await expect(ecosystem.locator('.tag-motion[data-tag-for]')).toHaveCount(ecosystemNodes.length);
-    await expect(ecosystem.locator('.orbit-layer path.orbit-path')).toHaveCount(ecosystemNodes.length);
-    await expect(ecosystem.locator('.core__codeforge')).toHaveAttribute('href', /codeforge-icon\.svg/);
+    const portfolio = page.locator('.portfolio-map');
+    await expect(portfolio).toBeVisible();
+    await expect(portfolio).toContainText('Different products. Clear boundaries.');
+    await expect(portfolio.locator('.portfolio-domain')).toHaveCount(4);
 
-    const rendered = await ecosystem.locator('.planet-link[data-node-id]').evaluateAll((nodes) =>
-      nodes.map((node) => ({
-        id: node.getAttribute('data-node-id'),
-        href: node.getAttribute('href'),
-        accessibleName: node.getAttribute('aria-label'),
-      }))
+    const destinations = await portfolio.locator('a[href^="/projects/"]').evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href'))
     );
-    expect(rendered.map((node) => node.id)).toEqual(ecosystemNodes.map((node) => node.id));
-    for (const node of ecosystemNodes) {
-      const body = rendered.find((entry) => entry.id === node.id);
-      expect(body?.href, `${node.id} project destination`).toBe(node.href);
-      expect(body?.accessibleName, `${node.id} accessible name`).toContain(node.name);
+    for (const project of projects) {
+      expect(destinations, `${project.name} appears in the portfolio map`).toContain(`/projects/${project.slug}`);
     }
+    await expect(portfolio.locator('a[href="/projects/codeforge#forge-aaa"]')).toContainText('CodeForge architecture');
+    await expect(portfolio.locator('.portfolio-domain--1')).toContainText('CodeForge');
+    await expect(portfolio.locator('.portfolio-domain--1')).toContainText('Forge AAA');
+    await expect(portfolio.locator('.portfolio-domain--2')).toContainText('Forge Control');
+    await expect(portfolio.locator('.portfolio-domain--3')).toContainText('Dead Trails West');
+    await expect(portfolio.locator('.portfolio-domain--4')).toContainText('ForgerEMS');
+    const additional = page.locator('.forge-list');
+    await expect(additional).toContainText('Kayla AI Publisher');
+    await expect(additional).not.toContainText('Forge Control');
+    await expect(additional).not.toContainText('Dead Trails West');
+    await expect(additional).not.toContainText('ForgerEMS');
+  });
 
-    for (const width of [1920, 1440, 1024, 768, 390]) {
+  test('keeps showcase media and text within desktop, tablet, and mobile layouts', async ({ page }) => {
+    await page.goto('/');
+    const showcases = page.locator('.portfolio-showcases > .product-showcase');
+    await expect(showcases).toHaveCount(5);
+    await expect(page.locator('#codeforge-showcase img')).toHaveAttribute('alt', /CodeForge v0\.2\.0/);
+    await expect(page.locator('#forgerems-showcase img')).toHaveAttribute('src', /forgerems-preview-poster/);
+    await expect(page.locator('#dead-trails-showcase')).toContainText('not gameplay evidence');
+
+    for (const width of [360, 390, 768, 1280, 1920]) {
       await page.setViewportSize({ width, height: 900 });
-      if (width < 720) {
-        await expect(ecosystem.locator('.fds-ecosystem__scene-wrap')).toBeHidden();
-      } else {
-        await expect(ecosystem.locator('.fds-ecosystem__scene-wrap')).toBeVisible();
-      }
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow, `homepage horizontal overflow at ${width}px`).toBeLessThanOrEqual(1);
+      for (const id of ['#codeforge-showcase', '#forge-control-showcase', '#forge-aaa-showcase', '#dead-trails-showcase', '#forgerems-showcase']) {
+        const box = await page.locator(id).boundingBox();
+        expect(box, `${id} visible at ${width}px`).not.toBeNull();
+        expect(box!.x).toBeGreaterThanOrEqual(0);
+        expect(box!.x + box!.width).toBeLessThanOrEqual(width + 1);
+      }
     }
   });
 
-  test('supports keyboard inspection and honors reduced-motion preference', async ({ page }) => {
+  test('keeps the portfolio map keyboard-accessible and labels its status-bearing links', async ({ page }) => {
     await page.goto('/');
-    const ecosystem = page.locator('.fds-ecosystem');
-    await ecosystem.scrollIntoViewIfNeeded();
-    const firstProject = ecosystem.locator('.planet-link[data-node-id]').first();
-    await firstProject.focus();
-    await expect(firstProject).toBeFocused();
-    await expect(ecosystem.locator('[data-panel-detail]')).toBeVisible();
-    await expect(ecosystem.locator('[data-panel-name]')).not.toBeEmpty();
-    await expect(ecosystem.locator('[data-panel-cta]')).toHaveAttribute('href', /^\/projects\//);
-
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    const animationName = await ecosystem.locator('.planet-motion[data-planet]').first()
-      .evaluate((element) => getComputedStyle(element).animationName);
-    expect(animationName).toBe('none');
+    const portfolio = page.locator('.portfolio-map');
+    const codeforgeLink = portfolio.locator('a[href="/projects/codeforge"]').first();
+    await codeforgeLink.focus();
+    await expect(codeforgeLink).toBeFocused();
+    await expect(codeforgeLink).toContainText('CodeForge');
+    await expect(portfolio.getByRole('link', { name: /Forge Control/ })).toHaveAttribute('href', '/projects/forge-control');
+    await expect(portfolio.getByRole('link', { name: /Dead Trails West/ })).toHaveAttribute('href', '/projects/dead-trails-west');
   });
 
-  test('keeps the homepage ecosystem diagrams free of serious accessibility violations', async ({ page }) => {
+  test('passes serious accessibility checks for the homepage portfolio and product showcases', async ({ page }) => {
     await page.goto('/');
+    const showcases = page.locator('.portfolio-showcases');
+    await showcases.scrollIntoViewIfNeeded();
+    await expect(showcases).toHaveClass(/is-revealed/);
+    await expect.poll(() => showcases.evaluate((element) => getComputedStyle(element).opacity))
+      .toBe('1');
     const results = await new AxeBuilder({ page })
-      .include('.fds-ecosystem')
-      .include('.one-eco__diagram')
+      .include('.portfolio-map')
+      .include('.portfolio-showcases')
       .withTags(['wcag2a', 'wcag2aa'])
       .analyze();
     const serious = results.violations.filter((violation) => violation.impact === 'critical' || violation.impact === 'serious');
-    expect(serious, 'Serious accessibility issues in the homepage ecosystem diagrams').toEqual([]);
+    expect(serious, 'Serious accessibility issues in portfolio presentation').toEqual([]);
   });
 });

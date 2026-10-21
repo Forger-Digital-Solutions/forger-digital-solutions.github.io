@@ -28,7 +28,19 @@ export const projects: Project[] = [
       { title: 'Verification & Safety', items: ['Workspace and path isolation', 'Command risk classification and approval', 'Secret scanning before model context leaves the machine', 'Testing and review inside the task lifecycle', 'Fail-closed model and cost eligibility'] },
       { title: 'Developer Control', body: 'Autonomy does not remove oversight. Repository scope, permissions, provider eligibility, and execution controls remain visible, and CodeForge reports failures or blocked routes rather than disguising them as success.' },
       { title: 'Current Availability', body: 'CodeForge v0.2.0 is released for Windows 10/11 x64 as an installer and portable executable. Builds are currently unsigned, so Windows may show an unknown-publisher warning; SHA-256 checksums are published with the release.', items: ['Desktop application', 'Command-line interface', 'VS Code integration', 'Installer and portable Windows builds'] },
-      { id: 'forge-aaa', title: 'Forge AAA', body: 'Forge AAA is an architecture workstream within the CodeForge ecosystem, not a separate public product. This page does not claim a standalone release or capabilities beyond the released CodeForge version.' },
+      {
+        id: 'forge-aaa',
+        title: 'Forge AAA: game-development architecture',
+        body: 'Forge AAA is the advanced game-development direction within CodeForge, not a separate executable, product, or release. The intended architecture is to help coordinate complex development tasks across game engines, content tools, asset and animation workflows, code, and verification while keeping the developer in control.',
+        items: [
+          'Unreal Engine project assistance and game-system implementation',
+          'Blender-centered 3D asset and animation workflows',
+          'Character development and animation integration',
+          'Asset validation, automated testing, and performance investigation',
+          'Coordinated specialist roles for bounded engineering tasks'
+        ],
+        note: 'These are development goals, not a claim that each integration is implemented in CodeForge v0.2.0. Forge AAA does not generate complete AAA games.'
+      },
       { title: 'Routing Systems in Development', body: 'Active development continues beyond the released v0.2.0 binary on model-control and runtime-efficiency work. These efforts are not backported claims about the public release.', items: ['ForgeAuto — automatic selection across verified zero-cost models', '8-Bit — dynamic model-routing and failover under changing provider health and quotas', 'ForgeZero — the fail-closed zero-cost boundary', 'ForgeGreen — runtime-efficiency research'] },
       { title: 'Where It Fits Inside FDS', body: 'CodeForge is both public software and an engineering foundation used across FDS. Its repository intelligence, agent coordination, verification discipline, and controlled execution inform how other FDS products are developed.' }
     ],
@@ -72,46 +84,54 @@ export const projects: Project[] = [
   },
   {
     id: 'forge-control', slug: 'forge-control', name: 'Forge Control',
-    category: 'Engineering Governance', ecosystem: 'Engineering',
-    audience: 'Teams and builders who need clear control and verification around software-engineering work.',
-    problem: 'Engineering workflows need accountable execution and evidence, not just activity or generated output.',
-    differentiation: 'Forge Control is a separate active FDS development project. Public product details are deliberately limited until implementation and integrations can be verified from an authoritative source.',
-    summary: 'An active FDS development project. No public release, live service, integrations, or specific shipped capabilities are currently verified.',
-    description: 'Forge Control is in active development. This public page records its place in the FDS portfolio without presenting a roadmap or intended direction as working software. No public download or third-party integration is currently verified.',
+    category: 'Multi-Agent Engineering Orchestration', ecosystem: 'Engineering',
+    audience: 'Developers coordinating substantial software work across multiple subscription-authenticated coding agents.',
+    problem: 'Separate coding agents can leave a developer manually splitting tasks, tracking state, avoiding conflicting edits, and recovering work when capacity changes.',
+    differentiation: 'Forge Control is intended to coordinate eligible connected agents in one governed workflow. Its direction is automatic discovery, task decomposition, parallel work where safe, shared progress, and continuation—not a chatbot that asks the user to appoint one replacement agent.',
+    summary: 'A separate FDS product in active development: intended to coordinate eligible coding agents, distribute safe independent work, and track verification. No public release or working provider integration is currently verified.',
+    description: 'Forge Control is a separate development project focused on multi-agent software-work coordination. Its intended architecture discovers connected eligible agents, checks supported availability signals, decomposes substantial work, dispatches safe independent tasks concurrently, coordinates shared resources, records progress, and continues or resumes unfinished tasks as capacity changes. These describe product direction; this website does not verify that the workflow or any integration is shipped.',
     status: 'ACTIVE DEVELOPMENT', featured: true, stageLabel: 'Active development · no public release',
-    tags: ['Engineering', 'Governance', 'Verification'],
-    focusAreas: ['Product development', 'Implementation verification'],
+    tags: ['Agent Orchestration', 'Task Distribution', 'Progress Tracking', 'Verification'],
+    focusAreas: ['Discover eligible connected agents', 'Decompose substantial engineering work', 'Dispatch safe independent tasks concurrently', 'Coordinate shared resources and task state', 'Rebalance, pause, and resume unfinished work', 'Return clear verification evidence'],
     highlights: [
-      'Active FDS development project; no public release is available.',
-      'No specific integration or shipped capability is claimed on this page.'
+      'The intended product coordinates agents automatically; users should not have to designate one special agent to replace another.',
+      'Quota-aware continuation is an architectural goal, not a claim of quota access or account pooling.',
+      'Potential integrations include OpenAI Codex, Claude Code, GitHub Copilot, and Antigravity; none is claimed as a verified working integration.',
+      'Owner-reported Windows Electron/NSIS installer acceptance testing is in progress. V23 certification evidence is not available to this public site.'
     ],
     sections: [
-      { title: 'Current Status', body: 'The project is active, but the website does not have access to an authoritative, current public source repository. Specific behavior, interfaces, and integrations are therefore not described as implemented.' },
-      { title: 'Availability', body: 'There is no public download or live service to use today. Product documentation will be expanded when its claims can be verified.' }
+      { title: 'The coordination problem', body: 'Using more than one coding agent can multiply the work around the work: dividing tasks, checking which agent can accept a task, avoiding conflicting edits, preserving shared context, and recovering unfinished work. Forge Control is being designed around coordinating that workflow rather than presenting another standalone chat surface.' },
+      { title: 'Intended orchestration workflow', body: 'The product direction is to discover connected eligible agents, inspect supported availability signals, break a substantial request into bounded work, and dispatch independent tasks in parallel when shared resources allow it. A coordinator would track task state, manage dependencies, and present the evidence needed to review the result.', items: ['Discover connected eligible agents', 'Decompose and assign independent work', 'Coordinate shared files and resources', 'Track progress and verification', 'Rebalance and resume work when capacity changes'], note: 'This is the intended architecture. The website does not claim these steps are implemented or certified.' },
+      { title: 'Potential integrations', body: 'The owner has identified OpenAI Codex, Claude Code, GitHub Copilot, and Antigravity as potential integration targets. Their current API, subscription, availability, and authentication compatibility has not been verified for this page; they must not be read as supported integrations.' },
+      { title: 'Recovery and continuity', body: 'The product goal is to preserve task state and continue eligible unfinished work when an agent reaches a limit or becomes unavailable, then resume when capacity returns. This does not imply access to private subscription quotas, account pooling, or bypassing provider controls.' },
+      { title: 'Security and human oversight', body: 'The intended workflow is governed engineering, not unreviewed parallel writes: task boundaries, shared-resource conflicts, permissions, and verification need to remain inspectable. Implementation and security certification details are not yet verified for public claims.' },
+      { id: 'forge-control-availability', title: 'Development and availability', body: 'Forge Control is in active development. The owner reports a Windows Electron/NSIS development installer undergoing installed-application acceptance testing; the website has not verified V23 certification or completed acceptance evidence. No public installer, beta, live service, or supported integration is available to claim.' },
+      { title: 'Relationship to CodeForge', body: 'Forge Control is a distinct FDS product direction. CodeForge is the released software-engineering product; Forge AAA is a game-development architecture workstream within CodeForge. This relationship does not mean Forge Control is a CodeForge feature or that all products share one executable.' }
     ],
-    roadmap: 'Public product detail will follow verified implementation and release evidence.',
+    roadmap: 'Automatic agent discovery, safe parallel task distribution, durable coordination, recovery, and evidence-backed verification are intended direction, not confirmed shipped capabilities.',
     accentColor: '#36b8ba', visualStyle: 'nodes', sortOrder: 3
   },
   {
     id: 'dead-trails-west', slug: 'dead-trails-west', name: 'Dead Trails West',
-    category: 'Historically Grounded Game', ecosystem: 'Gaming',
-    audience: 'Players interested in historically grounded Western worlds and character-driven survival stories.',
-    problem: 'A convincing historical game world depends on more than scenery: the world, people, animals, time, and player actions need to feel connected.',
-    differentiation: 'Dead Trails West is developed around a documented 1882 setting and a persistent-world simulation, with current engine evidence labeled by its actual verification state.',
-    summary: 'A private Unreal Engine 4.27 game project set in 1882. The persistent-world simulation foundation is partially verified; no public playable build is available.',
-    description: 'Dead Trails West is a historically grounded Western game in private development. Current project records identify an 1882 setting and a Sundance world, with a persistent-world simulation core and Unreal Engine 4.27 adapter under verification. Project records explicitly mark live material-driven visuals as still mid-verification. These are development milestones, not a finished public game.',
+    category: 'Historical Open-World Game', ecosystem: 'Gaming',
+    audience: 'Players drawn to character-led historical worlds, exploration, survival, and communities that respond to player choices.',
+    problem: 'Historical immersion is more than a set of period props. People, property, animals, seasons, work, law, and the consequences of a player’s choices should belong to the same evolving world.',
+    differentiation: 'Dead Trails West is being developed around an 1882–1900 historical span, the initial region of Sundance, New Jersey, and a persistent-world simulation whose verification is reported separately from finished gameplay.',
+    summary: 'An original historical open-world game in private development, set across 1882–1900 with an initial region in Sundance, New Jersey. Built for Unreal Engine 4.27; no public playable build is available.',
+    description: 'Dead Trails West is an original game about the people and places of a changing late-19th-century world. The initial setting is Sundance, New Jersey, and central characters George Bauer and Edward Bauer. The design combines historical storytelling and open-world exploration with settlement life, wildlife, survival, weather and seasons, farming and ranching, hunting and fishing, property, construction, transportation, law, and long-term progression. These are design goals, not a blanket claim that each system is complete. The project uses Unreal Engine 4.27 with Blender-centered asset workflows; no public playable build or release date is available.',
     status: 'PRIVATE DEVELOPMENT', featured: true, stageLabel: 'Private game development · no public build',
     tags: ['Western', '1882', 'Unreal Engine 4.27', 'Persistent World'],
-    focusAreas: ['World simulation', 'Historically grounded environments', 'Character and animal systems', 'Unreal Engine integration'],
+    focusAreas: ['Historical story and open-world exploration', 'Living settlements and character interactions', 'Wildlife, survival, weather, and seasons', 'Farming, ranching, hunting, and fishing', 'Property, construction, and transportation', 'Law, consequence, and long-term world progression'],
     highlights: [
       'Private development; no public playable build or release date is available.',
-      'Current project status marks the simulation foundation verified only in part.',
-      'The project uses Unreal Engine 4.27; live visual verification remains in progress.'
+      'The persistent-world simulation has not been independently verified; this is not full-game certification.',
+      'Owner-reported integration checks cover selected travel, store, empty-wallet purchase refusal, and return-route scenarios.'
     ],
     sections: [
-      { title: 'An 1882 World', body: 'The current project records identify an 1882 setting centered on Sundance. Historical and property details remain grounded in the project’s private canon and are not expanded into unsupported public claims.' },
-      { title: 'World Simulation', body: 'The documented persistent-world simulation core and adapter are partially verified. Recent project evidence also reports a packaged distribution certification milestone; that evidence does not establish a publicly playable release.' },
-      { title: 'Built for Unreal Engine', body: 'The active game project targets Unreal Engine 4.27. Current engineering records separate simulation-core evidence from live material and in-engine visual verification.' },
+      { id: 'dead-trails-setting', title: 'Sundance, 1882–1900', body: 'The story begins in Sundance, New Jersey, in 1882 and is designed to span the years through 1900. George Bauer and Edward Bauer are central characters. This public overview leaves unreleased story scripts and private canon details unpublished.' },
+      { title: 'A world with many kinds of play', body: 'The project is not framed as gunfights alone. Its design brings historical storytelling and open-world exploration together with settlement relationships, survival, wildlife, seasons, work, property, and consequences.', items: ['Living settlements and character interactions', 'Wildlife and survival, with dynamic weather and seasonal simulation as design goals', 'Farming, ranching, hunting, and fishing', 'Property development, construction, and transportation', 'Law, consequences, and long-term world progression'], note: 'These are design pillars and planned systems. This list does not assert that all features are currently implemented or playable.' },
+      { title: 'Selected integration checks', body: 'Owner-reported development evidence describes automated travel between locations, a general-store interaction, purchase refusal when the player wallet is empty, and a return-route test. These are specific integration scenarios, not a certification of the whole game, a visual-quality review, or evidence of public release.', note: 'The owner-reported test summary has not been independently reproduced in this website repository.' },
+      { title: 'Unreal and asset pipeline', body: 'The project targets Unreal Engine 4.27 and uses Blender with associated asset workflows. The development pipeline is intended to connect character work, materials, animation, collisions, validation, and in-engine integration. No gameplay screenshots are available in this public website repository, so the site uses no fabricated in-game imagery.' },
       { title: 'Availability', body: 'Dead Trails West is in private development. There is no public download, playable build, or announced release date.' }
     ],
     privacyNotice: 'Private-development source and assets are not distributed through this website.',

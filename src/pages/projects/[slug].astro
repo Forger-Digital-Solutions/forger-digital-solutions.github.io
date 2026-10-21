@@ -14,6 +14,7 @@ import KyraBloxLoop from '../../components/signatures/KyraBloxLoop.astro';
 import KaylaThread from '../../components/signatures/KaylaThread.astro';
 import WtpTrace from '../../components/signatures/WtpTrace.astro';
 import FarmStandRadius from '../../components/signatures/FarmStandRadius.astro';
+import ProductShowcase from '../../components/ProductShowcase.astro';
 
 export function getStaticPaths() {
   return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
@@ -57,6 +58,16 @@ const ecosystemStyles: Record<string, { color: string; bg: string }> = {
 };
 const ecosystemStyle = project.ecosystem ? ecosystemStyles[project.ecosystem] : null;
 const ecoColor = ecosystemStyle?.color || project.accentColor;
+const focusHeading = project.slug === 'forge-control'
+  ? 'Intended orchestration workflow'
+  : project.slug === 'dead-trails-west'
+    ? 'Gameplay design pillars'
+    : project.slug === 'codeforge'
+      ? 'Current product capabilities'
+      : project.slug === 'forgerems'
+        ? 'Public preview features'
+        : 'Project focus';
+const hasProductArtwork = ['forge-control', 'dead-trails-west'].includes(project.slug);
 
 // Structured data: breadcrumbs for every project page, plus a SoftwareApplication
 // record (with the download URL) only for projects that actually ship one. Source
@@ -207,10 +218,53 @@ const softwareSchema = releaseProduct ? {
         state={heroEvidenceState}
         eager
       />
-    ) : !signatureKind && (
+    ) : !signatureKind && !hasProductArtwork && (
       <figure class="project-visual">
         <ProjectVisual project={project} variant="hero" />
       </figure>
+    )}
+
+    {project.slug === 'codeforge' && (
+      <ProductShowcase
+        id="forge-aaa-overview"
+        eyebrow="CodeForge architecture · development direction"
+        title="Forge AAA: an engineering architecture for game work."
+        summary="Forge AAA is a CodeForge workstream for coordinating complex game-development tasks across software, tools, assets, animation, and verification. It is not a separate public product."
+        status="Planned direction · not a shipped feature set"
+        statusTone="planned"
+        href="#forge-aaa"
+        cta="Read the verified scope"
+        visual="forge-aaa"
+        points={['Unreal Engine and Blender workflows are intended focus areas; integrations are not claimed as shipped', 'Asset creation, characters, animation, game systems, tests, and performance are development goals', 'CodeForge v0.2.0 remains the released product; Forge AAA does not generate complete AAA games']}
+      />
+    )}
+    {project.slug === 'forge-control' && (
+      <ProductShowcase
+        id="forge-control-architecture"
+        eyebrow="Separate FDS project · intended architecture"
+        title="Coordinate the work around connected coding agents."
+        summary="Forge Control is designed around automatic discovery, task decomposition, safe distribution, shared progress, and recovery. The visual is an architecture sketch, not a screenshot or proof of implemented behavior."
+        status="Active development · integrations unverified"
+        statusTone="development"
+        href="#forge-control-availability"
+        cta="Review status and availability"
+        visual="control"
+        points={['Potential targets include Codex, Claude Code, GitHub Copilot, and Antigravity; current support is not verified', 'No public release, private beta, quota access, or account pooling is claimed', 'Owner-reported installer acceptance testing is not V23 certification']}
+      />
+    )}
+    {project.slug === 'dead-trails-west' && (
+      <ProductShowcase
+        id="dead-trails-setting-study"
+        eyebrow="Sundance · New Jersey · 1882"
+        title="A historical setting study, not a gameplay capture."
+        summary="The original CSS illustration evokes the project’s late-19th-century atmosphere while making clear that no approved in-game screenshot is available on this site."
+        status="Design study · private development"
+        statusTone="private"
+        href="#dead-trails-setting"
+        cta="Explore setting and gameplay goals"
+        visual="dead-trails-west"
+        points={['George and Edward Bauer anchor the public overview; private story scripts remain unpublished', 'Unreal Engine 4.27 and Blender are the documented development tools', 'The world simulation is partially verified; no public playable build is available']}
+      />
     )}
 
     <!-- Signature composition: the private-development projects replace the
@@ -327,7 +381,7 @@ const softwareSchema = releaseProduct ? {
 
         <!-- Focus Areas / Capabilities -->
         <section class="project-section" aria-labelledby="focus">
-          <h2 id="focus" class="section-title">Core Capabilities</h2>
+          <h2 id="focus" class="section-title">{focusHeading}</h2>
           <ul class="capabilities-grid">
             {(project.focusAreas || project.tags).slice(0, 6).map((area, index) => (
               <li class="capability-item">

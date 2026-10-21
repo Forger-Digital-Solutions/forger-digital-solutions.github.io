@@ -147,7 +147,8 @@ describe('content consistency guards (Phase 28)', () => {
   });
 
   it('navigates company-first without the old nav labels', () => {
-    expect(header).toContain("label: 'Portfolio'");
+    expect(header).toContain("label: 'Products'");
+    expect(header).toContain("label: 'CodeForge'");
     expect(header).toContain("label: 'Forge Control'");
     expect(header).toContain("label: 'Dead Trails West'");
     expect(header).toContain("label: 'Releases'");

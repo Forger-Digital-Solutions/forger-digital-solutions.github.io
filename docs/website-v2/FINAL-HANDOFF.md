@@ -2,26 +2,25 @@
 
 ## Current state
 
-The migration is in progress on `feature/fds-website-v2`, based on recovery commit `d931201edd8570013b5e8c630060d88b5a7a72b3`. Source files have not been committed, no pull request has been opened, and production has not been changed by this V2 work.
+The overhaul is committed on `feature/fds-website-v2` and tracked by open pull request #3 against `main`. Use the PR's head SHA as the source of truth for the final commit identifier; this handoff is committed with that source. The PR remains unmerged and undeployed. The earlier recovery audit found website sources intact and traced the original outage to GitHub Pages configuration, not loss of the owner's local `FDSWebsite` folder.
 
-The public portfolio and Kayla knowledge now emphasize CodeForge / Forge AAA, Forge Control, and Dead Trails West while retaining the other current project pages. GEMS / Training Grounds and KyraBlox are no longer promoted as current projects. Historical notes remain in Git as drafts and are excluded from production routes.
+## Product-specific coverage
 
-## Verified locally
+- CodeForge's released Windows v0.2.0 positioning and release path remain distinct from Forge AAA, which is presented on the CodeForge detail page as planned architecture, not a separate release or complete-game generator.
+- Forge Control has a dedicated detail showcase for its intended multi-agent coordination workflow. Provider integrations, V23 certification, installer acceptance evidence, and public availability remain unverified.
+- Dead Trails West has a dedicated setting-study showcase labeled as illustrative CSS, not gameplay footage. The owner-reported travel/store/wallet/return scenarios are not independently reproduced and do not certify the game.
+- ForgerEMS remains linked from the homepage and keeps its separate preview page, existing GitHub Release artifacts, checksums, and click-to-load video experience.
+- Kayla AI Publisher remains in the additional-development catalog and retains its project detail route. The website's Kayla assistant and its existing knowledge, accessibility, and interaction coverage remain in place.
+- GEMS / Training Grounds and KyraBlox are not current catalog entries; historical material remains in Git without being promoted as a current release.
 
-- Clean dependency install completed.
-- Unit suite: 62 files and 1,051 tests passed.
-- `npm run validate` passed, including 345/345 offline Kayla golden queries, a 28-page static build, and 1,265 internal links.
-- Astro reports no errors; two `document.execCommand` deprecation hints remain on existing Forged and ForgerEMS copy controls.
-- Chromium browser certification passed 153 tests with 26 intentional skips; Firefox and WebKit each passed all three Kayla shell smoke tests.
-- Updated portfolio-specific geometry, responsive-layout, accessibility, navigation, and project-route browser checks passed 14/14.
-- `git diff --check` passed.
+## Validation and evidence boundaries
 
-## Continue through GitHub
+Local `npm run validate`, `npm test` (62 files, 1,050 tests), and `npm run build` passed. The build generated 28 static pages and internal-link validation found 0 broken among 1,273 links. CI-mode Playwright passed 161 tests with 26 condition-skipped tests; the final focused portfolio/product/release run passed 16/16. Local responsive screenshots were inspected at 360, 390, 768, 1,280, and 1,920 CSS pixels for key homepage/product presentations. Formal visual-certification captures were among the skipped tests, and no production performance audit was performed.
 
-Use this repository as the authoritative source. Continue on the dedicated feature branch, make changes through a reviewed pull request, and rely on the existing GitHub Actions gates for tests, dependency security, build, browser certification, and Pages deployment. Do not merge or deploy until the owner approves.
+The previous recovery baseline at `d931201` had been checked live. No V2 production verification, merge, deployment, DNS change, or Pages-setting change is claimed here. Forge Control integrations/V23, Dead Trails West gameplay evidence and owner-reported checks, and the current deployed rendering remain unverified.
 
-Recommended safeguards after the migration: protect `main` against direct pushes and force pushes; require pull requests and passing required checks; require at least one human review; retain Actions artifacts and deployment history; and maintain a repository backup or mirror with Git history.
+## Next owner-controlled steps
 
-## Production boundary
+Review the final branch diff and GitHub Actions results for the PR head, then approve and merge only through the normal protected workflow. After the approved deployment, check the deployment artifact/run and verify the custom domain, HTTPS, redirects, routes, assets, mobile behavior, and retired-route expectations. If Pages or DNS needs adjustment, use observed evidence and the domain owner's authority; do not guess or replace records.
 
-The recovery baseline had previously been verified live. This V2 handoff does not assert that the migrated portfolio is live. Recheck the custom domain, HTTPS, redirects, routes, assets, mobile behavior, and expected absence of retired routes only after an approved deployment.
+Recommended safeguards: protect `main` against direct pushes and force pushes; require pull requests, a human review, and passing security/test/build checks; retain Actions artifacts and deployment history; and maintain a private repository mirror or scheduled backup that preserves Git history.

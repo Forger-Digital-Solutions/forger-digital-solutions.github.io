@@ -1,0 +1,111 @@
+---
+import { projects } from '../data/projects';
+import { manifestByProjectSlug, canonicalStatusLabels } from '../data/manifest';
+
+const bySlug = (slug: string) => projects.find((project) => project.slug === slug)!;
+const codeforge = bySlug('codeforge');
+const groups = [
+  {
+    name: 'Engineering',
+    description: 'Developer tools and software delivery.',
+    products: [
+      { project: codeforge, label: 'Released product', href: '/projects/codeforge' },
+      { project: null, label: 'CodeForge architecture', href: '/projects/codeforge#forge-aaa', name: 'Forge AAA', status: 'Planned development direction' },
+    ],
+  },
+  {
+    name: 'Orchestration',
+    description: 'A distinct project for coordinating eligible coding agents.',
+    products: [{ project: bySlug('forge-control'), label: 'Separate product', href: '/projects/forge-control' }],
+  },
+  {
+    name: 'Original games',
+    description: 'Historically grounded interactive worlds.',
+    products: [{ project: bySlug('dead-trails-west'), label: 'Private development', href: '/projects/dead-trails-west' }],
+  },
+  {
+    name: 'Technical utilities',
+    description: 'Tools built around practical technician workflows.',
+    products: [{ project: bySlug('forgerems'), label: 'Public preview', href: '/projects/forgerems' }],
+  },
+];
+const additional = ['kayla-ai-publisher', 'we-the-people', 'farmstand-finder'].map(bySlug);
+---
+
+<section class="portfolio-map" aria-labelledby="portfolio-map-title">
+  <div class="portfolio-map__header">
+    <p class="portfolio-map__eyebrow">The Digital Forge <span aria-hidden="true">/</span> Portfolio map</p>
+    <h2 id="portfolio-map-title">Different products. Clear boundaries.</h2>
+    <p>One independent studio, several distinct systems. Shared engineering discipline does not mean a single app, runtime, or release.</p>
+  </div>
+
+  <div class="portfolio-map__core">
+    <span class="portfolio-map__core-mark" aria-hidden="true">FDS</span>
+    <span><strong>Forger Digital Solutions</strong><small>Independent software and game development</small></span>
+  </div>
+
+  <div class="portfolio-map__grid">
+    {groups.map((group, groupIndex) => (
+      <section class={`portfolio-domain portfolio-domain--${groupIndex + 1}`} aria-label={group.name}>
+        <span class="portfolio-domain__index">0{groupIndex + 1}</span>
+        <h3>{group.name}</h3>
+        <p>{group.description}</p>
+        <ul>
+          {group.products.map((entry) => {
+            const project = entry.project;
+            const status = project ? manifestByProjectSlug[project.slug]?.canonicalStatus : undefined;
+            return (
+              <li>
+                <a href={entry.href}>
+                  <span class="portfolio-domain__product">{project?.name ?? entry.name}</span>
+                  <span class="portfolio-domain__status">{status ? canonicalStatusLabels[status] : entry.label}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <div class="portfolio-map__additional">
+    <span>Additional development</span>
+    {additional.map((project) => (
+      <a href={`/projects/${project.slug}`}>{project.shortName || project.name}<span>{manifestByProjectSlug[project.slug]?.canonicalStatus.replaceAll('-', ' ')}</span></a>
+    ))}
+    <a class="portfolio-map__all" href="/projects">View all projects <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<style>
+  .portfolio-map { position: relative; overflow: hidden; padding: clamp(1rem, 2.5vw, 1.5rem); border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl); background: radial-gradient(ellipse at 50% 0%, rgba(41,91,184,.18), transparent 56%), linear-gradient(155deg, #101722, #080c13 70%); box-shadow: var(--shadow-panel), inset 0 1px rgba(255,255,255,.055); }
+  .portfolio-map::before { position: absolute; inset: 0; background-image: linear-gradient(rgba(122,157,209,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(122,157,209,.045) 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(145deg, #000, transparent 70%); content: ''; pointer-events: none; }
+  .portfolio-map__header, .portfolio-map__core, .portfolio-map__grid, .portfolio-map__additional { position: relative; z-index: 1; }
+  .portfolio-map__header { max-width: 38rem; }
+  .portfolio-map__eyebrow { margin: 0 0 .6rem; color: #8eafff; font: 700 .62rem/1.4 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+  .portfolio-map__eyebrow span { padding: 0 .3rem; color: var(--color-text-subtle); }
+  .portfolio-map__header h2 { margin: 0; font-size: clamp(1.4rem, 2.5vw, 2rem); line-height: 1.08; letter-spacing: -.04em; }
+  .portfolio-map__header > p:last-child { max-width: 34rem; margin: .65rem 0 0; color: var(--color-text-muted); font-size: .86rem; line-height: 1.55; }
+  .portfolio-map__core { display: flex; align-items: center; gap: .75rem; width: fit-content; margin: 1.15rem auto .8rem; padding: .7rem .9rem; border: 1px solid rgba(112,157,246,.42); border-radius: var(--radius-md); background: rgba(18,34,60,.76); box-shadow: 0 10px 30px rgba(0,0,0,.24); }
+  .portfolio-map__core-mark { display: grid; place-items: center; width: 2.6rem; aspect-ratio: 1; border: 1px solid rgba(177,202,255,.55); border-radius: .6rem; background: linear-gradient(145deg, #3166c9, #102448); color: white; font: 800 .75rem/1 var(--font-mono); letter-spacing: .08em; }
+  .portfolio-map__core strong, .portfolio-map__core small { display: block; }
+  .portfolio-map__core strong { font-size: .83rem; }
+  .portfolio-map__core small { margin-top: .15rem; color: var(--color-text-muted); font-size: .69rem; line-height: 1.4; }
+  .portfolio-map__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+  .portfolio-domain { min-width: 0; padding: .8rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(7,12,19,.79); }
+  .portfolio-domain--1 { --domain-accent: #83a7ff; }.portfolio-domain--2 { --domain-accent: #69c8c5; }.portfolio-domain--3 { --domain-accent: #d5a47e; }.portfolio-domain--4 { --domain-accent: #79d6aa; }
+  .portfolio-domain__index { color: var(--domain-accent); font: 700 .58rem/1 var(--font-mono); letter-spacing: .12em; }
+  .portfolio-domain h3 { display: inline; margin: 0 0 0 .45rem; color: var(--color-text); font-size: .88rem; letter-spacing: -.02em; }
+  .portfolio-domain > p { margin: .25rem 0 .55rem; color: var(--color-text-subtle); font-size: .68rem; line-height: 1.45; }
+  .portfolio-domain ul { display: grid; gap: .35rem; margin: 0; padding: 0; list-style: none; }
+  .portfolio-domain li a { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .2rem .5rem; align-items: baseline; padding-top: .35rem; border-top: 1px solid var(--color-border); color: var(--color-text); }
+  .portfolio-domain li a:hover .portfolio-domain__product { color: var(--domain-accent); }
+  .portfolio-domain__product { font-size: .76rem; font-weight: 700; }
+  .portfolio-domain__status { color: var(--color-text-subtle); font: 600 .55rem/1.3 var(--font-mono); text-transform: uppercase; }
+  .portfolio-map__additional { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-top: .65rem; padding-top: .65rem; border-top: 1px solid var(--color-border); }
+  .portfolio-map__additional > span { margin-right: .2rem; color: var(--color-text-subtle); font: 650 .55rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .portfolio-map__additional > a { display: inline-flex; flex-wrap: wrap; gap: .1rem .3rem; align-items: baseline; padding: .27rem .45rem; border: 1px solid var(--color-border); border-radius: 999px; color: var(--color-text-muted); font-size: .61rem; }
+  .portfolio-map__additional > a span { color: var(--color-text-subtle); font: 500 .5rem/1 var(--font-mono); text-transform: uppercase; }
+  .portfolio-map__additional > .portfolio-map__all { margin-left: auto; border-color: transparent; color: #a9c1ff; font-weight: 700; }
+  @media (max-width: 520px) { .portfolio-map { padding: 1rem; }.portfolio-map__core { margin-top: .85rem; }.portfolio-map__grid { grid-template-columns: 1fr; }.portfolio-map__additional { align-items: flex-start; }.portfolio-map__additional > .portfolio-map__all { margin-left: 0; } }
+</style>

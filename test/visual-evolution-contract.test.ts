@@ -1,57 +1,52 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { ecosystemNodes } from '../src/data/ecosystem';
+import { projects } from '../src/data/projects';
 
-const ecosystem = readFileSync(new URL('../src/components/FDSEcosystem.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
-const connected = readFileSync(new URL('../src/components/OneFDSEcosystem.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
-const homepage = readFileSync(new URL('../src/pages/index.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+const portfolio = readFileSync(new URL('../src/components/PortfolioArchitecture.astro', import.meta.url), 'utf8');
+const showcases = readFileSync(new URL('../src/components/ProductShowcase.astro', import.meta.url), 'utf8');
+const homepage = readFileSync(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
+const projectPage = readFileSync(new URL('../src/pages/projects/[slug].astro', import.meta.url), 'utf8');
 
-describe('final visual evolution contract', () => {
-  it('preserves seven individually certified product-motion paths', () => {
-    expect(ecosystemNodes).toHaveLength(7);
-    expect(new Set(ecosystemNodes.map((node) => node.id)).size).toBe(7);
-    expect(new Set(ecosystemNodes.map((node) => node.orbit.path)).size).toBe(7);
-    expect(new Set(ecosystemNodes.map((node) => node.orbit.duration)).size).toBe(7);
-    expect(ecosystem.match(/data-planet={node\.id}/g)).toHaveLength(1);
-    expect(ecosystem.match(/data-tag-for={node\.id}/g)).toHaveLength(1);
-    expect(ecosystem).toContain('offset-path: var(--orbit-path)');
+describe('product portfolio visual contract', () => {
+  it('keeps distinct product relationships and derives project status from the manifest', () => {
+    expect(portfolio).toContain("name: 'Engineering'");
+    expect(portfolio).toContain("name: 'Orchestration'");
+    expect(portfolio).toContain("name: 'Original games'");
+    expect(portfolio).toContain("name: 'Technical utilities'");
+    expect(portfolio).toContain('manifestByProjectSlug[project.slug]?.canonicalStatus');
+    expect(portfolio).toContain('CodeForge architecture');
+    expect(portfolio).toContain('project: null');
   });
 
-  it('shows three dominant planes while retaining the exact seven product paths and canonical center mark', () => {
-    expect(ecosystem.match(/data-scaffold-plane="(?:one|two|three)"/g)).toHaveLength(3);
-    expect(ecosystem).toContain('class="orbit-path" d={node.orbit.path}');
-    expect(ecosystem).toContain('--orbit-path:path("${node.orbit.path}")');
-    expect(ecosystem).toContain('.orbit-path { fill: none; stroke: #8ba9e0; stroke-width: 1.05; opacity: 0;');
-    expect(ecosystem).toContain('stroke-dasharray: 18 982; stroke-dashoffset: var(--accent-offset); opacity: 0;');
-    expect(ecosystem).not.toContain('class="relation-layer"');
-    expect(ecosystem).toContain('.orbit-visual.orbit-highlight .orbit-path');
-    expect(ecosystem).toContain('codeforge-icon.svg');
-    expect(ecosystem).toContain('class="core__heart"');
-    expect(ecosystem).toContain('class="core__reactor-frame core__ring core__ring--outer"');
-  });
-
-  it('uses concise product categories in Connected Systems cards', () => {
-    expect(connected).not.toContain('DOMAIN //');
-    expect(connected).not.toContain('CORE //');
-    expect(connected).toContain('eco-node__micro">DEVELOPMENT</p>');
-    expect(connected).toContain("micro: 'ENGINEERING'");
-    for (const category of ['GAMING', 'PUBLISHING', 'CIVIC', 'LOCAL DISCOVERY', 'MAINTENANCE']) {
-      expect(connected).toContain(`'${category}'`);
-    }
-    expect(connected).toContain('FDS PRODUCTS');
-  });
-
-  it('highlights the current portfolio without publishing retired product diagrams', () => {
-    for (const current of ['CodeForge', 'Forge AAA', 'Forge Control', 'Dead Trails West']) {
-      expect(homepage).toContain(current);
-    }
+  it('preserves the current seven-project catalog and omits retired catalog entries', () => {
+    expect(projects.map((project) => project.slug)).toEqual([
+      'codeforge',
+      'forgerems',
+      'forge-control',
+      'dead-trails-west',
+      'kayla-ai-publisher',
+      'we-the-people',
+      'farmstand-finder',
+    ]);
     expect(homepage).not.toMatch(/GEMS|KyraBlox|Training Grounds/);
-    expect(homepage).not.toMatch(/GemsStory|GemsLearningSystem/);
   });
 
-  it('excludes retired products from the ecosystem map', () => {
-    expect(ecosystemNodes.map((node) => node.id)).not.toContain('gems-training-grounds');
-    expect(ecosystemNodes.map((node) => node.id)).not.toContain('kyrablox');
-    expect(ecosystem).not.toMatch(/gems-training-grounds|\/projects\/kyrablox/);
+  it('keeps the five homepage showcases distinct and availability-qualified', () => {
+    for (const id of ['codeforge-showcase', 'forge-control-showcase', 'forge-aaa-showcase', 'dead-trails-showcase', 'forgerems-showcase']) {
+      expect(homepage).toContain(`id="${id}"`);
+    }
+    expect(homepage).toContain('Released · v0.2.0');
+    expect(homepage).toContain('Active development · no public release');
+    expect(homepage).toContain('Private development · no public playable build');
+    expect(homepage).toContain('Public preview · v1.2.4-preview.1');
+  });
+
+  it('labels conceptual art and unverified integrations instead of presenting them as evidence', () => {
+    expect(showcases).toContain('illustrative design visualization, not a product screenshot');
+    expect(showcases).toContain('Potential integrations, not verified as working');
+    expect(showcases).toContain('not gameplay footage');
+    expect(projectPage).toContain('integrations are not claimed as shipped');
+    expect(projectPage).toContain('The visual is an architecture sketch, not a screenshot or proof of implemented behavior.');
+    expect(projectPage).toContain('not a gameplay capture');
   });
 });

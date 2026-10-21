@@ -16,7 +16,8 @@ test.describe('Site release-critical surfaces', () => {
 
   test('A. primary navigation reaches every release-critical page', async ({ page }) => {
     const navTargets = [
-      { label: 'Portfolio', href: '/projects', marker: 'main' },
+      { label: 'Products', href: '/projects', marker: 'main' },
+      { label: 'CodeForge', href: '/projects/codeforge', marker: 'main' },
       { label: 'Forge Control', href: '/projects/forge-control', marker: 'main' },
       { label: 'Dead Trails West', href: '/projects/dead-trails-west', marker: 'main' },
       { label: 'Releases', href: '/forged', marker: '.product-card' },
@@ -54,22 +55,19 @@ test.describe('Site release-critical surfaces', () => {
     await expect(nav).not.toHaveClass(/active/);
   });
 
-  test('C. ecosystem nodes are visible and keyboard-inspectable', async ({ page }) => {
+  test('C. portfolio map links and product relationships are keyboard-inspectable', async ({ page }) => {
     await page.goto('/');
 
-    const diagram = page.locator('.fds-ecosystem');
-    await expect(diagram).toBeVisible();
-
-    const nodes = diagram.locator('.planet-link[data-node-id]');
-    await expect(nodes).toHaveCount(projects.length);
-    const inspectable = nodes.first();
+    const map = page.locator('.portfolio-map');
+    await expect(map).toBeVisible();
+    const links = map.locator('a[href^="/projects/"]');
+    await expect(links).toHaveCount(projects.length + 1);
+    const inspectable = map.locator('a[href="/projects/codeforge"]').first();
     await inspectable.focus();
     await expect(inspectable).toBeFocused();
-    await expect(diagram.locator('[data-panel-detail]')).toBeVisible();
-    await expect(diagram.locator('[data-panel-purpose]')).not.toBeEmpty();
-
-    const codeforgeNode = diagram.locator('a.planet-link[href="/projects/codeforge"]');
-    await expect(codeforgeNode).toBeVisible();
+    await expect(map.locator('a[href="/projects/codeforge#forge-aaa"]')).toContainText('CodeForge architecture');
+    await expect(map.locator('a[href="/projects/forge-control"]')).toContainText('Forge Control');
+    await expect(map.locator('a[href="/projects/dead-trails-west"]')).toContainText('Dead Trails West');
   });
 
   test('D. Forged archive flow: exact full SHA, Copy SHA, Download ZIP', async ({ page, request }) => {

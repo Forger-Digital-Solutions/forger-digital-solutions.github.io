@@ -4,33 +4,33 @@ import { siteConfig } from '../config/site';
 import { projects } from '../data/projects';
 import { statusMeta } from '../data/status';
 import { statusStripEntries, canonicalStatusLabels } from '../data/manifest';
-import ProjectCard from '../components/ProjectCard.astro';
 import ProjectStatus from '../components/ProjectStatus.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import NoteCard from '../components/NoteCard.astro';
 import SupportDialog from '../components/SupportDialog.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
-import OneFDSEcosystem from '../components/OneFDSEcosystem.astro';
-import FDSEcosystem from '../components/FDSEcosystem.astro';
+import PortfolioArchitecture from '../components/PortfolioArchitecture.astro';
+import ProductShowcase from '../components/ProductShowcase.astro';
 import { getPublishedNotes } from '../lib/notes';
 
 const sortedProjects = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
-const codeForge = projects.find((p) => p.slug === 'codeforge');
-const activeProjects = sortedProjects.filter((p) => !['codeforge', 'forgerems'].includes(p.slug));
+const activeProjects = sortedProjects.filter((p) => !['codeforge', 'forgerems', 'forge-control', 'dead-trails-west'].includes(p.slug));
 const latestNotes = (await getPublishedNotes()).slice(0, 3);
 ---
-<BaseLayout>
+<BaseLayout
+  description="Forger Digital Solutions is an independent New Jersey software and interactive media studio. Explore released developer tools, technician software, and original games in development."
+>
   <VisitorCounter />
   <section class="hero">
     <div class="hero__copy">
-      <p class="hero__status"><span></span> FDS SYSTEMS // ONLINE</p>
+      <p class="hero__status"><span></span> FDS // INDEPENDENT STUDIO</p>
       <p class="hero__eyebrow"><span class="accent">FORGER</span> <span><span class="silver">DIGITAL</span> <span class="accent">SOLUTIONS</span></span></p>
-      <h1>Software engineered for the real world.</h1>
-      <p class="hero__line">An independent studio building useful systems, tools, and worlds.</p>
-      <p class="hero__description">From CodeForge and its Forge AAA architecture to Forge Control, ForgerEMS, and Dead Trails West, FDS builds with clear boundaries between released software and work still in development.</p>
+      <h1>Build the tools.<br />Build the worlds.</h1>
+      <p class="hero__line">Independent software engineering, AI development tools, and original interactive experiences.</p>
+      <p class="hero__description">Forger Digital Solutions is an independent New Jersey studio. We build focused products, publish them when they are ready, and show the difference between released software and work still in development.</p>
       <div class="hero__actions"><a href="/projects" class="btn btn-primary">Explore Products <span aria-hidden="true">→</span></a><a href="/forged" class="btn btn-outline">Get CodeForge</a>{siteConfig.githubUrl && <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="hero__github">GitHub <span aria-hidden="true">↗</span></a>}</div>
     </div>
-    <FDSEcosystem />
+    <PortfolioArchitecture />
     <div class="hero__rail" aria-label="FDS focus areas"><span>SOFTWARE ENGINEERING</span><span>DEVELOPER TOOLS</span><span>TECHNICIAN SOFTWARE</span><span>GAME WORLDS</span></div>
   </section>
 
@@ -48,41 +48,92 @@ const latestNotes = (await getPublishedNotes()).slice(0, 3);
     </ul>
   </section>
 
-  <section class="page-section" aria-labelledby="codeforge-title">
-    <SectionHeader eyebrow="Flagship Product" title="CodeForge engineers software" description="A released free-first autonomous engineering platform: it inspects repositories, plans work, edits code through controlled tools, runs checks, and reviews the result — while active development continues on the next generation of its routing and efficiency systems." />
-    {codeForge && <ProjectCard project={codeForge} featured={true} />}
+  <section class="page-section portfolio-showcases" aria-label="Featured Forger Digital Solutions products">
+    <ProductShowcase
+      id="codeforge-showcase"
+      eyebrow="Flagship software · Windows · CLI · VS Code"
+      title="CodeForge puts engineering work in motion."
+      summary="A released, free-first autonomous software-engineering platform that can inspect a repository, plan bounded work, edit through controlled tools, run checks, and review the result."
+      status="Released · v0.2.0"
+      statusTone="released"
+      href="/forged"
+      cta="Get CodeForge"
+      visual="codeforge"
+      points={['Windows 10/11 x64 installer and portable builds', 'ForgeZero rejects paid, local, unknown-cost, and unverified model routes', 'Provider capacity can be limited; unlimited availability is not promised']}
+    />
+    <ProductShowcase
+      id="forge-control-showcase"
+      eyebrow="Separate FDS product · orchestration"
+      title="Forge Control is being built to coordinate coding agents."
+      summary="The intended workflow discovers eligible connected agents, breaks substantial work into safe independent tasks, coordinates execution, and keeps progress and verification visible. It is not a chatbot or a replacement agent."
+      status="Active development · no public release"
+      statusTone="development"
+      href="/projects/forge-control"
+      cta="Explore the product direction"
+      visual="control"
+      reverse
+      points={['Automatic task distribution and concurrent independent work are product goals', 'Quota-aware pause, rebalance, and resume behavior is intended architecture', 'Codex, Claude Code, GitHub Copilot, and Antigravity are potential integrations; working support is unverified']}
+    />
+    <ProductShowcase
+      id="forge-aaa-showcase"
+      eyebrow="CodeForge architecture · game-development direction"
+      title="Forge AAA brings game workflows into CodeForge’s engineering direction."
+      summary="A planned development area within CodeForge—not a separate application. The direction is to help coordinate software, asset, animation, and validation work across game-development tools while keeping the developer in control."
+      status="Planned development direction · not a shipped feature set"
+      statusTone="planned"
+      href="/projects/codeforge#forge-aaa"
+      cta="See the Forge AAA architecture"
+      visual="forge-aaa"
+      points={['Intended to span Unreal Engine and Blender workflows', 'Potential areas include 3D assets, character work, animation, and game systems', 'No claim that Forge AAA produces complete AAA games or ships these integrations today']}
+    />
+    <ProductShowcase
+      id="dead-trails-showcase"
+      eyebrow="Original game · Sundance, New Jersey"
+      title="Dead Trails West is a world built to change with its people."
+      summary="An original historical game in private development, set in 1882 and centered on George and Edward Bauer. The design reaches beyond gunfights to settlement life, exploration, survival, wildlife, work, and consequence."
+      status="Private development · no public playable build"
+      statusTone="private"
+      href="/projects/dead-trails-west"
+      cta="Explore the game and its development"
+      visual="dead-trails-west"
+      reverse
+      points={['Unreal Engine 4.27 and Blender development pipeline', 'Seasonal world, farming, ranching, hunting, fishing, construction, and law are design goals—not blanket claims of completion', 'Illustration is an original CSS setting study, not gameplay evidence']}
+    />
+    <ProductShowcase
+      id="forgerems-showcase"
+      eyebrow="Technician workbench · Windows"
+      title="ForgerEMS brings practical repair tools together."
+      summary="A local-first workbench for USB toolkit creation, drive validation, system information, USB and port intelligence, driver guidance, and diagnostics."
+      status="Public preview · v1.2.4-preview.1"
+      statusTone="preview"
+      href="/projects/forgerems"
+      cta="Explore ForgerEMS and its preview"
+      visual="forgerems"
+      points={['Portable ZIP and installer preview artifacts are available through the existing release page', 'Preview binaries are unsigned; verify published SHA-256 checksums before running', 'The release remains a preview, not a production-certified or Microsoft Verified application']}
+    />
   </section>
 
-  <section class="page-section page-section--surface forge-priorities" aria-labelledby="forge-priorities-title">
-    <SectionHeader eyebrow="The Digital Forge" title="A focused portfolio. Honest status." description="CodeForge is the released engineering platform. Forge AAA belongs to its architecture; Forge Control and Dead Trails West are separate projects with no public release yet." />
-    <div class="priority-grid">
-      <a class="priority-card priority-card--codeforge" href="/projects/codeforge">
-        <span class="priority-card__index">01 / RELEASED</span>
-        <h3>CodeForge <span>+ Forge AAA</span></h3>
-        <p>Free-first autonomous software engineering for Windows, CLI, and editors. Forge AAA is an architecture workstream within CodeForge, not a separate product.</p>
-        <span class="priority-card__link">Explore CodeForge <span aria-hidden="true">→</span></span>
-      </a>
-      <a class="priority-card priority-card--control" href="/projects/forge-control">
-        <span class="priority-card__index">02 / ACTIVE DEVELOPMENT</span>
-        <h3>Forge Control</h3>
-        <p>An active FDS development project. Specific integrations and shipped capabilities are not claimed until verified.</p>
-        <span class="priority-card__link">Project status <span aria-hidden="true">→</span></span>
-      </a>
-      <a class="priority-card priority-card--west" href="/projects/dead-trails-west">
-        <span class="priority-card__index">03 / PRIVATE DEVELOPMENT</span>
-        <h3>Dead Trails West</h3>
-        <p>A private Unreal Engine 4.27 game project set in 1882. No public playable build is available.</p>
-        <span class="priority-card__link">Project status <span aria-hidden="true">→</span></span>
-      </a>
+  <section class="page-section page-section--surface engineering-credibility" aria-labelledby="engineering-title">
+    <SectionHeader eyebrow="Engineering practice" title="A product page should tell you what the build can do." description="FDS separates shipped behavior from active development and future direction. The boundary matters as much as the feature list." headingLevel="h2" />
+    <div class="engineering-credibility__grid">
+      <article><span>01 / RELEASED</span><h3>Real release paths</h3><p>CodeForge downloads, version, platform support, and checksum information come from the existing release records.</p></article>
+      <article><span>02 / GUARDED</span><h3>Cost and execution boundaries</h3><p>CodeForge documents its free-first routing limits, command approvals, and fail-closed behavior rather than promising unlimited inference.</p></article>
+      <article><span>03 / LABELED</span><h3>Development is not availability</h3><p>Active projects are described with their status and limitations. No unreleased product is offered as a download.</p></article>
     </div>
   </section>
 
-  <section class="page-section page-section--surface ecosystem-section">
-    <OneFDSEcosystem />
+  <section class="page-section development-ledger" aria-labelledby="development-ledger-title">
+    <SectionHeader eyebrow="Development ledger" title="Progress, with its evidence boundary attached." description="A release proves a release. A focused acceptance test proves that scenario—not an entire product or game." headingLevel="h2" />
+    <ol class="development-ledger__list">
+      <li><span class="development-ledger__state development-ledger__state--released">Released</span><div><h3>CodeForge v0.2.0</h3><p>Windows 10/11 x64 installer and portable builds are listed on Forged with published checksums.</p></div><a href="/forged">Release details <span aria-hidden="true">→</span></a></li>
+      <li><span class="development-ledger__state development-ledger__state--preview">Public preview</span><div><h3>ForgerEMS v1.2.4-preview.1</h3><p>Preview distribution is available; packaging and capability boundaries remain part of its preview status.</p></div><a href="/projects/forgerems">Preview details <span aria-hidden="true">→</span></a></li>
+      <li><span class="development-ledger__state development-ledger__state--reported">Owner-reported tests</span><div><h3>Dead Trails West integration work</h3><p>Owner-reported checks cover navigation between locations, a general-store interaction, rejection of a purchase with an empty wallet, and the return route. These scenarios do not certify the full game or establish a public build.</p></div><a href="/projects/dead-trails-west">Game status <span aria-hidden="true">→</span></a></li>
+      <li><span class="development-ledger__state development-ledger__state--unverified">Unverified</span><div><h3>Forge Control installer and integrations</h3><p>A development installer and acceptance testing were reported by the owner. V23 certification, working provider integrations, and public availability have not been independently verified.</p></div><a href="/projects/forge-control">Current status <span aria-hidden="true">→</span></a></li>
+    </ol>
   </section>
 
-  <section class="page-section page-section--surface" aria-labelledby="forge-title">
-    <SectionHeader eyebrow="In Development" title="Specialized products in development" description="Each project has a concrete job; status labels separate research, private work, prerelease software, and released products." />
+  <section class="page-section page-section--surface" aria-labelledby="additional-work-title">
+    <SectionHeader eyebrow="Additional development" title="More useful problems to solve." description="Other FDS projects remain part of the portfolio, each with its own scope, status, and development path." headingLevel="h2" id="additional-work-title" />
     <ul class="forge-list">
       {activeProjects.map((project) => (
         <li class="forge-item" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
@@ -222,10 +273,23 @@ const latestNotes = (await getPublishedNotes()).slice(0, 3);
   .support-close { display: grid; }
   .support-close__body { max-width: 52rem; margin: 0; color: var(--color-text-muted); line-height: 1.7; }
   .support-disclosure { max-width: 46rem; margin: 1.8rem 0 0; color: var(--color-text-subtle); font-size: .82rem; line-height: 1.65; }
-  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; gap: 1rem; min-height: auto; padding-top: 5rem; }.hero__copy { max-width: 47rem; }.hero :global(.fds-ecosystem) { margin-top: 1rem; }.hero__rail { position: relative; grid-column: 1; margin-top: 2rem; }.flagship { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } }
+  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; gap: 1rem; min-height: auto; padding-top: 5rem; }.hero__copy { max-width: 47rem; }.hero :global(.portfolio-map) { margin-top: 1rem; }.hero__rail { position: relative; grid-column: 1; margin-top: 2rem; }.flagship { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } }
   @media (max-width: 900px) { .priority-grid { grid-template-columns: 1fr 1fr; }.priority-card:last-child { grid-column: span 2; } }
-  @media (max-width: 760px) { .hero { padding-top: 4rem; }.hero :global(.fds-ecosystem) { margin-top: .5rem; }.hero__rail { flex-wrap: wrap; gap: .8rem 1.2rem; margin-top: 1rem; }.projects-grid { grid-template-columns: 1fr; }.capability-grid { grid-template-columns: 1fr 1fr; }.hero__actions { align-items: stretch; }.hero__actions .btn { flex: 1 1 10rem; } .distribution-portal { grid-template-columns: 1fr; padding: 1.4rem; } .distribution-portal__actions { flex-direction: row; flex-wrap: wrap; } }
+  @media (max-width: 760px) { .hero { padding-top: 4rem; }.hero :global(.portfolio-map) { margin-top: .5rem; }.hero__rail { flex-wrap: wrap; gap: .8rem 1.2rem; margin-top: 1rem; }.projects-grid { grid-template-columns: 1fr; }.capability-grid { grid-template-columns: 1fr 1fr; }.hero__actions { align-items: stretch; }.hero__actions .btn { flex: 1 1 10rem; } .distribution-portal { grid-template-columns: 1fr; padding: 1.4rem; } .distribution-portal__actions { flex-direction: row; flex-wrap: wrap; } }
   @media (max-width: 560px) { .priority-grid { grid-template-columns: 1fr; }.priority-card:last-child { grid-column: auto; }.priority-card { min-height: 14rem; } }
   @media (max-width: 430px) { .capability-grid { grid-template-columns: 1fr; }.hero h1 { font-size: 2.65rem; }.hero__actions .btn { flex-basis: 100%; } }
+  .portfolio-showcases { padding-top: 1rem; }
+  .engineering-credibility__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1.5rem; }
+  .engineering-credibility__grid article { padding: 1.1rem; border: 1px solid var(--color-border); border-top: 2px solid rgba(113,157,246,.55); border-radius: var(--radius-md); background: linear-gradient(150deg, rgba(13,20,32,.9), rgba(7,11,17,.9)); }
+  .engineering-credibility__grid article > span { color: #8eafff; font: 700 .58rem/1 var(--font-mono); letter-spacing: .1em; }
+  .engineering-credibility__grid h3 { margin: .65rem 0 .35rem; font-size: 1rem; letter-spacing: -.02em; }
+  .engineering-credibility__grid p { margin: 0; color: var(--color-text-muted); font-size: .82rem; line-height: 1.6; }
+  .development-ledger__list { display: grid; gap: .5rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+  .development-ledger__list li { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; gap: .8rem; align-items: center; padding: .9rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(10,15,23,.8); }
+  .development-ledger__state { width: fit-content; padding: .32rem .48rem; border: 1px solid currentColor; border-radius: 999px; font: 700 .54rem/1.3 var(--font-mono); letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+  .development-ledger__state--released { color: #72d5a1; }.development-ledger__state--preview { color: #8eb0ff; }.development-ledger__state--reported { color: #e0bd85; }.development-ledger__state--unverified { color: #c1a6db; }
+  .development-ledger__list h3 { margin: 0; font-size: .9rem; }.development-ledger__list p { margin: .2rem 0 0; color: var(--color-text-muted); font-size: .78rem; line-height: 1.5; }
+  .development-ledger__list li > a { color: #a9c1ff; font-size: .72rem; font-weight: 700; white-space: nowrap; }
+  @media (max-width: 760px) { .engineering-credibility__grid { grid-template-columns: 1fr; }.development-ledger__list li { grid-template-columns: 1fr; gap: .45rem; align-items: start; }.development-ledger__list li > a { white-space: normal; } }
   @media (prefers-reduced-motion: reduce) { .hero__status span { animation: none; } }
 </style>

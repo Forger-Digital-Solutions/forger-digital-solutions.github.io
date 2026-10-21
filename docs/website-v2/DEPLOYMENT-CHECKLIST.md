@@ -1,24 +1,31 @@
-# Website V2 deployment checklist
+# Website V2 review and deployment checklist
 
-## Before merge
+## Pull request #3 — before merge
 
-- [ ] Review the complete V2 diff and confirm no unrelated or secret-bearing changes.
-- [ ] Confirm `npm ci`, `npm test`, and `npm run validate` pass on the pull request head.
-- [ ] Confirm Playwright browser certification passes or document and fix every migration-related failure.
-- [ ] Confirm the built artifact contains `dist/index.html`, current project pages, sitemap, and expected static assets.
-- [ ] Review the GitHub Pages Actions run and artifact; do not infer public availability from a successful build alone.
-- [ ] Obtain owner approval before merging to `main`. Do not deploy from the feature branch or change DNS, Pages settings, Cloudflare services, credentials, or paid infrastructure.
+- [ ] Review the final source and documentation diff; confirm no unrelated files, secrets, or private assets were added.
+- [ ] Confirm the final feature-branch commit is the PR head and GitHub Actions ran against that exact commit.
+- [ ] Require the repository's existing security, dependency, unit, content, Astro build, link, and browser checks; investigate failures rather than weakening gates.
+- [ ] Confirm the generated Pages artifact contains `dist/index.html`, all current project routes, sitemap, and expected assets.
+- [ ] Review V23/integration and game evidence language; keep unverified claims explicitly qualified.
+- [ ] Obtain owner review/approval before merging to `main`. This work must not merge or deploy itself.
 
-## After an approved merge
+## After an owner-approved merge
 
-- [ ] Verify the Pages deployment completed from the merged `main` commit and the deployment artifact is the expected build.
-- [ ] Check `https://forgerdigitalsolutions.com` and `https://www.forgerdigitalsolutions.com` for successful HTTPS responses and expected redirects.
-- [ ] Check navigation, all seven current project pages, downloads, static assets, footer/support/legal links, and the Notes index.
-- [ ] Verify legacy GEMS/Training Grounds/KyraBlox project routes are not generated or linked from the current public catalog.
-- [ ] Test desktop and narrow mobile layouts, keyboard navigation, focus, and reduced-motion behavior.
-- [ ] Review browser console/network output for unexpected errors and check internal links for 404s.
-- [ ] Record the deployed commit, Pages run, observed domain behavior, and any owner-controlled DNS or repository-setting actions that remain.
+- [ ] Verify the Actions deployment completed from the merged `main` commit and inspect the deployed artifact/run.
+- [ ] Verify `https://forgerdigitalsolutions.com` and `https://www.forgerdigitalsolutions.com` by HTTPS request and browser navigation; record actual redirects and certificate status.
+- [ ] Verify project navigation, CodeForge and ForgerEMS release links, ForgerEMS video facade, images, footer/support/legal links, and Notes routes.
+- [ ] Verify 360px/390px mobile, tablet, desktop, keyboard navigation, and reduced-motion behavior; inspect browser console/network results.
+- [ ] Check the exact current portfolio and retired-route expectations, and rerun production-build internal-link validation.
+- [ ] Record the deployed commit, GitHub Pages run, observed domain behavior, and any owner-controlled follow-up.
+
+## Owner-controlled GitHub Pages or DNS changes
+
+No Pages setting, registrar, DNS record, domain verification, or certificate setting is changed by this PR. If production verification shows one of these is misconfigured, stop and report the observed evidence. Ask the repository/domain owner to check **Settings → Pages** for the custom domain, Actions publishing source, and HTTPS enforcement, then compare the actual registrar DNS to GitHub Pages' current published instructions for that verified domain. Do not add, delete, or replace A/AAAA/CNAME records by guesswork.
 
 ## Rollback
 
-Use a reviewed revert pull request or restore a known-good deployment through the repository's normal protected workflow. Do not force-push `main`, rewrite history, or change DNS records to compensate for a source issue.
+Use a reviewed revert pull request or restore a known-good deployment through the repository's protected workflow. Do not force-push `main`, rewrite Git history, bypass required checks, or use DNS changes as a source rollback.
+
+## Recommended repository safeguards
+
+After recovery, protect `main` against direct pushes and force pushes; require pull requests, an owner/human review, and the security, test, and build checks as required status checks. Retain GitHub Actions artifacts and Pages deployment history, and maintain a private Git mirror or scheduled repository backup that preserves Git history.
