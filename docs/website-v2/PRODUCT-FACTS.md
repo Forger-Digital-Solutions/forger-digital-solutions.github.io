@@ -19,7 +19,7 @@ The owner-described architecture includes discovering eligible connected agents,
 
 ## Dead Trails West evidence boundary
 
-The site's owner-reported checks cover selected travel, general-store, empty-wallet purchase-refusal, and return-route scenarios. They are not independently reproduced here, do not certify the whole game, and do not establish public availability. Seasonal simulation and other broad gameplay pillars are design goals, not blanket implementation claims. No gameplay screenshot is available in this website repository.
+The site's owner-reported checks cover selected travel, general-store, empty-wallet purchase-refusal, and return-route scenarios. They are not independently reproduced here, do not certify the whole game, and do not establish public availability. The persistent-world simulation has not been independently verified. Seasonal simulation and other broad gameplay pillars are design goals, not blanket implementation claims. No gameplay screenshot is available in this website repository.
 
 ## Retired portfolio references
 

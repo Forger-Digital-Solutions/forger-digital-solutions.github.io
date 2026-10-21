@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { projects } from '../src/data/projects';
 import { products } from '../src/data/products';
 import { productManifest, statusStripEntries, manifestByProjectSlug } from '../src/data/manifest';
+import { projectTechnologies } from '../src/data/technology';
 import { ecosystemNodes } from '../src/data/ecosystem';
 import { codeForgePlans } from '../src/data/codeforge-plans';
 
@@ -89,6 +90,25 @@ describe('content consistency guards (Phase 28)', () => {
     for (const source of sources) {
       expect(source).toMatch(/draft:\s*true/i);
     }
+  });
+
+  it('does not describe Dead Trails West simulation work as verified', () => {
+    const entry = manifestByProjectSlug['dead-trails-west']!;
+    const manifestCopy = [
+      entry.oneLineDescription,
+      entry.developmentStatus,
+      ...entry.capabilities,
+      ...entry.limitations,
+      ...entry.nonClaims,
+    ].join(' ');
+    const technologyCopy = projectTechnologies.find((item) => item.system === 'Dead Trails West')!.purpose;
+
+    for (const copy of [manifestCopy, technologyCopy, faqPage, page('lab.astro')]) {
+      expect(copy).not.toMatch(/partially verified|partial verification/i);
+    }
+    expect(manifestCopy).toContain('not been independently verified');
+    expect(technologyCopy).toContain('not been independently verified');
+    expect(faqPage).toContain('has not been independently verified here');
   });
 
   it('keeps CodeForge commercial plan names from drifting', () => {

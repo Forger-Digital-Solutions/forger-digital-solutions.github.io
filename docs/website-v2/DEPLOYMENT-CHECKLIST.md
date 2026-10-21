@@ -9,6 +9,14 @@
 - [ ] Review V23/integration and game evidence language; keep unverified claims explicitly qualified.
 - [ ] Obtain owner review/approval before merging to `main`. This work must not merge or deploy itself.
 
+### Check-run discrepancy observed during final review
+
+Run `39619113254` targeted commit `cdcb33fa961b24c0e9dd19a1b363d4e04c605f77` and its workflow/check suite reported `completed/success`. The Playwright test, visual-artifact upload, and cleanup steps succeeded, but its Playwright check-run `119288133152` stayed `in_progress`, leaving that old commit's check pending.
+
+Follow-up run `39624480634` on exact PR commit `08773c4ef12698c3745f627e313239e179943b92` passed the Dependency Security Gate, Unit/Kayla/Build, and Playwright checks; Pages deployment was skipped. The PR check rollup is `CLEAN`, resolving the practical pending-check discrepancy for that head. Do not weaken/remove checks, alter branch protection, or rerun successful workflows without evidence. The latest narrow source follow-up is newer than `08773c4` and needs its own checks before approval.
+
+Repository-level inspection found no `main` branch protection or repository/inherited rulesets; organization-level rules could not be confirmed from the available API response. If a future current-head run again completes while the Playwright check remains pending, ask an administrator to inspect the check-run/job records; only if the pending current-head check persists should they rerun that affected browser job once or escalate the stale record to GitHub support.
+
 ## After an owner-approved merge
 
 - [ ] Verify the Actions deployment completed from the merged `main` commit and inspect the deployed artifact/run.

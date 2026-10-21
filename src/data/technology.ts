@@ -35,7 +35,7 @@ export const projectTechnologies: ProjectTechnology[] = [
   { system: 'CodeForge', href: '/projects/codeforge', areas: 'TypeScript, Node.js, Electron, React, SQLite, Git, VS Code, model/provider APIs', purpose: 'Repository intelligence, autonomous task execution, desktop/CLI/editor surfaces, and free-first model routing.' },
   { system: 'ForgerEMS', href: '/projects/forgerems', areas: 'C#, .NET, WPF, Windows APIs, PowerShell, USB and hardware interfaces', purpose: 'Technician diagnostics, drive validation, USB tooling, system information, and local-first assistance.' },
   { system: 'Forge Control', href: '/projects/forge-control', areas: 'Engineering governance and verification', purpose: 'Active development; no specific integration or shipped capability is publicly verified.' },
-  { system: 'Dead Trails West', href: '/projects/dead-trails-west', areas: 'Unreal Engine 4.27, Blender', purpose: 'A private game project with a partially verified persistent-world simulation foundation.' },
+  { system: 'Dead Trails West', href: '/projects/dead-trails-west', areas: 'Unreal Engine 4.27, Blender', purpose: 'A private game project; owner-reported persistent-world simulation work has not been independently verified.' },
   { system: 'FDS Website', areas: 'Astro, TypeScript, Vitest, Cloudflare Workers, GitHub Pages', purpose: 'Static public publishing plus the separately deployed Kayla site-guide runtime.' }
 ];
 
