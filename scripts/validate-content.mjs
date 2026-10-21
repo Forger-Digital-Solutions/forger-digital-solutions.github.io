@@ -30,7 +30,7 @@ const noteFiles = readdirSync(notesDir).filter((f) => f.endsWith('.md'));
 const seenNote = new Set();
 for (const file of noteFiles) {
   const raw = readFileSync(join(notesDir, file), 'utf8');
-  const fm = raw.match(/^---\n([\s\S]*?)\n---/);
+  const fm = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!fm) { err(`Note ${file}: missing frontmatter`); continue; }
   const body = fm[1];
   const slug = file.replace(/\.md$/, '');

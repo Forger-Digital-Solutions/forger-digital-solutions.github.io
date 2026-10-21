@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { ecosystemNodes } from '../src/data/ecosystem';
 import { gems } from '../src/data/gems';
 
-const ecosystem = readFileSync(new URL('../src/components/FDSEcosystem.astro', import.meta.url), 'utf8');
-const connected = readFileSync(new URL('../src/components/OneFDSEcosystem.astro', import.meta.url), 'utf8');
-const gemsVisual = readFileSync(new URL('../src/components/GemsLearningSystem.astro', import.meta.url), 'utf8');
+const ecosystem = readFileSync(new URL('../src/components/FDSEcosystem.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+const connected = readFileSync(new URL('../src/components/OneFDSEcosystem.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+const gemsVisual = readFileSync(new URL('../src/components/GemsLearningSystem.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 
 describe('final visual evolution contract', () => {
   it('preserves all eight individually certified product-motion paths', () => {

@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const visual = readFileSync(new URL('../src/components/GemsLearningSystem.astro', import.meta.url), 'utf8');
-const story = readFileSync(new URL('../src/components/GemsStory.astro', import.meta.url), 'utf8');
+const visual = readFileSync(new URL('../src/components/GemsLearningSystem.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+const story = readFileSync(new URL('../src/components/GemsStory.astro', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 
 describe('GEMS learning-system visual (homepage)', () => {
   it('renders the four lineages from the canonical data module', () => {
