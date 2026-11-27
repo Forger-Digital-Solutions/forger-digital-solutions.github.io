@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import ModelCardPanel from '../../components/ModelCardPanel.astro';
+import { modelFamiliesData, publicRegistry } from '../../data/registry';
+
+const modelEntries = publicRegistry.filter(
+  (entry) => entry.category === 'ai-model-family' || entry.category === 'ai-model'
+);
+---
+
+<BaseLayout
+  title="AI Model Families"
+  description="Explore Forger Digital Solutions specialized AI model families: Alexandrite (collective intelligence vision), Hackmanite (gaming & game-dev), and Cinnabar (anime, manga & animation)."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Models</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Intelligence // Model Catalog</p>
+    <h1 class="page-title">Specialized model families.</h1>
+    <p class="page-description">
+      FDS develops domain-specialized AI architectures grounded in verified engineering, gaming, and storytelling disciplines. Every model record separates third-party open-weight foundations from completed post-training, independent evaluation, and public availability.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Model families overview">
+    <div class="family-stack">
+      {modelFamiliesData.map((family) => (
+        <article class="family-row" data-accent={family.accent}>
+          <div class="family-row__copy">
+            <p class="family-row__kicker">{family.role}</p>
+            <h2><a href={family.route}>{family.name}</a></h2>
+            <p class="family-row__tagline">{family.tagline}</p>
+            <p class="family-row__summary">{family.summary}</p>
+            <dl class="family-row__facts">
+              <div><dt>Status</dt><dd>{family.status}</dd></div>
+              <div><dt>Availability</dt><dd>{family.availability}</dd></div>
+            </dl>
+            <div class="family-row__actions">
+              <a href={family.route} class="btn btn-outline">Open {family.name} <span aria-hidden="true">→</span></a>
+              <a href="/model-cards/" class="text-link">Model cards</a>
+            </div>
+          </div>
+          <div class="family-row__media">
+            <SpecimenMedia
+              src={family.image}
+              mobileSrc={family.imageSm}
+              alt={family.imageAlt}
+              label={family.imageLabel}
+            />
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="catalog-table-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Provenance &amp; Status Matrix</p>
+        <h2 id="catalog-table-title">Verified public model records</h2>
+        <p>Filter by development stage. No private adapter weights, unavailable APIs, or simulated playgrounds are advertised.</p>
+      </div>
+      <div class="filter-bar" role="group" aria-label="Filter models by status">
+        <button type="button" class="filter-btn is-active" data-filter="all">All ({modelEntries.length})</button>
+        <button type="button" class="filter-btn" data-filter="research-vision">Research Vision</button>
+        <button type="button" class="filter-btn" data-filter="training-planned">Training Planned</button>
+        <button type="button" class="filter-btn" data-filter="experimental">Experimental</button>
+      </div>
+    </div>
+
+    <div class="cards-stack" id="model-filter-list">
+      {modelEntries.map((entry) => (
+        <ModelCardPanel entry={entry} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .family-stack {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .family-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2rem;
+    align-items: center;
+    padding: clamp(1.35rem, 3vw, 2rem);
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--page-accent);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+  }
+
+  .family-row__kicker {
+    margin: 0;
+    color: var(--page-accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .family-row h2 {
+    margin: 0.35rem 0 0;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: -0.03em;
+  }
+
+  .family-row h2 a {
+    color: var(--color-text);
+  }
+
+  .family-row__tagline {
+    margin: 0.25rem 0 0;
+    color: var(--color-brand-silver);
+    font-weight: 500;
+  }
+
+  .family-row__summary {
+    margin: 0.8rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.66;
+  }
+
+  .family-row__facts {
+    display: grid;
+    gap: 0.65rem;
+    margin: 1rem 0 1.25rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .family-row__facts dt {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .family-row__facts dd {
+    margin: 0.18rem 0 0;
+    color: var(--color-text);
+    font-size: 0.86rem;
+  }
+
+  .family-row__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.25rem;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .filter-btn {
+    padding: 0.42rem 0.8rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.is-active {
+    border-color: var(--color-brand-silver);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .cards-stack {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 920px) {
+    .family-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('#model-filter-list > article'));
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.filter || 'all';
+      buttons.forEach((b) => b.classList.toggle('is-active', b === btn));
+      cards.forEach((card) => {
+        const visible = target === 'all' || card.dataset.status === target;
+        card.style.display = visible ? '' : 'none';
+      });
+    });
+  });
+</script>

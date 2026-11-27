@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { publicReleasesData } from '../../data/registry';
+
+const formatBytes = (bytes: number) => `${(bytes / (1024 * 1024)).toFixed(2)} MB (${bytes.toLocaleString('en-US')} B)`;
+---
+
+<BaseLayout
+  title="Release Index — Chronological Software & Platform Ledger"
+  description="Chronological release index for Forger Digital Solutions with versions, dates, target OS/architecture, installer types, signing status, and SHA-256 digests."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/downloads/">Downloads</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Releases</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Release Ledger // Provenance Log</p>
+    <h1 class="page-title">Release Index</h1>
+    <p class="page-description">
+      Every public software package published by Forger Digital Solutions, indexed with exact build metadata, signing posture, and SHA-256 verification checksums.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="rel-table-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Published Builds</p>
+        <h2 id="rel-table-title">Chronological artifact ledger.</h2>
+      </div>
+      <a href="/changelog/" class="text-link">View Platform Changelog <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Product &amp; Version</th>
+            <th scope="col">Channel</th>
+            <th scope="col">Platform</th>
+            <th scope="col">Artifacts &amp; SHA-256</th>
+          </tr>
+        </thead>
+        <tbody>
+          {publicReleasesData.map((rel) => (
+            <tr>
+              <td class="rel-mono">{rel.date}</td>
+              <th scope="row">
+                <a href={rel.pageUrl}>{rel.product} {rel.version}</a>
+                <div class="rel-sub">Commit <code>{rel.sourceCommit}</code></div>
+              </th>
+              <td>
+                <StatusPill
+                  label={rel.channel}
+                  tone={rel.channel.includes('Paused') ? 'paused' : 'preview'}
+                />
+              </td>
+              <td>
+                <div>{rel.os} · {rel.architecture}</div>
+                <div class="rel-sub">{rel.signingStatus}</div>
+              </td>
+              <td>
+                <ul class="rel-artifacts" role="list">
+                  {rel.artifacts.map((art) => (
+                    <li>
+                      <div><strong>{art.filename}</strong> — {formatBytes(art.sizeBytes)}</div>
+                      <code class="rel-sha">{art.sha256}</code>
+                    </li>
+                  ))}
+                </ul>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rel-mono { font-family: var(--font-mono); white-space: nowrap; }
+  .rel-sub { margin-top: 0.3rem; color: var(--color-text-subtle); font-weight: 400; font-size: 0.78rem; }
+  .rel-artifacts { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; }
+  .rel-sha {
+    display: block;
+    margin-top: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    word-break: break-all;
+    color: var(--color-text-subtle);
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+
+const areas = [
+  { title: 'Specialist Post-Training (SFT / LoRA / QLoRA)', body: 'Adapting strong third-party open-weight architectures with parameter-efficient methods to deliver high domain precision on practical hardware budgets.' },
+  { title: 'Retrieval-Augmented Grounding', body: 'Pairing compact specialist checkpoints with structured, source-cited retrieval indices so factual recall remains inspectable and updateable.' },
+  { title: 'Multi-Teacher Distillation', body: 'Investigating structured transfer from independently evaluated specialist teachers into future Alexandrite collective architectures without blind weight averaging.' },
+  { title: 'Tool-Assisted Evaluation & Guardrails', body: 'Separating raw model accuracy from guarded verification pipelines with deterministic validators, schema enforcement, and uncertainty reporting.' },
+];
+---
+
+<BaseLayout
+  title="Artificial Intelligence Research"
+  description="Project Forge artificial intelligence research covering specialist adaptation, retrieval grounding, multi-teacher distillation, and tool-assisted evaluation."
+  accent="alexandrite"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/research/">Research</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Artificial Intelligence</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Project Forge // Division Track · Alexandrite Foundation</p>
+    <h1 class="page-title">Artificial Intelligence Systems</h1>
+    <p class="page-description">
+      Exploring how focused specialist adaptation, verified knowledge retrieval, and disciplined multi-teacher distillation can converge toward capable, verifiable intelligence without relying on unsupported frontier claims.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight">
+    <SpecimenMedia
+      src="/images/forge/alexandrite-architecture.webp"
+      mobileSrc="/images/forge/alexandrite-architecture-sm.webp"
+      alt="Specialist neural network topologies converging through emerald, violet, and crimson distillation streams into a unified computational lattice."
+      label="Collective Intelligence Research Concept — Not a Live Model Trace"
+      eager
+    />
+  </section>
+
+  <section class="page-section page-section--surface">
+    <div class="pillar-grid">
+      {areas.map((item, i) => (
+        <article class="pillar-card">
+          <span>0{i + 1}</span>
+          <h2>{item.title}</h2>
+          <p>{item.body}</p>
+        </article>
+      ))}
+    </div>
+    <div class="track-links">
+      <a href="/models/alexandrite/" class="btn btn-outline">Explore Alexandrite Vision <span aria-hidden="true">→</span></a>
+      <a href="/research/training/" class="text-link">Read Training Methodology</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pillar-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--color-border-structural); border-radius: var(--radius-md); background: var(--color-border); overflow: hidden; }
+  .pillar-card { padding: 1.5rem; background: var(--color-bg); }
+  .pillar-card span { color: var(--accent-alexandrite); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; }
+  .pillar-card h2 { margin: 0.45rem 0 0.4rem; font-size: 1.15rem; }
+  .pillar-card p { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.65; }
+  .track-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 1.75rem; }
+  @media (max-width: 760px) { .pillar-grid { grid-template-columns: 1fr; } }
+</style>

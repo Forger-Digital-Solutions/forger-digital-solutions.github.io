@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPublishedNotes, formatNoteDate } from '../../lib/notes';
+import { newsUpdatesData } from '../../data/registry';
+
+const notes = await getPublishedNotes();
+---
+
+<BaseLayout
+  title="Research Publications & Field Notes"
+  description="Approved public engineering notes, methodology write-ups, and research updates from Forger Digital Solutions."
+  accent="project-forge"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/research/">Research</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Publications</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Project Forge // Public Archive</p>
+    <h1 class="page-title">Publications &amp; Field Notes</h1>
+    <p class="page-description">
+      Public technical writing grounded in real FDS engineering work. We do not invent whitepapers, synthetic research preprints, or fictitious authors; superseded historical notes remain clearly labeled.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="pub-notes-heading">
+    <h2 id="pub-notes-heading" class="sub-h2">Published Engineering Field Notes</h2>
+    <ul class="fds-ledger">
+      {notes.map((note) => (
+        <li class="fds-ledger__row">
+          <time class="pub-date" datetime={note.data.date.toISOString()}>{formatNoteDate(note.data.date)}</time>
+          <div>
+            <span class="pub-tag">{note.data.category ?? 'Engineering'} · {note.data.state}</span>
+            <h3 class="pub-title"><a href={`/notes/${note.id}`}>{note.data.title}</a></h3>
+          </div>
+          <p class="pub-desc">{note.data.description}</p>
+          <a href={`/notes/${note.id}`} class="text-link">Read note →</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="pub-updates-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Newsroom Archive</p>
+        <h2 id="pub-updates-heading">Official ecosystem announcements</h2>
+      </div>
+      <a href="/news/" class="text-link">Open Newsroom →</a>
+    </div>
+    <ul class="fds-ledger">
+      {newsUpdatesData.map((item) => (
+        <li class="fds-ledger__row">
+          <time class="pub-date" datetime={item.date}>{item.date}</time>
+          <div>
+            <span class="pub-tag">{item.category} · {item.readingTime}</span>
+            <h3 class="pub-title"><a href={item.href}>{item.title}</a></h3>
+          </div>
+          <p class="pub-desc">{item.summary}</p>
+          <a href={item.href} class="text-link">Open →</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .sub-h2 { margin: 0 0 1rem; font-size: 1.35rem; }
+  .pub-date { color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.78rem; }
+  .pub-tag { display: inline-block; margin-bottom: 0.25rem; color: var(--accent-project-forge); font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .pub-title { margin: 0; font-size: 1.04rem; }
+  .pub-title a { color: var(--color-text); }
+  .pub-desc { margin: 0; color: var(--color-text-muted); font-size: 0.88rem; line-height: 1.58; }
+</style>

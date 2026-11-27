@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { newsUpdatesData } from '../../data/registry';
+import { getPublishedNotes, formatNoteDate } from '../../lib/notes';
+
+const notes = await getPublishedNotes();
+const categories = ['All', 'Announcements', 'Releases', 'Research', 'Engineering', 'Product Updates'];
+---
+
+<BaseLayout
+  title="Newsroom — Announcements, Releases & Research Updates"
+  description="Official public announcements, software releases, research publications, and engineering field notes from Forger Digital Solutions."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Newsroom</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Newsroom // Public Dispatches</p>
+    <h1 class="page-title">News &amp; Engineering Updates</h1>
+    <p class="page-description">
+      Verified studio announcements, software release milestones, research methodology notes, and architectural dispatches—each tied to real public deliverables.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="news-feed-title">
+    <div class="news-controls">
+      <h2 id="news-feed-title" class="sr-only">Filter updates by category</h2>
+      <div class="news-filters" role="group" aria-label="Filter newsroom updates">
+        {categories.map((cat, idx) => (
+          <button
+            type="button"
+            class={`filter-pill ${idx === 0 ? 'is-active' : ''}`}
+            data-news-filter={cat}
+            aria-pressed={idx === 0 ? 'true' : 'false'}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+      <a href="/notes/" class="text-link">Full Field Notes Archive <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ul class="fds-ledger" role="list" id="news-list">
+      {newsUpdatesData.map((item) => (
+        <li class="fds-ledger__row" data-news-category={item.category}>
+          <div class="news-date">
+            <time datetime={item.date}>{item.date}</time>
+            <span class="tag">{item.category}</span>
+          </div>
+          <div>
+            <h3 class="news-title"><a href={item.href}>{item.title}</a></h3>
+            <p class="news-meta">{item.readingTime} · {item.related.join(', ')}</p>
+          </div>
+          <p class="news-summary">{item.summary}</p>
+          <a href={item.href} class="text-link">Read <span aria-hidden="true">→</span></a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="news-notes-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Field Notes Journal</p>
+        <h2 id="news-notes-title">Published technical essays &amp; build logs.</h2>
+        <p>Long-form engineering logs maintained in our <a href="/notes/">Notes</a> archive with explicit currency tags (Current, Research, Historical, Superseded).</p>
+      </div>
+    </div>
+
+    <div class="notes-grid">
+      {notes.map((note) => (
+        <article class="fds-panel note-card">
+          <div class="note-card__meta">
+            <span>{formatNoteDate(note.data.date)}</span>
+            <span class="tag">{note.data.state}</span>
+          </div>
+          <h3><a href={`/notes/${note.id}`}>{note.data.title}</a></h3>
+          <p>{note.data.description}</p>
+          <a href={`/notes/${note.id}`} class="text-link">Read Note <span aria-hidden="true">→</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-news-filter]'));
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-news-category]'));
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.newsFilter || 'All';
+      buttons.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      rows.forEach((row) => {
+        const cat = row.dataset.newsCategory || '';
+        row.hidden = target !== 'All' && cat !== target;
+      });
+    });
+  });
+</script>
+
+<style>
+  .news-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .news-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .filter-pill {
+    padding: 0.48rem 0.9rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease;
+  }
+  .filter-pill:hover { color: var(--color-text); border-color: var(--color-brand-silver); }
+  .filter-pill.is-active {
+    background: var(--color-text);
+    color: #08090c;
+    border-color: var(--color-text);
+  }
+
+  .news-date { display: grid; gap: 0.45rem; align-content: start; }
+  .news-date time { color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.75rem; }
+  .news-title { margin: 0; font-size: 1.12rem; line-height: 1.3; }
+  .news-title a { color: var(--color-text); }
+  .news-title a:hover { color: var(--color-accent-bright); }
+  .news-meta { margin: 0.35rem 0 0; color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.72rem; }
+  .news-summary { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .note-card { display: flex; flex-direction: column; gap: 0.65rem; padding: 1.45rem; }
+  .note-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+  .note-card h3 { margin: 0; font-size: 1.08rem; line-height: 1.3; }
+  .note-card h3 a { color: var(--color-text); }
+  .note-card h3 a:hover { color: var(--color-accent-bright); }
+  .note-card p { margin: 0; color: var(--color-text-muted); font-size: 0.88rem; line-height: 1.6; flex: 1; }
+
+  @media (max-width: 960px) { .notes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .notes-grid { grid-template-columns: 1fr; } }
+</style>

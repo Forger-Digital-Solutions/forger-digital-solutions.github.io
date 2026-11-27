@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { evaluationsData, publicRegistry } from '../../data/registry';
+
+const modelEntries = publicRegistry.filter((e) => e.category === 'ai-model-family' || e.category === 'ai-model');
+---
+
+<BaseLayout
+  title="Evaluations & Benchmarks — Scientific Measurement Standard"
+  description="Forger Digital Solutions evaluation methodology, public benchmark register, raw vs. guarded reporting rules, and strict non-fabrication standards."
+  accent="project-forge"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Evaluations</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Research // Independent Measurement</p>
+    <h1 class="page-title">Evaluations &amp; Benchmarks</h1>
+    <p class="page-description">
+      Training a checkpoint is not proof of capability. Every numerical score published by Forger Digital Solutions must disclose exact model version, benchmark version, sample size, raw versus guarded conditions, comparison baseline, uncertainty bounds, and known limitations.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="eval-principles-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Publication Standard</p>
+        <h2 id="eval-principles-title">Why FDS refuses unverified leaderboards.</h2>
+        <p>{evaluationsData.policy}</p>
+      </div>
+      <a href="/trust/" class="text-link">Public Trust Center <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="eval-axioms">
+      <article class="fds-panel eval-axiom">
+        <span class="eval-axiom__code">RULE 01</span>
+        <h3>Raw vs. Guarded Separation</h3>
+        <p>Base checkpoint behavior is never conflated with scaffolded, retrieval-augmented, or verification-guarded system outputs. Both conditions must be reported separately.</p>
+      </article>
+      <article class="fds-panel eval-axiom">
+        <span class="eval-axiom__code">RULE 02</span>
+        <h3>No Cross-Suite Aggregation</h3>
+        <p>Unrelated benchmarks are never averaged into synthetic marketing indices. Each domain capability is measured on a named, versioned suite with disclosed sample size (<em>n</em>).</p>
+      </article>
+      <article class="fds-panel eval-axiom">
+        <span class="eval-axiom__code">RULE 03</span>
+        <h3>Holdout Isolation</h3>
+        <p>Training corpora and evaluation holdouts are governed separately inside Project Forge so contamination invalidates certification rather than inflating scores.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="eval-register-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Public Evaluation Register</p>
+        <h2 id="eval-register-title">Current public verification &amp; pending model exports.</h2>
+        <p>Last verified {evaluationsData.last_updated}. Entries without an owner-approved public evaluation export remain explicitly marked as pending or planned—never backfilled with synthetic numbers.</p>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Model / System</th>
+            <th scope="col">Benchmark Suite</th>
+            <th scope="col">Cases (n)</th>
+            <th scope="col">Raw Result</th>
+            <th scope="col">Guarded Result</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {evaluationsData.records.map((rec) => (
+            <tr>
+              <th scope="row">
+                <div>{rec.model}</div>
+                <span class="eval-sub">{rec.conditions}</span>
+              </th>
+              <td>
+                <div>{rec.benchmark}</div>
+                <span class="eval-sub">Baseline: {rec.baseline}</span>
+              </td>
+              <td class="eval-mono">{rec.testCases ?? 'Pending'}</td>
+              <td>{rec.rawResult}</td>
+              <td>{rec.guardedResult}</td>
+              <td>
+                <StatusPill
+                  label={rec.status}
+                  tone={rec.status.includes('Verified') ? 'release' : rec.status.includes('Vision') ? 'vision' : 'research'}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="eval-limitations">
+      {evaluationsData.records.map((rec) => (
+        <div class="fds-callout">
+          <strong>{rec.model} — Uncertainty &amp; Limitations:</strong> {rec.uncertainty}. {rec.limitations}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="eval-schema-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Mandatory Disclosure Schema</p>
+        <h2 id="eval-schema-title">Ten required fields for every future public score.</h2>
+        <p>Before any specialist checkpoint from Hackmanite, Cinnabar, or Alexandrite receives a published score, all ten fields below must be populated and owner-approved.</p>
+      </div>
+      <a href="/model-cards/" class="text-link">Browse Model Cards <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ol class="schema-list">
+      {evaluationsData.required_fields.map((field, idx) => (
+        <li class="schema-item">
+          <span class="schema-num">{String(idx + 1).padStart(2, '0')}</span>
+          <span>{field}</span>
+        </li>
+      ))}
+    </ol>
+
+    <div class="model-links-bar">
+      {modelEntries.map((entry) => (
+        <a href={entry.route} class="btn btn-secondary">{entry.name}</a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .eval-axioms {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .eval-axiom { padding: 1.5rem; }
+  .eval-axiom__code {
+    display: block;
+    color: var(--accent-project-forge);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+  }
+  .eval-axiom h3 { margin: 0 0 0.55rem; font-size: 1.08rem; }
+  .eval-axiom p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+
+  .eval-sub {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--color-text-subtle);
+    font-weight: 400;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+  .eval-mono { font-family: var(--font-mono); white-space: nowrap; }
+
+  .eval-limitations {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  .schema-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .schema-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-size: 0.92rem;
+  }
+  .schema-num {
+    color: var(--accent-project-forge);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .model-links-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    .eval-axioms,
+    .schema-list { grid-template-columns: 1fr; }
+  }
+</style>

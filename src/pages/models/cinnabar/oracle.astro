@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import { modelFamiliesData } from '../../../data/registry';
+
+const cinData = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
+
+const distinctions = [
+  { term: 'Trained Checkpoints', definition: 'Internal weights produced by a completed supervised or preference-tuning run. Existence of a checkpoint never proves domain readiness.' },
+  { term: 'Operational Defaults', definition: 'The internal model version selected for active engineering integration testing — explicitly versioned and subject to change as newer iterations pass review.' },
+  { term: 'Experimental Releases', definition: 'Research iterations undergoing iterative evaluation and ablation; not publicly downloadable or certified for external production.' },
+  { term: 'Raw Evaluation Results', definition: 'Direct model output accuracy without external retrieval scaffolding, tool checks, or post-hoc verification filters.' },
+  { term: 'Guarded Evaluation Results', definition: 'Performance measured inside an evidence-checked harness enforcing source citation, claim auditing, and uncertainty flags. Raw and guarded results are always reported separately.' },
+];
+---
+
+<BaseLayout
+  title="Cinnabar Oracle Lineages (v1–v4.1)"
+  description="Documented lineage progression of Cinnabar Oracle text models from v1 through v4.1, explaining checkpoint states, raw vs. guarded evaluations, and BattleVerse integration boundaries."
+  accent="cinnabar"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <a href="/models/cinnabar/">Cinnabar</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Oracle</span>
+  </nav>
+
+  <header class="page-head">
+    <div class="meta-bar">
+      <p class="page-eyebrow">Cinnabar Model Family · Oracle Text Lineages</p>
+      <StatusPill status="experimental" label="Experimental Lineages" />
+    </div>
+    <h1 class="page-title">Cinnabar Oracle</h1>
+    <p class="page-description">
+      The Oracle lineage tracks FDS's iterative specialization of text models for canonical grounding, narrative continuity, and evidence-disciplined fictional combat analysis across generations v1 through v4.1.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="oracle-lineage-table">
+    <h2 id="oracle-lineage-table" class="sub-h2">Documented Generation Ledger</h2>
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Generation</th>
+            <th scope="col">Lifecycle Tier</th>
+            <th scope="col">Focus</th>
+            <th scope="col">Evaluation &amp; Public Availability</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cinData.oracle_lineages?.map((row) => (
+            <tr>
+              <th scope="row">{row.version}</th>
+              <td>{row.stage}</td>
+              <td>{row.role}</td>
+              <td>{row.evalState}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="oracle-terms">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Evaluation Discipline</p>
+        <h2 id="oracle-terms">Why FDS separates raw outputs from guarded harnesses.</h2>
+      </div>
+      <a href="/evaluations/" class="text-link">Evaluation Center <span aria-hidden="true">→</span></a>
+    </div>
+
+    <dl class="term-list">
+      {distinctions.map((d) => (
+        <div class="term-row">
+          <dt>{d.term}</dt>
+          <dd>{d.definition}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="fds-callout" style="margin-top: 1.75rem;">
+      <strong>Scope Reminder:</strong> Cinnabar Oracle models are text-based analytical models. They do not natively generate video or animated footage, and they are separate from the standalone <a href="/products/battleverse/">Forge BattleVerse</a> application.
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .meta-bar .page-eyebrow { margin: 0; }
+  .sub-h2 { margin: 0 0 1.1rem; font-size: 1.4rem; letter-spacing: -0.025em; }
+  .term-list { display: grid; gap: 0.8rem; margin: 0; }
+  .term-row { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 1rem 1.75rem; padding: 1.05rem 1.2rem; border: 1px solid var(--color-border-structural); border-radius: var(--radius-sm); background: var(--color-bg); }
+  .term-row dt { color: var(--color-text); font-weight: 600; font-size: 0.94rem; }
+  .term-row dd { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.6; }
+  @media (max-width: 720px) { .term-row { grid-template-columns: 1fr; gap: 0.35rem; } }
+</style>

@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import ModelCardPanel from '../../../components/ModelCardPanel.astro';
+import { getRegistryEntry, modelFamiliesData } from '../../../data/registry';
+
+const familyEntry = getRegistryEntry('hackmanite');
+const primeEntry = getRegistryEntry('hackmanite-prime');
+const reasoningEntry = getRegistryEntry('hackmanite-reasoning');
+const hackData = modelFamiliesData.find((f) => f.id === 'hackmanite')!;
+---
+
+<BaseLayout
+  title="Hackmanite — Universal Gaming Intelligence"
+  description="Hackmanite is Forger Digital Solutions' specialist AI model family for game development, engines, graphics, physics, NPCs, multiplayer, and autonomous game engineering."
+  accent="hackmanite"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Hackmanite</span>
+  </nav>
+
+  <header class="model-hero" data-accent="hackmanite">
+    <div class="model-hero__copy">
+      <div class="hero-badges">
+        <span class="page-eyebrow">FDS Intelligence · Universal Gaming AI</span>
+        <StatusPill status={familyEntry.development_status} />
+      </div>
+      <h1 class="page-title">Hackmanite</h1>
+      <p class="model-hero__tagline">Intelligence built for games.</p>
+      <p class="page-description">{hackData.summary}</p>
+      <div class="fds-callout">
+        <strong>Foundation vs. Certification:</strong> Hackmanite's planned models adapt third-party open-weight foundations (<code>Qwen/Qwen3.8-27B</code> and <code>openai/gpt-oss-120b</code>). Availability of a base model does not imply completed FDS fine-tuning, specialist evaluation, or public deployment.
+      </div>
+    </div>
+    <div class="model-hero__visual">
+      <SpecimenMedia
+        src={hackData.image}
+        mobileSrc={hackData.imageSm}
+        alt={hackData.imageAlt}
+        label={hackData.imageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <section class="page-section" aria-labelledby="lineup-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Planned Specialist Lineup</p>
+        <h2 id="lineup-heading">Two distinct tiers for implementation and deep engineering.</h2>
+      </div>
+    </div>
+
+    <div class="lineup-grid">
+      <ModelCardPanel entry={primeEntry} />
+      <ModelCardPanel entry={reasoningEntry} />
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="scope-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research Scope</p>
+        <h2 id="scope-heading">Game-development domains under study.</h2>
+        <p>Backed by Project Forge's Universal Gaming, Game Engineering, Graphics, Physics, and Technical Art divisions.</p>
+      </div>
+      <a href="/research/gaming/" class="text-link">Gaming research division <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ul class="scope-grid">
+      {hackData.research_scope?.map((item, idx) => (
+        <li>
+          <span class="scope-idx">0{idx + 1}</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .model-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-badges .page-eyebrow { margin: 0; }
+
+  .model-hero__tagline {
+    margin: 0.45rem 0 0;
+    color: var(--accent-hackmanite);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .model-hero .fds-callout { margin-top: 1.4rem; }
+
+  .lineup-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .scope-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .scope-grid li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+  }
+
+  .scope-idx {
+    color: var(--accent-hackmanite);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px) {
+    .model-hero,
+    .scope-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

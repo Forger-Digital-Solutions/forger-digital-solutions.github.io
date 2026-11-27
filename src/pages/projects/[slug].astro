@@ -185,6 +185,14 @@ const softwareSchema = releaseProduct ? {
       </div>
     </header>
 
+    {project.slug === 'forge-control' && (
+      <div class="fds-callout" role="note" aria-label="Migration notice to Jaspilite" style="margin-bottom: 1.75rem;">
+        <strong>Platform Evolution — Superseded by Jaspilite:</strong>
+        {' '}Forge Control was an earlier orchestration name inside Forger Digital Solutions. Our flagship autonomous development and multi-agent orchestration platform is now{' '}
+        <a href="/products/jaspilite/"><strong>Jaspilite</strong></a> (operating across <strong>Auto</strong>, <strong>Meld</strong>, and <strong>Solo</strong> modes). This page is preserved as a historical reference.
+      </div>
+    )}
+
     {(releaseProduct || productRecord?.distributionPaused) && (
       <section class="release-strip" aria-label={`${productRecord?.name} availability`}>
         <p class="release-strip__meta">

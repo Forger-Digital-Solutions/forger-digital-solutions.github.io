@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectForgeGraph from '../../components/ProjectForgeGraph.astro';
+
+const tracks = [
+  { title: 'Project Forge', href: '/research/project-forge/', tag: 'Foundation', desc: '15 research divisions, 8-stage lifecycle, source verification, and dataset-eligibility governance.' },
+  { title: 'Universal Gaming & Engines', href: '/research/gaming/', tag: 'Hackmanite Track', desc: 'Game engines, C++/C# programming, PBR graphics, physics, NPCs, multiplayer, and technical art.' },
+  { title: 'Anime, Manga & Animation', href: '/research/animation/', tag: 'Cinnabar Track', desc: 'Storyboarding, keyframe craft, cinematography, worldbuilding, and canonical intelligence.' },
+  { title: 'Artificial Intelligence', href: '/research/artificial-intelligence/', tag: 'Alexandrite Track', desc: 'Specialist post-training, retrieval grounding, multi-teacher distillation, and evaluation.' },
+  { title: 'Training Methodology', href: '/research/training/', tag: 'Infrastructure', desc: 'How domain research becomes cleared datasets, controlled SFT/LoRA/QLoRA runs, and audited evals.' },
+  { title: 'Engineering Laboratory', href: '/research/laboratory/', tag: 'Experiments', desc: 'Executable benchmarks, fail-closed routing reliability, and automated verification harnesses.' },
+  { title: 'Evaluations & Benchmarks', href: '/evaluations/', tag: 'Measurement', desc: 'Raw vs. guarded scoring, uncertainty reporting, and strict zero-fabricated-leaderboard policy.' },
+  { title: 'Trust & Transparency Center', href: '/trust/', tag: 'Governance', desc: 'Model provenance, training rights, safety boundaries, and responsible AI disclosures.' },
+];
+---
+
+<BaseLayout
+  title="Research"
+  description="Forger Digital Solutions research hub: Project Forge, gaming intelligence, animation & storytelling research, AI systems, training methodology, evaluations, and Trust Center."
+  accent="project-forge"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Research</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Research // Scientific Foundation</p>
+    <h1 class="page-title">Research that becomes capability.</h1>
+    <p class="page-description">
+      Every model family and engineering platform at Forger Digital Solutions rests on disciplined, verifiable research. We separate source study, dataset clearance, controlled training, independent evaluation, and public availability at every step.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Research tracks">
+    <div class="tracks-grid">
+      {tracks.map((track) => (
+        <article class="track-item">
+          <span class="track-tag">{track.tag}</span>
+          <h2><a href={track.href}>{track.title}</a></h2>
+          <p>{track.desc}</p>
+          <a href={track.href} class="text-link">Explore <span aria-hidden="true">→</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="lifecycle-overview">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Project Forge Pipeline</p>
+        <h2 id="lifecycle-overview">The eight-stage research-to-capability lifecycle.</h2>
+      </div>
+      <a href="/research/project-forge/" class="btn btn-outline">Open Project Forge <span aria-hidden="true">→</span></a>
+    </div>
+    <ProjectForgeGraph compact />
+  </section>
+</BaseLayout>
+
+<style>
+  .tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+  .track-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: var(--color-bg-secondary);
+  }
+  .track-tag {
+    color: var(--accent-project-forge);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .track-item h2 { margin: 0.45rem 0 0.4rem; font-size: 1.2rem; letter-spacing: -0.02em; }
+  .track-item h2 a { color: var(--color-text); }
+  .track-item h2 a:hover { color: var(--accent-project-forge); }
+  .track-item p { margin: 0 0 1rem; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.6; }
+  .track-item .text-link { margin-top: auto; }
+  @media (max-width: 760px) { .tracks-grid { grid-template-columns: 1fr; } }
+</style>

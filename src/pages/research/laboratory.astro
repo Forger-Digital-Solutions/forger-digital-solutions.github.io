@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { labPrinciples } from '../../data/lab';
+---
+
+<BaseLayout
+  title="Engineering Laboratory"
+  description="FDS Engineering Laboratory: executable experiments, fail-closed reliability engineering, automated CI verification, and empirical validation standards."
+  accent="project-forge"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/research/">Research</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Engineering Laboratory</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Project Forge // Engineering Laboratory</p>
+    <h1 class="page-title">Build through experimentation.</h1>
+    <p class="page-description">
+      Execution is not evidence. Systems inside FDS earn permanent architectural status only after surviving repeatable experiments, failure-mode testing, and automated verification gates.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight">
+    <div class="principles-grid">
+      {labPrinciples.map((p) => (
+        <article class="principle-card">
+          <span>{p.number}</span>
+          <h2>{p.title}</h2>
+          <p>{p.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Verifiable Engineering Gates</p>
+        <h2>What runs in public CI today.</h2>
+        <p>Every change to this public headquarters passes automated content-schema checks, 1,000+ Vitest unit tests, Kayla golden-query regression checks, secret/private-path scanning, internal link verification, and Playwright + axe-core browser certification.</p>
+      </div>
+      <div class="lab-links">
+        <a href="/lab" class="btn btn-outline">Full FDS Lab Record <span aria-hidden="true">→</span></a>
+        <a href="/evaluations/" class="text-link">Evaluation Center</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .principles-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--color-border-structural); border-radius: var(--radius-md); background: var(--color-border); overflow: hidden; }
+  .principle-card { padding: 1.5rem; background: var(--color-bg-secondary); }
+  .principle-card span { color: var(--accent-project-forge); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; }
+  .principle-card h2 { margin: 0.5rem 0 0.45rem; font-size: 1.2rem; }
+  .principle-card p { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.65; }
+  .lab-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  @media (max-width: 720px) { .principles-grid { grid-template-columns: 1fr; } }
+</style>

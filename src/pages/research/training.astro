@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectForgeGraph from '../../components/ProjectForgeGraph.astro';
+
+const methods = [
+  { name: 'Domain Research & Source Verification', plain: 'Gathering accurate technical knowledge while recording exact origin and rights.', deep: 'Separates reference study corpora from training-eligible datasets so unverified or restricted sources never leak into model weights.' },
+  { name: 'Retrieval-Augmented Generation (RAG)', plain: 'Looking up verified facts at query time instead of memorizing everything.', deep: 'Structured document chunking, schema-typed canonical indices, and explicit citation verification keep dynamic facts current without retraining.' },
+  { name: 'Supervised Fine-Tuning (SFT)', plain: 'Teaching a model domain conventions using curated input-output demonstrations.', deep: 'Applied only to explicitly cleared datasets with logged splits, deduplication checks, and holdout isolation.' },
+  { name: 'LoRA & QLoRA Adaptation', plain: 'Efficiently adapting large open-weight base models without rewriting every weight.', deep: 'Low-rank adapters and quantized training enable disciplined iteration on specialist gaming and narrative domains while preserving transparent third-party base attribution.' },
+  { name: 'Tool-Assisted Evaluation', plain: 'Testing whether outputs actually compile, run, or match verified citations.', deep: 'Combines deterministic code/schema verifiers with separate raw vs. guarded benchmarks and documented uncertainty bounds.' },
+  { name: 'Multi-Teacher Distillation & Governance', plain: 'Long-term synthesis of verified specialist strengths into Alexandrite.', deep: 'Gated behind independent specialist evaluation and safety review — never performed via ad-hoc unverified weight merging.' },
+];
+---
+
+<BaseLayout
+  title="Training Methodology"
+  description="Public explanation of Forger Digital Solutions' model-development methodology: data provenance, RAG, SFT, LoRA/QLoRA, tool-assisted evaluation, multi-teacher distillation, and safety governance."
+  accent="project-forge"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/research/">Research</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Training Methodology</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Project Forge // Training &amp; Adaptation Architecture</p>
+    <h1 class="page-title">How FDS develops specialist intelligence.</h1>
+    <p class="page-description">
+      A transparent technical overview written for both nontechnical readers and practicing ML engineers — explaining every boundary from domain research to deployment governance without exposing private hyperparameters or fabricating loss charts.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight">
+    <ProjectForgeGraph compact />
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="methods-table-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Technical Layers</p>
+        <h2 id="methods-table-title">Plain-language purpose &amp; engineering discipline.</h2>
+      </div>
+      <a href="/evaluations/" class="text-link">Evaluation methodology <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Stage / Method</th>
+            <th scope="col">Plain-Language Role</th>
+            <th scope="col">Engineering &amp; Governance Standard</th>
+          </tr>
+        </thead>
+        <tbody>
+          {methods.map((m) => (
+            <tr>
+              <th scope="row">{m.name}</th>
+              <td>{m.plain}</td>
+              <td>{m.deep}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fds-callout" style="margin-top: 1.5rem;">
+      <strong>No Fabricated Training Charts:</strong> FDS does not display synthetic loss curves, private compute balances, or unverified training logs. Empirical training and evaluation results are published only when approved public exports exist.
+    </div>
+  </section>
+</BaseLayout>

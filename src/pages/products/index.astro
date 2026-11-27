@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import JaspiliteWorkbench from '../../components/JaspiliteWorkbench.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import { getRegistryEntry } from '../../data/registry';
+import { projects } from '../../data/projects';
+
+const jaspilite = getRegistryEntry('jaspilite');
+const battleverse = getRegistryEntry('battleverse');
+
+const extended = projects.filter((p) => !['dead-trails-west'].includes(p.slug));
+---
+
+<BaseLayout
+  title="Products & Platforms"
+  description="Explore Forger Digital Solutions software applications: Jaspilite autonomous development workspace, Forge BattleVerse fictional intelligence platform, ForgerEMS preview, and CodeForge."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Products</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Applications // Product Catalog</p>
+    <h1 class="page-title">Independent software platforms.</h1>
+    <p class="page-description">
+      FDS applications are standalone software products — distinct from our AI model families and research infrastructure. Public downloads are offered strictly for verified releases and previews.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Flagship Applications">
+    <article class="product-row" data-accent="jaspilite">
+      <div class="product-row__copy">
+        <div class="meta-row">
+          <span class="kicker">Flagship Development Platform</span>
+          <StatusPill status={jaspilite.development_status} />
+        </div>
+        <h2><a href="/products/jaspilite/">Jaspilite</a></h2>
+        <p class="tagline">Your intelligence. One development workspace.</p>
+        <p class="desc">{jaspilite.public_summary}</p>
+        <div class="actions">
+          <a href="/products/jaspilite/" class="btn btn-primary">Explore Jaspilite <span aria-hidden="true">→</span></a>
+          <a href="/projects/forge-control" class="text-link">Forge Control migration note</a>
+        </div>
+      </div>
+      <div class="product-row__visual">
+        <JaspiliteWorkbench />
+      </div>
+    </article>
+
+    <article class="product-row product-row--reverse" data-accent="battleverse">
+      <div class="product-row__visual">
+        <SpecimenMedia
+          src="/images/forge/battleverse-combat-sim.webp"
+          mobileSrc="/images/forge/battleverse-combat-sim-sm.webp"
+          alt="Original armored combatant silhouettes overlaid with cobalt trajectory curves and statistical probability wave envelopes."
+          label="Illustrative Simulation Concept — Original Silhouettes"
+        />
+      </div>
+      <div class="product-row__copy">
+        <div class="meta-row">
+          <span class="kicker">Fictional Intelligence &amp; Simulation</span>
+          <StatusPill status={battleverse.development_status} />
+        </div>
+        <h2><a href="/products/battleverse/">Forge BattleVerse</a></h2>
+        <p class="tagline">Beyond opinion. Built on evidence.</p>
+        <p class="desc">{battleverse.public_summary}</p>
+        <div class="actions">
+          <a href="/products/battleverse/" class="btn btn-primary">Explore BattleVerse <span aria-hidden="true">→</span></a>
+          <a href="/models/cinnabar/oracle/" class="text-link">Relationship to Cinnabar Oracle</a>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="verified-software-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Verified Public &amp; Extended Portfolio</p>
+        <h2 id="verified-software-heading">Current downloads and preserved FDS software.</h2>
+        <p>Legacy and specialized FDS applications remain accessible with transparent availability and SHA-256 verification.</p>
+      </div>
+      <a href="/downloads/" class="btn btn-outline">Open Downloads &amp; Releases <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Application</th>
+            <th scope="col">Category</th>
+            <th scope="col">Public Status</th>
+            <th scope="col">Summary</th>
+            <th scope="col">Route</th>
+          </tr>
+        </thead>
+        <tbody>
+          {extended.map((item) => (
+            <tr>
+              <th scope="row">{item.name}</th>
+              <td>{item.category}</td>
+              <td>{item.stageLabel ?? item.status}</td>
+              <td>{item.summary}</td>
+              <td><a href={item.slug === 'forgerems' ? '/forgerems/' : `/projects/${item.slug}`} class="text-link">Inspect →</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .product-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 2rem 2.5rem;
+    align-items: center;
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .product-row--reverse { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+  .meta-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.8rem; }
+  .kicker { color: var(--page-accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .product-row h2 { margin: 0; font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -0.03em; }
+  .product-row h2 a { color: var(--color-text); }
+  .tagline { margin: 0.3rem 0 0; color: var(--color-brand-silver); font-weight: 500; }
+  .desc { margin: 0.8rem 0 0; color: var(--color-text-muted); font-size: 0.94rem; line-height: 1.66; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.3rem; margin-top: 1.4rem; }
+  @media (max-width: 960px) {
+    .product-row, .product-row--reverse { grid-template-columns: 1fr; }
+    .product-row--reverse .product-row__visual { order: 2; }
+  }
+</style>

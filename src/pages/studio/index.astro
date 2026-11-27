@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import { getRegistryEntry } from '../../data/registry';
+
+const stateLines = getRegistryEntry('state-lines');
+const deadTrails = getRegistryEntry('dead-trails-west');
+---
+
+<BaseLayout
+  title="Studio — FDS Original Productions"
+  description="Forger Digital Solutions Original Productions builds AAA-ambition interactive worlds and cinematic storytelling alongside the specialized AI and engineering tools that power them."
+  accent="state-lines"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Studio</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Original Productions // Interactive Worlds</p>
+    <h1 class="page-title studio-title">Build the tools.<br />Build the worlds.</h1>
+    <p class="page-description">
+      Forger Digital Solutions does not build AI research and engineering platforms in a vacuum. FDS Original Productions applies our craft directly to original interactive fiction, cinematic worldbuilding, and long-horizon game development.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="studio-flagship-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Flagship Original Production</p>
+        <h2 id="studio-flagship-title">State Lines</h2>
+        <p>An original AAA-ambition open-world organized-crime drama inspired by the industrial corridors, ports, and borderlines of New York, New Jersey, and Pennsylvania.</p>
+      </div>
+      <StatusPill status={stateLines.development_status} label="Preproduction · Private" tone="private" />
+    </div>
+
+    <div class="studio-feature">
+      <SpecimenMedia
+        src="/images/forge/state-lines-concept.webp"
+        mobileSrc="/images/forge/state-lines-concept-sm.webp"
+        alt="Atmospheric dusk concept illustration of an industrial bridge, wet asphalt, and coastal rail corridor evoking State Lines creative direction"
+        label="Concept Art — Work in Progress (Not Gameplay)"
+        caption="Early atmospheric world direction for State Lines. Not in-engine footage or final visual representation."
+        eager={true}
+      />
+
+      <div class="studio-feature__copy">
+        <p class="studio-quote">
+          Prestige crime cinema translated into living regional systems—where every bridge, port authority, highway corridor, and neighborhood border carries weight.
+        </p>
+        <div class="studio-actions">
+          <a href="/studio/state-lines/" class="btn btn-primary">Enter State Lines Dossier <span aria-hidden="true">→</span></a>
+          <a href="/studio/productions/" class="btn btn-secondary">All Original Productions</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="studio-slate-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Production Slate</p>
+        <h2 id="studio-slate-title">Original worlds in active stewardship.</h2>
+        <p>Every studio title states its true development stage without fabricated release windows or deceptive pre-rendered gameplay claims.</p>
+      </div>
+    </div>
+
+    <div class="slate-grid">
+      <article class="fds-panel slate-card">
+        <div class="slate-card__top">
+          <span class="slate-kicker">FLAGSHIP PRODUCTION</span>
+          <StatusPill status={stateLines.development_status} label="Preproduction" tone="private" />
+        </div>
+        <h3>State Lines</h3>
+        <p>{stateLines.public_summary}</p>
+        <a href="/studio/state-lines/" class="text-link">Explore State Lines <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="fds-panel slate-card">
+        <div class="slate-card__top">
+          <span class="slate-kicker">ORIGINAL FRONTIER PRODUCTION</span>
+          <StatusPill status={deadTrails.development_status} label="Private Development" tone="private" />
+        </div>
+        <h3>Dead Trails West</h3>
+        <p>{deadTrails.public_summary}</p>
+        <a href="/projects/dead-trails-west" class="text-link">View Project Profile <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="studio-craft-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research &amp; Studio Synergy</p>
+        <h2 id="studio-craft-title">How FDS Intelligence serves human creative direction.</h2>
+      </div>
+      <a href="/models/hackmanite/" class="text-link">Explore Hackmanite <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-callout">
+      <strong>Human-Authored Vision First:</strong> Specialized AI programs like <a href="/models/hackmanite/">Hackmanite</a> (game-engineering systems) and <a href="/models/cinnabar/">Cinnabar</a> (storytelling and animation craft) exist to amplify technical depth, systems iteration, and visual preproduction—never to replace authored narrative voice or mislead players about what is real gameplay.
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .studio-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    font-size: clamp(2.8rem, 6.2vw, 4.9rem);
+    line-height: 0.98;
+  }
+  .studio-feature { display: grid; gap: 1.75rem; }
+  .studio-feature__copy {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem 2rem;
+    padding-top: 0.5rem;
+  }
+  .studio-quote {
+    max-width: 40rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1.04rem;
+    line-height: 1.68;
+  }
+  .studio-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  .slate-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .slate-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.65rem;
+  }
+  .slate-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .slate-kicker {
+    color: var(--accent-state-lines);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .slate-card h3 { margin: 0; font-size: 1.45rem; }
+  .slate-card p { margin: 0; color: var(--color-text-muted); font-size: 0.94rem; line-height: 1.65; flex: 1; }
+
+  @media (max-width: 760px) { .slate-grid { grid-template-columns: 1fr; } }
+</style>

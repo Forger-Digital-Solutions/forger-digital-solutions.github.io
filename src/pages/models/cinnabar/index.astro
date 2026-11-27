@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import ModelCardPanel from '../../../components/ModelCardPanel.astro';
+import { getRegistryEntry, modelFamiliesData } from '../../../data/registry';
+
+const entry = getRegistryEntry('cinnabar');
+const cinData = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
+
+const domains = [
+  { title: 'Anime & Manga Craft', detail: 'Panel rhythm, visual pacing, episode structure, storyboarding conventions, and terminology.' },
+  { title: 'Character & Narrative Design', detail: 'Long-form character arcs, voice consistency, dialogue cadence, and multi-arc continuity tracking.' },
+  { title: 'Worldbuilding & Cinematography', detail: 'Internal rule systems, camera framing vocabulary, lighting cues, and scene composition analysis.' },
+  { title: 'Canonical Intelligence & Combat Analysis', detail: 'Source-grounded feat verification, continuity versioning, and structured fictional combat reasoning through Oracle lineages.' },
+];
+---
+
+<BaseLayout
+  title="Cinnabar — Anime, Manga & Animation Intelligence"
+  description="Cinnabar is Forger Digital Solutions' specialized AI model family for anime, manga, animation workflows, worldbuilding, canonical intelligence, and fictional combat analysis."
+  accent="cinnabar"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Cinnabar</span>
+  </nav>
+
+  <header class="model-hero" data-accent="cinnabar">
+    <div class="model-hero__copy">
+      <div class="hero-badges">
+        <span class="page-eyebrow">FDS Intelligence · Creative &amp; Fictional AI</span>
+        <StatusPill status={entry.development_status} />
+      </div>
+      <h1 class="page-title">Cinnabar</h1>
+      <p class="model-hero__tagline">Intelligence for the art of storytelling.</p>
+      <p class="page-description">{cinData.summary}</p>
+      <div class="fds-callout">
+        <strong>Modality &amp; IP Integrity:</strong> Cinnabar Oracle models are text-based analytical and storytelling models — <strong>not</strong> native video or animation generators. Creative rendering and animation production rely on explicitly identified external tools. FDS never uses copyrighted anime footage or unlicensed manga scans as website artwork.
+      </div>
+    </div>
+    <div class="model-hero__visual">
+      <SpecimenMedia
+        src={cinData.image}
+        mobileSrc={cinData.imageSm}
+        alt={cinData.imageAlt}
+        label={cinData.imageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <section class="page-section" aria-labelledby="domains-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Creative Specializations</p>
+        <h2 id="domains-heading">Built around narrative discipline and production craft.</h2>
+      </div>
+      <a href="/models/cinnabar/oracle/" class="btn btn-outline">Inspect Oracle v1–v4.1 Lineages <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="domain-grid">
+      {domains.map((d, idx) => (
+        <article class="domain-cell">
+          <span class="domain-cell__idx">0{idx + 1}</span>
+          <h3>{d.title}</h3>
+          <p>{d.detail}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="oracle-overview-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Documented Oracle Lineages</p>
+        <h2 id="oracle-overview-heading">Progressive refinement from Oracle v1 to v4.1.</h2>
+        <p>
+          Cinnabar is the model family; <a href="/products/battleverse/">Forge BattleVerse</a> is a separate standalone application engineered to integrate with Cinnabar Oracle for structured canonical analysis.
+        </p>
+      </div>
+      <a href="/models/cinnabar/oracle/" class="text-link">Full Oracle lineage table <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Lineage</th>
+            <th scope="col">Status Class</th>
+            <th scope="col">Research Focus</th>
+            <th scope="col">Evaluation &amp; Publication State</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cinData.oracle_lineages?.map((item) => (
+            <tr>
+              <th scope="row">{item.version}</th>
+              <td>{item.stage}</td>
+              <td>{item.role}</td>
+              <td>{item.evalState}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <ModelCardPanel entry={entry} showLink={false} />
+  </section>
+</BaseLayout>
+
+<style>
+  .model-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .hero-badges .page-eyebrow { margin: 0; }
+  .model-hero__tagline { margin: 0.45rem 0 0; color: var(--accent-cinnabar); font-family: var(--font-serif); font-style: italic; font-size: 1.55rem; }
+  .model-hero .fds-callout { margin-top: 1.4rem; }
+
+  .domain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .domain-cell {
+    padding: 1.5rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .domain-cell__idx {
+    color: var(--accent-cinnabar);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .domain-cell h3 { margin: 0.5rem 0 0.4rem; font-size: 1.1rem; }
+  .domain-cell p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+
+  @media (max-width: 900px) {
+    .model-hero,
+    .domain-grid { grid-template-columns: 1fr; }
+  }
+</style>

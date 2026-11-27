@@ -1,0 +1,254 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { publicReleasesData, publicRegistry, statusDisplayLabels } from '../../data/registry';
+
+const formatMb = (bytes: number) =>
+  bytes >= 1_000_000 ? `${(bytes / (1024 * 1024)).toFixed(1)} MB` : `${(bytes / 1024).toFixed(1)} KB`;
+
+const privatePrograms = publicRegistry.filter(
+  (entry) => entry.availability !== 'public-preview' && entry.availability !== 'public-release' && entry.availability !== 'downloads-paused'
+);
+---
+
+<BaseLayout
+  title="Downloads — Verified Software Releases & Artifacts"
+  description="Official Forger Digital Solutions downloads with SHA-256 checksums, exact file sizes, signing disclosures, and honest private-development status."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Downloads</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Distribution // Verified Artifacts</p>
+    <h1 class="page-title">Downloads &amp; Verified Releases</h1>
+    <p class="page-description">
+      Every public artifact distributed by Forger Digital Solutions includes exact file size, architecture, signing status, and a SHA-256 verification digest. For the standalone software portal view, visit <a href="/forged">Forged Distribution</a>.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="dl-public-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Publicly Available &amp; Archived Packages</p>
+        <h2 id="dl-public-title">Current public artifacts.</h2>
+      </div>
+      <a href="/releases/" class="text-link">Full Release Index <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="release-stack">
+      {publicReleasesData.map((rel) => (
+        <article class="fds-panel release-card">
+          <div class="release-card__head">
+            <div>
+              <div class="release-card__title-row">
+                <h3>{rel.product} <span class="release-ver">{rel.version}</span></h3>
+                <StatusPill
+                  label={rel.channel}
+                  tone={rel.channel.includes('Paused') ? 'paused' : 'preview'}
+                />
+              </div>
+              <p class="release-card__meta">
+                <span>Published {rel.date}</span>
+                <span>·</span>
+                <span>{rel.os} ({rel.architecture})</span>
+                <span>·</span>
+                <span>Commit <code>{rel.sourceCommit.slice(0, 7)}</code></span>
+              </p>
+            </div>
+            <div class="release-card__links">
+              <a href={rel.pageUrl} class="btn btn-secondary">Product Details</a>
+              {rel.releaseUrl && (
+                <a href={rel.releaseUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                  GitHub Release <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </div>
+          </div>
+
+          <p class="release-card__notes">{rel.notes}</p>
+          <p class="release-card__signing">
+            <strong>Signing &amp; Limitations:</strong> {rel.signingStatus}. {rel.limitations}
+          </p>
+
+          <div class="artifact-list">
+            {rel.artifacts.map((art) => (
+              <div class="artifact-row">
+                <div class="artifact-info">
+                  <div class="artifact-name">
+                    <strong>{art.name}</strong>
+                    <span class="tag">{art.installerType}</span>
+                    <span class="artifact-size">{formatMb(art.sizeBytes)}</span>
+                  </div>
+                  <div class="artifact-hash">
+                    <span class="artifact-hash__label">SHA-256</span>
+                    <code>{art.sha256}</code>
+                    <button
+                      type="button"
+                      class="copy-hash-btn"
+                      data-copy-hash={art.sha256}
+                      aria-label={`Copy SHA-256 hash for ${art.filename}`}
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+                <a
+                  href={art.downloadUrl}
+                  class="btn btn-primary"
+                  target={art.downloadUrl.startsWith('http') ? '_blank' : undefined}
+                  rel={art.downloadUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+                >
+                  Download {art.filename}
+                </a>
+              </div>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="dl-not-public-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Not Yet Publicly Downloadable</p>
+        <h2 id="dl-not-public-title">Active programs without public downloads.</h2>
+        <p>FDS never displays fake download buttons, waitlists disguised as installers, or placeholder binaries for programs still in research or private development.</p>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Program</th>
+            <th scope="col">Division</th>
+            <th scope="col">Current Stage</th>
+            <th scope="col">Public Download Status</th>
+            <th scope="col">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {privatePrograms.map((entry) => (
+            <tr>
+              <th scope="row">{entry.name}</th>
+              <td>{entry.division}</td>
+              <td>{statusDisplayLabels[entry.development_status]}</td>
+              <td>No public binary or weight distribution yet</td>
+              <td><a href={entry.route}>Inspect →</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-hash]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.copyHash;
+      if (!value) return;
+      try {
+        await navigator.clipboard.writeText(value);
+        const prev = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(() => { btn.textContent = prev || 'Copy'; }, 1600);
+      } catch {
+        btn.textContent = 'Select hash';
+      }
+    });
+  });
+</script>
+
+<style>
+  .release-stack { display: grid; gap: 1.5rem; }
+  .release-card { padding: 1.65rem; }
+  .release-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem 1.5rem;
+  }
+  .release-card__title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .release-card__title-row h3 { margin: 0; font-size: 1.45rem; letter-spacing: -0.025em; }
+  .release-ver { color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.95rem; font-weight: 500; }
+  .release-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.65rem;
+    margin: 0.45rem 0 0;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .release-card__links { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+  .release-card__notes { margin: 1.15rem 0 0.6rem; color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.65; }
+  .release-card__signing {
+    margin: 0 0 1.25rem;
+    color: var(--color-text-subtle);
+    font-size: 0.86rem;
+    line-height: 1.58;
+  }
+  .release-card__signing strong { color: var(--color-text); }
+
+  .artifact-list { display: grid; gap: 0.85rem; }
+  .artifact-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+  }
+  .artifact-info { flex: 1 1 22rem; min-width: 0; }
+  .artifact-name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.5rem;
+  }
+  .artifact-size { color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.76rem; }
+  .artifact-hash {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+  .artifact-hash__label {
+    color: var(--color-text-subtle);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .artifact-hash code {
+    word-break: break-all;
+    color: var(--color-brand-silver);
+  }
+  .copy-hash-btn {
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-xs);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    cursor: pointer;
+  }
+  .copy-hash-btn:hover { border-color: var(--color-accent-bright); }
+</style>

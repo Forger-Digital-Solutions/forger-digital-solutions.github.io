@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import ModelCardPanel from '../../../components/ModelCardPanel.astro';
+import { getRegistryEntry } from '../../../data/registry';
+
+const entry = getRegistryEntry('hackmanite-reasoning');
+---
+
+<BaseLayout
+  title="Hackmanite Reasoning — Complex Game Engineering Reasoning Model"
+  description="Hackmanite Reasoning is Forger Digital Solutions' planned 120B-class reasoning model built on openai/gpt-oss-120b for complex game architecture, systems debugging, and technical analysis."
+  accent="hackmanite"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <a href="/models/hackmanite/">Hackmanite</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Reasoning</span>
+  </nav>
+
+  <header class="page-head">
+    <div class="meta-bar">
+      <p class="page-eyebrow">Hackmanite Family · Planned Reasoning Line</p>
+      <StatusPill status={entry.development_status} />
+    </div>
+    <h1 class="page-title">Hackmanite Reasoning</h1>
+    <p class="page-description">
+      Designed for deep multi-step game-engine architecture, physics and netcode debugging, frame-time profiling, and systems-level verification on top of the open-weight <code>openai/gpt-oss-120b</code> foundation.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight">
+    <ModelCardPanel entry={entry} showLink={false} />
+  </section>
+
+  <section class="page-section page-section--surface">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Target Engineering Workloads</p>
+        <h2>Built for hard diagnostic and architectural problems.</h2>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Domain</th>
+            <th scope="col">Planned Reasoning Focus</th>
+            <th scope="col">Verification Standard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Engine Architecture</th>
+            <td>Entity-component layout, streaming partition boundaries, multithreaded job graphs.</td>
+            <td>Evaluated against deterministic build and static-analysis checks.</td>
+          </tr>
+          <tr>
+            <th scope="row">Physics &amp; Simulation</th>
+            <td>Collision tunneling diagnosis, rigid-body determinism, fixed-timestep stability.</td>
+            <td>Measured against reproducible simulation regression harnesses.</td>
+          </tr>
+          <tr>
+            <th scope="row">Performance &amp; Rendering</th>
+            <td>Draw-call bottlenecks, shader register pressure, GPU memory residency budgets.</td>
+            <td>Requires concrete profiler baselines — never unmeasured speculation.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nav-foot">
+      <a href="/models/hackmanite/prime/" class="btn btn-outline">Compare with Hackmanite Prime <span aria-hidden="true">→</span></a>
+      <a href="/models/hackmanite/" class="text-link">Back to Hackmanite family</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .meta-bar .page-eyebrow { margin: 0; }
+  .nav-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 1.75rem; }
+</style>
