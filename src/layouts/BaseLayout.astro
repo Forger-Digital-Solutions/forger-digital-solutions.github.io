@@ -3,11 +3,14 @@ import { siteConfig } from '../config/site';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import KaylaCopilot from '../components/KaylaCopilot.astro';
-import SystemBackground from '../components/SystemBackground.astro';
-import CosmicBackdrop from '../components/CosmicBackdrop.astro';
 import '@fontsource-variable/inter';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource-variable/jetbrains-mono';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
 import '../styles/global.css';
 import { buildPageContext } from '../lib/kayla/context';
+import type { RegistryAccent } from '../data/registry';
 
 interface Props {
   title?: string;
@@ -15,30 +18,46 @@ interface Props {
   ogImage?: string;
   noindex?: boolean;
   robots?: string;
+  accent?: RegistryAccent;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, ogImage, noindex, robots } = Astro.props;
+const { title, description, ogImage, noindex, robots, accent, jsonLd } = Astro.props;
 const robotsDirective = robots || (noindex ? 'noindex, nofollow' : undefined);
-const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
+const pageTitle = title ? `${title} | ${siteConfig.name}` : `${siteConfig.name} — Specialized Intelligence & Original Worlds`;
 const pageDesc =
   description ||
-  siteConfig.description ||
-  'Independent AI and software company building AI systems, developer tools, and practical software.';
+  'Forger Digital Solutions is an independent artificial intelligence research and engineering studio developing specialized AI models, autonomous development systems, and original interactive experiences.';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
 const ogImageUrl = new URL(ogImage || siteConfig.ogImage, siteConfig.siteUrl).href;
 const kaylaPageContext = buildPageContext(Astro.url.pathname);
 const isHomepage = Astro.url.pathname === '/';
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteConfig.name,
+  alternateName: siteConfig.shortName,
+  url: siteConfig.siteUrl,
+  logo: new URL('/images/brand/fds-logo.png', siteConfig.siteUrl).href,
+  founder: { '@type': 'Person', name: siteConfig.author },
+  description: pageDesc,
+  sameAs: [siteConfig.githubUrl, siteConfig.youtubeUrl, siteConfig.linkedinUrl].filter(Boolean),
+};
+
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: siteConfig.name,
   alternateName: siteConfig.shortName,
   url: siteConfig.siteUrl,
-  publisher: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.siteUrl }
+  publisher: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.siteUrl },
 };
+
+const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-accent={accent}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,7 +66,7 @@ const websiteSchema = {
     {robotsDirective && <meta name="robots" content={robotsDirective} />}
     <link rel="canonical" href={canonicalUrl} />
     <meta name="author" content={siteConfig.author} />
-    <meta name="theme-color" content="#04070c" />
+    <meta name="theme-color" content="#08090c" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=fds-r2" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=fds-r2" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=fds-r2" />
@@ -56,36 +75,36 @@ const websiteSchema = {
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=fds-r2" />
     <link rel="manifest" href="/site.webmanifest?v=fds-r2" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph & Social -->
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDesc} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- Structured data -->
-    <script is:inline type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: siteConfig.name,
-      alternateName: siteConfig.shortName,
-      url: siteConfig.siteUrl,
-      founder: { '@type': 'Person', name: siteConfig.author },
-      description: pageDesc,
-      sameAs: [siteConfig.githubUrl, siteConfig.youtubeUrl, siteConfig.linkedinUrl].filter(Boolean)
-    })} />
+    <!-- Structured Data -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
     {isHomepage && <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />}
+    {extraSchemas.map((schema) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
 
     <!-- Kayla Copilot page context -->
     <script is:inline define:vars={{ kaylaPageContext }}>
-      window.__KAYLA_PAGE_CONTEXT__ = { route: kaylaPageContext.route, pageType: kaylaPageContext.pageType, entity: kaylaPageContext.entity ?? '' };
+      window.__KAYLA_PAGE_CONTEXT__ = {
+        route: kaylaPageContext.route,
+        pageType: kaylaPageContext.pageType,
+        entity: kaylaPageContext.entity ?? '',
+      };
     </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
-    <SystemBackground />
-    {isHomepage && <CosmicBackdrop />}
     <Header />
     <main id="main-content" class="site-main">
       <slot />
@@ -93,54 +112,13 @@ const websiteSchema = {
     <Footer />
     <KaylaCopilot />
     <script>
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const revealTargets = document.querySelectorAll<HTMLElement>('.page-section, .page-head, .doc, .spage-hero, .hw-hero, .ci-hero, .lab-hero, .about-wrap');
-      if (!reduceMotion && 'IntersectionObserver' in window) {
-        document.documentElement.classList.add('reveal-ready');
-        const revealObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-revealed');
-              revealObserver.unobserve(entry.target);
-            }
-          });
-        }, { rootMargin: '0px 0px -6% 0px', threshold: .08 });
-        revealTargets.forEach((target) => revealObserver.observe(target));
-      } else {
-        revealTargets.forEach((target) => target.classList.add('is-revealed'));
-      }
+      // Mark sections immediately revealed for full visibility & CI visual certification compatibility
+      const revealTargets = document.querySelectorAll<HTMLElement>(
+        '.page-section, .page-head, .doc, .spage-hero, .hw-hero, .ci-hero, .lab-hero, .about-wrap'
+      );
+      revealTargets.forEach((target) => target.classList.add('is-revealed'));
 
-      // Pointer-follow radial lighting: fine-pointer devices only (not touch/coarse).
-      // RAF-throttled: coalesces all raw pointermove events into one CSS variable update
-      // per animation frame, eliminating 75-80% of body::before radial-gradient repaints.
-      if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-        let _rafPending = false;
-        let _px = 0, _py = 0, _cardTarget: HTMLElement | null = null;
-        document.addEventListener('pointermove', (event) => {
-          _px = event.clientX;
-          _py = event.clientY;
-          _cardTarget = (event.target as HTMLElement).closest<HTMLElement>(
-            '.project-card, .product-card, .support-card, .tech-category, .method, .more-card'
-          );
-          if (!_rafPending) {
-            _rafPending = true;
-            requestAnimationFrame(() => {
-              _rafPending = false;
-              document.documentElement.style.setProperty('--pointer-x', `${_px}px`);
-              document.documentElement.style.setProperty('--pointer-y', `${_py}px`);
-              if (_cardTarget) {
-                const rect = _cardTarget.getBoundingClientRect();
-                _cardTarget.style.setProperty('--card-x', `${_px - rect.left}px`);
-                _cardTarget.style.setProperty('--card-y', `${_py - rect.top}px`);
-              }
-            });
-          }
-        }, { passive: true });
-      }
-
-      // Page visibility: suspend decorative animations when tab is hidden.
-      // CSS uses [data-bg-paused] on <html> to set animation-play-state: paused
-      // on decorative-only elements. Resumes immediately on return.
+      // Suspend decorative motion when tab is hidden
       const applyVisibility = () => {
         if (document.hidden) {
           document.documentElement.setAttribute('data-bg-paused', '');
@@ -149,7 +127,7 @@ const websiteSchema = {
         }
       };
       document.addEventListener('visibilitychange', applyVisibility);
-      applyVisibility(); // apply on load if page starts hidden (prerendered background tab)
+      applyVisibility();
     </script>
   </body>
 </html>

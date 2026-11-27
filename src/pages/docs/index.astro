@@ -1,0 +1,362 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { publicRegistry, statusDisplayLabels, availabilityDisplayLabels } from '../../data/registry';
+
+const docSections = [
+  {
+    id: 'getting-started',
+    category: 'Orientation',
+    title: 'Getting Started with FDS Architecture',
+    summary: 'How FDS organizes its four divisions—FDS Intelligence, FDS Applications, FDS Research, and FDS Original Productions—and how to read lifecycle status badges across the site.',
+    bullets: [
+      'Every flagship system is tracked in a schema-validated registry distinguishing research vision, planned training, active private development, public preview, and paused releases.',
+      'Use /models/ for AI families, /products/ for software applications, /research/ for Project Forge, and /studio/ for original interactive productions.',
+      'Verify downloadable Windows artifacts via SHA-256 hashes published on /downloads/ and /forged.',
+    ],
+    links: [
+      { label: 'Company Overview', href: '/company/' },
+      { label: 'Public Trust Center', href: '/trust/' },
+    ],
+  },
+  {
+    id: 'model-families',
+    category: 'FDS Intelligence',
+    title: 'Model Families Overview (Alexandrite, Hackmanite, Cinnabar)',
+    summary: 'Technical positioning, base-model transparency, and strict separation across FDS specialist model programs.',
+    bullets: [
+      'Alexandrite: Long-term collective intelligence research vision. Not trained; no public weights or API.',
+      'Hackmanite: Gaming & game-development specialist family targeting Hackmanite Prime (Qwen/Qwen3.8-27B base) and Hackmanite Reasoning (openai/gpt-oss-120b base). Base model availability does not equal completed FDS fine-tuning.',
+      'Cinnabar: Anime, manga, animation craft, and fictional intelligence family including documented Oracle text lineages (v1–v4.1). Explicitly not a native video or animation generator.',
+    ],
+    links: [
+      { label: 'Models Hub', href: '/models/' },
+      { label: 'Model Cards', href: '/model-cards/' },
+    ],
+  },
+  {
+    id: 'model-availability',
+    category: 'FDS Intelligence',
+    title: 'Model Availability & Certification Gates',
+    summary: 'Why Project Forge separates research, training, evaluation, certification, and public release into distinct gates.',
+    bullets: [
+      'No FDS specialist weights or hosted inference endpoints are currently publicly distributed.',
+      'All public numerical evaluation scores require an owner-approved export disclosing raw vs. guarded results, test counts, baselines, and uncertainty.',
+      'Check /evaluations/ and /releases/ for official updates when certified checkpoints or weights become available.',
+    ],
+    links: [
+      { label: 'Evaluations Center', href: '/evaluations/' },
+      { label: 'Project Forge', href: '/research/project-forge/' },
+    ],
+  },
+  {
+    id: 'jaspilite',
+    category: 'FDS Applications',
+    title: 'Jaspilite Autonomous Development Platform',
+    summary: 'Owner-approved workspace architecture, provider-agnostic model routing, and Auto / Meld / Solo operating modes.',
+    bullets: [
+      'Auto mode: Automated task routing, planning, execution, and verification under developer-defined boundaries.',
+      'Meld mode: Collaborative multi-agent synthesis pairing complementary reasoning and implementation specialists.',
+      'Solo mode: Focused single-model control when deterministic step-by-step execution is preferred.',
+      'Jaspilite supersedes earlier Forge Control naming (preserved as a historical migration reference at /projects/forge-control).',
+    ],
+    links: [
+      { label: 'Jaspilite Platform', href: '/products/jaspilite/' },
+      { label: 'Legacy Forge Control Ref', href: '/projects/forge-control' },
+    ],
+  },
+  {
+    id: 'battleverse',
+    category: 'FDS Applications',
+    title: 'Forge BattleVerse Intelligence & Simulation',
+    summary: 'How BattleVerse structures canonical research, character profiles, evidence graphs, and probabilistic combat simulations.',
+    bullets: [
+      'BattleVerse is a standalone FDS application—separate from the Cinnabar model family, though designed to integrate with Cinnabar Oracle capabilities.',
+      'Separates primary canonical citations from analytical modeling and quantitative simulation assumptions.',
+      'Simulation outputs represent structured probability estimates, never claims of objective canonical truth.',
+    ],
+    links: [
+      { label: 'Forge BattleVerse', href: '/products/battleverse/' },
+      { label: 'Cinnabar Oracle', href: '/models/cinnabar/oracle/' },
+    ],
+  },
+  {
+    id: 'forgerems-codeforge',
+    category: 'Public Software',
+    title: 'ForgerEMS Preview & CodeForge Source Policy',
+    summary: 'Practical documentation for FDS Windows software with public artifacts today.',
+    bullets: [
+      'ForgerEMS v1.2.4-preview.1 is publicly available on GitHub Releases as an unsigned Windows x64 portable ZIP (81.7 MB) and EXE installer (61.8 MB) with verified SHA-256 digests.',
+      'CodeForge v0.2.0 Windows installer downloads are temporarily paused while the release updates; a verified source snapshot archive (CodeForge-source-6b0770b.zip) remains published on /forged.',
+      'Always verify downloaded checksums before running unsigned prerelease builds.',
+    ],
+    links: [
+      { label: 'ForgerEMS Product Page', href: '/forgerems/' },
+      { label: 'Downloads Center', href: '/downloads/' },
+      { label: 'CodeForge Project', href: '/projects/codeforge' },
+    ],
+  },
+  {
+    id: 'local-inference',
+    category: 'Engineering Guidance',
+    title: 'Local-First & Supported Integrations Philosophy',
+    summary: 'Design assumptions for developers running local models, provider-agnostic tooling, and offline-capable workstations.',
+    bullets: [
+      'FDS targets open-weight foundations alongside standard provider APIs so teams are never locked into a single closed vendor.',
+      'ForgerEMS and CodeForge prioritize local-first execution and transparent fail-closed boundaries over silent cloud telemetry.',
+      'Hardware specifications for future FDS weight distributions will be published per checkpoint alongside quantization and VRAM measurements once certified.',
+    ],
+    links: [
+      { label: 'Developers Hub', href: '/developers/' },
+      { label: 'Training Infrastructure', href: '/research/training/' },
+    ],
+  },
+  {
+    id: 'security-troubleshooting',
+    category: 'Trust & Operations',
+    title: 'Security, SmartScreen Warnings & Troubleshooting',
+    summary: 'Common questions when verifying unsigned preview builds, checking release provenance, or reporting defects.',
+    bullets: [
+      'Windows Defender SmartScreen may warn on unsigned ForgerEMS preview binaries. Verify the SHA-256 checksum matches /downloads/ before deciding whether to run.',
+      'If a link, checksum, or status description appears out of date, report it via /contact/ for rapid review and public changelog correction.',
+      'Hardware donations to support open research and testing rigs are coordinated privately via /support/hardware.',
+    ],
+    links: [
+      { label: 'Contact & Support', href: '/contact/' },
+      { label: 'Frequently Asked Questions', href: '/faq' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Documentation — Technical Guides & System Reference"
+  description="Searchable technical documentation for Forger Digital Solutions model families, Jaspilite, Forge BattleVerse, Project Forge, ForgerEMS, and release verification."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/developers/">Developers</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Documentation</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Documentation // Technical Reference</p>
+    <h1 class="page-title">Documentation</h1>
+    <p class="page-description">
+      Authoritative guides covering FDS model families, platform architecture, release verification, and governance boundaries. Filter topics instantly below.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Documentation search and index">
+    <div class="docs-search-bar">
+      <label for="docs-filter-input" class="sr-only">Filter documentation sections</label>
+      <input
+        id="docs-filter-input"
+        type="search"
+        class="docs-search-input"
+        placeholder="Filter docs (e.g. Hackmanite, Auto, SHA-256, BattleVerse, ForgerEMS, Oracle)..."
+        autocomplete="off"
+      />
+      <span id="docs-filter-count" class="docs-search-count" aria-live="polite">
+        Showing {docSections.length} of {docSections.length} guides
+      </span>
+    </div>
+
+    <div class="docs-layout">
+      <aside class="docs-toc" aria-label="Documentation topics">
+        <p class="docs-toc__title">Contents</p>
+        <ul role="list">
+          {docSections.map((sec) => (
+            <li><a href={`#${sec.id}`}>{sec.title}</a></li>
+          ))}
+          <li><a href="#status-matrix">Live Public Status Matrix</a></li>
+        </ul>
+      </aside>
+
+      <div class="docs-content" id="docs-articles">
+        {docSections.map((sec) => (
+          <article
+            id={sec.id}
+            class="fds-panel doc-section-card"
+            data-doc-item
+            data-doc-search={`${sec.category} ${sec.title} ${sec.summary} ${sec.bullets.join(' ')}`.toLowerCase()}
+          >
+            <span class="doc-section-cat">{sec.category}</span>
+            <h2>{sec.title}</h2>
+            <p class="doc-section-summary">{sec.summary}</p>
+            <ul class="doc-section-list">
+              {sec.bullets.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <div class="doc-section-links">
+              {sec.links.map((link) => (
+                <a href={link.href} class="text-link">{link.label} <span aria-hidden="true">→</span></a>
+              ))}
+            </div>
+          </article>
+        ))}
+
+        <p id="docs-empty-state" class="docs-empty" hidden>
+          No documentation guides match your filter. Clear the search box to view all sections.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="status-matrix" class="page-section page-section--surface" aria-labelledby="docs-matrix-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Canonical Registry Snapshot</p>
+        <h2 id="docs-matrix-title">Public Status Reference Table</h2>
+        <p>Rendered directly from <code>content/public-status/registry.json</code>.</p>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Technology</th>
+            <th scope="col">Division</th>
+            <th scope="col">Development Status</th>
+            <th scope="col">Public Availability</th>
+            <th scope="col">Page</th>
+          </tr>
+        </thead>
+        <tbody>
+          {publicRegistry.map((entry) => (
+            <tr>
+              <th scope="row">{entry.name}</th>
+              <td>{entry.division}</td>
+              <td>{statusDisplayLabels[entry.development_status]}</td>
+              <td>{availabilityDisplayLabels[entry.availability]}</td>
+              <td><a href={entry.route}>Inspect →</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const input = document.getElementById('docs-filter-input') as HTMLInputElement | null;
+  const countEl = document.getElementById('docs-filter-count');
+  const emptyEl = document.getElementById('docs-empty-state');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-doc-item]'));
+
+  if (input && countEl && emptyEl) {
+    const applyFilter = () => {
+      const q = input.value.trim().toLowerCase();
+      let visible = 0;
+      for (const card of cards) {
+        const haystack = card.dataset.docSearch || '';
+        const match = !q || haystack.includes(q);
+        card.hidden = !match;
+        if (match) visible += 1;
+      }
+      countEl.textContent = `Showing ${visible} of ${cards.length} guides`;
+      emptyEl.hidden = visible > 0;
+    };
+    input.addEventListener('input', applyFilter);
+  }
+</script>
+
+<style>
+  .docs-search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .docs-search-input {
+    flex: 1 1 20rem;
+    min-height: 2.95rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+  }
+  .docs-search-input::placeholder { color: var(--color-text-subtle); }
+  .docs-search-count {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+  }
+
+  .docs-layout {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: 2.25rem;
+    align-items: start;
+  }
+  .docs-toc {
+    position: sticky;
+    top: calc(var(--header-height) + 1.5rem);
+    padding: 1.15rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+  }
+  .docs-toc__title {
+    margin: 0 0 0.75rem;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .docs-toc ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.5rem; }
+  .docs-toc a {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+  .docs-toc a:hover { color: var(--color-text); }
+
+  .docs-content { display: grid; gap: 1.25rem; }
+  .doc-section-card { padding: 1.65rem; scroll-margin-top: calc(var(--header-height) + 1.25rem); }
+  .doc-section-cat {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+  .doc-section-card h2 { margin: 0 0 0.65rem; font-size: 1.32rem; letter-spacing: -0.02em; }
+  .doc-section-summary { margin: 0 0 1rem; color: var(--color-text-muted); font-size: 0.94rem; line-height: 1.65; }
+  .doc-section-list {
+    margin: 0 0 1.25rem;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .doc-section-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+
+  .docs-empty {
+    padding: 2rem;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .docs-layout { grid-template-columns: 1fr; }
+    .docs-toc { position: static; }
+  }
+</style>

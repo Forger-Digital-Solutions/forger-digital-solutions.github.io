@@ -1,0 +1,216 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { siteConfig } from '../../config/site';
+
+const plannedInterfaces = [
+  {
+    surface: 'Hackmanite Model API & Game-Engine SDK',
+    status: 'Planned · Not Live Today',
+    scope: 'Programmatic coding, shader, netcode, and physics reasoning interfaces for Unreal, Unity, Godot, Roblox, and custom toolchains once Hackmanite models complete certification.',
+  },
+  {
+    surface: 'Cinnabar Narrative & Continuity API',
+    status: 'Commercial Direction · Research Only',
+    scope: 'Structured continuity auditing, character bible retrieval, and external pipeline coordination endpoints for creative tools and BattleVerse Creator Studio.',
+  },
+  {
+    surface: 'Jaspilite Local & Multi-Provider SDK',
+    status: 'Active Platform Development',
+    scope: 'Repository-aware orchestration hooks, local open-weight runtime discovery, and explicit permission gates across Auto, Meld, and Solo modes.',
+  },
+  {
+    surface: 'Commercial Model Licensing & Private Inference',
+    status: 'Commercial Direction · Scoping Open',
+    scope: 'Dedicated VPC/on-premises deployment specifications and Apache-2.0-grounded commercial adaptation licensing for studios and enterprise engineering teams.',
+  },
+];
+---
+
+<BaseLayout
+  title="Developers — Documentation, Planned APIs & Verified Releases"
+  description="Developer documentation, planned model APIs and SDKs, structured model cards, verifiable SHA-256 software releases, and honest API availability from Forger Digital Solutions."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Developers</span>
+  </nav>
+
+  <header class="page-head">
+    <div class="dev-meta">
+      <p class="page-eyebrow">FDS Developers // Engineering &amp; Integration Hub</p>
+      <StatusPill label="No Public Inference API Yet" tone="private" />
+    </div>
+    <h1 class="page-title">Built for engineers who verify before they ship.</h1>
+    <p class="page-description">
+      Inspect model architectures, Apache-2.0 foundation provenance, planned developer APIs and SDKs, verifiable software binaries, and public repositories across the Forger Digital Solutions ecosystem.
+    </p>
+    <div class="head-actions">
+      <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Interest in Developer Preview <span aria-hidden="true">→</span></a>
+      <a href="/docs/" class="btn btn-outline">Browse Documentation</a>
+      <a href="/contact/?track=licensing" class="btn btn-ghost">Commercial API &amp; Licensing</a>
+    </div>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="dev-api-status-title">
+    <div class="fds-callout">
+      <strong id="dev-api-status-title">Public API, Playground &amp; Billing Honesty:</strong>
+      Forger Digital Solutions does <strong>not</strong> currently operate a public hosted model API, commercial API key portal, metered billing console, or live inference playground. We will never publish fake key generators, mock checkout pages, or non-functional sandboxes. When public developer endpoints or certified weights launch, they will appear here and in our <a href="/releases/">Release Index</a>.
+    </div>
+  </section>
+
+  <!-- Planned Commercial APIs & SDK Roadmap -->
+  <section class="page-section page-section--surface" aria-labelledby="dev-roadmap-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Planned Developer Surfaces</p>
+        <h2 id="dev-roadmap-title">Upcoming APIs, SDKs, and commercial integration pathways.</h2>
+        <p>Every integration surface below is tracked honestly against our certification gates before commercial availability.</p>
+      </div>
+      <a href="/solutions/software-engineering/" class="text-link">Software Team Solutions <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Planned Interface</th>
+            <th scope="col">Current Status</th>
+            <th scope="col">Intended Engineering Scope</th>
+          </tr>
+        </thead>
+        <tbody>
+          {plannedInterfaces.map((item) => (
+            <tr>
+              <th scope="row">{item.surface}</th>
+              <td><strong>{item.status}</strong></td>
+              <td>{item.scope}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="dev-surfaces-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Available Today</p>
+        <h2 id="dev-surfaces-title">Developer resources you can inspect right now.</h2>
+      </div>
+    </div>
+
+    <div class="dev-grid">
+      <article class="fds-panel dev-card">
+        <span class="dev-card__kicker">DOCUMENTATION</span>
+        <h3>Technical Documentation Hub</h3>
+        <p>Searchable architecture references covering FDS model families, Jaspilite operating modes, BattleVerse methodology, local inference considerations, and release verification.</p>
+        <a href="/docs/" class="text-link">Browse Documentation <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="fds-panel dev-card">
+        <span class="dev-card__kicker">MODEL SPECIFICATIONS</span>
+        <h3>Model Cards &amp; Lineages</h3>
+        <p>Structured model cards disclosing base architectures, Apache-2.0 upstream licenses, parameter targets, modalities, known limitations, and explicit non-claims.</p>
+        <a href="/model-cards/" class="text-link">View Model Cards <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="fds-panel dev-card">
+        <span class="dev-card__kicker">VERIFIED BINARIES &amp; SOURCES</span>
+        <h3>Downloads &amp; Checksums</h3>
+        <p>Download ForgerEMS v1.2.4-preview.1 for Windows with published SHA-256 verification hashes, or inspect the archived CodeForge source snapshot.</p>
+        <a href="/downloads/" class="text-link">Open Downloads Center <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="fds-panel dev-card">
+        <span class="dev-card__kicker">AUTONOMOUS DEVELOPMENT</span>
+        <h3>Jaspilite Platform Architecture</h3>
+        <p>Explore how Jaspilite organizes provider-agnostic model orchestration across Auto, Meld, and Solo modes plus our 5-tier provider verification ladder.</p>
+        <a href="/products/jaspilite/" class="text-link">Explore Jaspilite <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="fds-panel dev-card">
+        <span class="dev-card__kicker">BENCHMARKS &amp; PROOF</span>
+        <h3>Evaluations &amp; Governance</h3>
+        <p>Inspect FDS's raw-vs-guarded measurement policy, CI-verified Kayla golden suite invariants, and pending public evaluation exports.</p>
+        <a href="/evaluations/" class="text-link">Open Evaluation Center <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="fds-panel dev-card">
+        <span class="dev-card__kicker">PUBLIC SOURCE</span>
+        <h3>GitHub Organization</h3>
+        <p>Follow public FDS repositories, release tags, build scripts, and architectural documentation directly on GitHub.</p>
+        <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="text-link">Open GitHub <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="dev-verify-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Release Integrity</p>
+        <h2 id="dev-verify-title">Verify any FDS download locally before execution.</h2>
+        <p>Because prerelease Windows builds of ForgerEMS are currently unsigned, always compare the local SHA-256 digest against the value published on <a href="/downloads/">Downloads</a> or <a href="/forged">Forged Distribution</a>.</p>
+      </div>
+    </div>
+
+    <div class="code-box">
+      <div class="code-box__head">
+        <span>PowerShell (Windows) — SHA-256 Verification</span>
+        <span>Verified against /downloads/</span>
+      </div>
+      <pre><code>Get-FileHash .\ForgerEMS-v1.2.4.zip -Algorithm SHA256
+# Expected: 61A000203FD3E866C10221856322AD318A38562B5CE9E122626205997373B137</code></pre>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .dev-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .dev-meta .page-eyebrow { margin: 0; }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+
+  .dev-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .dev-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.5rem;
+  }
+  .dev-card__kicker {
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .dev-card h3 { margin: 0; font-size: 1.12rem; }
+  .dev-card p { margin: 0 0 auto; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.6; padding-bottom: 0.5rem; }
+
+  .code-box {
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-recessed);
+    overflow: hidden;
+  }
+  .code-box__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+  .code-box pre { margin: 0; padding: 1.1rem; overflow-x: auto; }
+  .code-box code { color: var(--color-brand-silver); font-family: var(--font-mono); font-size: 0.82rem; }
+
+  @media (max-width: 960px) { .dev-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+
+const areas = [
+  { title: 'Anime & Manga Visual Grammar', body: 'Panel choreography, visual pacing, ink-line hierarchy, screen-tone balance, and sequential storytelling principles.' },
+  { title: 'Animation & Rigging Workflows', body: 'Keyframe timing charts, breakdown poses, skeletal rigging conventions, and integration with external 2D/3D animation tools.' },
+  { title: 'Cinematography & Direction', body: 'Camera blocking, lighting contrast, lens framing, scene transitions, and color scripts for serialized dramatic storytelling.' },
+  { title: 'Canonical Intelligence & Continuity', body: 'Versioned lore tracking, character-state persistence, and auditable source citation powering Cinnabar Oracle and BattleVerse.' },
+];
+---
+
+<BaseLayout
+  title="Anime, Manga & Animation Research"
+  description="Project Forge creative research across anime, manga, animation pipelines, cinematography, and narrative continuity supporting Cinnabar and original productions."
+  accent="cinnabar"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/research/">Research</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Animation &amp; Storytelling</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Project Forge // Division Track · Cinnabar Foundation</p>
+    <h1 class="page-title">Anime, Manga, Animation &amp; Cinematics</h1>
+    <p class="page-description">
+      Studying narrative craft, sequential visual composition, animation production workflows, and long-form canonical consistency — while keeping strict ethical boundaries around original art and third-party intellectual property.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight">
+    <SpecimenMedia
+      src="/images/forge/cinnabar-animation.webp"
+      mobileSrc="/images/forge/cinnabar-animation-sm.webp"
+      alt="Original manga ink storyboards transitioning into a cel-shaded twilight rooftop scene with warm vermilion lanterns."
+      label="Original Creative Concept Study — Not Model Output · Zero Franchise IP"
+      eager
+    />
+  </section>
+
+  <section class="page-section page-section--surface">
+    <div class="pillar-grid">
+      {areas.map((item, i) => (
+        <article class="pillar-card">
+          <span>0{i + 1}</span>
+          <h2>{item.title}</h2>
+          <p>{item.body}</p>
+        </article>
+      ))}
+    </div>
+    <div class="track-links">
+      <a href="/models/cinnabar/" class="btn btn-outline">Explore Cinnabar Family <span aria-hidden="true">→</span></a>
+      <a href="/products/battleverse/" class="text-link">See Forge BattleVerse</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pillar-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--color-border-structural); border-radius: var(--radius-md); background: var(--color-border); overflow: hidden; }
+  .pillar-card { padding: 1.5rem; background: var(--color-bg); }
+  .pillar-card span { color: var(--accent-cinnabar); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; }
+  .pillar-card h2 { margin: 0.45rem 0 0.4rem; font-size: 1.15rem; }
+  .pillar-card p { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.65; }
+  .track-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 1.75rem; }
+  @media (max-width: 760px) { .pillar-grid { grid-template-columns: 1fr; } }
+</style>

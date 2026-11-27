@@ -1,295 +1,1150 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { siteConfig } from '../config/site';
-import { projects } from '../data/projects';
-import { statusMeta } from '../data/status';
-import { statusStripEntries, canonicalStatusLabels } from '../data/manifest';
-import ProjectStatus from '../components/ProjectStatus.astro';
-import SectionHeader from '../components/SectionHeader.astro';
-import NoteCard from '../components/NoteCard.astro';
+import StatusPill from '../components/StatusPill.astro';
+import SpecimenMedia from '../components/SpecimenMedia.astro';
+import EcosystemGraph from '../components/EcosystemGraph.astro';
+import JaspiliteWorkbench from '../components/JaspiliteWorkbench.astro';
+import ProjectForgeGraph from '../components/ProjectForgeGraph.astro';
 import SupportDialog from '../components/SupportDialog.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
-import PortfolioArchitecture from '../components/PortfolioArchitecture.astro';
-import ProductShowcase from '../components/ProductShowcase.astro';
-import { getPublishedNotes } from '../lib/notes';
+import {
+  companyProfile,
+  getRegistryEntry,
+  modelFamiliesData,
+  projectForgeData,
+  newsUpdatesData,
+  solutionsData,
+} from '../data/registry';
 
-const sortedProjects = [...projects].sort((a, b) => (a.sortOrder ?? 99) - (b.sortOrder ?? 99));
-const activeProjects = sortedProjects.filter((p) => !['codeforge', 'forgerems', 'forge-control', 'dead-trails-west'].includes(p.slug));
-const latestNotes = (await getPublishedNotes()).slice(0, 3);
+const alexandrite = getRegistryEntry('alexandrite');
+const hackmanite = getRegistryEntry('hackmanite');
+const cinnabar = getRegistryEntry('cinnabar');
+const jaspilite = getRegistryEntry('jaspilite');
+const battleverse = getRegistryEntry('battleverse');
+const stateLines = getRegistryEntry('state-lines');
+
+const alexModel = modelFamiliesData.find((f) => f.id === 'alexandrite')!;
+const hackModel = modelFamiliesData.find((f) => f.id === 'hackmanite')!;
+const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
 ---
+
 <BaseLayout
-  description="Forger Digital Solutions is an independent New Jersey software and interactive media studio. Explore released developer tools, technician software, and original games in development."
+  description="Forger Digital Solutions is an independent AI research laboratory, commercial AI technology provider, autonomous software engineering company, and original entertainment studio building Alexandrite, Hackmanite, Cinnabar, Jaspilite, Forge BattleVerse, Project Forge, and State Lines."
 >
-  <VisitorCounter />
-  <section class="hero">
-    <div class="hero__copy">
-      <p class="hero__status"><span></span> FDS // INDEPENDENT STUDIO</p>
-      <p class="hero__eyebrow"><span class="accent">FORGER</span> <span><span class="silver">DIGITAL</span> <span class="accent">SOLUTIONS</span></span></p>
-      <h1>Build the tools.<br />Build the worlds.</h1>
-      <p class="hero__line">Independent software engineering, AI development tools, and original interactive experiences.</p>
-      <p class="hero__description">Forger Digital Solutions is an independent New Jersey studio. We build focused products, publish them when they are ready, and show the difference between released software and work still in development.</p>
-      <div class="hero__actions"><a href="/projects" class="btn btn-primary">Explore Products <span aria-hidden="true">→</span></a><a href="/forged" class="btn btn-outline">Get CodeForge</a>{siteConfig.githubUrl && <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="hero__github">GitHub <span aria-hidden="true">↗</span></a>}</div>
+  <!-- Section A: Compact factual announcement strip -->
+  <div class="announce-strip" role="region" aria-label="Latest update">
+    <span class="announce-strip__tag">Update</span>
+    <p class="announce-strip__text">
+      FDS Commercial AI &amp; Studio Solutions pathways open for early scoping · ForgerEMS v1.2.4-preview.1 remains publicly available for Windows.
+    </p>
+    <a class="announce-strip__link" href="/solutions/">Explore Solutions <span aria-hidden="true">→</span></a>
+  </div>
+
+  <!-- Section B: Editorial Hero with Bespoke Computational Convergence Visual -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero__backdrop" aria-hidden="true">
+      <picture>
+        <source media="(max-width: 760px)" srcset="/images/forge/hero-manifold-sm.webp" type="image/webp" />
+        <img
+          src="/images/forge/hero-manifold.webp"
+          alt=""
+          width="1600"
+          height="893"
+          loading="eager"
+          fetchpriority="high"
+          decoding="sync"
+        />
+      </picture>
+      <div class="hero__scrim"></div>
     </div>
-    <PortfolioArchitecture />
-    <div class="hero__rail" aria-label="FDS focus areas"><span>SOFTWARE ENGINEERING</span><span>DEVELOPER TOOLS</span><span>TECHNICIAN SOFTWARE</span><span>GAME WORLDS</span></div>
-  </section>
 
-  <section class="status-strip page-section--tight" aria-label="Current FDS product status">
-    <ul class="status-strip__list" role="list">
-      {statusStripEntries.map((entry) => (
-        <li class="status-strip__item" data-status={entry.canonicalStatus}>
-          <a href={entry.projectUrl ?? '#'} class="status-strip__link">
-            <span class="status-strip__name">{entry.name}</span>
-            <span class="status-strip__state">{canonicalStatusLabels[entry.canonicalStatus]}</span>
-          </a>
-        </li>
+    <div class="hero__inner">
+      <p class="fds-eyebrow">
+        <span class="fds-eyebrow__rule"></span>
+        Forger Digital Solutions · Commercial AI, Research &amp; Original Studio
+      </p>
+      <h1 id="hero-heading" class="hero__title">
+        Specialized intelligence.<br />Extraordinary worlds.
+      </h1>
+      <p class="hero__lead">
+        {companyProfile.supportingCopy}
+      </p>
+      <div class="hero__actions">
+        <a href="/models/" class="btn btn-primary">Explore Our Models <span aria-hidden="true">→</span></a>
+        <a href="/solutions/" class="btn btn-outline">Studio &amp; Enterprise Solutions</a>
+        <a href="/research/" class="btn btn-ghost">Discover Our Research</a>
+      </div>
+      <p class="hero__heritage">
+        <span>Studio Creed</span>
+        <strong>{companyProfile.heritageSlogan}</strong>
+      </p>
+    </div>
+
+    <!-- Clean 4-pillar institutional division rail -->
+    <div class="division-rail" aria-label="Forger Digital Solutions four core pillars">
+      {companyProfile.divisions.map((div, i) => (
+        <a href={div.route} class="division-rail__item">
+          <span class="division-rail__idx">0{i + 1}</span>
+          <span class="division-rail__name">{div.name}</span>
+          <span class="division-rail__flagships">{div.flagships.join(' · ')}</span>
+        </a>
       ))}
-      <li class="status-strip__item"><a href="/forged" class="status-strip__link"><span class="status-strip__name">Releases</span><span class="status-strip__state">Downloads & Archives</span></a></li>
-    </ul>
-  </section>
-
-  <section class="page-section portfolio-showcases" aria-label="Featured Forger Digital Solutions products">
-    <ProductShowcase
-      id="codeforge-showcase"
-      eyebrow="Flagship software · Windows · CLI · VS Code"
-      title="CodeForge puts engineering work in motion."
-      summary="A released, free-first autonomous software-engineering platform that can inspect a repository, plan bounded work, edit through controlled tools, run checks, and review the result."
-      status="Released · v0.2.0"
-      statusTone="released"
-      href="/forged"
-      cta="Get CodeForge"
-      visual="codeforge"
-      points={['Windows 10/11 x64 installer and portable builds', 'ForgeZero rejects paid, local, unknown-cost, and unverified model routes', 'Provider capacity can be limited; unlimited availability is not promised']}
-    />
-    <ProductShowcase
-      id="forge-control-showcase"
-      eyebrow="Separate FDS product · orchestration"
-      title="Forge Control is being built to coordinate coding agents."
-      summary="The intended workflow discovers eligible connected agents, breaks substantial work into safe independent tasks, coordinates execution, and keeps progress and verification visible. It is not a chatbot or a replacement agent."
-      status="Active development · no public release"
-      statusTone="development"
-      href="/projects/forge-control"
-      cta="Explore the product direction"
-      visual="control"
-      reverse
-      points={['Automatic task distribution and concurrent independent work are product goals', 'Quota-aware pause, rebalance, and resume behavior is intended architecture', 'Codex, Claude Code, GitHub Copilot, and Antigravity are potential integrations; working support is unverified']}
-    />
-    <ProductShowcase
-      id="forge-aaa-showcase"
-      eyebrow="CodeForge architecture · game-development direction"
-      title="Forge AAA brings game workflows into CodeForge’s engineering direction."
-      summary="A planned development area within CodeForge—not a separate application. The direction is to help coordinate software, asset, animation, and validation work across game-development tools while keeping the developer in control."
-      status="Planned development direction · not a shipped feature set"
-      statusTone="planned"
-      href="/projects/codeforge#forge-aaa"
-      cta="See the Forge AAA architecture"
-      visual="forge-aaa"
-      points={['Intended to span Unreal Engine and Blender workflows', 'Potential areas include 3D assets, character work, animation, and game systems', 'No claim that Forge AAA produces complete AAA games or ships these integrations today']}
-    />
-    <ProductShowcase
-      id="dead-trails-showcase"
-      eyebrow="Original game · Sundance, New Jersey"
-      title="Dead Trails West is a world built to change with its people."
-      summary="An original historical game in private development, set in 1882 and centered on George and Edward Bauer. The design reaches beyond gunfights to settlement life, exploration, survival, wildlife, work, and consequence."
-      status="Private development · no public playable build"
-      statusTone="private"
-      href="/projects/dead-trails-west"
-      cta="Explore the game and its development"
-      visual="dead-trails-west"
-      reverse
-      points={['Unreal Engine 4.27 and Blender development pipeline', 'Seasonal world, farming, ranching, hunting, fishing, construction, and law are design goals—not blanket claims of completion', 'Illustration is an original CSS setting study, not gameplay evidence']}
-    />
-    <ProductShowcase
-      id="forgerems-showcase"
-      eyebrow="Technician workbench · Windows"
-      title="ForgerEMS brings practical repair tools together."
-      summary="A local-first workbench for USB toolkit creation, drive validation, system information, USB and port intelligence, driver guidance, and diagnostics."
-      status="Public preview · v1.2.4-preview.1"
-      statusTone="preview"
-      href="/projects/forgerems"
-      cta="Explore ForgerEMS and its preview"
-      visual="forgerems"
-      points={['Portable ZIP and installer preview artifacts are available through the existing release page', 'Preview binaries are unsigned; verify published SHA-256 checksums before running', 'The release remains a preview, not a production-certified or Microsoft Verified application']}
-    />
-  </section>
-
-  <section class="page-section page-section--surface engineering-credibility" aria-labelledby="engineering-title">
-    <SectionHeader eyebrow="Engineering practice" title="A product page should tell you what the build can do." description="FDS separates shipped behavior from active development and future direction. The boundary matters as much as the feature list." headingLevel="h2" />
-    <div class="engineering-credibility__grid">
-      <article><span>01 / RELEASE STATUS</span><h3>Real release paths</h3><p>CodeForge's previously listed installer is temporarily paused while its release is updated. Other public downloads remain listed on Forged.</p></article>
-      <article><span>02 / GUARDED</span><h3>Cost and execution boundaries</h3><p>CodeForge documents its free-first routing limits, command approvals, and fail-closed behavior rather than promising unlimited inference.</p></article>
-      <article><span>03 / LABELED</span><h3>Development is not availability</h3><p>Active projects are described with their status and limitations. No unreleased product is offered as a download.</p></article>
     </div>
   </section>
 
-  <section class="page-section development-ledger" aria-labelledby="development-ledger-title">
-    <SectionHeader eyebrow="Development ledger" title="Progress, with its evidence boundary attached." description="A release proves a release. A focused acceptance test proves that scenario—not an entire product or game." headingLevel="h2" />
-    <ol class="development-ledger__list">
-      <li><span class="development-ledger__state development-ledger__state--unverified">Downloads paused</span><div><h3>CodeForge</h3><p>The last version listed here was v0.2.0. Installer and portable downloads are temporarily unavailable while the release is updated.</p></div><a href="/projects/codeforge">Availability details <span aria-hidden="true">→</span></a></li>
-      <li><span class="development-ledger__state development-ledger__state--preview">Public preview</span><div><h3>ForgerEMS v1.2.4-preview.1</h3><p>Preview distribution is available; packaging and capability boundaries remain part of its preview status.</p></div><a href="/projects/forgerems">Preview details <span aria-hidden="true">→</span></a></li>
-      <li><span class="development-ledger__state development-ledger__state--reported">Owner-reported tests</span><div><h3>Dead Trails West integration work</h3><p>Owner-reported checks cover navigation between locations, a general-store interaction, rejection of a purchase with an empty wallet, and the return route. These scenarios do not certify the full game or establish a public build.</p></div><a href="/projects/dead-trails-west">Game status <span aria-hidden="true">→</span></a></li>
-      <li><span class="development-ledger__state development-ledger__state--unverified">Unverified</span><div><h3>Forge Control installer and integrations</h3><p>A development installer and acceptance testing were reported by the owner. V23 certification, working provider integrations, and public availability have not been independently verified.</p></div><a href="/projects/forge-control">Current status <span aria-hidden="true">→</span></a></li>
-    </ol>
+  <!-- Section C: Flagship AI Model Families -->
+  <section class="page-section" aria-labelledby="models-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Intelligence · Commercial &amp; Research Model Families</p>
+        <h2 id="models-heading">Focused intelligence, built for the worlds we create.</h2>
+        <p>
+          Rather than chasing generic all-purpose claims, FDS develops specialized AI model families for game engineering, anime and animation production, and long-term collective convergence—backed by verified Apache-2.0 open-weight foundations and Project Forge research.
+        </p>
+      </div>
+      <div class="head-links">
+        <a href="/models/" class="text-link">Model catalog <span aria-hidden="true">→</span></a>
+        <a href="/model-cards/" class="text-link">Model cards <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <!-- Flagship Spotlight: Alexandrite (Horizontal Split — not a generic card) -->
+    <article class="alex-spotlight" data-accent="alexandrite">
+      <div class="alex-spotlight__copy">
+        <div class="flagship-meta-row">
+          <span class="flagship-kicker">Flagship Research Vision · Collective Intelligence</span>
+          <StatusPill status={alexandrite.development_status} />
+        </div>
+        <h3><a href="/models/alexandrite/">Alexandrite</a></h3>
+        <p class="flagship-tagline">Intelligence, converged.</p>
+        <p class="flagship-body">{alexModel.summary}</p>
+        <p class="flagship-boundary">
+          <strong>Verification status:</strong> Long-term convergence architecture. No collective training run has completed and no public model endpoint is advertised.
+        </p>
+        <div class="flagship-actions">
+          <a href="/models/alexandrite/" class="btn btn-outline">Explore Alexandrite <span aria-hidden="true">→</span></a>
+          <a href="/evaluations/" class="text-link">Evaluation standards</a>
+        </div>
+      </div>
+      <div class="alex-spotlight__visual">
+        <SpecimenMedia
+          src={alexModel.image}
+          mobileSrc={alexModel.imageSm}
+          alt={alexModel.imageAlt}
+          label={alexModel.imageLabel}
+        />
+      </div>
+    </article>
+
+    <!-- Specialist Model Pair: Hackmanite & Cinnabar -->
+    <div class="specialist-grid">
+      <article class="specialist-panel" data-accent="hackmanite">
+        <SpecimenMedia
+          src={hackModel.image}
+          mobileSrc={hackModel.imageSm}
+          alt={hackModel.imageAlt}
+          label={hackModel.imageLabel}
+        />
+        <div class="specialist-panel__body">
+          <div class="flagship-meta-row">
+            <span class="flagship-kicker">Universal Gaming AI</span>
+            <StatusPill status={hackmanite.development_status} />
+          </div>
+          <h3><a href="/models/hackmanite/">Hackmanite</a></h3>
+          <p class="flagship-tagline">Intelligence built for games.</p>
+          <p class="flagship-body">{hackModel.summary}</p>
+          <ul class="model-line-list">
+            <li>
+              <a href="/models/hackmanite/prime/"><strong>Hackmanite Prime</strong></a>
+              <span>Planned base: <code>Qwen/Qwen3.8-27B</code> · coding &amp; implementation</span>
+            </li>
+            <li>
+              <a href="/models/hackmanite/reasoning/"><strong>Hackmanite Reasoning</strong></a>
+              <span>Planned base: <code>openai/gpt-oss-120b</code> · architecture &amp; debugging</span>
+            </li>
+          </ul>
+          <a href="/models/hackmanite/" class="text-link">Inspect Hackmanite family <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <article class="specialist-panel" data-accent="cinnabar">
+        <SpecimenMedia
+          src={cinModel.image}
+          mobileSrc={cinModel.imageSm}
+          alt={cinModel.imageAlt}
+          label={cinModel.imageLabel}
+        />
+        <div class="specialist-panel__body">
+          <div class="flagship-meta-row">
+            <span class="flagship-kicker">Anime · Manga · Animation AI</span>
+            <StatusPill status={cinnabar.development_status} />
+          </div>
+          <h3><a href="/models/cinnabar/">Cinnabar</a></h3>
+          <p class="flagship-tagline">Intelligence for the art of storytelling.</p>
+          <p class="flagship-body">{cinModel.summary}</p>
+          <ul class="model-line-list">
+            <li>
+              <a href="/models/cinnabar/oracle/"><strong>Cinnabar Oracle (v1–v4.1)</strong></a>
+              <span>Documented text lineages for canonical intelligence &amp; combat analysis</span>
+            </li>
+            <li>
+              <strong>Strict Modality Boundary</strong>
+              <span>Text Oracle models are not native video generators; animation workflows use external tools</span>
+            </li>
+          </ul>
+          <a href="/models/cinnabar/" class="text-link">Inspect Cinnabar family <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    </div>
   </section>
 
-  <section class="page-section page-section--surface" aria-labelledby="additional-work-title">
-    <SectionHeader eyebrow="Additional development" title="More useful problems to solve." description="Other FDS projects remain part of the portfolio, each with its own scope, status, and development path." headingLevel="h2" id="additional-work-title" />
-    <ul class="forge-list">
-      {activeProjects.map((project) => (
-        <li class="forge-item" style={`--project-accent: ${project.accentColor || 'var(--color-accent)'}`}>
-          <a href={`/projects/${project.slug}`} class="forge-item__link">
-            <span class="forge-item__name">{project.name}</span>
-            <ProjectStatus status={project.status} />
-          </a>
-          <p class="forge-item__note">{statusMeta[project.status].short} {project.summary}</p>
+  <!-- Section D: Interactive Ecosystem Architecture Visualization -->
+  <section class="page-section page-section--surface" aria-label="Interactive FDS ecosystem architecture">
+    <EcosystemGraph />
+  </section>
+
+  <!-- Section E: Independent Applications (Jaspilite & Forge BattleVerse) -->
+  <section class="page-section" aria-labelledby="apps-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Applications · Standalone Platforms</p>
+        <h2 id="apps-heading">Software built to orchestrate intelligence and audit evidence.</h2>
+        <p>
+          FDS applications stand independently from our model research — engineered for autonomous software development, reproducible fictional physics analysis, and real Windows utility workflows.
+        </p>
+      </div>
+      <a href="/products/" class="text-link">All products &amp; portfolio <span aria-hidden="true">→</span></a>
+    </div>
+
+    <!-- Jaspilite Asymmetric Showcase -->
+    <article class="app-feature" data-accent="jaspilite">
+      <div class="app-feature__copy">
+        <div class="flagship-meta-row">
+          <span class="flagship-kicker">Autonomous Development Platform</span>
+          <StatusPill status={jaspilite.development_status} />
+        </div>
+        <h3><a href="/products/jaspilite/">Jaspilite</a></h3>
+        <p class="flagship-tagline">Your intelligence. One development workspace.</p>
+        <p class="flagship-body">
+          A project-aware autonomous development and multi-agent orchestration workspace operating across three explicit governance modes — <strong>Auto</strong>, <strong>Meld</strong>, and <strong>Solo</strong> — built to work with local models, customer-provided API keys, and supported provider integrations where verified. Customers use their own AI provider credentials; FDS does not route consumer subscriptions or bundle AI inference.
+        </p>
+        <p class="flagship-boundary">
+          Supersedes legacy Forge Control branding. Private builds remain unpublished until installer verification completes.
+        </p>
+        <div class="flagship-actions">
+          <a href="/products/jaspilite/" class="btn btn-outline">Explore Jaspilite <span aria-hidden="true">→</span></a>
+          <a href="/projects/codeforge" class="text-link">See CodeForge v0.2.0</a>
+        </div>
+      </div>
+      <div class="app-feature__visual">
+        <JaspiliteWorkbench />
+      </div>
+    </article>
+
+    <!-- Forge BattleVerse Reversed Asymmetric Showcase -->
+    <article class="app-feature app-feature--reverse" data-accent="battleverse">
+      <div class="app-feature__visual">
+        <SpecimenMedia
+          src="/images/forge/battleverse-combat-sim.webp"
+          mobileSrc="/images/forge/battleverse-combat-sim-sm.webp"
+          alt="Two original armored silhouettes mid-clash in an abstract spatial physics arena overlaid with cobalt ballistic vectors and Gaussian probability envelopes."
+          label="Illustrative Simulation Concept — Original Silhouettes"
+        />
+      </div>
+      <div class="app-feature__copy">
+        <div class="flagship-meta-row">
+          <span class="flagship-kicker">Fictional Intelligence &amp; Simulation</span>
+          <StatusPill status={battleverse.development_status} />
+        </div>
+        <h3><a href="/products/battleverse/">Forge BattleVerse</a></h3>
+        <p class="flagship-tagline">Beyond opinion. Built on evidence.</p>
+        <p class="flagship-body">
+          An independent fictional intelligence, canonical version-tracking, and combat-simulation platform combining mathematical physics bounds, independent claim auditing, and explicit statistical uncertainty. Designed to integrate with Cinnabar Oracle while remaining a separate standalone application.
+        </p>
+        <p class="flagship-boundary">
+          Simulation outputs model explicit assumptions and uncertainty bounds — never marketed as objective canonical facts.
+        </p>
+        <div class="flagship-actions">
+          <a href="/products/battleverse/" class="btn btn-outline">Explore BattleVerse <span aria-hidden="true">→</span></a>
+          <a href="/products/battleverse/arena/" class="text-link">Arena</a>
+          <a href="/products/battleverse/creator-studio/" class="text-link">Creator Studio</a>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Section E2: Studio & Enterprise Commercial Solutions -->
+  <section class="page-section page-section--surface" aria-labelledby="solutions-home-heading">
+    <div class="solutions-feature">
+      <div class="solutions-feature__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Commercial Solutions · Studio &amp; Enterprise AI</p>
+        <h2 id="solutions-home-heading">Personalized AI workforces built for your codebase, engine, and creative pipeline.</h2>
+        <p class="flagship-body">
+          Whether you are an independent game developer, an animation studio protecting original IP, or an enterprise engineering organization seeking customer-segregated AI, FDS architects specialized retrieval, multi-agent roles, and private deployment pathways tailored to real production workflows.
+        </p>
+        <div class="solutions-pill-links" aria-label="Commercial solution pathways">
+          {solutionsData.audienceSolutions.map((sol) => (
+            <a href={`/solutions/${sol.slug}/`} class="sol-chip">{sol.name} →</a>
+          ))}
+        </div>
+        <div class="flagship-actions">
+          <a href="/solutions/" class="btn btn-primary">Explore Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
+          <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
+        </div>
+        <p class="flagship-boundary">
+          Private deployments and commercial model licensing are active commercial directions with strict customer data segregation — no unverified turnkey SLA or SOC 2/ISO badge is claimed today.
+        </p>
+      </div>
+      <div class="solutions-feature__visual">
+        <SpecimenMedia
+          src={solutionsData.heroVisual.src}
+          mobileSrc={solutionsData.heroVisual.mobileSrc}
+          alt={solutionsData.heroVisual.alt}
+          label={solutionsData.heroVisual.label}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Section F: Project Forge Research Foundation -->
+  <section class="page-section" data-accent="project-forge" aria-labelledby="forge-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Research · Project Forge</p>
+        <h2 id="forge-heading">Research that becomes capability.</h2>
+        <p>
+          Project Forge is the permanent 15-division research and engineering intelligence foundation behind every FDS specialist model — enforcing strict provenance clearance, executable experiments, retrieval grounding, and independent holdout evaluation.
+        </p>
+      </div>
+      <div class="head-links">
+        <a href="/research/project-forge/" class="text-link">Explore Project Forge <span aria-hidden="true">→</span></a>
+        <a href="/research/training/" class="text-link">Training methodology <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <ProjectForgeGraph compact />
+  </section>
+
+  <!-- Section G: State Lines Cinematic Original Entertainment Showcase -->
+  <section class="page-section page-section--surface" data-accent="state-lines" aria-labelledby="statelines-heading">
+    <div class="statelines-banner">
+      <div class="statelines-banner__media">
+        <picture>
+          <source media="(max-width: 760px)" srcset="/images/forge/state-lines-concept-sm.webp" type="image/webp" />
+          <img
+            src="/images/forge/state-lines-concept.webp"
+            alt="Atmospheric concept illustration at dusk overlooking a steel cantilever river bridge, weathered brick industrial skyline, misty freight yard, and rain-slicked highway inspired by the NY/NJ/PA corridor."
+            width="1600"
+            height="893"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+        <div class="statelines-banner__scrim"></div>
+      </div>
+
+      <div class="statelines-banner__content">
+        <div class="flagship-meta-row">
+          <span class="statelines-kicker">FDS Original Productions · Open-World Narrative</span>
+          <StatusPill status={stateLines.development_status} label="Preproduction · Private" tone="private" />
+        </div>
+        <h2 id="statelines-heading" class="statelines-title">State Lines</h2>
+        <p class="statelines-copy">
+          An original AAA-ambition open-world organized-crime narrative rooted in the industrial corridors, bridges, and border towns of New York, New Jersey, and Pennsylvania. Grounded characters, regional authenticity, and long-form cinematic storytelling.
+        </p>
+        <div class="flagship-actions">
+          <a href="/studio/state-lines/" class="btn btn-primary">Enter State Lines <span aria-hidden="true">→</span></a>
+          <a href="/studio/productions/" class="btn btn-outline">All Original Productions</a>
+        </div>
+        <p class="statelines-label">
+          <strong>Asset Notice:</strong> Concept Art — Work in Progress (Not Gameplay or In-Engine Capture). No release date, platform, or pricing announced.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section H: Newsroom & Research Updates Ledger -->
+  <section class="page-section" aria-labelledby="updates-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Newsroom &amp; Engineering Journal</p>
+        <h2 id="updates-heading">Verified updates and field notes.</h2>
+        <p>Dated releases, methodology notes, and studio milestones grounded in real repository evidence.</p>
+      </div>
+      <div class="head-links">
+        <a href="/news/" class="text-link">All newsroom updates <span aria-hidden="true">→</span></a>
+        <a href="/notes" class="text-link">Engineering log <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <ul class="fds-ledger">
+      {newsUpdatesData.map((item) => (
+        <li class="fds-ledger__row">
+          <time class="ledger-date" datetime={item.date}>{item.date}</time>
+          <div class="ledger-title-wrap">
+            <span class="ledger-cat">{item.category}</span>
+            <h3 class="ledger-title"><a href={item.href}>{item.title}</a></h3>
+          </div>
+          <p class="ledger-summary">{item.summary}</p>
+          <a href={item.href} class="text-link ledger-link">Read <span aria-hidden="true">→</span></a>
         </li>
       ))}
     </ul>
   </section>
 
+  <!-- Section I: Responsible Development & Non-Conflation Transparency -->
+  <section class="page-section page-section--surface" aria-labelledby="transparency-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Responsible Development &amp; Trust</p>
+        <h2 id="transparency-heading">Four lines we never cross.</h2>
+        <p>
+          Credibility comes from refusing to blur research activity into product availability. Every model card, benchmark, and product page across FDS enforces four strict boundaries.
+        </p>
+      </div>
+      <a href="/trust/" class="text-link">Open Trust Center <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="axiom-grid">
+      {projectForgeData.axioms.map((axiom, idx) => (
+        <article class="axiom-cell">
+          <span class="axiom-cell__idx">0{idx + 1}</span>
+          <h3>{axiom.left} <span class="axiom-neq" aria-label="does not equal">≠</span> {axiom.right}</h3>
+          <p>{axiom.explanation}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Section J: Commercial Engagement & Partnership Pathways -->
+  <section class="page-section" aria-labelledby="commercial-cta-heading">
+    <div class="commercial-band">
+      <div class="commercial-band__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Work With Forger Digital Solutions</p>
+        <h2 id="commercial-cta-heading">Build with specialized intelligence — on evidence, not hype.</h2>
+        <p>
+          Register interest for upcoming developer previews, scope personalized gaming or animation studio AI workforces, discuss future model licensing, or connect with Project Forge research.
+        </p>
+      </div>
+      <div class="commercial-band__actions">
+        <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Interest in Developer Preview <span aria-hidden="true">→</span></a>
+        <a href="/contact/?track=studio-workforce" class="btn btn-outline">Register Studio Interest</a>
+        <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
+        <a href="/contact/?track=research-partnership" class="btn btn-ghost">Explore Research Partnerships</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Verified Software Distribution Portal (Preserved release contract) -->
   <section class="page-section page-section--tight" aria-labelledby="distribution-title">
     <div class="distribution-portal">
       <div class="distribution-portal__content">
-        <p class="distribution-portal__eyebrow">Releases // Distribution</p>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Releases // Distribution</p>
         <h2 id="distribution-title" class="distribution-portal__title">Looking for ready-to-run software?</h2>
         <p class="distribution-portal__desc">
-          Public FDS software, verified release artifacts, and project source archives live on <strong>Releases</strong> (Forged), with SHA-256 checksums shown for every archive. Project pages detail technical architecture, roadmaps, and research notes.
+          Public builds such as <strong>ForgerEMS v1.2.4-preview.1</strong> and SHA-256-verified project source archives live in our Downloads &amp; Releases center (and legacy <strong>Forged</strong> shelf). Private development models and unreleased installers are never offered as fake downloads.
         </p>
       </div>
       <div class="distribution-portal__actions">
-        <a href="/forged" class="btn btn-primary">Open Releases <span aria-hidden="true">→</span></a>
-        <a href="/projects" class="btn btn-outline">Explore Products</a>
+        <a href="/downloads/" class="btn btn-primary">Downloads &amp; Releases <span aria-hidden="true">→</span></a>
+        <a href="/forged" class="btn btn-outline">Open Releases</a>
       </div>
     </div>
   </section>
 
-  {latestNotes.length > 0 && (
-    <section class="page-section page-section--surface" aria-labelledby="notes-title">
-      <div class="notes-head"><SectionHeader eyebrow="Engineering Log" title="Recent changes and findings" description="Public field notes from active engineering, product work, and model research." /><a class="text-link" href="/notes">All notes <span aria-hidden="true">→</span></a></div>
-      <div class="notes-grid">{latestNotes.map((note) => <NoteCard note={note} />)}</div>
-    </section>
-  )}
-
-  <section class="page-section page-section--tight support-section" aria-labelledby="support-title">
-    <div class="support-close">
-      <p class="support-close__body" id="support-title">
-        FDS is independent. If you want to help the work continue, <a class="text-link" href="/support">development support</a>,
-        <a class="text-link" href="/support/hardware">hardware donations</a>, and <a class="text-link" href="/community-impact">community impact</a> routes are kept separate from products and releases.
+  <!-- Quiet Independent Support Notice -->
+  <section class="page-section page-section--tight support-close" aria-label="Independent support notice">
+    <div class="support-close__row">
+      <p class="support-close__body">
+        Forger Digital Solutions is an independent New Jersey studio. <a class="text-link" href="/support">Development support</a>,
+        <a class="text-link" href="/support/hardware">hardware donations</a>, and <a class="text-link" href="/community-impact">community impact</a> routes remain strictly separated from software products and research releases. Contributions should not be assumed to be tax-deductible charitable donations.
       </p>
+      <div class="support-close__counter">
+        <VisitorCounter />
+      </div>
     </div>
-    <p class="support-disclosure">Contributions should not be assumed to be tax-deductible charitable donations.</p>
   </section>
+
   <SupportDialog />
-  </BaseLayout>
-<script is:inline>
-  (() => {
-    // Hero status pulse: suspend once the hero has scrolled away so the far-offscreen
-    // opacity animation cannot fall back to per-frame main-thread ticking.
-    const el = document.querySelector('.hero__status');
-    if (!el || !('IntersectionObserver' in window)) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => el.toggleAttribute('data-hero-status-paused', !e.isIntersecting));
-    }, { rootMargin: '100px 0px 100px 0px', threshold: 0 });
-    obs.observe(el);
-  })();
-</script>
+</BaseLayout>
+
 <style>
-  .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(24rem, .88fr); gap: 2rem; align-items: center; min-height: min(49rem, calc(100svh - 4rem)); padding: clamp(4rem, 9vw, 7rem) 0 5rem; }.hero::before { position: absolute; z-index: -1; top: 8%; right: -18%; width: 62%; aspect-ratio: 1; border: 1px solid rgba(78,122,222,.1); border-radius: 50%; box-shadow: 0 0 0 5rem rgba(38,78,174,.018), 0 0 0 11rem rgba(134,158,202,.012); content: ''; }.hero__copy { position: relative; z-index: 4; }.hero__status { display: flex; align-items: center; gap: .55rem; margin: 0 0 1.2rem; color: var(--color-accent-bright); font: 700 .69rem/1.4 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }  .hero__status span { width: .45rem; height: .45rem; border: 1px solid #7597e5; border-radius: 50%; background: #315fca; box-shadow: 0 0 8px rgba(49,95,202,.7); animation: system-pulse 3s ease-in-out infinite; }.hero__eyebrow { margin: 0 0 .9rem; font: 700 .78rem/1.5 var(--font-mono); letter-spacing: .2em; text-transform: uppercase; }.hero__eyebrow .accent { color: #5a82e8; }.hero__eyebrow .silver { color: var(--color-silver); }.hero h1 { max-width: 44rem; margin: 0; font-size: clamp(2.35rem, 4.6vw, 3.9rem); line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }.hero__line { margin: 1.4rem 0 0; color: var(--color-text); font-size: clamp(1.08rem, 2vw, 1.3rem); font-weight: 700; letter-spacing: -.02em; }.hero__description { max-width: 42rem; margin: .9rem 0 0; color: var(--color-text-muted); font-size: 1.02rem; line-height: 1.75; }.hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; margin-top: 2.15rem; }.hero__actions .btn-primary span { margin-left: .45rem; transition: transform .2s ease; }.hero__actions .btn-primary:hover span { transform: translateX(.2rem); }.hero__github { padding: .7rem; color: var(--color-text-muted); font: 700 .7rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }.hero__github span { color: var(--color-accent-bright); transition: transform .2s ease; }.hero__github:hover { color: var(--color-text); }.hero__github:hover span { display: inline-block; transform: translate(.15rem, -.15rem); }.hero__rail { position: absolute; right: 0; bottom: 1.25rem; left: 0; display: flex; flex-wrap: wrap; gap: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); color: var(--color-text-subtle); font: 650 .58rem/1 var(--font-mono); letter-spacing: .13em; }.hero__rail span::before { margin-right: .45rem; color: var(--color-accent-bright); content: '//'; }
-  @keyframes system-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-  :global([data-bg-paused]) .hero__status span, .hero__status[data-hero-status-paused] span { animation-play-state: paused; }
-
-  /* Canonical status strip: product states driven by the product manifest. */
-  .status-strip { padding: 0 0 1rem; }
-  .status-strip__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1px; margin: 0 auto; padding: 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-border); box-shadow: var(--shadow-sm); list-style: none; overflow: hidden; max-width: 72rem; }
-  .status-strip__item { background: rgba(6,11,19,.94); }
-  .status-strip__link { display: grid; gap: .3rem; padding: .95rem 1.1rem; transition: background .2s ease; }
-  .status-strip__link:hover, .status-strip__link:focus-visible { background: rgba(31,54,102,.35); }
-  .status-strip__name { color: var(--color-text); font-weight: 700; font-size: .98rem; letter-spacing: -.01em; }
-  .status-strip__state { display: inline-flex; align-items: center; gap: .45rem; color: var(--color-text-muted); font: 700 .62rem/1.4 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
-  .status-strip__state::before { width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-text-subtle); content: ''; }
-  .status-strip__item[data-status='public-release'] .status-strip__state::before { background: #61d7a1; box-shadow: 0 0 8px rgba(97,215,161,.7); }
-  .status-strip__item[data-status='public-preview'] .status-strip__state::before { background: #5a9df0; box-shadow: 0 0 8px rgba(90,157,240,.7); }
-  .status-strip__item[data-status='active-ai-research'] .status-strip__state::before { background: #b487ff; box-shadow: 0 0 8px rgba(180,135,255,.7); }
-  .status-strip__item[data-status='active-development'] .status-strip__state::before { background: #e0a63c; box-shadow: 0 0 8px rgba(224,166,60,.7); }
-
-  .flagship { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 2.5rem; align-items: center; overflow: hidden; padding: 1.8rem; border: 1px solid color-mix(in srgb, var(--project-accent) 35%, var(--color-border)); border-left: 3px solid var(--project-accent); border-radius: var(--radius-xl); background: linear-gradient(120deg, color-mix(in srgb, var(--project-accent) 9%, rgba(13,20,32,.96)), rgba(7,12,20,.95) 60%); box-shadow: var(--shadow-panel), inset 0 1px rgba(255,255,255,.04); }.flagship::before { position: absolute; inset: 0; background-image: linear-gradient(rgba(85,138,231,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(85,138,231,.04) 1px, transparent 1px); background-size: 32px 32px; content: ''; pointer-events: none; }.flagship__body, .flagship__visual { position: relative; }.flagship__lead { margin: 1rem 0 .8rem; color: var(--color-text); font-size: clamp(1.15rem, 2.2vw, 1.5rem); font-weight: 700; line-height: 1.3; letter-spacing: -.02em; }.flagship__desc { margin-bottom: 1.6rem; color: var(--color-text-muted); }.flagship__visual { margin: 0; }.flagship__img { display: block; width: 100%; height: auto; border: 1px solid color-mix(in srgb, var(--project-accent) 34%, var(--color-border)); border-radius: var(--radius-md); box-shadow: 0 18px 45px rgba(0,0,0,.32); }.flagship__visual figcaption { margin-top: .6rem; color: var(--color-text-subtle); font: .78rem/1.4 var(--font-mono); }
-
-  .forge-list { display: grid; gap: 1px; margin: 0; padding: 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-border); box-shadow: var(--shadow-sm); list-style: none; overflow: hidden; }.forge-item { position: relative; padding: 1.2rem 1.35rem; border-left: 3px solid var(--project-accent); background: rgba(6,11,19,.93); transition: background .2s ease; }.forge-item:hover { background: color-mix(in srgb, var(--project-accent) 6%, rgba(9,15,25,.96)); }.forge-item__link { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; }.forge-item__name { color: var(--color-text); font-size: 1.12rem; font-weight: 700; letter-spacing: -.02em; }.forge-item__link:hover .forge-item__name { color: var(--project-accent); }.forge-item__note { margin: .45rem 0 0; color: var(--color-text-muted); font-size: .92rem; line-height: 1.6; }
-  .priority-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-  .priority-card { display: flex; flex-direction: column; min-height: 16rem; padding: 1.35rem; border: 1px solid var(--color-border); border-top: 2px solid var(--priority-color); border-radius: var(--radius-lg); background: linear-gradient(155deg, color-mix(in srgb, var(--priority-color) 9%, rgba(12,19,31,.96)), rgba(6,10,17,.96) 65%); box-shadow: var(--shadow-sm); transition: transform .2s ease, border-color .2s ease; }
-  .priority-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--priority-color) 48%, var(--color-border)); }
-  .priority-card--codeforge { --priority-color: #6f9aff; }.priority-card--control { --priority-color: #36b8ba; }.priority-card--west { --priority-color: #c47c4f; }
-  .priority-card__index { color: var(--priority-color); font: 700 .62rem/1.4 var(--font-mono); letter-spacing: .12em; }
-  .priority-card h3 { margin: 1.5rem 0 .6rem; color: var(--color-text); font-size: 1.25rem; letter-spacing: -.025em; }
-  .priority-card h3 span { color: var(--priority-color); font-size: .78rem; }
-  .priority-card p { margin: 0; color: var(--color-text-muted); font-size: .9rem; line-height: 1.65; }
-  .priority-card__link { display: inline-flex; gap: .45rem; align-items: center; margin-top: auto; padding-top: 1.2rem; color: var(--priority-color); font-size: .82rem; font-weight: 750; }
-
-  .projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
-  .notes-head { display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between; }.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem; }
-  .roadmap-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }.roadmap-item { padding: 1.1rem 1.2rem; border: 1px solid var(--color-border); border-top: 3px solid var(--project-accent); border-radius: var(--radius-md); background: var(--color-surface); }.roadmap-item a { color: var(--color-text); font-weight: 700; letter-spacing: -.02em; }.roadmap-item a:hover { color: var(--project-accent); opacity: 1; }.roadmap-item p { margin: .5rem 0 0; color: var(--color-text-muted); font-size: .9rem; line-height: 1.55; }
-
-  /* Distribution portal strip: routes downloads exclusively to /forged */
-  .distribution-portal {
-    display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, .6fr);
-    gap: 1.5rem 2rem;
+  /* Announcement Strip */
+  .announce-strip {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    padding: 1.8rem 2rem;
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-accent);
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, rgba(13,20,32,.95), rgba(7,12,20,.95));
-    box-shadow: var(--shadow-sm);
+    gap: 0.55rem 1rem;
+    margin-top: 1.15rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+    font-size: 0.82rem;
   }
-  .distribution-portal__eyebrow {
-    margin: 0 0 .5rem;
-    color: var(--color-accent-bright);
-    font: 700 .68rem/1 var(--font-mono);
-    letter-spacing: .14em;
+
+  .announce-strip__tag {
+    padding: 0.16rem 0.48rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 3px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  .distribution-portal__title {
+
+  .announce-strip__text {
     margin: 0;
-    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
-    line-height: 1.2;
-    letter-spacing: -.025em;
-    color: var(--color-text);
-  }
-  .distribution-portal__desc {
-    margin: .6rem 0 0;
     color: var(--color-text-muted);
-    font-size: .95rem;
-    line-height: 1.65;
-  }
-  .distribution-portal__actions {
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-    align-items: flex-start;
+    flex: 1 1 20rem;
   }
 
-  /* Closing support note: deliberately quiet — support lives in the footer, About, and /support. */
-  .support-close { display: grid; }
-  .support-close__body { max-width: 52rem; margin: 0; color: var(--color-text-muted); line-height: 1.7; }
-  .support-disclosure { max-width: 46rem; margin: 1.8rem 0 0; color: var(--color-text-subtle); font-size: .82rem; line-height: 1.65; }
-  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; gap: 1rem; min-height: auto; padding-top: 5rem; }.hero__copy { max-width: 47rem; }.hero :global(.portfolio-map) { margin-top: 1rem; }.hero__rail { position: relative; grid-column: 1; margin-top: 2rem; }.flagship { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } }
-  @media (max-width: 900px) { .priority-grid { grid-template-columns: 1fr 1fr; }.priority-card:last-child { grid-column: span 2; } }
-  @media (max-width: 760px) { .hero { padding-top: 4rem; }.hero :global(.portfolio-map) { margin-top: .5rem; }.hero__rail { flex-wrap: wrap; gap: .8rem 1.2rem; margin-top: 1rem; }.projects-grid { grid-template-columns: 1fr; }.capability-grid { grid-template-columns: 1fr 1fr; }.hero__actions { align-items: stretch; }.hero__actions .btn { flex: 1 1 10rem; } .distribution-portal { grid-template-columns: 1fr; padding: 1.4rem; } .distribution-portal__actions { flex-direction: row; flex-wrap: wrap; } }
-  @media (max-width: 560px) { .priority-grid { grid-template-columns: 1fr; }.priority-card:last-child { grid-column: auto; }.priority-card { min-height: 14rem; } }
-  @media (max-width: 430px) { .capability-grid { grid-template-columns: 1fr; }.hero h1 { font-size: 2.65rem; }.hero__actions .btn { flex-basis: 100%; } }
-  .portfolio-showcases { padding-top: 1rem; }
-  .engineering-credibility__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1.5rem; }
-  .engineering-credibility__grid article { padding: 1.1rem; border: 1px solid var(--color-border); border-top: 2px solid rgba(113,157,246,.55); border-radius: var(--radius-md); background: linear-gradient(150deg, rgba(13,20,32,.9), rgba(7,11,17,.9)); }
-  .engineering-credibility__grid article > span { color: #8eafff; font: 700 .58rem/1 var(--font-mono); letter-spacing: .1em; }
-  .engineering-credibility__grid h3 { margin: .65rem 0 .35rem; font-size: 1rem; letter-spacing: -.02em; }
-  .engineering-credibility__grid p { margin: 0; color: var(--color-text-muted); font-size: .82rem; line-height: 1.6; }
-  .development-ledger__list { display: grid; gap: .5rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
-  .development-ledger__list li { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; gap: .8rem; align-items: center; padding: .9rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(10,15,23,.8); }
-  .development-ledger__state { width: fit-content; padding: .32rem .48rem; border: 1px solid currentColor; border-radius: 999px; font: 700 .54rem/1.3 var(--font-mono); letter-spacing: .04em; text-align: center; text-transform: uppercase; }
-  .development-ledger__state--released { color: #72d5a1; }.development-ledger__state--preview { color: #8eb0ff; }.development-ledger__state--reported { color: #e0bd85; }.development-ledger__state--unverified { color: #c1a6db; }
-  .development-ledger__list h3 { margin: 0; font-size: .9rem; }.development-ledger__list p { margin: .2rem 0 0; color: var(--color-text-muted); font-size: .78rem; line-height: 1.5; }
-  .development-ledger__list li > a { color: #a9c1ff; font-size: .72rem; font-weight: 700; white-space: nowrap; }
-  @media (max-width: 760px) { .engineering-credibility__grid { grid-template-columns: 1fr; }.development-ledger__list li { grid-template-columns: 1fr; gap: .45rem; align-items: start; }.development-ledger__list li > a { white-space: normal; } }
-  @media (prefers-reduced-motion: reduce) { .hero__status span { animation: none; } }
+  .announce-strip__link {
+    color: var(--color-text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    margin-top: 1.15rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-lg);
+    background: var(--color-recessed);
+    overflow: hidden;
+    box-shadow: var(--shadow-panel), var(--surface-highlight);
+  }
+
+  .hero__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero__backdrop img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    opacity: 0.88;
+  }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      95deg,
+      rgba(8, 9, 12, 0.96) 0%,
+      rgba(8, 9, 12, 0.88) 46%,
+      rgba(8, 9, 12, 0.32) 76%,
+      rgba(8, 9, 12, 0.14) 100%
+    );
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 52rem;
+    padding: clamp(2.4rem, 5vw, 4.1rem) clamp(1.5rem, 4vw, 3.25rem) clamp(1.9rem, 4vw, 3rem);
+  }
+
+  .hero__title {
+    margin: 0;
+    font-size: clamp(2.35rem, 4.4vw, 4.05rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--color-text);
+  }
+
+  .support-close__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .support-close__counter {
+    flex-shrink: 0;
+  }
+
+  .hero__lead {
+    max-width: 38rem;
+    margin: 1.35rem 0 0;
+    color: var(--color-text-muted);
+    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    line-height: 1.68;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .hero__heritage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 0.85rem;
+    margin: 2.25rem 0 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .hero__heritage span {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .hero__heritage strong {
+    color: var(--color-brand-silver);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  /* Division Rail */
+  .division-rail {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--color-border-structural);
+    background: rgba(10, 12, 16, 0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  .division-rail__item {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.05rem 1.25rem;
+    border-right: 1px solid var(--color-border);
+    transition: background-color 0.16s ease;
+  }
+
+  .division-rail__item:last-child {
+    border-right: 0;
+  }
+
+  .division-rail__item:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .division-rail__idx {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .division-rail__name {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .division-rail__flagships {
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+  }
+
+  .head-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1.4rem;
+  }
+
+  /* Model Families */
+  .alex-spotlight {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 2rem 2.5rem;
+    align-items: center;
+    padding: clamp(1.35rem, 3vw, 2.25rem);
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--accent-alexandrite);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.045), rgba(16, 18, 23, 0.96) 45%, rgba(139, 92, 246, 0.04));
+    box-shadow: var(--surface-highlight);
+  }
+
+  .flagship-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .flagship-kicker {
+    color: var(--page-accent, var(--color-accent-bright));
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .alex-spotlight h3,
+  .specialist-panel h3,
+  .app-feature h3 {
+    margin: 0;
+    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+    letter-spacing: -0.03em;
+  }
+
+  .alex-spotlight h3 a,
+  .specialist-panel h3 a,
+  .app-feature h3 a {
+    color: var(--color-text);
+  }
+
+  .alex-spotlight h3 a:hover,
+  .specialist-panel h3 a:hover,
+  .app-feature h3 a:hover {
+    color: var(--page-accent, var(--color-accent-bright));
+  }
+
+  .flagship-tagline {
+    margin: 0.3rem 0 0;
+    color: var(--color-brand-silver);
+    font-size: 1.02rem;
+    font-weight: 500;
+  }
+
+  .flagship-body {
+    margin: 0.85rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.68;
+  }
+
+  .flagship-boundary {
+    margin: 1rem 0 0;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--color-border-strong);
+    color: var(--color-text-subtle);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .flagship-boundary strong {
+    color: var(--color-text-muted);
+  }
+
+  .flagship-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.25rem;
+    margin-top: 1.45rem;
+  }
+
+  .specialist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .specialist-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem;
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--page-accent);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+    box-shadow: var(--surface-highlight);
+  }
+
+  .specialist-panel__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-top: 1.25rem;
+  }
+
+  .model-line-list {
+    display: grid;
+    gap: 0.65rem;
+    margin: 1.1rem 0 1.35rem;
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--color-border);
+    list-style: none;
+  }
+
+  .model-line-list li {
+    display: grid;
+    gap: 0.15rem;
+    font-size: 0.84rem;
+  }
+
+  .model-line-list strong {
+    color: var(--color-text);
+  }
+
+  .model-line-list span {
+    color: var(--color-text-muted);
+  }
+
+  .model-line-list code {
+    padding: 0.08rem 0.32rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: 3px;
+    background: var(--color-recessed);
+    color: var(--color-brand-silver);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .specialist-panel__body > .text-link {
+    margin-top: auto;
+  }
+
+  /* Applications Asymmetric Showcases */
+  .app-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 2rem 2.75rem;
+    align-items: center;
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .app-feature--reverse {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+
+  /* State Lines Widescreen Cinematic Banner */
+  .statelines-banner {
+    position: relative;
+    min-height: 31rem;
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid rgba(197, 160, 89, 0.28);
+    border-radius: var(--radius-lg);
+    background: #100f0d;
+    overflow: hidden;
+    box-shadow: var(--shadow-panel);
+  }
+
+  .statelines-banner__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .statelines-banner__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+  }
+
+  .statelines-banner__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(12, 11, 10, 0.22) 0%,
+      rgba(12, 11, 10, 0.65) 48%,
+      rgba(10, 9, 8, 0.96) 100%
+    );
+  }
+
+  .statelines-banner__content {
+    position: relative;
+    z-index: 2;
+    max-width: 48rem;
+    padding: clamp(1.75rem, 4vw, 3.25rem);
+  }
+
+  .statelines-kicker {
+    color: var(--accent-state-lines);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .statelines-title {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2.8rem, 6vw, 4.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.015em;
+    color: #f6efe2;
+  }
+
+  .statelines-copy {
+    margin: 1rem 0 0;
+    color: #d3cbbd;
+    font-size: 1rem;
+    line-height: 1.68;
+  }
+
+  .statelines-label {
+    margin: 1.35rem 0 0;
+    color: #a99f8e;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  .statelines-label strong {
+    color: #d8c398;
+  }
+
+  /* Ledger styling */
+  .ledger-date {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .ledger-cat {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ledger-title {
+    margin: 0;
+    font-size: 1.04rem;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+  }
+
+  .ledger-title a {
+    color: var(--color-text);
+  }
+
+  .ledger-title a:hover {
+    color: var(--color-accent-bright);
+  }
+
+  .ledger-summary {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.58;
+  }
+
+  .ledger-link {
+    white-space: nowrap;
+  }
+
+  /* 4-Axiom Transparency Matrix */
+  .axiom-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .axiom-cell {
+    padding: 1.35rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .axiom-cell__idx {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .axiom-cell h3 {
+    margin: 0.65rem 0 0.45rem;
+    font-size: 1.06rem;
+    letter-spacing: -0.02em;
+  }
+
+  .axiom-neq {
+    color: var(--color-accent-bright);
+    margin: 0 0.15rem;
+  }
+
+  .axiom-cell p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* Distribution Portal */
+  .distribution-portal {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) auto;
+    gap: 1.5rem 2rem;
+    align-items: center;
+    padding: 1.75rem 2rem;
+    border: 1px solid var(--color-border-structural);
+    border-left: 2px solid var(--color-accent-bright);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+  }
+
+  .distribution-portal__title {
+    margin: 0;
+    font-size: clamp(1.3rem, 2.4vw, 1.68rem);
+    letter-spacing: -0.025em;
+  }
+
+  .distribution-portal__desc {
+    margin: 0.6rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .distribution-portal__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .solutions-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 2.25rem;
+    align-items: center;
+  }
+
+  .solutions-feature__copy h2 {
+    margin: 0.45rem 0 0.75rem;
+    font-size: clamp(1.6rem, 2.9vw, 2.25rem);
+    letter-spacing: -0.03em;
+  }
+
+  .solutions-pill-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.15rem 0 1.4rem;
+  }
+
+  .sol-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.34rem 0.72rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+
+  .sol-chip:hover {
+    border-color: var(--color-brand-cobalt-bright);
+    color: var(--color-brand-cobalt-bright);
+  }
+
+  .commercial-band {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.15rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(59, 123, 248, 0.06) 0%, var(--color-bg-secondary) 60%);
+  }
+
+  .commercial-band__copy h2 {
+    margin: 0.4rem 0 0.55rem;
+    font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+    letter-spacing: -0.03em;
+  }
+
+  .commercial-band__copy p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.96rem;
+    line-height: 1.65;
+    max-width: 52rem;
+  }
+
+  .commercial-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .support-close__body {
+    max-width: 56rem;
+    margin: 0;
+    color: var(--color-text-subtle);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 1024px) {
+    .division-rail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .division-rail__item {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .alex-spotlight,
+    .specialist-grid,
+    .app-feature,
+    .app-feature--reverse,
+    .solutions-feature,
+    .distribution-portal {
+      grid-template-columns: 1fr;
+    }
+    .app-feature--reverse .app-feature__visual {
+      order: 2;
+    }
+    .axiom-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero__scrim {
+      background: linear-gradient(180deg, rgba(8, 9, 12, 0.84) 0%, rgba(8, 9, 12, 0.95) 60%, #08090c 100%);
+    }
+    .division-rail,
+    .axiom-grid {
+      grid-template-columns: 1fr;
+    }
+    .division-rail__item {
+      border-right: 0;
+    }
+    .distribution-portal,
+    .commercial-band {
+      padding: 1.35rem;
+    }
+  }
 </style>

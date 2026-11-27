@@ -1,0 +1,131 @@
+{
+  "last_updated": "2026-11-26",
+  "families": [
+    {
+      "id": "alexandrite",
+      "name": "Alexandrite",
+      "tagline": "Intelligence, converged.",
+      "role": "Collective Intelligence Flagship Program",
+      "accent": "alexandrite",
+      "route": "/models/alexandrite/",
+      "status": "Research Vision",
+      "availability": "Not publicly available — no completed collective training run",
+      "image": "/images/forge/alexandrite-architecture.webp",
+      "imageSm": "/images/forge/alexandrite-architecture-sm.webp",
+      "imageAlt": "Abstract computational architecture diagram showing distinct specialist neural topologies converging through emerald, violet, and crimson-plum distillation streams into a unified multi-layered intelligence lattice.",
+      "imageLabel": "Collective Intelligence Concept Visualization — Research Program",
+      "summary": "Alexandrite is FDS's long-term research program for collective intelligence: synthesizing independently verified capabilities from specialist families like Hackmanite and Cinnabar through Project Forge's distillation, retrieval, and certification discipline.",
+      "architecture_layers": [
+        { "stage": "01", "title": "Certified Knowledge Base", "detail": "Source-verified research and structured engineering evidence curated through Project Forge." },
+        { "stage": "02", "title": "Specialist Model Mastery", "detail": "Independent domain specialists (Hackmanite for game engineering; Cinnabar for narrative and creative intelligence) evaluated on domain-specific rubrics." },
+        { "stage": "03", "title": "Multi-Teacher Distillation", "detail": "Planned transfer of verified reasoning traces and specialist strengths without naive unverified weight merging." },
+        { "stage": "04", "title": "Independent Certification", "detail": "Holdout evaluation, uncertainty auditing, and capability certification before any production or public release." }
+      ]
+    },
+    {
+      "id": "hackmanite",
+      "name": "Hackmanite",
+      "tagline": "Intelligence built for games.",
+      "role": "Universal Gaming & Game-Development AI Model Family",
+      "accent": "hackmanite",
+      "route": "/models/hackmanite/",
+      "status": "Training Planned · Active Research",
+      "availability": "Base models open-weight third-party; FDS specialist checkpoints not publicly released",
+      "image": "/images/forge/hackmanite-gamedev.webp",
+      "imageSm": "/images/forge/hackmanite-gamedev-sm.webp",
+      "imageAlt": "Isometric 3D game-development visualization transitioning from UV maps, shader graphs, skeletal character rig, and ultraviolet wireframe topology into a photorealistic lit stone mountain fortress.",
+      "imageLabel": "Game-Development Pipeline Concept — Not Model Output",
+      "summary": "A specialist AI model family engineered for every layer of modern game development: game engines, gameplay programming, graphics pipelines, physics, animation rigs, NPC behavior, multiplayer synchronization, asset validation, and performance profiling.",
+      "models": [
+        {
+          "id": "hackmanite-prime",
+          "name": "Hackmanite Prime",
+          "route": "/models/hackmanite/prime/",
+          "baseModel": "Qwen/Qwen3.8-27B",
+          "parameterCount": "27B (third-party base architecture)",
+          "role": "Specialist Gaming Assistance, Implementation & Coding",
+          "trainingStatus": "Training planned — third-party open-weight foundation available; FDS post-training not certified publicly",
+          "evaluationStatus": "Pending public specialist benchmark export",
+          "availability": "Not publicly released",
+          "intendedUse": "Interactive engine scripting, gameplay feature implementation, C++/C#/shader drafting, and day-to-day game-developer coding assistance.",
+          "limitations": "Adapted open-weight foundation target — not trained from scratch by FDS. Does not replace engine compilation, profiling, or playtesting."
+        },
+        {
+          "id": "hackmanite-reasoning",
+          "name": "Hackmanite Reasoning",
+          "route": "/models/hackmanite/reasoning/",
+          "baseModel": "openai/gpt-oss-120b",
+          "parameterCount": "120B (third-party base architecture)",
+          "role": "Complex Game Architecture, Debugging & Technical Reasoning",
+          "trainingStatus": "Training planned — third-party open-weight foundation available; FDS post-training not certified publicly",
+          "evaluationStatus": "Pending public specialist benchmark export",
+          "availability": "Not publicly released",
+          "intendedUse": "Deep multi-system engine architecture, deterministic physics debugging, multiplayer state reconciliation, and render-pipeline performance investigation.",
+          "limitations": "Adapted open-weight foundation target — not trained from scratch by FDS. High compute footprint; no public API endpoint exists."
+        }
+      ],
+      "research_scope": [
+        "Game engine architecture (Unreal, Godot, custom C++/Rust runtimes)",
+        "Gameplay systems, state machines & deterministic mechanics",
+        "Real-time graphics, PBR shaders & frame-budget optimization",
+        "Rigid-body & soft-body physics, collision & spatial partitioning",
+        "Character rigging, skeletal animation & state blending",
+        "NPC behavior trees, utility AI & tactical simulation",
+        "Multiplayer netcode, replication & lag compensation",
+        "Asset validation pipelines & autonomous build verification"
+      ]
+    },
+    {
+      "id": "cinnabar",
+      "name": "Cinnabar",
+      "tagline": "Intelligence for the art of storytelling.",
+      "role": "Anime, Manga, Animation & Fictional Intelligence Model Family",
+      "accent": "cinnabar",
+      "route": "/models/cinnabar/",
+      "status": "Experimental Research · Oracle Lineages Documented",
+      "availability": "Research checkpoints only — no public model endpoint or weights release",
+      "image": "/images/forge/cinnabar-animation.webp",
+      "imageSm": "/images/forge/cinnabar-animation-sm.webp",
+      "imageAlt": "Original anime and manga production artwork transitioning from black-and-white ink storyboard frames and keyframe roughs into a cel-shaded rooftop twilight scene with warm vermilion lanterns.",
+      "imageLabel": "Original Creative Production Concept — Not Model Output",
+      "summary": "A specialized research model family built around anime, manga, animation craft, long-form worldbuilding, cinematography, canonical consistency, and structured fictional combat analysis — including the documented Cinnabar Oracle text-model lineages.",
+      "oracle_lineages": [
+        {
+          "version": "Oracle v1",
+          "stage": "Historical Lineage",
+          "role": "Initial fictional-universe & canonical text analysis exploration",
+          "evalState": "Historical internal baseline; not an active public default"
+        },
+        {
+          "version": "Oracle v2",
+          "stage": "Historical Lineage",
+          "role": "Expanded canonical attribution and structured character-comparison prompts",
+          "evalState": "Superseded by later research iterations"
+        },
+        {
+          "version": "Oracle v3",
+          "stage": "Historical Lineage",
+          "role": "Refined evidence-grounding discipline and reduced unsupported scaling claims",
+          "evalState": "Internal research checkpoint; private holdout evaluations unpublished"
+        },
+        {
+          "version": "Oracle v4",
+          "stage": "Experimental Lineage",
+          "role": "Structured analytical reasoning for fictional physics, canonical versioning, and claim auditing",
+          "evalState": "Distinguishes raw generation from guarded verification; public benchmark export pending owner approval"
+        },
+        {
+          "version": "Oracle v4.1",
+          "stage": "Latest Documented Research Lineage",
+          "role": "Iterative refinement of canonical evidence discipline and BattleVerse integration compatibility",
+          "evalState": "Experimental — guarded vs. raw public evaluation tables await approved internal export"
+        }
+      ],
+      "capability_boundaries": [
+        "Cinnabar Oracle models are text-based analytical and storytelling specialists — they are NOT native video or animation generators.",
+        "Any animation, rigging, storyboard rendering, or video generation workflows rely on explicitly identified external tools and creative pipelines.",
+        "FDS never uses copyrighted anime footage, unlicensed manga scans, or protected franchise characters as commercial branding."
+      ]
+    }
+  ]
+}

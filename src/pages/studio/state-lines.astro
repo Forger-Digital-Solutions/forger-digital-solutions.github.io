@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import { getRegistryEntry } from '../../data/registry';
+
+const entry = getRegistryEntry('state-lines');
+
+const pillars = [
+  {
+    num: 'I',
+    title: 'Tri-State Industrial Geography',
+    body: 'Inspired by the intersecting ports, turnpikes, commuter bridges, post-industrial river towns, and outer boroughs across New York, New Jersey, and Pennsylvania—a lived-in geography shaped by jurisdiction lines and commerce.',
+  },
+  {
+    num: 'II',
+    title: 'Prestige Crime-Drama Tone',
+    body: 'Grounded, character-driven tension focused on institutional power, logistics, loyalty, and consequence rather than cartoonish spectacle. Every district carries its own economic texture and pressure.',
+  },
+  {
+    num: 'III',
+    title: 'Systemic Open-World Ambition',
+    body: 'Engineered from the ground up with long-horizon world simulation goals: persistent regional corridors, credible nocturnal lighting, and narrative choices that ripple across borders.',
+  },
+];
+---
+
+<BaseLayout
+  title="State Lines — Original Open-World Production"
+  description="State Lines is Forger Digital Solutions' original AAA-ambition open-world organized-crime game inspired by New York, New Jersey, and Pennsylvania. Currently in preproduction."
+  accent="state-lines"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/studio/">Studio</a><span aria-hidden="true">/</span>
+    <span aria-current="page">State Lines</span>
+  </nav>
+
+  <header class="page-head sl-head">
+    <div class="sl-meta">
+      <p class="page-eyebrow">FDS Original Productions // Flagship Title</p>
+      <StatusPill status={entry.development_status} label="Preproduction · Private Development" tone="private" />
+    </div>
+    <h1 class="sl-title">State Lines</h1>
+    <p class="sl-subtitle">Across every river, bridge, and jurisdiction, someone owns the road.</p>
+    <p class="page-description">
+      An original AAA-ambition open-world organized-crime drama inspired by the interconnected corridors of New York, New Jersey, and Pennsylvania. Currently in early preproduction and world-architecture development inside Forger Digital Solutions.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="sl-concept-title">
+    <h2 id="sl-concept-title" class="sr-only">Atmospheric Concept Direction</h2>
+    <SpecimenMedia
+      src="/images/forge/state-lines-concept.webp"
+      mobileSrc="/images/forge/state-lines-concept-sm.webp"
+      alt="Cinematic charcoal and aged-gold atmospheric concept artwork showing a rain-slicked industrial bridge, freight corridor, and distant skyline"
+      label="Concept Art — Work in Progress (Not Gameplay)"
+      caption="Atmospheric tone study created for public presentation of State Lines. Does not depict final in-engine graphics or gameplay."
+      eager={true}
+      aspect="21/9"
+    />
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="sl-pillars-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Creative Direction</p>
+        <h2 id="sl-pillars-title">Three foundational pillars of the world.</h2>
+        <p>We keep story details, characters, and plot arcs strictly under wraps during preproduction while sharing the atmosphere and structural ambition guiding the work.</p>
+      </div>
+    </div>
+
+    <div class="sl-pillars">
+      {pillars.map((pillar) => (
+        <article class="fds-panel sl-pillar">
+          <span class="sl-pillar__num">{pillar.num}</span>
+          <h3>{pillar.title}</h3>
+          <p>{pillar.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="sl-honesty-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Production Transparency</p>
+        <h2 id="sl-honesty-title">What is verified today — and what remains unannounced.</h2>
+      </div>
+      <a href="/studio/productions/" class="text-link">All Original Productions <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="sl-facts">
+      <div class="fds-panel sl-fact-box">
+        <h3>Verified Public Status</h3>
+        <ul>
+          {entry.verified_capabilities.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="fds-panel sl-fact-box">
+        <h3>Explicitly Unannounced / Non-Claims</h3>
+        <ul>
+          {entry.non_claims.map((item) => (
+            <li>{item}</li>
+          ))}
+          <li>No release date, target launch window, console/PC platform commitment, or pricing has been announced.</li>
+          <li>No public playable demo, beta registration, or pre-order exists.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sl-head { max-width: 56rem; }
+  .sl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .sl-meta .page-eyebrow { margin: 0; }
+  .sl-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(3.1rem, 7.2vw, 5.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+  .sl-subtitle {
+    margin: 0.85rem 0 0;
+    color: var(--accent-state-lines);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+    line-height: 1.3;
+  }
+
+  .sl-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .sl-pillar { padding: 1.65rem; border-top: 2px solid var(--accent-state-lines); }
+  .sl-pillar__num {
+    display: block;
+    color: var(--accent-state-lines);
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    margin-bottom: 0.55rem;
+  }
+  .sl-pillar h3 { margin: 0 0 0.6rem; font-size: 1.12rem; }
+  .sl-pillar p { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.65; }
+
+  .sl-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .sl-fact-box { padding: 1.55rem; }
+  .sl-fact-box h3 {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-state-lines);
+  }
+  .sl-fact-box ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 900px) {
+    .sl-pillars,
+    .sl-facts { grid-template-columns: 1fr; }
+  }
+</style>

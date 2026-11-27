@@ -52,10 +52,12 @@ describe('Phase 9 Grounded Recommendations', () => {
     expect(answer!.text).toMatch(/downloads are temporarily paused/i);
   });
 
-  it('does not promote retired AI research lineages as current', () => {
+  it('reports current Operation Digital Forge AI research programs without promoting retired lineages', () => {
     const answer = canonicalAnswer('What FDS project is focused on model research and training?', ctx, []);
     expect(answer).toBeDefined();
-    expect(answer!.text).toMatch(/no current public fds project is listed as an ai research or model-training program/i);
+    expect(answer!.text).toMatch(/Project Forge/i);
+    expect(answer!.text).toMatch(/Alexandrite|Hackmanite|Cinnabar/i);
+    expect(answer!.text).not.toMatch(/Topaz|Sapphire|Peridot|Garnet|KyraBlox/i);
   });
 
   it('gracefully handles ambiguous recommendation queries by listing all areas', () => {

@@ -654,10 +654,13 @@ function filteredListAnswer(query: string): CanonicalAnswer | undefined {
   if (matching.length === 0 && standalone.length === 0) {
     return {
       text: filter.label === 'still in research'
-        ? 'No current public FDS project is listed as a research program. The Projects page shows the current portfolio.'
+        ? 'FDS active AI research programs include Project Forge (our permanent 15-division research foundation), Alexandrite (collective intelligence research vision), Hackmanite (universal gaming AI family, training planned on Apache-2.0 bases), and Cinnabar (anime, manga, animation, and Oracle v1–v4.1 experimental checkpoints). None have publicly downloadable model weights today.'
         : `Nothing is ${filter.label} right now.`,
-      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
-      sources: ['fds-ecosystem'],
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Research', href: '/research/project-forge/' },
+        { type: 'OPEN_PAGE', label: 'Explore Models', href: '/models/' }
+      ],
+      sources: ['registry-project-forge', 'registry-alexandrite'],
       intent: 'list'
     };
   }
@@ -1352,6 +1355,287 @@ export function archiveIntegrityAnswer(query: string): CanonicalAnswer | undefin
   return undefined;
 }
 
+function flagshipPortfolioAnswer(query: string): CanonicalAnswer | undefined {
+  const q = normalize(query);
+
+  // 1. Cross-flagship comparisons first
+  if (/\bjaspilite\b/.test(q) && /\bhackmanite\b/.test(q)) {
+    return {
+      text: 'Jaspilite and Hackmanite serve different layers of the FDS ecosystem. Jaspilite is an independent autonomous software engineering and multi-agent orchestration application built around Auto, Meld, and Solo modes. Hackmanite is FDS’s specialized universal gaming and game-development AI model family (targeting Apache-2.0 Qwen/Qwen3.8-27B for Prime and openai/gpt-oss-120b for Reasoning). Neither is publicly downloadable yet.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Jaspilite', href: '/products/jaspilite/' },
+        { type: 'OPEN_PAGE', label: 'Explore Hackmanite', href: '/models/hackmanite/' }
+      ],
+      sources: ['registry-jaspilite', 'registry-hackmanite'],
+      intent: 'comparison',
+      entityId: 'jaspilite',
+      settled: true
+    };
+  }
+
+  if (/\bcinnabar\b/.test(q) && /\bbattle\s?verse\b/.test(q)) {
+    return {
+      text: 'Cinnabar is FDS’s anime, manga, animation craft, and fictional-intelligence AI model family (including the documented Oracle v1–v4.1 text lineages). Forge BattleVerse is a separate, independent commercial application platform—spanning BattleVerse Arena and BattleVerse Creator Studio—designed to integrate with Cinnabar models while running simulation and workflow orchestration independently.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Cinnabar', href: '/models/cinnabar/' },
+        { type: 'OPEN_PAGE', label: 'Explore Forge BattleVerse', href: '/products/battleverse/' }
+      ],
+      sources: ['registry-cinnabar', 'registry-battleverse'],
+      intent: 'comparison',
+      entityId: 'cinnabar',
+      settled: true
+    };
+  }
+
+  // 2. Alexandrite
+  if (/\balexandrite\b/.test(q)) {
+    return {
+      text: 'Alexandrite is Forger Digital Solutions’ long-term collective intelligence flagship research program. It is designed to synthesize independently validated, rights-cleared specialist capabilities from Hackmanite, Cinnabar, and Project Forge via multi-teacher distillation rather than naive weight merging. Alexandrite is a research vision: no collective checkpoint has completed training, and no public model weights, API, or commercial offering exist today.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Alexandrite', href: '/models/alexandrite/' },
+        { type: 'OPEN_PAGE', label: 'Evaluation Standards', href: '/evaluations/' }
+      ],
+      sources: ['registry-alexandrite'],
+      intent: /\b(available|download|release|out|use|try|api)\b/.test(q) ? 'availability' : 'identity',
+      entityId: 'alexandrite',
+      settled: true
+    };
+  }
+
+  // 3. Hackmanite (Prime, Reasoning, availability, studio workforce)
+  if (/\bhackmanite\b/.test(q)) {
+    if (/\b(available|download|release|out|use|try|buy|subscribe|access|api)\b/.test(q)) {
+      return {
+        text: 'Hackmanite is not publicly available or commercially shipping yet. Hackmanite Prime targets Apache-2.0 Qwen/Qwen3.8-27B and Hackmanite Reasoning targets Apache-2.0 openai/gpt-oss-120b, but upstream base-model availability is strictly distinct from completed FDS fine-tuning, evaluation, and certification. Developers and studios can register early preview or scoping interest through the Contact page.',
+        actions: [
+          { type: 'OPEN_PAGE', label: 'Explore Hackmanite', href: '/models/hackmanite/' },
+          { type: 'OPEN_PAGE', label: 'Register Preview Interest', href: '/contact/?track=developer-preview' }
+        ],
+        sources: ['registry-hackmanite'],
+        intent: 'availability',
+        entityId: 'hackmanite',
+        settled: true
+      };
+    }
+    return {
+      text: 'Hackmanite is FDS’s universal gaming and game-development AI model family. Its planned specialist lineup comprises Hackmanite Prime (targeting Apache-2.0 Qwen/Qwen3.8-27B for fast engine coding and gameplay implementation) and Hackmanite Reasoning (targeting Apache-2.0 openai/gpt-oss-120b for complex architecture, physics, multiplayer netcode, and debugging), alongside planned commercial directions including Hackmanite Game Engineer, Gaming Assistant, Studio, Enterprise, and a 10-role studio workforce. FDS fine-tuning and certification are not yet publicly released.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Hackmanite', href: '/models/hackmanite/' },
+        { type: 'OPEN_PAGE', label: 'Gaming Studio Solutions', href: '/solutions/gaming-studios/' }
+      ],
+      sources: ['registry-hackmanite'],
+      intent: 'identity',
+      entityId: 'hackmanite',
+      settled: true
+    };
+  }
+
+  // 4. Cinnabar & Oracle (explicit anime/video generation boundary)
+  if (/\bcinnabar\b/.test(q) || (/\boracle\b/.test(q) && /\b(v1|v2|v3|v4|model|lineage|fds|anime|manga|battleverse)\b/.test(q))) {
+    if (/\b(generate|render|make|create|draw)\b.{0,30}\b(anime|video|animation|episodes?|frames?|footage)\b/.test(q)) {
+      return {
+        text: 'No — Cinnabar is not a native video or animation generator. Cinnabar’s documented Oracle checkpoints (v1 through v4.1) and creative-intelligence models are text-based models focused on anime and manga storytelling craft, storyboarding plans, character bibles, fight choreography, and continuity auditing. Visual, animation, and audio rendering rely on specialized external creative tools coordinated under human creative direction.',
+        actions: [
+          { type: 'OPEN_PAGE', label: 'Explore Cinnabar', href: '/models/cinnabar/' },
+          { type: 'OPEN_PAGE', label: 'BattleVerse Creator Studio', href: '/products/battleverse/creator-studio/' }
+        ],
+        sources: ['registry-cinnabar'],
+        intent: 'capability',
+        entityId: 'cinnabar',
+        settled: true
+      };
+    }
+    return {
+      text: 'Cinnabar is FDS’s specialized AI model family for anime, manga, webtoon, animation production craft, cinematic storytelling, narrative continuity, and fictional intelligence. It preserves the documented Oracle v1–v4.1 fictional-intelligence text lineages alongside a broader 8-role creative production vision. Cinnabar models are experimental research checkpoints—not native video generators and not publicly released as weights or an API today.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Cinnabar', href: '/models/cinnabar/' },
+        { type: 'OPEN_PAGE', label: 'Inspect Oracle Lineages', href: '/models/cinnabar/oracle/' }
+      ],
+      sources: ['registry-cinnabar'],
+      intent: 'identity',
+      entityId: 'cinnabar',
+      settled: true
+    };
+  }
+
+  // 5. Forge BattleVerse — Arena & Creator Studio
+  if (/\bcreator\s+studio\b/.test(q) || (/\bbattle\s?verse\b/.test(q) && /\b(studio|creator|anime|manga|storyboard)\b/.test(q))) {
+    return {
+      text: 'BattleVerse Creator Studio is a proposed commercial application direction inside the Forge BattleVerse platform, powered by Cinnabar intelligence for anime studios, manga artists, independent animators, webtoon creators, publishers, and game studios. Planned workflows cover story development, character bibles, chapter planning, storyboarding, choreography, continuity auditing, and coordinating external creative tools. It is currently a commercial product direction with no released build yet.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Creator Studio', href: '/products/battleverse/creator-studio/' },
+        { type: 'OPEN_PAGE', label: 'Register Studio Interest', href: '/contact/?track=studio-workforce' }
+      ],
+      sources: ['registry-battleverse-creator-studio'],
+      intent: 'identity',
+      entityId: 'battleverse-creator-studio',
+      settled: true
+    };
+  }
+
+  if (/\bbattle\s?verse\b/.test(q)) {
+    return {
+      text: 'BattleVerse Arena is the consumer and researcher direction inside Forge BattleVerse, an independent application platform architected to integrate with Cinnabar Oracle. Arena focuses on version-specific character profiles, canonical evidence verification, feat analysis, fictional physics, and probability-based combat simulation with explicit uncertainty intervals—never treating simulated outcomes as canonical fact. Forge BattleVerse is in active development with no public download or live web simulator yet.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore BattleVerse Arena', href: '/products/battleverse/arena/' },
+        { type: 'OPEN_PAGE', label: 'Forge BattleVerse Hub', href: '/products/battleverse/' }
+      ],
+      sources: ['registry-battleverse-arena', 'registry-battleverse'],
+      intent: /\b(available|download|release|play|use|try)\b/.test(q) ? 'availability' : 'identity',
+      entityId: 'battleverse-arena',
+      settled: true
+    };
+  }
+
+  // 6. Jaspilite & Provider Credentials / Consumer Subscriptions Boundary
+  if (/\bconnect\b.{0,30}\b(existing|my|own)\b.{0,25}\b(ai\s+)?(subscriptions?|accounts?|providers?|api\s+keys?)\b/.test(q)
+    || (/\bjaspilite\b/.test(q) && /\b(subscriptions?|accounts?|local\s+models?|providers?|api\s+keys?|unlimited)\b/.test(q))) {
+    return {
+      text: 'No — FDS does not route consumer AI subscriptions through Jaspilite, does not include an AI provider with Jaspilite, and does not provide unlimited AI inference. Jaspilite is being architected to work with local open-weight models, customer-provided API keys, and supported provider integrations where verified—customers use their own AI provider credentials under each provider’s own billing, terms, and quotas, and connectors advance through a five-tier verification ladder from discovered to production-certified. Jaspilite is still in active development with no public download yet.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Jaspilite', href: '/products/jaspilite/' },
+        { type: 'OPEN_PAGE', label: 'Register Preview Interest', href: '/contact/?track=developer-preview' }
+      ],
+      sources: ['registry-jaspilite'],
+      intent: 'capability',
+      entityId: 'jaspilite',
+      settled: true
+    };
+  }
+
+  if (/\bjaspilite\b/.test(q)) {
+    if (/\b(download|install|available|get|buy|release|out|try)\b/.test(q)) {
+      return {
+        text: 'No — Jaspilite is not publicly downloadable yet. It is in active platform development with private Windows builds only, and supersedes the legacy Forge Control branding. When signed, verified builds are cleared for release, they will appear on Downloads & Releases; developers can register early preview interest on the Contact page.',
+        actions: [
+          { type: 'OPEN_PAGE', label: 'Explore Jaspilite', href: '/products/jaspilite/' },
+          { type: 'OPEN_PAGE', label: 'Register Preview Interest', href: '/contact/?track=developer-preview' }
+        ],
+        sources: ['registry-jaspilite'],
+        intent: 'availability',
+        entityId: 'jaspilite',
+        settled: true
+      };
+    }
+    return {
+      text: 'Jaspilite is FDS’s autonomous software engineering and multi-agent orchestration application (replacing legacy Forge Control branding). It organizes repository-aware planning, coding, debugging, and verification across three official operating modes—Auto (adaptive routing), Meld (multi-agent lead, sidekick, and specialist collaboration), and Solo (focused single-model control)—using local models, customer-provided API keys, and verified provider integrations. FDS does not route consumer subscriptions or bundle AI inference, and Jaspilite is in active development with no public installer yet.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Jaspilite', href: '/products/jaspilite/' },
+        { type: 'OPEN_PAGE', label: 'Software Team Solutions', href: '/solutions/software-engineering/' }
+      ],
+      sources: ['registry-jaspilite'],
+      intent: 'identity',
+      entityId: 'jaspilite',
+      settled: true
+    };
+  }
+
+  // 7. State Lines
+  if (/\bstate\s+lines\b/.test(q)) {
+    return {
+      text: 'No — State Lines is not playable today. It is Forger Digital Solutions’ flagship original AAA-ambition open-world organized-crime game inspired by New York, New Jersey, and Pennsylvania, currently in preproduction and private development. No release date, target platforms, pricing, or playable build have been announced, and public visuals are explicitly labeled as work-in-progress concept art rather than gameplay.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore State Lines', href: '/studio/state-lines/' },
+        { type: 'OPEN_PAGE', label: 'Original Productions', href: '/studio/productions/' }
+      ],
+      sources: ['registry-state-lines'],
+      intent: /\b(playable|play|available|download|release|when|platform|buy)\b/.test(q) ? 'availability' : 'identity',
+      entityId: 'state-lines',
+      settled: true
+    };
+  }
+
+  // 8. Project Forge
+  if (/\bproject\s+forge\b/.test(q)) {
+    return {
+      text: 'Project Forge is FDS’s permanent 15-division research and engineering foundation—not a public inference model. It governs source verification, retrieval, controlled training, and independent evaluation across Hackmanite, Cinnabar, and Alexandrite under four strict non-conflation principles: Research ≠ Training, Training ≠ Evaluation, Evaluation ≠ Certification, and Certification ≠ Public Availability.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Project Forge', href: '/research/project-forge/' },
+        { type: 'OPEN_PAGE', label: 'Public Trust Center', href: '/trust/' }
+      ],
+      sources: ['registry-project-forge'],
+      intent: 'identity',
+      entityId: 'project-forge',
+      settled: true
+    };
+  }
+
+  // 9. Private AI / Personalized Studio & Enterprise Workforces
+  if (/\b(private\s+ai|personalized\s+(studio\s+)?ai|ai\s+workforce|custom\s+ai)\b/.test(q)
+    || (/\b(gaming\s+studio|game\s+studio|animation\s+studio|my\s+studio|enterprise)\b/.test(q) && /\b(build|deploy|private|custom|workforce|solution|for\s+my)\b/.test(q))) {
+    return {
+      text: 'Personalized studio and enterprise AI workforces are a core commercial direction for Forger Digital Solutions, though they are not yet shipping as turnkey deployments. Our architecture separates five customization tiers—customer-specific retrieval, agent configuration, approved tool integration, optional customer-exclusive fine-tuning, and dedicated private deployment—with strict customer data segregation so private studio IP is never automatically used to train shared models. Studios and enterprises can open early scoping discussions on the Solutions or Contact pages.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Studio & Enterprise Solutions', href: '/solutions/' },
+        { type: 'OPEN_PAGE', label: 'Register Studio Interest', href: '/contact/?track=studio-workforce' }
+      ],
+      sources: ['fds-solutions'],
+      intent: 'capability',
+      settled: true
+    };
+  }
+
+  // 10. Commercial Model Licensing
+  if (/\blicen[cs]e\b.{0,30}\b(fds|your|hackmanite|cinnabar|alexandrite)?\s*models?\b/.test(q)
+    || /\bcommercial\s+licen[cs]ing\b/.test(q)) {
+    return {
+      text: 'Commercial model licensing is a planned offering, and no FDS-trained models are commercially licensed yet. Hackmanite’s target foundations (Qwen/Qwen3.8-27B and openai/gpt-oss-120b) carry permissive Apache 2.0 upstream licenses; studios and publishers can register early licensing interest on the Contact page.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Commercial Licensing Inquiry', href: '/contact/?track=licensing' },
+        { type: 'OPEN_PAGE', label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/' }
+      ],
+      sources: ['fds-api-licensing', 'registry-hackmanite'],
+      intent: 'availability',
+      settled: true
+    };
+  }
+
+  // 11. Public API / SDK Availability
+  if (/\b(offer|have|provide|public|access|use)\b.{0,25}\b(an?\s+)?(api|apis|sdk|sdks|inference\s+endpoint)\b/.test(q)
+    || /\b(fds|your)\s+(api|sdk)\b/.test(q)) {
+    return {
+      text: 'No — Forger Digital Solutions does not currently operate a public inference API, commercial API key portal, or metered billing console. Programmatic APIs and engine/pipeline SDKs for Hackmanite, Cinnabar, and Jaspilite are planned commercial developer surfaces that will launch only after independent certification. You can inspect documentation and register for future developer previews on the Developers or Contact pages.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Developer Hub', href: '/developers/' },
+        { type: 'OPEN_PAGE', label: 'Developer Preview Interest', href: '/contact/?track=developer-preview' }
+      ],
+      sources: ['fds-api-licensing'],
+      intent: 'availability',
+      settled: true
+    };
+  }
+
+  // 12. Preview Tester / Early Access Interest
+  if (/\b(preview\s+tester|beta\s+tester|early\s+access|developer\s+preview|test\s+your|join\s+the\s+preview)\b/.test(q)) {
+    return {
+      text: `You can register developer preview interest for upcoming Jaspilite, Hackmanite, BattleVerse Arena, or FDS SDK releases through the structured inquiry composer on the Contact page (sent directly to ${siteConfig.supportEmail}). If you want to test publicly downloadable FDS software right now, ForgerEMS v1.2.4-preview.1 is available for Windows on Downloads & Releases with published SHA-256 checksums.`,
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Register Preview Interest', href: '/contact/?track=developer-preview' },
+        { type: 'OPEN_PAGE', label: 'Downloads & Releases', href: '/downloads/' }
+      ],
+      sources: ['fds-api-licensing', 'forgerems-download'],
+      intent: 'navigation',
+      settled: true
+    };
+  }
+
+  // 13. Company / Business / Enterprise Contact
+  if (/\b(my\s+company|our\s+company|my\s+studio|our\s+studio|business|enterprise|partner)\b.{0,30}\b(contact|reach|work\s+with|partner\s+with|inquire|talk\s+to)\b/.test(q)) {
+    return {
+      text: `Companies, studios, and partners can contact Forger Digital Solutions directly via ${siteConfig.supportEmail} or use the structured Commercial Inquiry Composer on the Contact page (covering developer previews, studio AI workforces, enterprise private AI, commercial licensing, and research partnerships).`,
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Commercial Inquiry Page', href: '/contact/' },
+        { type: 'OPEN_CONTACT', label: 'Email FDS', href: `mailto:${siteConfig.supportEmail}` }
+      ],
+      sources: ['fds-contact', 'fds-solutions'],
+      intent: 'contact',
+      settled: true
+    };
+  }
+
+  return undefined;
+}
+
 export function canonicalAnswer(
   query: string,
   context?: KaylaPageContext,
@@ -1373,19 +1657,36 @@ export function canonicalAnswer(
     };
   }
 
+  const intents = classifyIntents(query).map((match) => match.intent);
+  const has = (intent: KaylaIntent) => intents.includes(intent);
+
+  // Safety boundaries win before any product or flagship answers.
+  for (const intent of ['private_info', 'external_current', 'unsupported_task'] as const) {
+    if (has(intent)) {
+      const answer = boundaryAnswer(intent, query);
+      if (answer) return { ...answer, settled: true };
+    }
+  }
+
+  // Operation Digital Forge II flagship models, applications, studio solutions & commercial inquiries.
+  const flagship = flagshipPortfolioAnswer(query);
+  if (flagship) return flagship;
+
   if (/\b(ai|artificial intelligence|synthetic intelligence|models?)\b/i.test(query)
     && /\b(research|training|work|program)\b/i.test(query)
     && !mentionsCurrentProject) {
     return {
-      text: 'No current public FDS project is listed as an AI research or model-training program. The Projects page shows the current portfolio, including CodeForge for software engineering.',
-      actions: [{ type: 'OPEN_PAGE', label: 'View Current Projects', href: '/projects' }],
-      sources: ['portfolio-status'],
+      text: 'Forger Digital Solutions conducts specialized AI research through Project Forge (our permanent 15-division research foundation), developing three flagship model families: Alexandrite (collective intelligence research vision), Hackmanite (universal gaming AI, training planned on Apache-2.0 Qwen/Qwen3.8-27B and openai/gpt-oss-120b), and Cinnabar (anime, manga, animation, and Oracle v1–v4.1 experimental checkpoints). None have publicly downloadable weights or a public API today.',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Models', href: '/models/' },
+        { type: 'OPEN_PAGE', label: 'Explore Project Forge', href: '/research/project-forge/' }
+      ],
+      sources: ['registry-project-forge', 'registry-alexandrite', 'registry-hackmanite'],
       intent: 'navigation',
       settled: true
     };
   }
 
-  const intents = classifyIntents(query).map((match) => match.intent);
   const entityMatches = matchEntities(query);
   let entityIds = entityMatches.map((match) => match.entityId);
 
@@ -1410,7 +1711,6 @@ export function canonicalAnswer(
   }
 
   const primaryEntity = entityIds[0];
-  const has = (intent: KaylaIntent) => intents.includes(intent);
   const codeforgeProduct = productFor('codeforge');
 
   if (primaryEntity === 'codeforge' && codeforgeProduct?.distributionPaused) {
@@ -1448,15 +1748,6 @@ export function canonicalAnswer(
         intent: 'availability',
         settled: true
       };
-    }
-  }
-
-  // Boundaries win over everything: never let an entity match turn a weather
-  // question into a product pitch.
-  for (const intent of ['private_info', 'external_current', 'unsupported_task'] as const) {
-    if (has(intent)) {
-      const answer = boundaryAnswer(intent, query);
-      if (answer) return { ...answer, settled: true };
     }
   }
 

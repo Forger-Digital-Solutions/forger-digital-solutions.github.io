@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { solutionsData, type RegistryAccent, type DevelopmentStatus } from '../../data/registry';
+
+export function getStaticPaths() {
+  return solutionsData.audienceSolutions.map((solution) => ({
+    params: { slug: solution.slug },
+    props: { solution },
+  }));
+}
+
+const { solution } = Astro.props;
+const others = solutionsData.audienceSolutions.filter((s) => s.slug !== solution.slug);
+---
+
+<BaseLayout
+  title={`${solution.name} — FDS Solutions`}
+  description={solution.summary}
+  accent={solution.accent as RegistryAccent}
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/solutions/">Solutions</a><span aria-hidden="true">/</span>
+    <span aria-current="page">{solution.name}</span>
+  </nav>
+
+  <header class="page-head sol-detail-head" data-accent={solution.accent}>
+    <div class="meta-bar">
+      <p class="page-eyebrow">{solution.eyebrow}</p>
+      <StatusPill status={solution.status as DevelopmentStatus} />
+    </div>
+    <h1 class="page-title">{solution.headline}</h1>
+    <p class="page-description">{solution.summary}</p>
+    <div class="flagship-strip" aria-label="Aligned FDS flagships">
+      {solution.flagships.map((f) => (
+        <span class="flagship-chip">{f}</span>
+      ))}
+    </div>
+    <div class="head-actions">
+      <a href={solution.ctaHref} class="btn btn-primary">{solution.ctaLabel} <span aria-hidden="true">→</span></a>
+      <a href="/solutions/" class="btn btn-outline">All Solutions</a>
+      <a href="/trust/" class="btn btn-ghost">Trust &amp; Data Segregation</a>
+    </div>
+  </header>
+
+  <section class="page-section page-section--surface" aria-labelledby="challenges-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Industry Reality</p>
+        <h2 id="challenges-heading">Why generic AI falls short for {solution.name.toLowerCase()}.</h2>
+      </div>
+    </div>
+
+    <div class="challenge-grid">
+      {solution.challenges.map((ch, idx) => (
+        <article class="fds-panel challenge-card">
+          <span class="challenge-idx">0{idx + 1}</span>
+          <h3>{ch.title}</h3>
+          <p>{ch.detail}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="workflows-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Proposed FDS Architecture</p>
+        <h2 id="workflows-heading">How FDS products and workforces are designed to help.</h2>
+      </div>
+    </div>
+
+    <ol class="workflow-list">
+      {solution.proposedWorkflows.map((wf, idx) => (
+        <li class="fds-panel workflow-item">
+          <span class="workflow-idx">0{idx + 1}</span>
+          <p>{wf}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="fds-callout boundary-box">
+      <strong>Availability &amp; Verification Boundary:</strong> {solution.availabilityBoundary}
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="other-solutions-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Explore Related Pathways</p>
+        <h2 id="other-solutions-heading">Additional FDS commercial solutions.</h2>
+      </div>
+      <a href={solution.ctaHref} class="btn btn-primary">{solution.ctaLabel} <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="related-grid">
+      {others.map((item) => (
+        <a href={`/solutions/${item.slug}/`} class="fds-panel related-card">
+          <span class="related-card__name">{item.name}</span>
+          <span class="related-card__sub">{item.flagships.slice(0, 2).join(' · ')}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sol-detail-head { max-width: 58rem; }
+  .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .meta-bar .page-eyebrow { margin: 0; }
+  .flagship-strip { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+  .flagship-chip {
+    padding: 0.28rem 0.68rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+  }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.6rem; }
+
+  .challenge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .challenge-card { padding: 1.5rem; }
+  .challenge-idx { color: var(--color-accent-bright); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; }
+  .challenge-card h3 { margin: 0.45rem 0 0.45rem; font-size: 1.1rem; }
+  .challenge-card p { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.62; }
+
+  .workflow-list {
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .workflow-item {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.25rem 1.45rem;
+  }
+  .workflow-idx { color: var(--color-accent-bright); font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
+  .workflow-item p { margin: 0; color: var(--color-text-muted); font-size: 0.96rem; line-height: 1.65; }
+
+  .boundary-box { margin-top: 1.6rem; }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.1rem;
+    color: var(--color-text);
+  }
+  .related-card:hover { border-color: var(--color-border-strong); background: var(--color-surface); }
+  .related-card__name { font-family: var(--font-display); font-size: 0.94rem; font-weight: 600; }
+  .related-card__sub { color: var(--color-text-subtle); font-size: 0.76rem; line-height: 1.4; }
+
+  @media (max-width: 960px) {
+    .challenge-grid,
+    .related-grid { grid-template-columns: 1fr; }
+  }
+</style>

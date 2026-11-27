@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { registryMeta } from '../../data/registry';
+
+const trustPillars = [
+  {
+    code: '01',
+    title: 'Model Provenance & Upstream Licensing',
+    body: 'Every FDS model family discloses whether it is a research vision, an Apache-2.0 open-weight foundation target (verified on Hugging Face for Qwen/Qwen3.8-27B and openai/gpt-oss-120b), or an internal fine-tuned lineage (Cinnabar Oracle v1–v4.1). Base-model availability is never presented as completed FDS fine-tuning.',
+  },
+  {
+    code: '02',
+    title: 'Dataset & Licensing Governance',
+    body: 'Project Forge enforces a hard boundary between internal research archives and legally cleared training corpora. Reading or referencing technical documentation does not make material eligible for model training. Overlapping dataset snapshots are never summed to inflate reported volume.',
+  },
+  {
+    code: '03',
+    title: 'Research Integrity & Non-Conflation Axioms',
+    body: 'FDS operates on four non-conflation axioms: Research ≠ Training, Training ≠ Evaluation, Evaluation ≠ Certification, and Certification ≠ Public Availability. Website tests, application regression tests, model evaluations, and commercial certification are never conflated.',
+  },
+  {
+    code: '04',
+    title: 'Creator Intellectual Property & Consent',
+    body: 'Third-party copyrighted entertainment IP is strictly excluded from unauthorized visual or prose training claims. Cinnabar and BattleVerse Creator Studio are designed to strengthen human directors and artists—never to strip creator ownership or publish unlicensed franchise artwork.',
+  },
+  {
+    code: '05',
+    title: 'Independent Evaluation Methodology',
+    body: 'Numerical benchmark claims require an owner-approved public evaluation export naming exact model version, base-model identity, benchmark version, test count, raw versus guarded results, comparison baseline, evaluation conditions, uncertainty bounds, and known limitations.',
+  },
+  {
+    code: '06',
+    title: 'Explicit Model Limitations & Non-Claims',
+    body: 'Every model card publishes an explicit "What this is NOT" non-claims list alongside known limitations—for example, Cinnabar is not a native video generator, Alexandrite is not a trained model, and BattleVerse simulations are probabilistic analytical models rather than canonical fact.',
+  },
+  {
+    code: '07',
+    title: 'Transparent Product & Commercial Availability',
+    body: 'All public pages read lifecycle badges from a schema-validated registry (content/public-status/registry.json) validated in CI. Commercial directions, private studio scoping, paused downloads, and public previews are strictly distinguished—never obscured behind fake checkout flows.',
+  },
+  {
+    code: '08',
+    title: 'Customer Data Segregation & Private AI',
+    body: 'Future personalized studio and enterprise AI workforces are architected around strict tenant isolation—keeping customer codebases, engine docs, and creative bibles segregated. FDS never implies that private customer information is automatically used to train shared models.',
+  },
+  {
+    code: '09',
+    title: 'User Data Handling & Website Privacy',
+    body: 'This public website uses zero invasive third-party advertising trackers, zero hidden session recorders, and zero silent personal-data collection. Optional Kayla Copilot interactions route through a hardened Cloudflare Worker with input sanitization and privacy controls documented in our Privacy Policy.',
+  },
+  {
+    code: '10',
+    title: 'Product, Web & Contractual Security Honesty',
+    body: 'Automated CI gates enforce zero high-severity dependency advisories across the website and Worker, secret scanning on every commit, strict canonical routing invariants for Kayla, and fail-closed boundaries on paused flows. Private deployment and security promises always match demonstrated controls and actual agreements.',
+  },
+  {
+    code: '11',
+    title: 'Release & Binary Verification',
+    body: 'Every publicly downloadable artifact (such as ForgerEMS v1.2.4-preview.1 portable ZIP/installer and the CodeForge source archive) ships with published SHA-256 checksums, exact byte sizes, source commits, and explicit disclosure when prerelease binaries are unsigned.',
+  },
+  {
+    code: '12',
+    title: 'Public Correction & Disclosure Policy',
+    body: 'If an inaccurate status label, broken checksum, outdated technical description, or security issue is reported via our public contact channel, FDS investigates promptly, updates the public status registry, and records material corrections transparently in our changelog.',
+  },
+];
+---
+
+<BaseLayout
+  title="Public Trust & Transparency Center"
+  description="Forger Digital Solutions public trust, model provenance, dataset governance, evaluation methodology, release verification, and honesty standards."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Trust Center</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Governance // Public Verification Standard</p>
+    <h1 class="page-title">Public Trust &amp; Transparency</h1>
+    <p class="page-description">
+      Credibility in artificial intelligence is earned through verifiable discipline, not decorative badges. This page documents how Forger Digital Solutions governs model claims, datasets, evaluations, software releases, and public corrections.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="trust-honesty-title">
+    <div class="fds-callout">
+      <strong id="trust-honesty-title">Compliance &amp; Audit Honesty Disclosure:</strong>
+      Forger Digital Solutions is an independent research and engineering studio. We do <strong>not</strong> claim SOC 2, ISO 27001, HIPAA, FedRAMP, or third-party enterprise security certifications that we have not independently completed. Every security practice described on this site reflects concrete, verifiable engineering controls present in our public repository and build pipeline (Registry v{registryMeta.schemaVersion}, verified {registryMeta.lastUpdated}).
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="trust-pillars-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Twelve Governance Commitments</p>
+        <h2 id="trust-pillars-title">How every public claim is verified before publication.</h2>
+      </div>
+      <a href="/evaluations/" class="text-link">Evaluation Register <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="trust-grid">
+      {trustPillars.map((pillar) => (
+        <article class="trust-card">
+          <span class="trust-code">{pillar.code}</span>
+          <h3>{pillar.title}</h3>
+          <p>{pillar.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="trust-boundaries-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Domain-Specific Integrity</p>
+        <h2 id="trust-boundaries-title">Explicit scientific &amp; creative separation rules.</h2>
+      </div>
+    </div>
+
+    <div class="boundary-grid">
+      <article class="fds-panel boundary-card">
+        <h3>Forge BattleVerse Probabilistic Integrity</h3>
+        <p>
+          Forge BattleVerse evaluates fictional characters through cited canonical evidence, source provenance, and quantitative simulation frameworks. BattleVerse outputs are <strong>analytical models and probability estimates</strong>, never declarations of absolute canonical fact.
+        </p>
+        <a href="/products/battleverse/" class="text-link">Inspect BattleVerse <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="fds-panel boundary-card">
+        <h3>State Lines Creative Disclosure</h3>
+        <p>
+          All visual environments presented for State Lines represent early creative direction and are explicitly labeled <em>Concept Art — Work in Progress (Not Gameplay)</em>. Unannounced story details, release dates, platforms, and pricing are intentionally withheld.
+        </p>
+        <a href="/studio/state-lines/" class="text-link">View State Lines <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="fds-panel boundary-card">
+        <h3>Legal &amp; Support Documentation</h3>
+        <p>
+          Review our complete privacy terms, website terms of use, and support funding disclosures—including explicit separation between studio operational support and charitable giving.
+        </p>
+        <div class="boundary-links">
+          <a href="/privacy" class="text-link">Privacy Policy</a>
+          <a href="/terms" class="text-link">Terms of Use</a>
+          <a href="/support" class="text-link">Support Disclosure</a>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+  .trust-card {
+    padding: 1.45rem;
+    background: var(--color-bg);
+  }
+  .trust-code {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+  }
+  .trust-card h3 { margin: 0 0 0.5rem; font-size: 1.02rem; }
+  .trust-card p { margin: 0; color: var(--color-text-muted); font-size: 0.87rem; line-height: 1.62; }
+
+  .boundary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .boundary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+  .boundary-card h3 { margin: 0; font-size: 1.08rem; }
+  .boundary-card p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; flex: 1; }
+  .boundary-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.15rem; }
+
+  @media (max-width: 960px) {
+    .trust-grid,
+    .boundary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .trust-grid,
+    .boundary-grid { grid-template-columns: 1fr; }
+  }
+</style>

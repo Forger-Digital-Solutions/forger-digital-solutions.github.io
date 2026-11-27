@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ModelCardPanel from '../../components/ModelCardPanel.astro';
+import { publicRegistry, registryMeta } from '../../data/registry';
+
+const cards = publicRegistry.filter(
+  (entry) => entry.category === 'ai-model-family' || entry.category === 'ai-model'
+);
+---
+
+<BaseLayout
+  title="Public Model Cards"
+  description="Standardized public model cards for Forger Digital Solutions AI model families with base architecture provenance, parameter scale, development status, known limitations, and explicit non-claims."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Model Cards</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Intelligence // Schema v{registryMeta.schemaVersion} · Verified {registryMeta.lastUpdated}</p>
+    <h1 class="page-title">Public Model Cards</h1>
+    <p class="page-description">
+      Every model card is generated from our validated public status registry. FDS explicitly identifies third-party open-weight foundations and never markets adapted models as foundation models trained from scratch.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight">
+    <div class="fds-callout" style="margin-bottom: 1.75rem;">
+      <strong>No Private Leaks or Simulated Playgrounds:</strong> This directory publishes verified provenance metadata only. Private adapter files, unreleased weights, and internal evaluation holdouts are never exposed here, and no simulated "Try Model" playground is offered for unavailable endpoints.
+    </div>
+
+    <div class="cards-stack">
+      {cards.map((entry) => (
+        <ModelCardPanel entry={entry} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cards-stack { display: grid; gap: 1.5rem; }
+</style>

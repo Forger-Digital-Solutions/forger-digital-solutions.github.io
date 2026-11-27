@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0.0",
+  "last_verified": "2026-11-26",
+  "organization": "Forger Digital Solutions",
+  "environment_access_disclosure": {
+    "public_github_repo_accessible": true,
+    "windows_local_workspace_accessible": false,
+    "google_drive_private_research_accessible": false,
+    "policy": "Every claim published on forgerdigitalsolutions.com must map to verified public repository evidence, verified upstream public licenses, or owner-approved directive framing. Private local training runs, internal benchmarks, and private builds remain unpublished until sanitized exports are placed into the repository."
+  },
+  "evidence_items": [
+    {
+      "id": "ev-upstream-qwen38-27b",
+      "entity": "hackmanite-prime",
+      "claim": "Proposed base foundation Qwen/Qwen3.8-27B is distributed under an unmodified Apache-2.0 open-weight license on Hugging Face.",
+      "verification_status": "verified-public-source",
+      "source": "Hugging Face model card (Qwen/Qwen3.8-27B), verified 2026-11-26",
+      "non_conflation_note": "Upstream license verification does NOT verify completed FDS specialist fine-tuning or evaluation."
+    },
+    {
+      "id": "ev-upstream-gpt-oss-120b",
+      "entity": "hackmanite-reasoning",
+      "claim": "Proposed base foundation openai/gpt-oss-120b is distributed under an unmodified Apache-2.0 open-weight license on Hugging Face.",
+      "verification_status": "verified-public-source",
+      "source": "Hugging Face model card (openai/gpt-oss-120b), verified 2026-11-26",
+      "non_conflation_note": "Upstream license verification does NOT verify completed FDS specialist fine-tuning or evaluation."
+    },
+    {
+      "id": "ev-hackmanite-s22-training",
+      "entity": "hackmanite",
+      "claim": "Hackmanite S22 training readiness, checkpoint counts, and specialist game-engineering evaluation scores.",
+      "verification_status": "pending-authorized-export",
+      "required_export": "FDS_PUBLIC_WEBSITE_STATUS_EXPORT.json + FDS_MODEL_CAPABILITY_MATRIX.json + FDS_HACKMANITE_S22_TRAINING_READINESS.md",
+      "public_treatment": "Presented honestly as Training Planned / Early Interest Open with zero fabricated scores."
+    },
+    {
+      "id": "ev-cinnabar-oracle-evals",
+      "entity": "cinnabar",
+      "claim": "Cinnabar Oracle fresh inference results, confirmation evaluations, and raw vs. guarded benchmark splits across v1–v4.1.",
+      "verification_status": "pending-authorized-export",
+      "required_export": "FDS_MODEL_CAPABILITY_MATRIX.json + FDS_CINNABAR_FRESH_INFERENCE_REPORT.md + FDS_CINNABAR_CONFIRMATION_EVALUATION.md",
+      "public_treatment": "Historical lineage v1–v4.1 documented qualitatively; numerical benchmarks withheld pending owner-approved export."
+    },
+    {
+      "id": "ev-jaspilite-builds",
+      "entity": "jaspilite",
+      "claim": "Jaspilite private Windows builds, live screenshots, and execution-verified provider routing matrix.",
+      "verification_status": "pending-authorized-export",
+      "required_export": "FDS_PUBLIC_WEBSITE_STATUS_EXPORT.json + sanitized screenshots + provider verification matrix",
+      "public_treatment": "Documented via approved Auto/Meld/Solo architecture and 5-tier provider maturity ladder; concept visualization explicitly labeled not a live screenshot."
+    },
+    {
+      "id": "ev-battleverse-engine",
+      "entity": "battleverse",
+      "claim": "Forge BattleVerse production builds, Lantern Quay verification artifacts, and live Arena simulation metrics.",
+      "verification_status": "pending-authorized-export",
+      "required_export": "FDS_PUBLIC_WEBSITE_STATUS_EXPORT.json + FDS_LANTERN_QUAY_VERIFICATION_REPORT.md",
+      "public_treatment": "BattleVerse Arena uses an explicitly labeled illustrative showcase with original FDS silhouettes; BattleVerse Creator Studio labeled Commercial Product Direction."
+    },
+    {
+      "id": "ev-project-forge-snapshots",
+      "entity": "project-forge",
+      "claim": "Dated, disaggregated Project Forge research corpus metrics and reproducible benchmark outputs.",
+      "verification_status": "pending-authorized-export",
+      "required_export": "FDS_PUBLIC_WEBSITE_STATUS_EXPORT.json (disaggregated by category, snapshot date, and methodology)",
+      "public_treatment": "15-division taxonomy, 8-stage pipeline, and 4 non-conflation axioms published; unverified aggregate corpus counts strictly excluded."
+    },
+    {
+      "id": "ev-state-lines-production",
+      "entity": "state-lines",
+      "claim": "State Lines original NY/NJ/PA organized-crime open-world preproduction status.",
+      "verification_status": "verified-owner-directive",
+      "source": "Operation Digital Forge I & II executive directives",
+      "non_conflation_note": "Zero spoilers, zero release dates/platforms/pricing; concept art explicitly labeled Concept Art — Work in Progress (Not Gameplay)."
+    },
+    {
+      "id": "ev-forgerems-release",
+      "entity": "forgerems",
+      "claim": "ForgerEMS v1.2.4-preview.1 Windows x64 portable ZIP (81.7 MB) and EXE installer (61.8 MB) with verified SHA-256 digests on GitHub Releases.",
+      "verification_status": "verified-public-artifact",
+      "source": "content/public-status/registry.json + src/data/manifest.ts + GitHub Releases (commit fc54150)"
+    },
+    {
+      "id": "ev-codeforge-archive",
+      "entity": "codeforge",
+      "claim": "CodeForge v0.2.0 verified source snapshot archive (CodeForge-source-6b0770b.zip) with paused Windows installer downloads and fail-closed upgrade flow.",
+      "verification_status": "verified-public-artifact",
+      "source": "src/data/manifest.ts + public/downloads/ + test/codeforge-commerce.test.ts"
+    },
+    {
+      "id": "ev-kayla-verification",
+      "entity": "kayla-copilot",
+      "claim": "Kayla Copilot canonical knowledge registry (62 routes, 76 docs) passes 365/365 golden queries (100.0%) and 0 drift errors.",
+      "verification_status": "verified-automated-test",
+      "source": "npm run validate + npm run kayla:golden + test/operation-digital-forge-ii.test.ts (2026-11-26)"
+    }
+  ]
+}

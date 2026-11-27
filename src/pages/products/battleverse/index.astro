@@ -1,0 +1,212 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import BattleVerseArenaDemo from '../../../components/BattleVerseArenaDemo.astro';
+import { getRegistryEntry, flagshipAppsData, solutionsData } from '../../../data/registry';
+
+const entry = getRegistryEntry('battleverse');
+const arenaEntry = getRegistryEntry('battleverse-arena');
+const studioEntry = getRegistryEntry('battleverse-creator-studio');
+const bvData = flagshipAppsData.find((p) => p.id === 'battleverse')!;
+const { creatorStudioImage, creatorStudioImageSm, creatorStudioImageAlt, creatorStudioImageLabel } = solutionsData.battleverseDirections;
+
+const simFields = [
+  { field: 'Model / Engine Version', example: 'Explicit engine build & optional Cinnabar Oracle lineage version (pending public release)' },
+  { field: 'Scenario Definition', example: 'Original FDS test silhouettes (Unit Alpha vs. Unit Beta), bounded arena geometry, starting separation & ruleset' },
+  { field: 'Experimental Conditions', example: 'Canonical continuity version pinned; non-canon outliers excluded with logged audit notes' },
+  { field: 'Evidence Limitations', example: 'Explicitly lists ambiguous feats, missing mass/timeframe values, and interpretative assumptions' },
+  { field: 'Statistical Uncertainty', example: 'Reports win-probability envelope and parameter sensitivity instead of a single binary absolute verdict' },
+];
+---
+
+<BaseLayout
+  title="Forge BattleVerse — Fictional Intelligence & Creative Production Platform"
+  description="Forge BattleVerse is Forger Digital Solutions' independent application platform spanning BattleVerse Arena (fictional intelligence and probabilistic combat simulation) and BattleVerse Creator Studio (Cinnabar-powered anime, manga, and animation workflows)."
+  accent="battleverse"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/products/">Products</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Forge BattleVerse</span>
+  </nav>
+
+  <header class="bv-hero" data-accent="battleverse">
+    <div class="bv-hero__copy">
+      <div class="meta-bar">
+        <span class="page-eyebrow">FDS Applications · Dual Commercial Platform</span>
+        <StatusPill status={entry.development_status} />
+      </div>
+      <h1 class="page-title">Forge BattleVerse</h1>
+      <p class="bv-tagline">Beyond opinion. Built on evidence.</p>
+      <p class="page-description">
+        An independent commercial application platform engineered to integrate with Cinnabar intelligence across two distinct product tracks: <strong>BattleVerse Arena</strong> for evidence-audited fictional combat simulation, and <strong>BattleVerse Creator Studio</strong> for anime, manga, and animation production workflows.
+      </p>
+      <div class="bv-hero__actions">
+        <a href="/products/battleverse/arena/" class="btn btn-primary">Explore BattleVerse Arena <span aria-hidden="true">→</span></a>
+        <a href="/products/battleverse/creator-studio/" class="btn btn-outline">Explore Creator Studio</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Relationship to Cinnabar:</strong> {bvData.relationshipToCinnabar}
+      </div>
+    </div>
+    <div class="bv-hero__visual">
+      <SpecimenMedia
+        src={bvData.image!}
+        mobileSrc={bvData.imageSm}
+        alt={bvData.imageAlt!}
+        label={bvData.imageLabel!}
+        eager
+      />
+    </div>
+  </header>
+
+  <!-- Two Distinct Commercial Product Directions -->
+  <section class="page-section page-section--surface" aria-labelledby="bv-tracks-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Two Commercial Product Directions</p>
+        <h2 id="bv-tracks-heading">Consumer fictional intelligence and professional creative production.</h2>
+      </div>
+    </div>
+
+    <div class="tracks-grid">
+      <article class="fds-panel track-card" data-accent="battleverse">
+        <div class="meta-bar">
+          <span class="track-kicker">TRACK 01 · CONSUMER &amp; CREATOR COMMUNITY</span>
+          <StatusPill status={arenaEntry.development_status} />
+        </div>
+        <h3><a href="/products/battleverse/arena/">BattleVerse Arena</a></h3>
+        <p>
+          Version-specific character profiles, canonical evidence tracking, source verification, feat analysis, fictional physics, configurable cross-universe rules, and probability-based combat simulation with explicit uncertainty intervals.
+        </p>
+        <div class="track-actions">
+          <a href="/products/battleverse/arena/" class="btn btn-outline">Open Arena Overview <span aria-hidden="true">→</span></a>
+          <a href="/contact/?track=developer-preview" class="text-link">Register Preview Interest</a>
+        </div>
+      </article>
+
+      <article class="fds-panel track-card" data-accent="cinnabar">
+        <div class="meta-bar">
+          <span class="track-kicker track-kicker--cin">TRACK 02 · PROFESSIONAL CREATIVE WORKFLOWS</span>
+          <StatusPill status={studioEntry.development_status} />
+        </div>
+        <h3><a href="/products/battleverse/creator-studio/">BattleVerse Creator Studio</a></h3>
+        <p>
+          Proposed Cinnabar-powered application for anime studios, manga artists, independent animators, webtoon creators, publishers, and game studios covering story development, character bibles, storyboarding, choreography, continuity auditing, and external tool orchestration.
+        </p>
+        <SpecimenMedia
+          src={creatorStudioImage}
+          mobileSrc={creatorStudioImageSm}
+          alt={creatorStudioImageAlt}
+          label={creatorStudioImageLabel}
+        />
+        <div class="track-actions">
+          <a href="/products/battleverse/creator-studio/" class="btn btn-outline">Open Creator Studio <span aria-hidden="true">→</span></a>
+          <a href="/contact/?track=studio-workforce" class="text-link">Register Studio Interest</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Interactive Illustrative Arena Demonstration -->
+  <section class="page-section" aria-labelledby="bv-demo-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Arena Methodology Preview</p>
+        <h2 id="bv-demo-heading">How BattleVerse separates evidence, assumptions, and uncertainty.</h2>
+        <p>Inspect two original FDS test-silhouette scenarios demonstrating why BattleVerse reports audited probability envelopes rather than canonical verdicts.</p>
+      </div>
+      <a href="/products/battleverse/arena/" class="text-link">Full Arena page <span aria-hidden="true">→</span></a>
+    </div>
+
+    <BattleVerseArenaDemo />
+  </section>
+
+  <!-- Scientific Methodology & Reporting Schema -->
+  <section class="page-section page-section--surface" aria-labelledby="bv-method-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Scientific Methodology</p>
+        <h2 id="bv-method-heading">Four analytical disciplines behind every simulation.</h2>
+      </div>
+      <a href="/trust/" class="text-link">Trust &amp; Scientific Integrity <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="pillar-grid">
+      {bvData.pillars?.map((pillar, idx) => (
+        <article class="pillar-cell">
+          <span class="pillar-idx">0{idx + 1}</span>
+          <h3>{pillar.title}</h3>
+          <p>{pillar.detail}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="fds-table-wrap protocol-table" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Required Result Field</th>
+            <th scope="col">Audit Requirement</th>
+          </tr>
+        </thead>
+        <tbody>
+          {simFields.map((row) => (
+            <tr>
+              <th scope="row">{row.field}</th>
+              <td>{row.example}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bv-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+  .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .meta-bar .page-eyebrow { margin: 0; }
+  .bv-tagline { margin: 0.45rem 0 0; color: #60a5fa; font-family: var(--font-display); font-size: 1.28rem; font-weight: 500; }
+  .bv-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+  .bv-hero .fds-callout { margin-top: 1.4rem; }
+
+  .tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem;
+  }
+  .track-card { display: flex; flex-direction: column; gap: 0.85rem; padding: 1.65rem; }
+  .track-kicker { color: #93c5fd; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; }
+  .track-kicker--cin { color: var(--accent-cinnabar); }
+  .track-card h3 { margin: 0; font-size: 1.35rem; }
+  .track-card h3 a { color: var(--color-text); }
+  .track-card p { margin: 0; color: var(--color-text-muted); font-size: 0.93rem; line-height: 1.65; }
+  .track-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.25rem; margin-top: auto; padding-top: 0.5rem; }
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+  .pillar-cell { padding: 1.5rem; background: var(--color-bg); }
+  .pillar-idx { color: #60a5fa; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; }
+  .pillar-cell h3 { margin: 0.45rem 0 0.4rem; font-size: 1.08rem; }
+  .pillar-cell p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+  .protocol-table { margin-top: 1.75rem; }
+
+  @media (max-width: 900px) {
+    .bv-hero, .tracks-grid, .pillar-grid { grid-template-columns: 1fr; }
+  }
+</style>

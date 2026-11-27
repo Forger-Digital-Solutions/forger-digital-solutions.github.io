@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CommercialInquiryBuilder from '../../components/CommercialInquiryBuilder.astro';
+import { siteConfig } from '../../config/site';
+
+const channels = [
+  {
+    kicker: 'DIRECT BUSINESS & TECHNICAL EMAIL',
+    title: 'Commercial, Preview, Press, Security & Accuracy Inquiries',
+    detail: siteConfig.supportEmail,
+    body: 'Reach Forger Digital Solutions directly for developer preview interest, studio AI workforce scoping, enterprise solutions, commercial licensing, research partnerships, or accuracy corrections.',
+    href: `mailto:${siteConfig.supportEmail}`,
+    cta: 'Email FDS Directly',
+    external: false,
+  },
+  {
+    kicker: 'COMMUNITY',
+    title: 'FDS Discord Server',
+    detail: 'Community & Developer Discussion',
+    body: 'Join the public Discord community for engineering discussions, ForgerEMS preview feedback, and studio updates.',
+    href: siteConfig.discordUrl,
+    cta: 'Join Discord',
+    external: true,
+  },
+  {
+    kicker: 'OPEN REPOSITORIES',
+    title: 'GitHub Organization',
+    detail: 'github.com/forger-digital-solutions',
+    body: 'Inspect public repositories, release tags, SHA-256 verification metadata, and issue trackers directly on GitHub.',
+    href: siteConfig.githubUrl,
+    cta: 'Visit GitHub',
+    external: true,
+  },
+  {
+    kicker: 'HARDWARE SUPPORT',
+    title: 'Give Your Old Tech a Second Life',
+    detail: 'Compute & Test Hardware Donations',
+    body: 'Interested in donating usable GPUs, workstations, servers, or drives for local AI research and testing? Review our hardware donation guidelines first.',
+    href: '/support/hardware',
+    cta: 'Hardware Guidelines',
+    external: false,
+  },
+];
+---
+
+<BaseLayout
+  title="Contact & Commercial Inquiries — Forger Digital Solutions"
+  description="Connect directly with Forger Digital Solutions for developer preview interest, gaming and animation studio AI workforces, enterprise private AI scoping, commercial licensing, research partnerships, or support."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Contact</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Forger Digital Solutions // Commercial &amp; Verified Channels</p>
+    <h1 class="page-title">Contact &amp; Commercial Inquiries</h1>
+    <p class="page-description">
+      Whether you are an independent developer registering preview interest, a studio exploring specialized AI workforces, an enterprise scoping segregated private deployments, or a researcher looking to collaborate, reach Forger Digital Solutions through verified direct channels.
+    </p>
+  </header>
+
+  <!-- Structured Zero-Deception Commercial Inquiry Composer -->
+  <section class="page-section page-section--tight" aria-labelledby="inquiry-composer-title">
+    <h2 id="inquiry-composer-title" class="sr-only">Structured commercial inquiry composer</h2>
+    <CommercialInquiryBuilder />
+  </section>
+
+  <!-- Primary Verified Channels -->
+  <section class="page-section page-section--surface" aria-labelledby="contact-channels-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Direct Verified Channels</p>
+        <h2 id="contact-channels-title">Every channel officially operated by Forger Digital Solutions.</h2>
+      </div>
+      <a href="/solutions/" class="text-link">Explore Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="contact-grid">
+      {channels.map((ch) => (
+        <article class="fds-panel contact-card">
+          <span class="contact-kicker">{ch.kicker}</span>
+          <h3>{ch.title}</h3>
+          <p class="contact-detail">{ch.detail}</p>
+          <p class="contact-body">{ch.body}</p>
+          <a
+            href={ch.href}
+            class="btn btn-secondary"
+            target={ch.external ? '_blank' : undefined}
+            rel={ch.external ? 'noopener noreferrer' : undefined}
+          >
+            {ch.cta} <span aria-hidden="true">{ch.external ? '↗' : '→'}</span>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="contact-social-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Additional Verified Profiles</p>
+        <h2 id="contact-social-title">Official public social links.</h2>
+      </div>
+      <a href="/support" class="text-link">Support FDS Development <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="social-row">
+      <a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">YouTube ↗</a>
+      <a href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">LinkedIn ↗</a>
+      <a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub ↗</a>
+      <a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">Discord ↗</a>
+    </div>
+
+    <div class="fds-callout contact-privacy">
+      <strong>Privacy Notice:</strong> Emails sent to <code>{siteConfig.supportEmail}</code> are used solely to respond to your inquiry or coordinate requested technical or commercial discussions. For complete data handling details, read our <a href="/privacy">Privacy Policy</a> and <a href="/trust/">Trust Center</a>.
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 1.65rem;
+  }
+  .contact-kicker {
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .contact-card h3 { margin: 0; font-size: 1.18rem; }
+  .contact-detail {
+    margin: 0;
+    color: var(--color-brand-silver);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    word-break: break-all;
+  }
+  .contact-body { margin: 0.25rem 0 0.75rem; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.62; flex: 1; }
+
+  .social-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.75rem; }
+  .contact-privacy { margin: 0; }
+
+  @media (max-width: 760px) { .contact-grid { grid-template-columns: 1fr; } }
+</style>

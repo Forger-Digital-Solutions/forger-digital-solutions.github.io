@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { getRegistryEntry } from '../../data/registry';
+
+const stateLines = getRegistryEntry('state-lines');
+const deadTrails = getRegistryEntry('dead-trails-west');
+---
+
+<BaseLayout
+  title="Original Productions — Interactive Worlds Portfolio"
+  description="Original games and interactive worlds in development at Forger Digital Solutions Studio, including State Lines and Dead Trails West."
+  accent="state-lines"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/studio/">Studio</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Productions</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Original Productions // Portfolio</p>
+    <h1 class="page-title">Original Productions</h1>
+    <p class="page-description">
+      Every original world developed under Forger Digital Solutions carries clear development labeling, zero fabricated release promises, and direct technical synergy with our engineering and AI research divisions.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="prod-ledger-title">
+    <h2 id="prod-ledger-title" class="sr-only">Productions Ledger</h2>
+
+    <ul class="fds-ledger" role="list">
+      <li class="fds-ledger__row">
+        <span class="prod-tag">FLAGSHIP</span>
+        <div>
+          <h3 class="prod-name"><a href="/studio/state-lines/">State Lines</a></h3>
+          <p class="prod-sub">Open-World Organized-Crime Drama · NY / NJ / PA Inspired</p>
+        </div>
+        <p class="prod-desc">{stateLines.public_summary}</p>
+        <div class="prod-right">
+          <StatusPill status={stateLines.development_status} label="Preproduction" tone="private" />
+          <a href="/studio/state-lines/" class="text-link">Open Dossier →</a>
+        </div>
+      </li>
+
+      <li class="fds-ledger__row">
+        <span class="prod-tag">ORIGINAL IP</span>
+        <div>
+          <h3 class="prod-name"><a href="/projects/dead-trails-west">Dead Trails West</a></h3>
+          <p class="prod-sub">Dark Western Survival Experience</p>
+        </div>
+        <p class="prod-desc">{deadTrails.public_summary}</p>
+        <div class="prod-right">
+          <StatusPill status={deadTrails.development_status} label="Private Development" tone="private" />
+          <a href="/projects/dead-trails-west" class="text-link">View Profile →</a>
+        </div>
+      </li>
+    </ul>
+
+    <div class="fds-callout prod-note">
+      <strong>Production Honesty Rule:</strong> FDS Original Productions publishes playable builds only when they exist and have cleared verification. Concept artwork is always labeled <em>Concept Art — Work in Progress (Not Gameplay)</em>.
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prod-tag {
+    color: var(--accent-state-lines);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  .prod-name { margin: 0; font-size: 1.3rem; }
+  .prod-name a { color: var(--color-text); }
+  .prod-name a:hover { color: var(--accent-state-lines); }
+  .prod-sub { margin: 0.3rem 0 0; color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.74rem; }
+  .prod-desc { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.62; }
+  .prod-right { display: grid; gap: 0.65rem; justify-items: end; }
+  .prod-note { margin-top: 2.25rem; }
+
+  @media (max-width: 860px) { .prod-right { justify-items: start; margin-top: 0.5rem; } }
+</style>

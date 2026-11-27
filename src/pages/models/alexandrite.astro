@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import ModelCardPanel from '../../components/ModelCardPanel.astro';
+import AlexandriteArchitecture from '../../components/AlexandriteArchitecture.astro';
+import { getRegistryEntry, modelFamiliesData } from '../../data/registry';
+
+const entry = getRegistryEntry('alexandrite');
+const alex = modelFamiliesData.find((f) => f.id === 'alexandrite')!;
+
+const researchDirections = [
+  'Cross-domain reasoning',
+  'Software engineering',
+  'Game engineering',
+  'Creative intelligence',
+  'Narrative understanding',
+  'Scientific & technical reasoning',
+  'Multimodal workflow coordination',
+  'Multi-teacher knowledge distillation',
+  'Specialist capability synthesis',
+  'Independent capability certification',
+];
+
+const readinessTiers = [
+  { label: 'Existing Infrastructure', status: 'Active', detail: 'Project Forge 15-division research taxonomy, source-provenance governance, and public status validation gates.' },
+  { label: 'Experimental Systems', status: 'In Progress', detail: 'Cinnabar Oracle text-model research lineages (v1–v4.1) and evaluation harness refinement.' },
+  { label: 'Planned Specialist Models', status: 'Training Planned', detail: 'Hackmanite Prime (Apache-2.0 Qwen/Qwen3.8-27B target) and Hackmanite Reasoning (Apache-2.0 openai/gpt-oss-120b target).' },
+  { label: 'Collective Training & Distillation', status: 'Not Started', detail: 'Multi-teacher distillation into Alexandrite begins only after specialist models clear independent verification.' },
+  { label: 'Certified Commercial Deployment', status: 'Long-Term Vision', detail: 'No certified collective model, public inference endpoint, or commercial offering exists today.' },
+];
+---
+
+<BaseLayout
+  title="Alexandrite — Collective Intelligence Flagship Program"
+  description="Alexandrite is Forger Digital Solutions' long-term collective intelligence flagship research program designed to combine independently validated specialist capabilities from Hackmanite, Cinnabar, and Project Forge."
+  accent="alexandrite"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Alexandrite</span>
+  </nav>
+
+  <header class="model-hero" data-accent="alexandrite">
+    <div class="model-hero__copy">
+      <div class="hero-badges">
+        <span class="page-eyebrow">FDS Intelligence · Collective Intelligence Program</span>
+        <StatusPill status={entry.development_status} />
+      </div>
+      <h1 class="page-title">Alexandrite</h1>
+      <p class="model-hero__tagline">Intelligence, converged.</p>
+      <p class="page-description">
+        Alexandrite is Forger Digital Solutions' long-term collective intelligence research flagship—designed to synthesize independently validated, appropriately licensed specialist capabilities developed across Hackmanite, Cinnabar, and Project Forge.
+      </p>
+      <div class="hero-actions">
+        <a href="/contact/?track=research-partnership" class="btn btn-primary">Explore Research Partnerships <span aria-hidden="true">→</span></a>
+        <a href="/evaluations/" class="btn btn-outline">Evaluation Standards</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Strict Research Transparency:</strong> Alexandrite is an ambitious collective intelligence research program — <strong>not</strong> a completed or certified frontier model today. No collective weights have finished training and no public endpoint or commercial subscription is offered.
+      </div>
+    </div>
+    <div class="model-hero__visual">
+      <SpecimenMedia
+        src={alex.image}
+        mobileSrc={alex.imageSm}
+        alt={alex.imageAlt}
+        label={alex.imageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <!-- Interactive 7-Stage Convergence & Orchestration vs. Collective Model -->
+  <section class="page-section page-section--surface" aria-labelledby="convergence-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Interactive Convergence Architecture</p>
+        <h2 id="convergence-heading">From specialist mastery to collective intelligence.</h2>
+        <p>
+          Inspect the seven research-to-deployment stages and why FDS strictly distinguishes runtime multi-model orchestration from a separately trained collective model.
+        </p>
+      </div>
+    </div>
+
+    <AlexandriteArchitecture />
+  </section>
+
+  <!-- Research Directions -->
+  <section class="page-section" aria-labelledby="alex-directions-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Core Research Directions</p>
+        <h2 id="alex-directions-heading">Ten technical disciplines guiding Alexandrite.</h2>
+      </div>
+      <a href="/research/artificial-intelligence/" class="text-link">AI Research Track <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ul class="dir-grid">
+      {researchDirections.map((item, idx) => (
+        <li class="fds-panel dir-item">
+          <span class="dir-idx">{String(idx + 1).padStart(2, '0')}</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Readiness Distinction & Roadmap Table -->
+  <section class="page-section page-section--surface" aria-labelledby="readiness-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Model Status &amp; Development Roadmap</p>
+        <h2 id="readiness-heading">Separating long-term vision from verified state.</h2>
+        <p>Every gate between existing research infrastructure and certified collective capability is disclosed explicitly.</p>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Program Layer</th>
+            <th scope="col">Current Public State</th>
+            <th scope="col">Scope &amp; Evidence Boundary</th>
+          </tr>
+        </thead>
+        <tbody>
+          {readinessTiers.map((row) => (
+            <tr>
+              <th scope="row">{row.label}</th>
+              <td><strong>{row.status}</strong></td>
+              <td>{row.detail}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="alex-card-heading">
+    <h2 id="alex-card-heading" class="section-subhead">Public Model Card Record</h2>
+    <ModelCardPanel entry={entry} showLink={false} />
+    <div class="next-links">
+      <a href="/models/hackmanite/" class="btn btn-outline">Explore Hackmanite <span aria-hidden="true">→</span></a>
+      <a href="/models/cinnabar/" class="btn btn-outline">Explore Cinnabar <span aria-hidden="true">→</span></a>
+      <a href="/research/project-forge/" class="btn btn-outline">Inspect Project Forge <span aria-hidden="true">→</span></a>
+      <a href="/contact/?track=research-partnership" class="btn btn-primary">Discuss Research Partnerships <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .model-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .hero-badges .page-eyebrow { margin: 0; }
+  .model-hero__tagline { margin: 0.45rem 0 0; color: var(--accent-alexandrite); font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+  .model-hero .fds-callout { margin-top: 1.4rem; }
+
+  .dir-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dir-item { display: flex; align-items: baseline; gap: 0.85rem; padding: 0.95rem 1.15rem; color: var(--color-text); font-size: 0.93rem; }
+  .dir-idx { color: var(--accent-alexandrite); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; flex-shrink: 0; }
+
+  .section-subhead { margin: 0 0 1.25rem; font-size: 1.45rem; letter-spacing: -0.025em; }
+  .next-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+
+  @media (max-width: 960px) {
+    .model-hero, .dir-grid { grid-template-columns: 1fr; }
+  }
+</style>

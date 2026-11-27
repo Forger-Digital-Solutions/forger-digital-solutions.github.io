@@ -1,0 +1,176 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import ModelCardPanel from '../../../components/ModelCardPanel.astro';
+import SpecialistWorkforceExplorer from '../../../components/SpecialistWorkforceExplorer.astro';
+import { getRegistryEntry, modelFamiliesData, solutionsData } from '../../../data/registry';
+
+const entry = getRegistryEntry('cinnabar');
+const cinData = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
+const { domains, workforceRoles } = solutionsData.cinnabarCommercial;
+---
+
+<BaseLayout
+  title="Cinnabar — Anime, Manga & Animation Production Intelligence"
+  description="Cinnabar is Forger Digital Solutions' specialized AI model family for anime, manga, animation craft, cinematic storytelling, narrative continuity, and Oracle fictional intelligence."
+  accent="cinnabar"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Cinnabar</span>
+  </nav>
+
+  <header class="model-hero" data-accent="cinnabar">
+    <div class="model-hero__copy">
+      <div class="hero-badges">
+        <span class="page-eyebrow">FDS Intelligence · Creative &amp; Fictional AI</span>
+        <StatusPill status={entry.development_status} />
+      </div>
+      <h1 class="page-title">Cinnabar</h1>
+      <p class="model-hero__tagline">Intelligence for the art of storytelling.</p>
+      <p class="page-description">
+        Cinnabar is FDS's dedicated anime, manga, animation, cinematic-production, and fictional-intelligence model family—built for professional creative workflows far beyond powerscaling, while preserving the documented <strong>Oracle v1–v4.1</strong> fictional-intelligence lineages.
+      </p>
+      <div class="hero-actions">
+        <a href="/products/battleverse/creator-studio/" class="btn btn-primary">Explore Creator Studio <span aria-hidden="true">→</span></a>
+        <a href="/models/cinnabar/oracle/" class="btn btn-outline">Inspect Oracle v1–v4.1</a>
+        <a href="/solutions/animation-studios/" class="btn btn-ghost">Animation Studio Solutions</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Modality &amp; IP Integrity:</strong> Cinnabar language models coordinate specialized external image, animation, video, and audio tools—they are <strong>not</strong> native video or animation generators. FDS uses only original or appropriately licensed artwork and respects creator intellectual property.
+      </div>
+    </div>
+    <div class="model-hero__visual">
+      <SpecimenMedia
+        src={cinData.image}
+        mobileSrc={cinData.imageSm}
+        alt={cinData.imageAlt}
+        label={cinData.imageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <!-- Interactive 8-Role Professional Creative Workforce -->
+  <section class="page-section page-section--surface" aria-labelledby="cin-workforce-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Professional Creative Workforce</p>
+        <h2 id="cin-workforce-heading">Eight specialized creative roles supporting human directors and artists.</h2>
+        <p>
+          Explore how Cinnabar's storytelling, choreography, continuity, and direction capabilities map onto real anime, manga, and webtoon production roles.
+        </p>
+      </div>
+      <a href="/solutions/anime-manga-creators/" class="text-link">Anime &amp; Manga Creators <span aria-hidden="true">→</span></a>
+    </div>
+
+    <SpecialistWorkforceExplorer
+      idPrefix="cin-wf"
+      eyebrow="CINNABAR // 8-ROLE PROFESSIONAL CREATIVE WORKFORCE"
+      accent="cinnabar"
+      roles={workforceRoles}
+      architectureNote="Architectural honesty: creative roles combine Cinnabar language models, studio continuity retrieval, and external drawing/animation/audio tool coordination—never falsely claiming native video synthesis from text checkpoints."
+    />
+  </section>
+
+  <!-- 17 Research & Development Domains -->
+  <section class="page-section" aria-labelledby="domains-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research &amp; Development Scope</p>
+        <h2 id="domains-heading">Seventeen craft and narrative domains across anime, manga, and animation.</h2>
+      </div>
+      <a href="/research/animation/" class="text-link">Animation Research Track <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="domain-chips">
+      {domains.map((dom, idx) => (
+        <span class="domain-chip">
+          <span class="domain-chip__idx">{String(idx + 1).padStart(2, '0')}</span>
+          <span>{dom}</span>
+        </span>
+      ))}
+    </div>
+  </section>
+
+  <!-- Oracle Lineages Distinction -->
+  <section class="page-section page-section--surface" aria-labelledby="oracle-overview-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Oracle Lineages vs. Broader Cinnabar Family</p>
+        <h2 id="oracle-overview-heading">Documented Oracle v1–v4.1 fictional-intelligence progression.</h2>
+        <p>
+          Oracle is Cinnabar's fictional-intelligence and canonical-analysis specialization; the broader Cinnabar family targets anime, manga, and animation creative workflows. <a href="/products/battleverse/">Forge BattleVerse</a> is a separate application platform designed to integrate with Cinnabar across both <a href="/products/battleverse/arena/">Arena</a> and <a href="/products/battleverse/creator-studio/">Creator Studio</a>.
+        </p>
+      </div>
+      <a href="/models/cinnabar/oracle/" class="text-link">Full Oracle lineage table <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Lineage</th>
+            <th scope="col">Status Class</th>
+            <th scope="col">Research Focus</th>
+            <th scope="col">Evaluation &amp; Publication State</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cinData.oracle_lineages?.map((item) => (
+            <tr>
+              <th scope="row">{item.version}</th>
+              <td>{item.stage}</td>
+              <td>{item.role}</td>
+              <td>{item.evalState}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <ModelCardPanel entry={entry} showLink={false} />
+  </section>
+</BaseLayout>
+
+<style>
+  .model-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .hero-badges .page-eyebrow { margin: 0; }
+  .model-hero__tagline { margin: 0.45rem 0 0; color: var(--accent-cinnabar); font-family: var(--font-serif); font-style: italic; font-size: 1.55rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+  .model-hero .fds-callout { margin-top: 1.4rem; }
+
+  .domain-chips {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  .domain-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-size: 0.9rem;
+  }
+  .domain-chip__idx { color: var(--accent-cinnabar); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; flex-shrink: 0; }
+
+  @media (max-width: 960px) {
+    .model-hero, .domain-chips { grid-template-columns: 1fr; }
+  }
+</style>

@@ -28,13 +28,18 @@ const CAPTURES_DIR = resolve('shots-ci');
 const CERTIFICATION_WIDTHS = [390, 768, 1440, 1920];
 const CAPTURE_PAGES = [
   { path: '/', name: 'homepage' },
+  { path: '/models/', name: 'models' },
+  { path: '/solutions/', name: 'solutions' },
+  { path: '/products/jaspilite/', name: 'jaspilite' },
+  { path: '/products/battleverse/arena/', name: 'battleverse-arena' },
+  { path: '/research/project-forge/', name: 'project-forge' },
+  { path: '/studio/state-lines/', name: 'state-lines' },
   { path: '/forged', name: 'forged' },
-  { path: '/projects/gems-training-grounds', name: 'gems' },
   { path: '/projects/codeforge', name: 'codeforge' },
   { path: '/projects/forgerems', name: 'forgerems' },
   { path: '/about', name: 'about' },
 ];
-const REDUCED_MOTION_PAGES = ['/', '/projects/gems-training-grounds'];
+const REDUCED_MOTION_PAGES = ['/', '/models/'];
 
 // Keep in sync with the revealTargets query in src/layouts/BaseLayout.astro.
 const REVEAL_SELECTOR = '.page-section, .page-head, .doc, .spage-hero, .hw-hero, .ci-hero, .lab-hero, .about-wrap';
@@ -117,7 +122,7 @@ test.describe('Visual certification captures', () => {
       await expect(page.locator('main')).toBeVisible();
       await settle(page);
       await expectRevealed(page, `${path} @ 1440px reduced motion`);
-      const name = path === '/' ? 'homepage' : 'gems';
+      const name = path === '/' ? 'homepage' : 'models';
       await page.screenshot({ path: resolve(CAPTURES_DIR, `${name}-1440-reduced-motion.png`), fullPage: true, animations: 'disabled' });
     });
   }

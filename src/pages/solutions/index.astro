@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import { solutionsData } from '../../data/registry';
+
+const { heroVisual, markets, audienceSolutions, personalizationLayers } = solutionsData;
+---
+
+<BaseLayout
+  title="Solutions — Studio & Enterprise AI Workforces"
+  description="Commercial AI pathways, personalized studio AI workforces, segregated private deployments, and specialized solutions for game developers, gaming studios, anime and animation teams, software engineers, and enterprises."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Solutions</span>
+  </nav>
+
+  <header class="sol-hero">
+    <div class="sol-hero__copy">
+      <div class="hero-badges">
+        <span class="page-eyebrow">FDS Commercial Solutions // Studio &amp; Enterprise</span>
+        <StatusPill status="commercial-direction" label="Commercial Direction · Scoping Open" />
+      </div>
+      <h1 class="page-title">Personalized AI workforces built around your pipeline.</h1>
+      <p class="page-description">
+        Forger Digital Solutions designs specialized AI models, autonomous software engineering platforms, and customer-segregated AI workforces configured around your codebase, engine, creative standards, and security policies.
+      </p>
+      <div class="sol-hero__actions">
+        <a href="/contact/?track=studio-workforce" class="btn btn-primary">Register Studio Interest <span aria-hidden="true">→</span></a>
+        <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Commercial Honesty Boundary:</strong> Studio workforces, private deployments, and commercial model licensing represent active product and commercial directions. No unverified turnkey enterprise SLA, unearned SOC 2/ISO certification, or live self-serve checkout is claimed today.
+      </div>
+    </div>
+    <div class="sol-hero__visual">
+      <SpecimenMedia
+        src={heroVisual.src}
+        mobileSrc={heroVisual.mobileSrc}
+        alt={heroVisual.alt}
+        label={heroVisual.label}
+        eager
+      />
+    </div>
+  </header>
+
+  <!-- Three Core Commercial Markets -->
+  <section class="page-section page-section--surface" aria-labelledby="markets-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Three Primary Markets</p>
+        <h2 id="markets-heading">From solo creators to private enterprise deployments.</h2>
+        <p>Every commercial pathway matches a distinct operational workflow while preserving transparent development and availability boundaries.</p>
+      </div>
+    </div>
+
+    <div class="market-grid">
+      {markets.map((m) => (
+        <article class="fds-panel market-card">
+          <span class="market-card__idx">{m.code}</span>
+          <h3>{m.name}</h3>
+          <p class="market-card__body">{m.summary}</p>
+          <ul class="market-card__list">
+            {m.offerings.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <a href={m.ctaHref} class="text-link">{m.ctaLabel} <span aria-hidden="true">→</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Six Audience-Oriented Solutions -->
+  <section class="page-section" aria-labelledby="audiences-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Solutions by Discipline</p>
+        <h2 id="audiences-heading">Dedicated pathways for every creative and engineering team.</h2>
+        <p>Explore how FDS's intelligence families and applications align to your studio, engineering organization, or independent workflow.</p>
+      </div>
+    </div>
+
+    <div class="audience-grid">
+      {audienceSolutions.map((sol) => (
+        <article class="fds-panel audience-card" data-accent={sol.accent}>
+          <div class="audience-card__top">
+            <span class="audience-card__kicker">{sol.name}</span>
+            <StatusPill status={sol.status as 'commercial-direction' | 'active-development'} />
+          </div>
+          <h3><a href={`/solutions/${sol.slug}/`}>{sol.headline}</a></h3>
+          <p class="audience-card__summary">{sol.summary}</p>
+          <div class="audience-card__tags">
+            {sol.flagships.map((f) => (
+              <span class="audience-tag">{f}</span>
+            ))}
+          </div>
+          <a href={`/solutions/${sol.slug}/`} class="text-link">Explore {sol.name} <span aria-hidden="true">→</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Five-Layer Personalized AI Workforce Architecture -->
+  <section class="page-section page-section--surface" aria-labelledby="layers-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Personalized AI Workforces</p>
+        <h2 id="layers-heading">Five distinct customization layers — never conflated.</h2>
+        <p>
+          Customizing AI around a studio or enterprise does not always require training a model from scratch. FDS distinguishes five concrete architectural tiers, each with strict customer data segregation.
+        </p>
+      </div>
+      <a href="/trust/" class="text-link">Data Segregation &amp; Trust <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Tier</th>
+            <th scope="col">Customization Mechanism</th>
+            <th scope="col">Isolation Boundary</th>
+            <th scope="col">Operational Role</th>
+            <th scope="col">Customer Data Guarantee</th>
+          </tr>
+        </thead>
+        <tbody>
+          {personalizationLayers.map((layer) => (
+            <tr>
+              <th scope="row">{layer.tier}</th>
+              <td><strong>{layer.name}</strong></td>
+              <td>{layer.isolation}</td>
+              <td>{layer.whatItDoes}</td>
+              <td>{layer.dataBoundary}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fds-callout segregation-note">
+      <strong>Customer Data Segregation Principle:</strong> Private studio repositories, unannounced game designs, animation bibles, and enterprise documents must remain strictly isolated per customer. FDS never implies that private customer information is automatically ingested into shared model training. Contractual and security commitments will align strictly with demonstrated technical controls as commercial deployments mature.
+    </div>
+  </section>
+
+  <!-- Commercial Conversion Band -->
+  <section class="page-section" aria-labelledby="sol-cta-heading">
+    <div class="fds-panel sol-cta-panel">
+      <div>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Start a Conversation</p>
+        <h2 id="sol-cta-heading">Exploring specialized AI for your studio or engineering team?</h2>
+        <p>
+          Connect directly with Forger Digital Solutions to register preview interest, scope future personalized AI workforces, discuss commercial licensing, or explore research partnerships.
+        </p>
+      </div>
+      <div class="sol-cta-actions">
+        <a href="/contact/?track=studio-workforce" class="btn btn-primary">Register Studio Interest <span aria-hidden="true">→</span></a>
+        <a href="/contact/?track=licensing" class="btn btn-outline">Commercial Licensing</a>
+        <a href="/contact/?track=research-partnership" class="btn btn-ghost">Research Partnerships</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sol-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .hero-badges .page-eyebrow { margin: 0; }
+  .sol-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+  .sol-hero .fds-callout { margin-top: 1.4rem; }
+
+  .market-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .market-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.65rem;
+  }
+
+  .market-card__idx {
+    color: var(--color-brand-cobalt-bright);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .market-card h3 { margin: 0; font-size: 1.2rem; }
+  .market-card__body { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.62; }
+
+  .market-card__list {
+    margin: 0.4rem 0 auto;
+    padding-left: 1.1rem;
+    color: var(--color-text);
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .audience-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.65rem;
+  }
+
+  .audience-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .audience-card__kicker {
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .audience-card h3 { margin: 0; font-size: 1.18rem; line-height: 1.32; }
+  .audience-card h3 a { color: var(--color-text); }
+  .audience-card h3 a:hover { color: var(--color-brand-cobalt-bright); }
+  .audience-card__summary { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.62; }
+
+  .audience-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: auto;
+    padding-top: 0.4rem;
+  }
+
+  .audience-tag {
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-recessed);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .segregation-note { margin-top: 1.5rem; }
+
+  .sol-cta-panel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    padding: 2rem;
+  }
+
+  .sol-cta-panel h2 { margin: 0.4rem 0 0.5rem; font-size: 1.55rem; }
+  .sol-cta-panel p { margin: 0; color: var(--color-text-muted); max-width: 40rem; }
+  .sol-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  @media (max-width: 980px) {
+    .sol-hero,
+    .market-grid,
+    .audience-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -3,34 +3,36 @@ import AxeBuilder from '@axe-core/playwright';
 import { projects } from '../../src/data/projects';
 
 /**
- * R4.1 release-critical site coverage for the CI deployment gate.
+ * Release-critical site coverage for the CI deployment gate (Operation Digital Forge).
  *
- * R4's e2e suite was heavily Kayla-focused; the surfaces here — site
- * navigation, the mobile menu aria contract, ecosystem keyboard inspection,
- * the Forged archive integrity flow (full SHA display, Copy SHA, Download
- * ZIP), and every current project detail route — receive browser coverage.
+ * Certifies the six institutional primary navigation pillars, mobile menu aria
+ * contract, interactive EcosystemGraph keyboard inspection, Forged archive
+ * integrity flow (exact full SHA display, Copy SHA, Download ZIP), all 7
+ * flagship ecosystem pages, every preserved legacy project detail route, and
+ * WCAG 2.2 AA accessibility smoke checks.
  */
 
 test.describe('Site release-critical surfaces', () => {
   test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
 
-  test('A. primary navigation reaches every release-critical page', async ({ page }) => {
+  test('A. primary navigation reaches every institutional pillar', async ({ page }) => {
+    test.setTimeout(90_000);
     const navTargets = [
-      { label: 'Products', href: '/projects', marker: 'main' },
-      { label: 'CodeForge', href: '/projects/codeforge', marker: 'main' },
-      { label: 'Forge Control', href: '/projects/forge-control', marker: 'main' },
-      { label: 'Dead Trails West', href: '/projects/dead-trails-west', marker: 'main' },
-      { label: 'Releases', href: '/forged', marker: '.product-card' },
-      { label: 'Engineering', href: '/lab', marker: 'main' },
-      { label: 'Company', href: '/about', marker: 'main' },
+      { label: 'Models', href: '/models/', marker: 'main h1' },
+      { label: 'Products', href: '/products/', marker: 'main h1' },
+      { label: 'Solutions', href: '/solutions/', marker: 'main h1' },
+      { label: 'Research', href: '/research/', marker: 'main h1' },
+      { label: 'Developers', href: '/developers/', marker: 'main h1' },
+      { label: 'Studio', href: '/studio/', marker: 'main h1' },
+      { label: 'Company', href: '/company/', marker: 'main h1' },
     ];
 
     for (const target of navTargets) {
       await page.goto('/');
-      const link = page.locator('.nav-links a', { hasText: target.label }).first();
+      const link = page.locator('.nav-group__link', { hasText: target.label }).first();
       await expect(link).toHaveAttribute('href', target.href);
       await link.click();
-      await expect(page).toHaveURL(new RegExp(`${target.href}$`));
+      await expect(page).toHaveURL(new RegExp(`${target.href.replace(/\/$/, '')}/?$`));
       await expect(page.locator(target.marker).first()).toBeVisible();
     }
   });
@@ -55,19 +57,26 @@ test.describe('Site release-critical surfaces', () => {
     await expect(nav).not.toHaveClass(/active/);
   });
 
-  test('C. portfolio map links and product relationships are keyboard-inspectable', async ({ page }) => {
+  test('C. interactive ecosystem graph nodes are keyboard-inspectable and update live inspector', async ({ page }) => {
     await page.goto('/');
 
-    const map = page.locator('.portfolio-map');
-    await expect(map).toBeVisible();
-    const links = map.locator('a[href^="/projects/"]');
-    await expect(links).toHaveCount(projects.length + 1);
-    const inspectable = map.locator('a[href="/projects/codeforge"]').first();
-    await inspectable.focus();
-    await expect(inspectable).toBeFocused();
-    await expect(map.locator('a[href="/projects/codeforge#forge-aaa"]')).toContainText('CodeForge architecture');
-    await expect(map.locator('a[href="/projects/forge-control"]')).toContainText('Forge Control');
-    await expect(map.locator('a[href="/projects/dead-trails-west"]')).toContainText('Dead Trails West');
+    const graph = page.locator('.eco-arch');
+    await expect(graph).toBeVisible();
+    const nodes = graph.locator('.eco-node');
+    await expect(nodes).toHaveCount(7);
+
+    const hackNode = graph.locator('.eco-node[data-eco-id="hackmanite"]');
+    await hackNode.focus();
+    await expect(hackNode).toBeFocused();
+    await hackNode.click();
+    await expect(hackNode).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#eco-inspector [data-field="name"]')).toHaveText('Hackmanite');
+    await expect(page.locator('#eco-inspector [data-field="cta"]')).toHaveAttribute('href', '/models/hackmanite/');
+
+    const stateLinesNode = graph.locator('.eco-node[data-eco-id="state-lines"]');
+    await stateLinesNode.click();
+    await expect(page.locator('#eco-inspector [data-field="name"]')).toHaveText('State Lines');
+    await expect(page.locator('#eco-inspector [data-field="cta"]')).toHaveAttribute('href', '/studio/state-lines/');
   });
 
   test('D. Forged archive flow: exact full SHA, Copy SHA, Download ZIP', async ({ page, request }) => {
@@ -91,7 +100,33 @@ test.describe('Site release-critical surfaces', () => {
     expect(zip.headers()['content-type']).toMatch(/zip/);
   });
 
-  test('E. every current portfolio project detail page renders', async ({ page }) => {
+  test('E. every flagship ecosystem page and preserved legacy project route renders', async ({ page }) => {
+    test.setTimeout(90_000);
+    const flagshipRoutes = [
+      { path: '/models/alexandrite/', text: 'Alexandrite' },
+      { path: '/models/hackmanite/', text: 'Hackmanite' },
+      { path: '/models/cinnabar/', text: 'Cinnabar' },
+      { path: '/products/jaspilite/', text: 'Jaspilite' },
+      { path: '/products/battleverse/', text: 'BattleVerse' },
+      { path: '/products/battleverse/arena/', text: 'BattleVerse Arena' },
+      { path: '/products/battleverse/creator-studio/', text: 'Creator Studio' },
+      { path: '/solutions/', text: 'Personalized AI workforces' },
+      { path: '/solutions/gaming-studios/', text: 'Gaming Studios' },
+      { path: '/solutions/enterprise-private-ai/', text: 'Enterprise' },
+      { path: '/research/project-forge/', text: 'Project Forge' },
+      { path: '/studio/state-lines/', text: 'State Lines' },
+      { path: '/evaluations/', text: 'Evaluations' },
+      { path: '/trust/', text: 'Trust' },
+      { path: '/docs/', text: 'Documentation' },
+      { path: '/downloads/', text: 'Downloads' },
+    ];
+
+    for (const item of flagshipRoutes) {
+      await page.goto(item.path);
+      await expect(page.locator('main h1').first(), `${item.path} heading`).toBeVisible();
+      await expect(page.locator('main')).toContainText(item.text);
+    }
+
     for (const project of projects) {
       await page.goto(`/projects/${project.slug}`);
       await expect(page.locator('main h1').first(), `${project.name} page heading`).toBeVisible();
@@ -99,16 +134,19 @@ test.describe('Site release-critical surfaces', () => {
     }
   });
 
-  test('F. accessibility smoke on the current portfolio page', async ({ page }) => {
-    await page.goto('/projects');
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
-      .exclude('iframe')
-      .analyze();
+  test('F. accessibility smoke on flagship and portfolio pages', async ({ page }) => {
+    test.setTimeout(90_000);
+    for (const path of ['/models/', '/projects', '/docs/']) {
+      await page.goto(path);
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa'])
+        .exclude('iframe')
+        .analyze();
 
-    const criticalViolations = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
-    );
-    expect(criticalViolations, 'Critical/Serious a11y issues on /projects').toEqual([]);
+      const criticalViolations = results.violations.filter(
+        (v) => v.impact === 'critical' || v.impact === 'serious'
+      );
+      expect(criticalViolations, `Critical/Serious a11y issues on ${path}`).toEqual([]);
+    }
   });
 });

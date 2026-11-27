@@ -1,0 +1,255 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import ModelCardPanel from '../../../components/ModelCardPanel.astro';
+import SpecialistWorkforceExplorer from '../../../components/SpecialistWorkforceExplorer.astro';
+import { getRegistryEntry, modelFamiliesData, solutionsData } from '../../../data/registry';
+
+const familyEntry = getRegistryEntry('hackmanite');
+const primeEntry = getRegistryEntry('hackmanite-prime');
+const reasoningEntry = getRegistryEntry('hackmanite-reasoning');
+const hackData = modelFamiliesData.find((f) => f.id === 'hackmanite')!;
+const { offerings, targetCustomers, workforceRoles, studioPersonalization } = solutionsData.hackmaniteCommercial;
+---
+
+<BaseLayout
+  title="Hackmanite — Universal Gaming & Game-Development Intelligence"
+  description="Hackmanite is Forger Digital Solutions' commercial gaming AI family spanning Hackmanite Prime, Reasoning, 10 specialist studio roles, personalized studio AI workforces, and planned model APIs."
+  accent="hackmanite"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/models/">Models</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Hackmanite</span>
+  </nav>
+
+  <header class="model-hero" data-accent="hackmanite">
+    <div class="model-hero__copy">
+      <div class="hero-badges">
+        <span class="page-eyebrow">FDS Intelligence · Universal Gaming AI</span>
+        <StatusPill status={familyEntry.development_status} />
+      </div>
+      <h1 class="page-title">Hackmanite</h1>
+      <p class="model-hero__tagline">Intelligence built for games.</p>
+      <p class="page-description">{hackData.summary}</p>
+      <div class="hero-actions">
+        <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Preview Interest <span aria-hidden="true">→</span></a>
+        <a href="/solutions/gaming-studios/" class="btn btn-outline">Gaming Studio Solutions</a>
+        <a href="/contact/?track=studio-workforce" class="btn btn-ghost">Register Studio Interest</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Foundation License vs. FDS Training:</strong> Hackmanite Prime targets <code>Qwen/Qwen3.8-27B</code> and Hackmanite Reasoning targets <code>openai/gpt-oss-120b</code>—both verified under permissive <strong>Apache 2.0</strong> licenses on Hugging Face. Upstream base availability does <strong>not</strong> equate to completed FDS fine-tuning, specialist certification, or current commercial availability.
+      </div>
+    </div>
+    <div class="model-hero__visual">
+      <SpecimenMedia
+        src={hackData.image}
+        mobileSrc={hackData.imageSm}
+        alt={hackData.imageAlt}
+        label={hackData.imageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <!-- Commercial Product Family Offerings -->
+  <section class="page-section page-section--surface" aria-labelledby="offerings-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Commercial Product Direction</p>
+        <h2 id="offerings-heading">Five proposed offerings spanning developers, gamers, studios, and enterprise.</h2>
+        <p>Every offering below is explicitly labeled by its current development status. No premature checkout or unverified SLA is advertised today.</p>
+      </div>
+      <a href="/solutions/game-developers/" class="text-link">Game Developer Solutions <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="offerings-grid">
+      {offerings.map((off, idx) => (
+        <article class="fds-panel offering-card">
+          <div class="offering-card__top">
+            <span class="offering-idx">0{idx + 1}</span>
+            <span class="offering-status">{off.status}</span>
+          </div>
+          <h3>{off.name}</h3>
+          <span class="offering-aud">{off.audience}</span>
+          <p>{off.summary}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="target-customers">
+      <h3>Target Ecosystems &amp; Customers</h3>
+      <div class="cust-chips">
+        {targetCustomers.map((c) => (
+          <span class="cust-chip">{c}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive 10-Role Hackmanite Specialist Workforce -->
+  <section class="page-section" aria-labelledby="workforce-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Hackmanite Specialist Workforce</p>
+        <h2 id="workforce-heading">Ten specialized game-development roles — powered by shared models and studio context.</h2>
+        <p>
+          Select any role to inspect its technical focus and proposed execution stack. Specialist roles combine shared Hackmanite models, domain retrieval, tools, and agent configurations rather than requiring ten independently trained foundation models.
+        </p>
+      </div>
+    </div>
+
+    <SpecialistWorkforceExplorer
+      idPrefix="hack-wf"
+      eyebrow="HACKMANITE // 10-ROLE GAMING SPECIALIST WORKFORCE"
+      accent="hackmanite"
+      roles={workforceRoles}
+      architectureNote="Architectural honesty: these ten roles represent specialized agent configurations, retrieval indexes, and tool policies running on shared Hackmanite models—not ten separately trained foundation models."
+    />
+  </section>
+
+  <!-- Private Studio Personalization -->
+  <section class="page-section page-section--surface" aria-labelledby="studio-pers-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Studio Personalization Direction</p>
+        <h2 id="studio-pers-heading">A specialized AI development workforce tuned to your production environment.</h2>
+        <p>
+          Future Hackmanite Studio and Enterprise engagements are designed to configure private retrieval, role policies, tool hooks, and optional customer-exclusive adapters around your own game studio—with strict data segregation.
+        </p>
+      </div>
+      <a href="/solutions/gaming-studios/" class="btn btn-outline">Gaming Studio Architecture <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ul class="pers-grid">
+      {studioPersonalization.map((item, idx) => (
+        <li class="fds-panel pers-item">
+          <span class="scope-idx">0{idx + 1}</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+
+    <div class="fds-callout pers-note">
+      <strong>Commercial Availability Disclosure:</strong> Private studio AI workforces are under active architectural development and are not yet commercially available turnkey deployments. Studios interested in early scoping can reach FDS via <a href="/contact/?track=studio-workforce">Register Studio Interest</a>.
+    </div>
+  </section>
+
+  <!-- Planned Model Lineup (Prime & Reasoning) -->
+  <section class="page-section" aria-labelledby="lineup-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Model Research Lineup</p>
+        <h2 id="lineup-heading">Two Apache-2.0 foundation targets for implementation and deep engineering.</h2>
+      </div>
+      <a href="/model-cards/" class="text-link">All Model Cards <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="lineup-grid">
+      <ModelCardPanel entry={primeEntry} />
+      <ModelCardPanel entry={reasoningEntry} />
+    </div>
+  </section>
+
+  <!-- Research Scope -->
+  <section class="page-section page-section--surface" aria-labelledby="scope-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research Scope</p>
+        <h2 id="scope-heading">Game-development domains under study in Project Forge.</h2>
+        <p>Backed by Project Forge's Universal Gaming, Game Engineering, Graphics, Physics, and Technical Art divisions.</p>
+      </div>
+      <a href="/research/gaming/" class="text-link">Gaming research division <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ul class="scope-grid">
+      {hackData.research_scope?.map((item, idx) => (
+        <li>
+          <span class="scope-idx">0{idx + 1}</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .model-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .hero-badges .page-eyebrow { margin: 0; }
+  .model-hero__tagline { margin: 0.45rem 0 0; color: var(--accent-hackmanite); font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+  .model-hero .fds-callout { margin-top: 1.4rem; }
+
+  .offerings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+  .offering-card { display: flex; flex-direction: column; gap: 0.45rem; padding: 1.4rem; }
+  .offering-card__top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .offering-idx { color: var(--accent-hackmanite); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; }
+  .offering-status { color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.05em; text-transform: uppercase; text-align: right; }
+  .offering-card h3 { margin: 0.25rem 0 0; font-size: 1.08rem; }
+  .offering-aud { color: #d8b4fe; font-family: var(--font-mono); font-size: 0.72rem; }
+  .offering-card p { margin: 0.25rem 0 0; color: var(--color-text-muted); font-size: 0.89rem; line-height: 1.6; }
+
+  .target-customers { margin-top: 1.75rem; }
+  .target-customers h3 { margin: 0 0 0.75rem; font-size: 0.98rem; color: var(--color-text); }
+  .cust-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cust-chip {
+    padding: 0.32rem 0.72rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+  }
+
+  .pers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pers-item { display: flex; align-items: baseline; gap: 0.75rem; padding: 1rem 1.15rem; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.5; }
+  .pers-note { margin-top: 1.5rem; }
+
+  .lineup-grid { display: grid; gap: 1.5rem; }
+
+  .scope-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .scope-grid li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+  }
+  .scope-idx { color: var(--accent-hackmanite); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; flex-shrink: 0; }
+
+  @media (max-width: 980px) {
+    .model-hero, .offerings-grid, .pers-grid, .scope-grid { grid-template-columns: 1fr; }
+  }
+</style>

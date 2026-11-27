@@ -1,66 +1,741 @@
 ---
 import { siteConfig } from '../config/site';
+
 const { githubUrl } = siteConfig;
 const pathname = Astro.url.pathname;
-const isActive = (href: string) => href === '/' || href === '/projects'
-  ? pathname === href
-  : pathname === href || pathname.startsWith(`${href}/`);
 
-/** Company-first navigation: what we build, what we research, what ships. */
-const primaryNav = [
-  { label: 'Products', href: '/projects' },
-  { label: 'CodeForge', href: '/projects/codeforge' },
-  { label: 'Forge Control', href: '/projects/forge-control' },
-  { label: 'Dead Trails West', href: '/projects/dead-trails-west' },
-  { label: 'Releases', href: '/forged' },
-  { label: 'Engineering', href: '/lab' },
-  { label: 'Company', href: '/about' },
+interface NavLinkItem {
+  label: string;
+  href: string;
+  meta: string;
+  accent?: string;
+}
+
+interface NavGroup {
+  id: string;
+  label: string;
+  href: string;
+  lead: string;
+  items: NavLinkItem[];
+}
+
+const navGroups: NavGroup[] = [
+  {
+    id: 'models',
+    label: 'Models',
+    href: '/models/',
+    lead: 'Specialized AI model families & collective intelligence research.',
+    items: [
+      { label: 'Alexandrite', href: '/models/alexandrite/', meta: 'Collective intelligence flagship vision', accent: 'alexandrite' },
+      { label: 'Hackmanite', href: '/models/hackmanite/', meta: 'Universal gaming AI & 10-role workforce', accent: 'hackmanite' },
+      { label: 'Cinnabar', href: '/models/cinnabar/', meta: 'Anime, manga, animation & Oracle lineages', accent: 'cinnabar' },
+      { label: 'Model Catalog', href: '/models/', meta: 'Overview, licenses & provenance' },
+      { label: 'Model Cards', href: '/model-cards/', meta: 'Base architectures, status & limitations' },
+      { label: 'Evaluations', href: '/evaluations/', meta: 'Methodology, baselines & verification' },
+    ],
+  },
+  {
+    id: 'products',
+    label: 'Products',
+    href: '/products/',
+    lead: 'Autonomous software engineering, simulation & creative production platforms.',
+    items: [
+      { label: 'Jaspilite', href: '/products/jaspilite/', meta: 'Autonomous AI engineering (Auto · Meld · Solo)', accent: 'jaspilite' },
+      { label: 'Forge BattleVerse', href: '/products/battleverse/', meta: 'Fictional intelligence & creative platform', accent: 'battleverse' },
+      { label: 'BattleVerse Arena', href: '/products/battleverse/arena/', meta: 'Evidence-audited combat simulation', accent: 'battleverse' },
+      { label: 'BattleVerse Creator Studio', href: '/products/battleverse/creator-studio/', meta: 'Anime, manga & animation workflow direction', accent: 'cinnabar' },
+      { label: 'Downloads & Releases', href: '/downloads/', meta: 'ForgerEMS preview & verified archives' },
+      { label: 'Extended Portfolio', href: '/projects', meta: 'CodeForge, ForgerEMS & legacy records' },
+    ],
+  },
+  {
+    id: 'solutions',
+    label: 'Solutions',
+    href: '/solutions/',
+    lead: 'Commercial pathways, personalized studio AI workforces & private deployments.',
+    items: [
+      { label: 'Studio & Enterprise Hub', href: '/solutions/', meta: 'Personalized AI workforces & data isolation', accent: 'fds-cobalt' },
+      { label: 'Game Developers', href: '/solutions/game-developers/', meta: 'Solo & indie engine, shader & code workflows', accent: 'hackmanite' },
+      { label: 'Gaming Studios', href: '/solutions/gaming-studios/', meta: '10-role private game-engineering workforces', accent: 'hackmanite' },
+      { label: 'Anime & Manga Creators', href: '/solutions/anime-manga-creators/', meta: 'Creator-owned story, panel & continuity tools', accent: 'cinnabar' },
+      { label: 'Animation Studios', href: '/solutions/animation-studios/', meta: '8-role pre-production & pipeline orchestration', accent: 'battleverse' },
+      { label: 'Software Engineering Teams', href: '/solutions/software-engineering/', meta: 'Jaspilite multi-agent & local-first routing', accent: 'jaspilite' },
+      { label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/', meta: 'Segregated deployment & commercial licensing', accent: 'fds-cobalt' },
+    ],
+  },
+  {
+    id: 'research',
+    label: 'Research',
+    href: '/research/',
+    lead: 'Permanent scientific foundation turning verified research into capability.',
+    items: [
+      { label: 'Project Forge', href: '/research/project-forge/', meta: '15 research divisions & 8-stage lifecycle', accent: 'project-forge' },
+      { label: 'Gaming & Engines', href: '/research/gaming/', meta: 'Graphics, physics, gameplay & technical art' },
+      { label: 'Animation & Storytelling', href: '/research/animation/', meta: 'Anime, manga, cinematography & narrative' },
+      { label: 'Artificial Intelligence', href: '/research/artificial-intelligence/', meta: 'Distillation, specialist models & retrieval' },
+      { label: 'Training Methodology', href: '/research/training/', meta: 'Data eligibility, SFT, LoRA/QLoRA & evals' },
+      { label: 'Engineering Laboratory', href: '/research/laboratory/', meta: 'Experiments, reliability & verification' },
+      { label: 'Publications', href: '/research/publications/', meta: 'Approved research write-ups & field notes' },
+      { label: 'Trust Center', href: '/trust/', meta: 'Provenance, privacy & commercial integrity' },
+    ],
+  },
+  {
+    id: 'developers',
+    label: 'Developers',
+    href: '/developers/',
+    lead: 'Technical documentation, planned APIs & SDKs, model cards & releases.',
+    items: [
+      { label: 'Developer Hub', href: '/developers/', meta: 'Architecture, planned APIs & SDK roadmap' },
+      { label: 'Documentation', href: '/docs/', meta: 'Guides, model availability & local inference' },
+      { label: 'Model Cards', href: '/model-cards/', meta: 'Open-weight provenance & capabilities' },
+      { label: 'Releases', href: '/releases/', meta: 'Versioned builds & SHA-256 checksums' },
+      { label: 'Changelog', href: '/changelog/', meta: 'Platform & website revision history' },
+      { label: 'Technology Map', href: '/technology', meta: 'Core stack vs. research & legacy systems' },
+    ],
+  },
+  {
+    id: 'studio',
+    label: 'Studio',
+    href: '/studio/',
+    lead: 'Original AAA-ambition open-world games and cinematic entertainment.',
+    items: [
+      { label: 'State Lines', href: '/studio/state-lines/', meta: 'AAA-ambition open-world crime drama (Preproduction)', accent: 'state-lines' },
+      { label: 'Original Productions', href: '/studio/productions/', meta: 'State Lines, Dead Trails West & studio slate' },
+      { label: 'Studio Overview', href: '/studio/', meta: 'Creative philosophy & asset honesty standards' },
+    ],
+  },
+  {
+    id: 'company',
+    label: 'Company',
+    href: '/company/',
+    lead: 'Commercial AI technology, engineering & original entertainment studio.',
+    items: [
+      { label: 'Company & Mission', href: '/company/', meta: 'Commercial positioning, divisions & roadmap' },
+      { label: 'About FDS', href: '/about', meta: 'Founder, principles & studio background' },
+      { label: 'Newsroom', href: '/news/', meta: 'Official announcements & engineering journal' },
+      { label: 'Trust & Transparency', href: '/trust/', meta: 'Data segregation, IP ethics & governance' },
+      { label: 'Commercial Inquiries & Contact', href: '/contact/', meta: 'Previews, studio workforces & enterprise' },
+      { label: 'Independent Support', href: '/support', meta: 'Development & hardware support disclosure' },
+    ],
+  },
 ];
 
-/** Full access preserved on mobile via the secondary menu block. */
-const secondaryNav = [
-  { label: 'Engineering Log', href: '/notes' },
-  { label: 'Technology', href: '/technology' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Support', href: '/support' },
-];
+const isGroupActive = (group: NavGroup): boolean => {
+  if (pathname === group.href || pathname.startsWith(group.href)) return true;
+  return group.items.some((item) => item.href !== '/' && (pathname === item.href || pathname.startsWith(item.href)));
+};
 ---
-<nav class="navbar" aria-label="Main navigation">
-  <div class="nav-container">
-    <a href="/" class="logo" aria-label="Forger Digital Solutions home">
-      <img src="/images/brand/fds-logo.png" width="44" height="44" alt="" />
-      <span class="logo-system">Forger Digital Solutions</span>
-    </a>
-    <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-navigation"><span class="hamburger"></span></button>
-     <ul class="nav-links" id="site-navigation">
-       {primaryNav.map((item) => <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>)}
-      <li class="nav-actions">
-        {githubUrl && <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="nav-github" aria-label="FDS on GitHub"><svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>}
-        <a href="/forged" class="cta-btn">Get CodeForge</a>
-      </li>
-      <li class="nav-secondary">
-        <p class="nav-secondary__label" id="nav-secondary-label">More</p>
-        <ul aria-labelledby="nav-secondary-label">
-          {secondaryNav.map((item) => <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>)}
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
+
+<header class="site-header">
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="/" class="logo" aria-label="Forger Digital Solutions home">
+        <img src="/images/brand/fds-logo.png" width="38" height="38" alt="" />
+        <span class="logo-text">
+          <span class="logo-system">Forger Digital Solutions</span>
+        </span>
+      </a>
+
+      <button
+        type="button"
+        class="mobile-menu-btn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="site-navigation"
+      >
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-links" id="site-navigation">
+        {navGroups.map((group) => {
+          const active = isGroupActive(group);
+          return (
+            <li class="nav-group" data-nav-group={group.id}>
+              <div class="nav-group__trigger-wrap">
+                <a
+                  href={group.href}
+                  class="nav-group__link"
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {group.label}
+                </a>
+                <button
+                  type="button"
+                  class="nav-group__caret"
+                  aria-label={`Expand ${group.label} menu`}
+                  aria-expanded="false"
+                  aria-controls={`menu-${group.id}`}
+                >
+                  <svg viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true">
+                    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="mega-menu" id={`menu-${group.id}`} role="region" aria-label={`${group.label} navigation`}>
+                <div class="mega-menu__inner">
+                  <div class="mega-menu__intro">
+                    <p class="mega-menu__label">{group.label}</p>
+                    <p class="mega-menu__lead">{group.lead}</p>
+                    <a href={group.href} class="mega-menu__all">
+                      Overview <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                  <ul class="mega-menu__grid">
+                    {group.items.map((item) => (
+                      <li data-accent={item.accent}>
+                        <a href={item.href} class="mega-menu__item">
+                          <span class="mega-menu__item-title">
+                            {item.accent && <span class="mega-menu__dot" aria-hidden="true"></span>}
+                            {item.label}
+                          </span>
+                          <span class="mega-menu__item-meta">{item.meta}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+
+        <li class="nav-actions">
+          {githubUrl && (
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="nav-github"
+              aria-label="Forger Digital Solutions on GitHub"
+            >
+              <svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+            </a>
+          )}
+          <a href="/downloads/" class="nav-cta nav-cta--ghost">Releases</a>
+          <a href="/contact/" class="nav-cta">Contact FDS</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
 <style>
-  .navbar { position: sticky; top: 0; z-index: 100; display: flex; justify-content: center; padding: .62rem 1.25rem; border-bottom: 1px solid rgba(158,187,232,.14); background: linear-gradient(180deg, rgba(5,9,16,.91), rgba(5,9,16,.76)); box-shadow: 0 12px 35px rgba(0,0,0,.18); backdrop-filter: blur(20px) saturate(130%); }.navbar::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 1px; background: linear-gradient(90deg, transparent 6%, rgba(42,107,244,.5) 36%, rgba(198,212,233,.16) 62%, transparent 94%); content: ''; }.nav-container { display: flex; align-items: center; justify-content: space-between; width: min(100%, var(--content-wide)); }.logo { display: inline-flex; align-items: center; gap: .48rem; color: var(--color-text); }.logo img { width: 2.35rem; height: 2.35rem; object-fit: contain; filter: drop-shadow(0 0 11px rgba(40,103,237,.28)); }.logo-system { max-width: 7.2rem; padding-left: .52rem; border-left: 1px solid var(--color-border-strong); color: var(--color-text-subtle); font: 650 .5rem/1.35 var(--font-mono); letter-spacing: .11em; text-transform: uppercase; }.nav-links { display: flex; align-items: center; gap: .18rem; margin: 0; padding: 0; list-style: none; }.nav-links > li > a:not(.cta-btn) { position: relative; display: inline-flex; padding: .62rem .55rem; color: var(--color-text-muted); font-size: .76rem; font-weight: 650; }.nav-links > li > a:not(.cta-btn)::after { position: absolute; right: .55rem; bottom: .2rem; left: .55rem; height: 1px; background: var(--color-accent-bright); content: ''; opacity: 0; transform: scaleX(.25); transition: opacity .2s ease, transform .2s ease; }.nav-links > li > a:not(.cta-btn):hover, .nav-links > li > a[aria-current='page']:not(.cta-btn) { color: var(--color-text); opacity: 1; }.nav-links > li > a:not(.cta-btn):hover::after, .nav-links > li > a[aria-current='page']:not(.cta-btn)::after { opacity: 1; transform: scaleX(1); }
-  .nav-actions { display: flex; align-items: center; gap: .3rem; margin-left: .35rem; padding-left: .55rem; border-left: 1px solid var(--color-border); }.nav-github { display: inline-flex; padding: .38rem; color: var(--color-text-subtle); }.nav-github:hover { color: var(--color-accent-bright); }
-  .nav-links .cta-btn { margin-left: .1rem; padding: .58rem .8rem; border: 1px solid rgba(103,157,255,.32); border-radius: var(--radius-sm); background: linear-gradient(135deg, #153fae, #2558d4); color: #f5f7fa; font-size: .69rem; font-weight: 800; box-shadow: 0 7px 22px rgba(26,79,210,.2); }
-  .nav-secondary { display: none; }
-  .mobile-menu-btn { display: none; padding: .7rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: rgba(255,255,255,.025); color: var(--color-text); }.hamburger, .hamburger::before, .hamburger::after { display: block; width: 1.35rem; height: 2px; background: currentColor; content: ''; transition: transform .2s ease, top .2s ease, opacity .2s ease; }.hamburger { position: relative; }.hamburger::before { position: absolute; top: -.42rem; }.hamburger::after { position: absolute; top: .42rem; }.mobile-menu-btn[aria-expanded='true'] .hamburger { background: transparent; }.mobile-menu-btn[aria-expanded='true'] .hamburger::before { top: 0; transform: rotate(45deg); }.mobile-menu-btn[aria-expanded='true'] .hamburger::after { top: 0; transform: rotate(-45deg); }
-  @media (max-width: 1220px) { .mobile-menu-btn { display: block; }.nav-links { position: fixed; top: 4.25rem; right: 1rem; left: 1rem; display: grid; gap: 0; max-height: calc(100dvh - 5rem); overflow-y: auto; padding: .7rem; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); background: rgba(7,12,21,.97); box-shadow: var(--shadow-md); opacity: 0; transform: translateY(-1rem); backdrop-filter: blur(22px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }.nav-links.active { opacity: 1; transform: translateY(0); pointer-events: auto; }.nav-links li, .nav-links a { display: block; }.nav-links > li > a:not(.cta-btn) { padding: .8rem; }.nav-links > li > a:not(.cta-btn)::after { right: .8rem; bottom: .35rem; left: .8rem; }.nav-links .cta-btn { margin: .35rem 0 0; text-align: center; }.nav-actions { display: flex; justify-content: center; gap: 1.4rem; margin: .35rem 0; padding: .5rem 0; border: 0; border-top: 1px solid var(--color-border); }.nav-github { display: inline-flex; padding: .5rem; }
-    .nav-secondary { display: block; margin-top: .4rem; padding: .6rem 0 .2rem; border-top: 1px solid var(--color-border); }.nav-secondary__label { margin: 0 0 .2rem; color: var(--color-text-subtle); font: 700 .58rem/1.4 var(--font-mono); letter-spacing: .16em; text-transform: uppercase; }.nav-secondary ul { display: grid; margin: 0; padding: 0; list-style: none; }.nav-secondary a { display: block; padding: .55rem .8rem; color: var(--color-text-muted); font-size: .8rem; font-weight: 650; }.nav-secondary a:hover, .nav-secondary a[aria-current='page'] { color: var(--color-text); }.nav-secondary a[aria-current='page'] { border-left: 2px solid var(--color-accent-bright); padding-left: calc(.8rem - 2px); } }
-  @media (min-width: 1221px) { .nav-secondary { display: none !important; } }
-  @media (max-width: 520px) { .logo img { width: 2.1rem; height: 2.1rem; }.logo-system { max-width: 6.3rem; padding-left: .42rem; font-size: .44rem; } }
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 120;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-header::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(8, 9, 12, 0.9);
+    backdrop-filter: blur(18px) saturate(125%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .navbar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 0 1.25rem;
+  }
+
+  .nav-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(100%, var(--content-wide));
+    min-height: var(--header-height);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--color-text);
+    flex-shrink: 0;
+  }
+
+  .logo img {
+    width: 2.25rem;
+    height: 2.25rem;
+    object-fit: contain;
+    border-radius: 50%;
+  }
+
+  .logo-system {
+    display: block;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-group {
+    position: static;
+  }
+
+  .nav-group__trigger-wrap {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .nav-group__link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.35rem 0.5rem 0.55rem;
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+
+  .nav-group__link:hover,
+  .nav-group__link[aria-current='page'],
+  .nav-group.is-open .nav-group__link {
+    color: var(--color-text);
+  }
+
+  .nav-group__caret {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.9rem;
+    margin-left: -0.15rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    transition: transform 0.16s ease, color 0.16s ease;
+  }
+
+  .nav-group__caret:hover,
+  .nav-group.is-open .nav-group__caret {
+    color: var(--color-text);
+  }
+
+  .nav-group.is-open .nav-group__caret svg {
+    transform: rotate(180deg);
+  }
+
+  /* Desktop Mega-Menu Panel */
+  .mega-menu {
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 0;
+    right: 0;
+    z-index: 150;
+    display: none;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-structural);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background: rgba(13, 15, 20, 0.98);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(22px);
+  }
+
+  .nav-group.is-open .mega-menu {
+    display: block;
+  }
+
+  .mega-menu__inner {
+    display: grid;
+    grid-template-columns: 15.5rem minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .mega-menu__intro {
+    padding-right: 1.5rem;
+    border-right: 1px solid var(--color-border);
+  }
+
+  .mega-menu__label {
+    margin: 0;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .mega-menu__lead {
+    margin: 0.6rem 0 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  .mega-menu__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-text);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .mega-menu__all:hover {
+    color: var(--color-accent-bright);
+  }
+
+  .mega-menu__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mega-menu__item {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.72rem 0.85rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .mega-menu__item:hover,
+  .mega-menu__item:focus-visible {
+    border-color: var(--color-border-structural);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .mega-menu__item-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--color-text);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .mega-menu__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--page-accent, var(--color-accent-bright));
+    flex-shrink: 0;
+  }
+
+  .mega-menu__item-meta {
+    color: var(--color-text-subtle);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-left: 0.75rem;
+    padding-left: 0.85rem;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .nav-github {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.15rem;
+    height: 2.15rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+  }
+
+  .nav-github:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+  }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.48rem 0.92rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .nav-cta:hover {
+    border-color: var(--color-brand-silver);
+    background: var(--color-surface-hover);
+    color: #ffffff;
+  }
+
+  /* Mobile Hamburger */
+  .mobile-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.65rem;
+    height: 2.65rem;
+    padding: 0;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after {
+    display: block;
+    width: 1.25rem;
+    height: 1.5px;
+    background: currentColor;
+    content: '';
+    transition: transform 0.2s ease, top 0.2s ease, opacity 0.2s ease;
+  }
+
+  .hamburger {
+    position: relative;
+  }
+
+  .hamburger::before {
+    position: absolute;
+    top: -0.38rem;
+  }
+
+  .hamburger::after {
+    position: absolute;
+    top: 0.38rem;
+  }
+
+  .mobile-menu-btn[aria-expanded='true'] .hamburger {
+    background: transparent;
+  }
+
+  .mobile-menu-btn[aria-expanded='true'] .hamburger::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-btn[aria-expanded='true'] .hamburger::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  .nav-cta--ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--color-text-muted);
+  }
+
+  .nav-cta--ghost:hover {
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  @media (max-width: 1180px) {
+    .mobile-menu-btn {
+      display: inline-flex;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: var(--header-height);
+      right: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 200;
+      height: calc(100dvh - var(--header-height));
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      overflow-y: auto;
+      padding: 1rem 1.25rem 4rem;
+      background: #08090c;
+      border-top: 1px solid var(--color-border-structural);
+    }
+
+    .nav-links.active {
+      display: flex;
+    }
+
+    .nav-group {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .nav-group__trigger-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .nav-group__link {
+      flex: 1;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .nav-group__caret {
+      width: 2.75rem;
+      height: 2.75rem;
+      margin-left: 0;
+    }
+
+    .mega-menu {
+      position: static;
+      padding: 0 0 0.85rem;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .mega-menu__inner {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .mega-menu__intro {
+      display: none;
+    }
+
+    .mega-menu__grid {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+
+    .mega-menu__item {
+      padding: 0.55rem 0.65rem;
+    }
+
+    .nav-actions {
+      justify-content: space-between;
+      margin: 1.1rem 0 0;
+      padding: 1rem 0 0;
+      border-left: 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .nav-cta {
+      flex: 1;
+      min-height: 2.75rem;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .logo-system {
+      font-size: 0.82rem;
+    }
+  }
 </style>
+
 <script>
-  const mobileBtn = document.querySelector<HTMLButtonElement>('.mobile-menu-btn'); const navLinks = document.querySelector('.nav-links');
-  const closeMenu = () => { mobileBtn?.setAttribute('aria-expanded', 'false'); navLinks?.classList.remove('active'); };
-  mobileBtn?.addEventListener('click', () => { const open = mobileBtn.getAttribute('aria-expanded') === 'true'; mobileBtn.setAttribute('aria-expanded', String(!open)); navLinks?.classList.toggle('active', !open); });
-  navLinks?.addEventListener('click', (event) => { if ((event.target as HTMLElement).closest('a')) closeMenu(); }); document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+  const mobileBtn = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
+  const navLinks = document.getElementById('site-navigation');
+  const navGroups = Array.from(document.querySelectorAll<HTMLLIElement>('.nav-group'));
+  const desktopQuery = window.matchMedia('(min-width: 1181px)');
+
+  const closeAllMenus = () => {
+    navGroups.forEach((group) => {
+      group.classList.remove('is-open');
+      group.querySelector<HTMLButtonElement>('.nav-group__caret')?.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  const closeMobile = () => {
+    mobileBtn?.setAttribute('aria-expanded', 'false');
+    navLinks?.classList.remove('active');
+    closeAllMenus();
+  };
+
+  mobileBtn?.addEventListener('click', () => {
+    const isOpen = mobileBtn.getAttribute('aria-expanded') === 'true';
+    mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+    navLinks?.classList.toggle('active', !isOpen);
+    if (isOpen) closeAllMenus();
+  });
+
+  navGroups.forEach((group) => {
+    const caret = group.querySelector<HTMLButtonElement>('.nav-group__caret');
+    let hoverTimer: number | undefined;
+
+    caret?.addEventListener('click', () => {
+      const opening = !group.classList.contains('is-open');
+      if (desktopQuery.matches) closeAllMenus();
+      group.classList.toggle('is-open', opening);
+      caret.setAttribute('aria-expanded', String(opening));
+    });
+
+    group.addEventListener('mouseenter', () => {
+      if (!desktopQuery.matches) return;
+      window.clearTimeout(hoverTimer);
+      closeAllMenus();
+      group.classList.add('is-open');
+      caret?.setAttribute('aria-expanded', 'true');
+    });
+
+    group.addEventListener('mouseleave', () => {
+      if (!desktopQuery.matches) return;
+      hoverTimer = window.setTimeout(() => {
+        group.classList.remove('is-open');
+        caret?.setAttribute('aria-expanded', 'false');
+      }, 140);
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.site-header')) {
+      closeAllMenus();
+    }
+  });
+
+  navLinks?.addEventListener('click', (event) => {
+    const link = (event.target as HTMLElement).closest('a');
+    if (link) closeMobile();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeAllMenus();
+      if (navLinks?.classList.contains('active')) {
+        closeMobile();
+        mobileBtn?.focus();
+      }
+    }
+  });
 </script>

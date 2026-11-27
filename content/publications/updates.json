@@ -1,0 +1,65 @@
+{
+  "last_updated": "2026-11-26",
+  "updates": [
+    {
+      "id": "operation-digital-forge-ii",
+      "date": "2026-11-26",
+      "category": "Announcements",
+      "title": "Operation Digital Forge II: Commercial AI Solutions, Studio Workforces & BattleVerse Sub-Platforms",
+      "summary": "Forger Digital Solutions expands its public identity with dedicated commercial solutions hubs for gaming studios, anime and animation teams, software teams, and private enterprise AI—alongside BattleVerse Arena, BattleVerse Creator Studio, Apache-2.0 upstream model disclosures, and expanded Kayla Copilot portfolio guidance.",
+      "readingTime": "4 min read",
+      "related": ["Hackmanite", "Cinnabar", "Jaspilite", "Forge BattleVerse"],
+      "href": "/solutions/"
+    },
+    {
+      "id": "operation-digital-forge",
+      "date": "2026-11-26",
+      "category": "Announcements",
+      "title": "Operation Digital Forge: Establishing FDS's AI Research & Ecosystem Architecture",
+      "summary": "Forger Digital Solutions reorganizes its public architecture around seven interconnected technologies—Alexandrite, Hackmanite, Cinnabar, Jaspilite, Forge BattleVerse, Project Forge, and State Lines—backed by permanent design governance and strict publication truthfulness.",
+      "readingTime": "4 min read",
+      "related": ["Alexandrite", "Project Forge", "Jaspilite"],
+      "href": "/company/"
+    },
+    {
+      "id": "forgerems-v1-2-4-preview",
+      "date": "2026-10-08",
+      "category": "Releases",
+      "title": "ForgerEMS v1.2.4-preview.1 Public Preview Available for Windows",
+      "summary": "Local-first Windows technician workbench published on GitHub Releases as unsigned portable ZIP and installer packages with SHA-256 checksums.",
+      "readingTime": "3 min read",
+      "related": ["ForgerEMS"],
+      "href": "/forgerems/"
+    },
+    {
+      "id": "codeforge-v0-2-notes",
+      "date": "2026-08-29",
+      "category": "Product Updates",
+      "title": "CodeForge v0.2.0: Free-First Engineering & ForgeZero Boundaries",
+      "summary": "How CodeForge enforces fail-closed zero-cost routing and controlled tool execution across repositories. Installer downloads are currently paused while the release updates.",
+      "readingTime": "5 min read",
+      "related": ["CodeForge"],
+      "href": "/notes/codeforge-v0-2-free-first-engineering"
+    },
+    {
+      "id": "evidence-over-assumptions",
+      "date": "2026-08-20",
+      "category": "Research",
+      "title": "Evidence Over Assumptions: Separating Execution from Proof",
+      "summary": "Why FDS treats 'it ran' and 'it worked' as fundamentally different claims—a principle now encoded across Project Forge, BattleVerse, and the FDS Evaluation Center.",
+      "readingTime": "4 min read",
+      "related": ["Project Forge", "Forge BattleVerse"],
+      "href": "/notes/evidence-over-assumptions"
+    },
+    {
+      "id": "introducing-fds-notes",
+      "date": "2026-08-22",
+      "category": "Engineering",
+      "title": "Introducing FDS Engineering Field Notes",
+      "summary": "Public build logs, methodology write-ups, and state-labeled technical notes documenting real changes across the studio.",
+      "readingTime": "2 min read",
+      "related": ["Project Forge"],
+      "href": "/notes/introducing-fds-notes"
+    }
+  ]
+}

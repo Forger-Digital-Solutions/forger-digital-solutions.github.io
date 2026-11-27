@@ -1,22 +1,22 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
-  test('portfolio map and product showcases do not start continuous animation work', async ({ page }) => {
+test.describe('Animation Performance & Lifecycle Regression Gates', () => {
+  test('flagship surfaces and ecosystem architecture do not run continuous background animations', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
-    const animationNames = await page.locator('.portfolio-map, .product-showcase, .showcase-art').evaluateAll((elements) =>
-      elements.map((element) => getComputedStyle(element).animationName)
-    );
-    expect(animationNames.length).toBeGreaterThan(5);
+    const animationNames = await page
+      .locator('.hero, .eco-arch, .specialist-panel, .app-feature, .statelines-banner')
+      .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).animationName));
+    expect(animationNames.length).toBeGreaterThanOrEqual(6);
     expect(animationNames.every((name) => name === 'none')).toBe(true);
 
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(150);
-    await page.locator('.portfolio-map').scrollIntoViewIfNeeded();
-    const restored = await page.locator('.portfolio-map').evaluate((element) => getComputedStyle(element).animationName);
+    await page.locator('.eco-arch').scrollIntoViewIfNeeded();
+    const restored = await page.locator('.eco-arch').evaluate((element) => getComputedStyle(element).animationName);
     expect(restored).toBe('none');
   });
 
-  test('Page visibility API suspends decorative background and footer animations on hidden tab', async ({ page }) => {
+  test('Page visibility API suspends ambient indicator animations on hidden tab', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
     await expect(page.locator('html')).not.toHaveAttribute('data-bg-paused');
 
@@ -26,16 +26,11 @@ test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
     });
     await expect(page.locator('html')).toHaveAttribute('data-bg-paused');
 
-    const hiddenStates = await page.evaluate(() => {
-      const systemNode = document.querySelector('.system-node');
-      const footerPulse = document.querySelector('.footer-kicker span');
-      return {
-        systemNode: systemNode ? getComputedStyle(systemNode).animationPlayState : null,
-        footerPulse: footerPulse ? getComputedStyle(footerPulse).animationPlayState : null,
-      };
+    const hiddenDotState = await page.evaluate(() => {
+      const dot = document.querySelector('.visitor-counter__dot');
+      return dot ? getComputedStyle(dot).animationPlayState : null;
     });
-    expect(hiddenStates.systemNode).toBe('paused');
-    expect(hiddenStates.footerPulse).toBe('paused');
+    expect(hiddenDotState).toBe('paused');
 
     await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', { get: () => false, configurable: true });
@@ -44,34 +39,37 @@ test.describe('R4.2 Animation Performance & Lifecycle Regression Gates', () => {
     await expect(page.locator('html')).not.toHaveAttribute('data-bg-paused');
   });
 
-  test('Reduced motion disables ambient animation', async ({ browser }) => {
+  test('Reduced motion disables ambient animations across the homepage', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
     await page.goto('/', { waitUntil: 'networkidle' });
     const motionStyles = await page.evaluate(() => ({
-      systemNode: getComputedStyle(document.querySelector('.system-node')!).animationName,
-      footerPulse: getComputedStyle(document.querySelector('.footer-kicker span')!).animationName,
-      portfolioMap: getComputedStyle(document.querySelector('.portfolio-map')!).animationName,
-      showcase: getComputedStyle(document.querySelector('.showcase-art')!).animationName,
+      visitorDot: getComputedStyle(document.querySelector('.visitor-counter__dot')!).animationName,
+      ecoArch: getComputedStyle(document.querySelector('.eco-arch')!).animationName,
+      hero: getComputedStyle(document.querySelector('.hero')!).animationName,
     }));
     expect(motionStyles).toEqual({
-      systemNode: 'none',
-      footerPulse: 'none',
-      portfolioMap: 'none',
-      showcase: 'none',
+      visitorDot: 'none',
+      ecoArch: 'none',
+      hero: 'none',
     });
     await context.close();
   });
 
-  test('Mobile portfolio layouts remain stacked and do not overflow', async ({ page }) => {
+  test('Mobile flagship layouts remain stacked in a single column and do not overflow', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
-    const map = page.locator('.portfolio-map');
-    await expect(map).toBeVisible();
-    await expect(map.locator('.portfolio-domain')).toHaveCount(4);
-    const columns = await map.locator('.portfolio-map__grid').evaluate((element) => getComputedStyle(element).gridTemplateColumns);
-    expect(columns.trim().split(/\s+/)).toHaveLength(1);
-    await expect(page.locator('.portfolio-showcases > .product-showcase')).toHaveCount(5);
+
+    const divisionCols = await page
+      .locator('.division-rail')
+      .evaluate((el) => getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
+    expect(divisionCols).toBe(1);
+
+    const specialistCols = await page
+      .locator('.specialist-grid')
+      .evaluate((el) => getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
+    expect(specialistCols).toBe(1);
+
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
   });

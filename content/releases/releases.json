@@ -1,0 +1,65 @@
+{
+  "last_updated": "2026-11-26",
+  "releases": [
+    {
+      "id": "forgerems-v1.2.4-preview.1",
+      "product": "ForgerEMS",
+      "version": "v1.2.4-preview.1",
+      "date": "2026-10-08",
+      "channel": "Public Preview",
+      "os": "Windows 10 / 11",
+      "architecture": "x64",
+      "signingStatus": "Unsigned prerelease preview (Windows SmartScreen may warn)",
+      "availability": "Available on GitHub Releases",
+      "sourceCommit": "fc54150844b36c2e6d6a4fd18d6ea9dd065fd4fb",
+      "releaseUrl": "https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/tag/v1.2.4-preview.1",
+      "pageUrl": "/forgerems/",
+      "notes": "Windows technician workbench preview with USB toolkit creation, drive validation, USB/port intelligence, system info, driver guidance, and local-first diagnostics.",
+      "limitations": "Prerelease preview; binaries are unsigned and installer lifecycle certification is not complete.",
+      "artifacts": [
+        {
+          "name": "Portable ZIP",
+          "filename": "ForgerEMS-v1.2.4.zip",
+          "installerType": "Portable ZIP",
+          "sizeBytes": 81742749,
+          "sha256": "61A000203FD3E866C10221856322AD318A38562B5CE9E122626205997373B137",
+          "downloadUrl": "https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/download/v1.2.4-preview.1/ForgerEMS-v1.2.4.zip"
+        },
+        {
+          "name": "Windows Installer",
+          "filename": "ForgerEMS-Setup-v1.2.4.exe",
+          "installerType": "Windows EXE Installer",
+          "sizeBytes": 61780805,
+          "sha256": "F7C3541860015A533D437CE80B8D0D8B70DD78F0DE9CF47091353C1175B8A9BB",
+          "downloadUrl": "https://github.com/Forger-Digital-Solutions/ForgerEMS/releases/download/v1.2.4-preview.1/ForgerEMS-Setup-v1.2.4.exe"
+        }
+      ]
+    },
+    {
+      "id": "codeforge-v0.2.0",
+      "product": "CodeForge",
+      "version": "v0.2.0",
+      "date": "2026-08-29",
+      "channel": "Downloads Temporarily Paused",
+      "os": "Windows 10 / 11",
+      "architecture": "x64",
+      "signingStatus": "Unsigned (installer distribution temporarily paused)",
+      "availability": "Installer paused; verified source ZIP archive published on /forged",
+      "sourceCommit": "6b0770b",
+      "releaseUrl": null,
+      "pageUrl": "/projects/codeforge",
+      "notes": "Free-first autonomous software-engineering platform. Windows installer downloads are temporarily paused while the release is updated; a SHA-256-verified source snapshot archive remains available on /forged.",
+      "limitations": "No current executable installer is offered while the release updates.",
+      "artifacts": [
+        {
+          "name": "Source Snapshot Archive",
+          "filename": "CodeForge-source-6b0770b.zip",
+          "installerType": "Source Snapshot ZIP (not an installer)",
+          "sizeBytes": 304287,
+          "sha256": "a6e16d0056deebeeb8d8b99f7228f5fed43c380722e97012e45b26d5c6fe3208",
+          "downloadUrl": "/downloads/codeforge/CodeForge-source-6b0770b.zip"
+        }
+      ]
+    }
+  ]
+}

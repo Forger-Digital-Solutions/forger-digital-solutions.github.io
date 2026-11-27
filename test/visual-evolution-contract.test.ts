@@ -31,14 +31,13 @@ describe('product portfolio visual contract', () => {
     expect(homepage).not.toMatch(/GEMS|KyraBlox|Training Grounds/);
   });
 
-  it('keeps the five homepage showcases distinct and availability-qualified', () => {
-    for (const id of ['codeforge-showcase', 'forge-control-showcase', 'forge-aaa-showcase', 'dead-trails-showcase', 'forgerems-showcase']) {
-      expect(homepage).toContain(`id="${id}"`);
+  it('keeps the flagship ecosystem technologies distinct and availability-qualified on the homepage', () => {
+    for (const id of ['alexandrite', 'hackmanite', 'cinnabar', 'jaspilite', 'battleverse', 'state-lines']) {
+      expect(homepage).toContain(`getRegistryEntry('${id}')`);
     }
-    expect(homepage).toContain('Released · v0.2.0');
-    expect(homepage).toContain('Active development · no public release');
-    expect(homepage).toContain('Private development · no public playable build');
-    expect(homepage).toContain('Public preview · v1.2.4-preview.1');
+    expect(homepage).toContain('<StatusPill');
+    expect(homepage).toContain('ForgerEMS v1.2.4-preview.1');
+    expect(homepage).toContain('Concept Art — Work in Progress (Not Gameplay');
   });
 
   it('labels conceptual art and unverified integrations instead of presenting them as evidence', () => {

@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data/registry';
+---
+
+<BaseLayout
+  title="Company — Mission, Divisions & Studio Philosophy"
+  description="Forger Digital Solutions is an independent AI research lab, specialized model developer, autonomous software engineering company, and original entertainment studio."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Company</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">Forger Digital Solutions // AI Research, Commercial Technology &amp; Studio</p>
+    <h1 class="page-title">{companyProfile.headline}</h1>
+    <p class="page-description">{companyProfile.supportingCopy}</p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-labelledby="comp-mission-title">
+    <div class="mission-grid">
+      <div class="fds-panel mission-card">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Commercial Identity &amp; Heritage</p>
+        <h2 id="comp-mission-title">{companyProfile.heritageSlogan}</h2>
+        <p>
+          Founded in {companyProfile.location} by {companyProfile.founder}, Forger Digital Solutions is building an independent AI research laboratory, commercial AI technology provider, autonomous software engineering company, and original entertainment studio—creating revenue both from the worlds we craft and the specialized intelligence others use to build theirs.
+        </p>
+        <ul class="business-pillars" aria-label="Long-term FDS commercial model pillars">
+          {companyProfile.businessModelPillars.map((pillar) => (
+            <li>{pillar}</li>
+          ))}
+        </ul>
+        <div class="mission-links">
+          <a href="/solutions/" class="btn btn-primary">Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
+          <a href="/about" class="text-link">Founder &amp; Background <span aria-hidden="true">→</span></a>
+          <a href="/trust/" class="text-link">Public Trust Center <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="fds-panel mission-facts">
+        <dl>
+          <div>
+            <dt>Organization</dt>
+            <dd>{companyProfile.name} ({companyProfile.shortName})</dd>
+          </div>
+          <div>
+            <dt>Founder</dt>
+            <dd>{companyProfile.founder}</dd>
+          </div>
+          <div>
+            <dt>Location</dt>
+            <dd>{companyProfile.location}</dd>
+          </div>
+          <div>
+            <dt>Commercial Direction</dt>
+            <dd>Specialized AI models, autonomous engineering, studio workforces, licensing &amp; original games</dd>
+          </div>
+          <div>
+            <dt>Governance</dt>
+            <dd>Schema-validated public registry · Customer data segregation · Zero fabricated benchmarks</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section page-section--surface" aria-labelledby="comp-divisions-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Four Interconnected Divisions</p>
+        <h2 id="comp-divisions-title">One architecture from fundamental research to original worlds.</h2>
+      </div>
+    </div>
+
+    <div class="div-grid">
+      {companyProfile.divisions.map((div, idx) => (
+        <article class="fds-panel div-card">
+          <span class="div-num">0{idx + 1}</span>
+          <h3>{div.name}</h3>
+          <p>{div.summary}</p>
+          <div class="div-tags">
+            {div.flagships.map((f) => <span class="tag">{f}</span>)}
+          </div>
+          <a href={div.route} class="text-link">Explore Division <span aria-hidden="true">→</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="comp-flagships-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Flagship Ecosystem</p>
+        <h2 id="comp-flagships-title">Seven interconnected technologies, transparently labeled.</h2>
+      </div>
+      <a href="/contact/" class="btn btn-secondary">Contact FDS</a>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Technology</th>
+            <th scope="col">Division</th>
+            <th scope="col">Status</th>
+            <th scope="col">Public Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          {flagshipEntries.map((entry) => (
+            <tr>
+              <th scope="row"><a href={entry.route}>{entry.name}</a></th>
+              <td>{entry.division}</td>
+              <td><StatusPill status={entry.development_status} label={statusDisplayLabels[entry.development_status]} /></td>
+              <td>{entry.public_summary}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mission-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  .mission-card,
+  .mission-facts { padding: 1.75rem; }
+  .mission-card h2 { margin: 0 0 0.85rem; font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.03em; }
+  .mission-card p { margin: 0 0 1.05rem; color: var(--color-text-muted); font-size: 0.96rem; line-height: 1.7; }
+  .business-pillars { margin: 0 0 1.35rem; padding-left: 1.1rem; display: grid; gap: 0.35rem; color: var(--color-text); font-size: 0.89rem; line-height: 1.5; }
+  .mission-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.4rem; }
+
+  .mission-facts dl { margin: 0; display: grid; gap: 0.95rem; }
+  .mission-facts dt {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .mission-facts dd { margin: 0.2rem 0 0; color: var(--color-text); font-size: 0.92rem; line-height: 1.5; }
+
+  .div-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .div-card { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.65rem; }
+  .div-num { color: var(--color-accent-bright); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; }
+  .div-card h3 { margin: 0; font-size: 1.28rem; }
+  .div-card p { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.62; flex: 1; }
+  .div-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+  @media (max-width: 860px) {
+    .mission-grid,
+    .div-grid { grid-template-columns: 1fr; }
+  }
+</style>

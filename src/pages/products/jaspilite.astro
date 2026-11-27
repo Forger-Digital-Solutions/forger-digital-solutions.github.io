@@ -1,0 +1,218 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
+import JaspiliteWorkbench from '../../components/JaspiliteWorkbench.astro';
+import { getRegistryEntry, flagshipAppsData, solutionsData } from '../../data/registry';
+
+const entry = getRegistryEntry('jaspilite');
+const jaspData = flagshipAppsData.find((p) => p.id === 'jaspilite')!;
+const { image, imageSm, imageAlt, imageLabel, providerMaturityLadder, architecturePillars, targetMarkets } = solutionsData.jaspiliteCommercial;
+---
+
+<BaseLayout
+  title="Jaspilite — Autonomous AI Software Engineering Platform"
+  description="Jaspilite is Forger Digital Solutions' commercial autonomous software development and multi-agent orchestration application featuring Auto, Meld, and Solo modes, local models, customer-provided API keys, and verified provider integrations."
+  accent="jaspilite"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/products/">Products</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Jaspilite</span>
+  </nav>
+
+  <header class="jasp-hero" data-accent="jaspilite">
+    <div class="jasp-hero__copy">
+      <div class="meta-bar">
+        <span class="page-eyebrow">FDS Applications · Autonomous Software Engineering</span>
+        <StatusPill status={entry.development_status} />
+      </div>
+      <h1 class="page-title">Jaspilite</h1>
+      <p class="jasp-tagline">Your intelligence. One development workspace.</p>
+      <p class="page-description">
+        An independent autonomous development and multi-agent orchestration application engineered for repository-scale planning, execution, debugging, verification, and cost-aware routing across local open-weight models, customer-provided API keys, and supported provider integrations where verified.
+      </p>
+      <div class="hero-actions">
+        <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Preview Interest <span aria-hidden="true">→</span></a>
+        <a href="/solutions/software-engineering/" class="btn btn-outline">Engineering Team Solutions</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Build &amp; Provider Honesty:</strong> Jaspilite is in active development with private Windows builds only; no public installer is distributed today. Jaspilite works with local models, customer-provided API keys, and supported provider integrations where verified. Customers use their own AI provider credentials—FDS does not route consumer subscriptions through Jaspilite, does not include an AI provider with Jaspilite, and does not provide unlimited AI inference.
+      </div>
+    </div>
+    <div class="jasp-hero__visual">
+      <SpecimenMedia
+        src={image}
+        mobileSrc={imageSm}
+        alt={imageAlt}
+        label={imageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <section class="page-section page-section--surface" aria-labelledby="modes-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Operating Modes</p>
+        <h2 id="modes-heading">Three explicit modes: Auto, Meld, and Solo.</h2>
+        <p>Select a mode below to inspect how Jaspilite structures adaptive routing, lead/sidekick/specialist multi-agent execution, and single-model precision.</p>
+      </div>
+    </div>
+
+    <JaspiliteWorkbench />
+  </section>
+
+  <section class="page-section" aria-labelledby="jasp-arch-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Intended Engineering Architecture</p>
+        <h2 id="jasp-arch-heading">Governed execution from planning to verified diff.</h2>
+      </div>
+    </div>
+
+    <div class="cap-grid">
+      {architecturePillars.map((cap, idx) => (
+        <article class="cap-cell">
+          <span class="cap-idx">0{idx + 1}</span>
+          <h3>{cap.title}</h3>
+          <p>{cap.detail}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="markets-strip">
+      <h3>Intended Commercial Markets</h3>
+      <div class="market-chips">
+        {targetMarkets.map((m) => (
+          <span class="market-chip">{m}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-Tier Provider Verification Ladder -->
+  <section class="page-section page-section--surface" aria-labelledby="ladder-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Provider Verification Standard</p>
+        <h2 id="ladder-heading">Five distinct tiers of provider maturity — never conflated.</h2>
+        <p>Detecting a CLI or local endpoint is never marketed as a production-certified integration. Jaspilite tracks every connector through five explicit readiness stages.</p>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Stage</th>
+            <th scope="col">Maturity Tier</th>
+            <th scope="col">Exact Engineering Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          {providerMaturityLadder.map((row) => (
+            <tr>
+              <th scope="row">{row.stage}</th>
+              <td><strong>{row.tier}</strong></td>
+              <td>{row.meaning}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="providers-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Provider Integration Boundaries</p>
+        <h2 id="providers-heading">Local models, customer-provided API keys, and verified provider integrations.</h2>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Integration Category</th>
+            <th scope="col">Public Verification Tier</th>
+            <th scope="col">Governance &amp; User Responsibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          {jaspData.providerTiers?.map((tier) => (
+            <tr>
+              <th scope="row">{tier.tier}</th>
+              <td><strong>{tier.status}</strong></td>
+              <td>{tier.detail}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <aside class="migration-box">
+      <h3>Migration from Forge Control</h3>
+      <p>
+        {jaspData.legacyMigrationNote} Developers looking for earlier public software records can also review <a href="/projects/codeforge">CodeForge</a> (v0.2.0, installer downloads currently paused; verified source ZIP archive on <a href="/forged">/forged</a>).
+      </p>
+    </aside>
+  </section>
+</BaseLayout>
+
+<style>
+  .jasp-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+  .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .meta-bar .page-eyebrow { margin: 0; }
+  .jasp-tagline { margin: 0.45rem 0 0; color: #f87171; font-family: var(--font-display); font-size: 1.3rem; font-weight: 500; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+  .jasp-hero .fds-callout { margin-top: 1.4rem; }
+
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+  .cap-cell { padding: 1.45rem; background: var(--color-bg-secondary); }
+  .cap-idx { color: #f87171; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; }
+  .cap-cell h3 { margin: 0.45rem 0 0.35rem; font-size: 1.08rem; }
+  .cap-cell p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+
+  .markets-strip { margin-top: 1.75rem; }
+  .markets-strip h3 { margin: 0 0 0.75rem; font-size: 0.98rem; color: var(--color-text); }
+  .market-chips { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  .market-chip {
+    padding: 0.35rem 0.78rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+  }
+
+  .migration-box {
+    margin-top: 1.75rem;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+  }
+  .migration-box h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+  .migration-box p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+
+  @media (max-width: 960px) {
+    .jasp-hero, .cap-grid { grid-template-columns: 1fr; }
+  }
+</style>

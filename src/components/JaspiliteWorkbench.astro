@@ -1,0 +1,352 @@
+---
+interface ModeSpec {
+  id: string;
+  name: string;
+  label: string;
+  routing: string;
+  concurrency: string;
+  governance: string;
+  summary: string;
+  steps: string[];
+}
+
+const modes: ModeSpec[] = [
+  {
+    id: 'auto',
+    name: 'Auto',
+    label: 'Adaptive Multi-Model Routing',
+    routing: 'Dynamic task-to-model matching across local models, customer-provided API keys, and verified providers',
+    concurrency: 'Single or staged handoff based on task scope',
+    governance: 'Workspace scope lock · command approval gate · secret redaction',
+    summary:
+      'Auto evaluates task complexity and routes planning, code synthesis, debugging, and verification to eligible configured models while keeping every repository write inspectable.',
+    steps: [
+      'Inspect repository graph & open session context',
+      'Select eligible local model or verified customer-provided API route',
+      'Execute bounded edits, tests & diff review under approval policy',
+    ],
+  },
+  {
+    id: 'meld',
+    name: 'Meld',
+    label: 'Coordinated Multi-Agent Execution',
+    routing: 'Specialist agents assigned in parallel across disjoint repository boundaries',
+    concurrency: 'Parallel bounded sub-tasks with shared state reconciliation',
+    governance: 'File-ownership isolation · merge conflict checks · unified test gate',
+    summary:
+      'Meld coordinates multiple specialist agent roles concurrently — separating architecture planning, implementation, and verification inside one cohesive engineering session.',
+    steps: [
+      'Decompose engineering objective into independent workstreams',
+      'Coordinate parallel agents with explicit path & tool boundaries',
+      'Synthesize diffs and run unified build & test verification',
+    ],
+  },
+  {
+    id: 'solo',
+    name: 'Solo',
+    label: 'Deterministic Single-Model Session',
+    routing: 'Pinned to one explicitly selected local model or verified customer-provided API route',
+    concurrency: 'Sequential single-agent turn execution',
+    governance: 'Direct step-by-step developer approval · zero automatic model switching',
+    summary:
+      'Solo locks a workspace session to one chosen model — ideal when an engineer wants exact behavioral predictability, local-only execution, or direct model comparison.',
+    steps: [
+      'Pin explicit local runtime or customer-provided API key model',
+      'Run interactive repository edits and shell verification',
+      'Audit exact prompt context, file diffs, and tool outputs',
+    ],
+  },
+];
+---
+
+<div class="jasp-bench" data-jasp-bench>
+  <div class="jasp-bench__topbar">
+    <div class="jasp-bench__brand">
+      <span class="jasp-bench__mark" aria-hidden="true"></span>
+      <span>JASPILITE // ORCHESTRATION ARCHITECTURE</span>
+    </div>
+    <div class="jasp-bench__modes" role="tablist" aria-label="Jaspilite operating modes">
+      {modes.map((mode, idx) => (
+        <button
+          type="button"
+          role="tab"
+          id={`jasp-tab-${mode.id}`}
+          aria-selected={idx === 0 ? 'true' : 'false'}
+          aria-controls={`jasp-panel-${mode.id}`}
+          class:list={['jasp-mode-btn', idx === 0 && 'is-active']}
+          data-jasp-mode={mode.id}
+        >
+          {mode.name}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="jasp-bench__body">
+    {modes.map((mode, idx) => (
+      <div
+        id={`jasp-panel-${mode.id}`}
+        role="tabpanel"
+        aria-labelledby={`jasp-tab-${mode.id}`}
+        class:list={['jasp-panel', idx !== 0 && 'is-hidden']}
+        data-jasp-panel={mode.id}
+      >
+        <div class="jasp-panel__header">
+          <div>
+            <p class="jasp-panel__kicker">Operating Mode · {mode.name}</p>
+            <h4>{mode.label}</h4>
+          </div>
+          <span class="jasp-panel__pill">Workspace Governed</span>
+        </div>
+
+        <p class="jasp-panel__summary">{mode.summary}</p>
+
+        <ol class="jasp-steps">
+          {mode.steps.map((step, sIdx) => (
+            <li>
+              <span class="jasp-steps__num">0{sIdx + 1}</span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+
+        <dl class="jasp-specs">
+          <div>
+            <dt>Routing Policy</dt>
+            <dd>{mode.routing}</dd>
+          </div>
+          <div>
+            <dt>Execution Model</dt>
+            <dd>{mode.concurrency}</dd>
+          </div>
+          <div>
+            <dt>Safety Controls</dt>
+            <dd>{mode.governance}</dd>
+          </div>
+        </dl>
+      </div>
+    ))}
+  </div>
+
+  <p class="jasp-bench__footer">
+    <strong>Architectural Workflow Preview:</strong> Interactive mode specification — not a live screenshot of an unreleased installer. Approved desktop captures will replace this schematic upon public release.
+  </p>
+</div>
+
+<style>
+  .jasp-bench {
+    border: 1px solid #2b2024;
+    border-top: 2px solid var(--accent-jaspilite);
+    border-radius: var(--radius-md);
+    background: #0a0b0e;
+    box-shadow: var(--shadow-panel), var(--surface-highlight);
+    overflow: hidden;
+  }
+
+  .jasp-bench__topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid #22252e;
+    background: #0f1116;
+  }
+
+  .jasp-bench__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #cbd5e1;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .jasp-bench__mark {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 2px;
+    background: var(--accent-jaspilite);
+  }
+
+  .jasp-bench__modes {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    border: 1px solid #292e38;
+    border-radius: var(--radius-sm);
+    background: #07080b;
+  }
+
+  .jasp-mode-btn {
+    padding: 0.38rem 0.85rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .jasp-mode-btn:hover {
+    color: var(--color-text);
+  }
+
+  .jasp-mode-btn.is-active {
+    border-color: rgba(220, 38, 38, 0.55);
+    background: rgba(220, 38, 38, 0.16);
+    color: #ffffff;
+  }
+
+  .jasp-bench__body {
+    padding: 1.35rem 1.25rem;
+  }
+
+  .jasp-panel.is-hidden {
+    display: none;
+  }
+
+  .jasp-panel__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .jasp-panel__kicker {
+    margin: 0;
+    color: #f87171;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .jasp-panel__header h4 {
+    margin: 0.25rem 0 0;
+    font-size: 1.22rem;
+    letter-spacing: -0.02em;
+  }
+
+  .jasp-panel__pill {
+    padding: 0.22rem 0.55rem;
+    border: 1px solid #303642;
+    border-radius: var(--radius-xs);
+    background: #13161d;
+    color: #cbd5e1;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .jasp-panel__summary {
+    margin: 0.75rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.62;
+  }
+
+  .jasp-steps {
+    display: grid;
+    gap: 0.45rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .jasp-steps li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #1e222b;
+    border-radius: var(--radius-xs);
+    background: #101218;
+    color: var(--color-text);
+    font-size: 0.85rem;
+  }
+
+  .jasp-steps__num {
+    color: #f87171;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .jasp-specs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin: 1.15rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid #1f232c;
+  }
+
+  .jasp-specs dt {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .jasp-specs dd {
+    margin: 0.25rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .jasp-bench__footer {
+    margin: 0;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid #1e222b;
+    background: #07080a;
+    color: var(--color-text-subtle);
+    font-size: 0.76rem;
+    line-height: 1.5;
+  }
+
+  .jasp-bench__footer strong {
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 720px) {
+    .jasp-specs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-jasp-bench]').forEach((bench) => {
+    const tabs = Array.from(bench.querySelectorAll<HTMLButtonElement>('[data-jasp-mode]'));
+    const panels = Array.from(bench.querySelectorAll<HTMLElement>('[data-jasp-panel]'));
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const mode = tab.dataset.jaspMode;
+        tabs.forEach((t) => {
+          const active = t.dataset.jaspMode === mode;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-selected', String(active));
+        });
+        panels.forEach((p) => {
+          p.classList.toggle('is-hidden', p.dataset.jaspPanel !== mode);
+        });
+      });
+    });
+  });
+</script>

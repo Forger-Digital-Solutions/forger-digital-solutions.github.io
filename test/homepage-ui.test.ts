@@ -3,48 +3,49 @@ import { describe, expect, it } from 'vitest';
 
 const homepage = readFileSync(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
 const header = readFileSync(new URL('../src/components/Header.astro', import.meta.url), 'utf8');
-const portfolioMap = readFileSync(new URL('../src/components/PortfolioArchitecture.astro', import.meta.url), 'utf8');
+const ecosystemGraph = readFileSync(new URL('../src/components/EcosystemGraph.astro', import.meta.url), 'utf8');
+const jaspiliteWorkbench = readFileSync(new URL('../src/components/JaspiliteWorkbench.astro', import.meta.url), 'utf8');
 const productShowcase = readFileSync(new URL('../src/components/ProductShowcase.astro', import.meta.url), 'utf8');
-const cosmicBackdrop = readFileSync(new URL('../src/components/CosmicBackdrop.astro', import.meta.url), 'utf8');
 
-describe('homepage product presentation contract', () => {
-  it('keeps the company wordmark and exposes product routes in primary navigation', () => {
-    expect(header).toContain('class="logo-system">Forger Digital Solutions</span>');
-    for (const route of ['/projects', '/projects/codeforge', '/projects/forge-control', '/projects/dead-trails-west', '/forged']) {
+describe('homepage Operation Digital Forge presentation contract', () => {
+  it('keeps the company wordmark and exposes the seven institutional navigation domains', () => {
+    expect(header).toContain('Forger Digital Solutions');
+    for (const domain of ['Models', 'Products', 'Solutions', 'Research', 'Developers', 'Studio', 'Company']) {
+      expect(header).toContain(domain);
+    }
+    for (const route of ['/models/', '/products/', '/solutions/', '/research/', '/developers/', '/studio/', '/company/', '/downloads/', '/contact/']) {
       expect(header).toContain(route);
     }
+    expect(header).not.toContain('Support FDS');
   });
 
-  it('leads with the studio mission and product-specific calls to action', () => {
-    expect(homepage).toContain('Build the tools.<br />Build the worlds.');
-    expect(homepage).toContain('FDS // INDEPENDENT STUDIO');
-    expect(homepage).toContain('Explore Products');
-    expect(homepage).toContain('Get CodeForge');
+  it('leads with the FDS AI studio headline, mission, and heritage slogan', () => {
+    expect(homepage).toContain('Specialized intelligence.<br />Extraordinary worlds.');
+    expect(homepage).toContain('Explore Our Models');
+    expect(homepage).toContain('Discover Our Research');
+    expect(homepage).toContain('companyProfile.heritageSlogan');
     expect(homepage).not.toContain('hero__support');
   });
 
-  it('renders the canonical product status strip and portfolio relationship map', () => {
-    expect(homepage).toContain('statusStripEntries');
-    expect(homepage).toContain('canonicalStatusLabels');
-    expect(homepage).toContain('<PortfolioArchitecture />');
-    expect(portfolioMap).toContain('manifestByProjectSlug');
-    expect(portfolioMap).toContain('Forge AAA');
-    expect(portfolioMap).toContain('/projects/codeforge#forge-aaa');
+  it('renders the interactive seven-flagship ecosystem graph and registry-backed flagships', () => {
+    expect(homepage).toContain('<EcosystemGraph />');
+    expect(homepage).toContain('<JaspiliteWorkbench />');
+    expect(homepage).toContain('<ProjectForgeGraph');
+    for (const flagship of ['Alexandrite', 'Hackmanite', 'Cinnabar', 'Jaspilite', 'BattleVerse', 'Project Forge', 'State Lines']) {
+      expect(homepage).toContain(flagship);
+      expect(ecosystemGraph).toContain(flagship);
+    }
+    expect(jaspiliteWorkbench).toContain('Auto');
+    expect(jaspiliteWorkbench).toContain('Meld');
+    expect(jaspiliteWorkbench).toContain('Solo');
   });
 
-  it('features current products while labeling development and illustrative work', () => {
-    for (const id of ['codeforge-showcase', 'forge-control-showcase', 'forge-aaa-showcase', 'dead-trails-showcase', 'forgerems-showcase']) {
-      expect(homepage).toContain(`id="${id}"`);
-    }
-    expect(homepage).toContain('Owner-reported tests');
-    expect(homepage).toContain('V23 certification');
+  it('labels non-claims, conceptual visuals, and model boundaries honestly', () => {
+    expect(homepage).toContain('Qwen/Qwen3.8-27B');
+    expect(homepage).toContain('openai/gpt-oss-120b');
+    expect(homepage).toContain('Concept Art — Work in Progress (Not Gameplay');
     expect(productShowcase).toContain('not a product screenshot');
     expect(productShowcase).toContain('Potential integrations · unverified');
     expect(productShowcase).toContain('not gameplay footage');
-  });
-
-  it('keeps ambient decoration nonessential and reduced-motion aware', () => {
-    expect(cosmicBackdrop).toContain('aria-hidden="true"');
-    expect(cosmicBackdrop).toContain('@media (prefers-reduced-motion: reduce)');
   });
 });

@@ -60,8 +60,8 @@ test('support dialog dismisses via ESC', async ({ page }) => {
   await expect(dialog).not.toBeVisible();
 });
 
-test('homepage portfolio map links ForgerEMS to its project page', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'networkidle' });
-  const link = page.locator('.portfolio-domain--4 a[href="/projects/forgerems"]');
+test('products catalog and site footer link ForgerEMS to its project page', async ({ page }) => {
+  await page.goto('/products/', { waitUntil: 'networkidle' });
+  const link = page.locator('a[href="/projects/forgerems"]').first();
   await expect(link).toHaveAttribute('href', '/projects/forgerems');
 });

@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatusPill from '../../components/StatusPill.astro';
+
+const changelogEntries = [
+  {
+    date: '2026-11-26',
+    tag: 'Commercial Platform',
+    tone: 'dev' as const,
+    title: 'Operation Digital Forge II — Commercial Solutions, Studio Workforces & BattleVerse Expansion',
+    items: [
+      'Expanded top-level navigation to seven institutional pillars—Models, Products, Solutions, Research, Developers, Studio, and Company—adding /solutions/ and six audience solution routes.',
+      'Published dedicated /products/battleverse/arena/ (with original-silhouette illustrative comparison demo) and /products/battleverse/creator-studio/ routes while keeping Cinnabar distinct as the specialist model family.',
+      'Added interactive Alexandrite seven-stage convergence pipeline, Hackmanite 10-role and Cinnabar 8-role specialist workforce explorers, Jaspilite five-tier provider ladder, and a zero-deception Commercial Inquiry Composer on /contact/.',
+      'Verified unmodified Apache-2.0 upstream foundations for Hackmanite Prime (Qwen/Qwen3.8-27B) and Hackmanite Reasoning (openai/gpt-oss-120b), commissioned four new art-directed WebP assets, and expanded Kayla Copilot verification to 365/365 golden queries.',
+    ],
+  },
+  {
+    date: '2026-11-26',
+    tag: 'Platform Architecture',
+    tone: 'dev' as const,
+    title: 'Operation Digital Forge — FDS AI Research & Ecosystem Architecture',
+    items: [
+      'Reorganized public site navigation around six institutional pillars: Models, Products, Research, Developers, Studio, and Company.',
+      'Introduced dedicated architecture pages and model cards for Alexandrite, Hackmanite (Prime & Reasoning), Cinnabar (Oracle v1–v4.1), Jaspilite (Auto / Meld / Solo), Forge BattleVerse, Project Forge (15 divisions), and State Lines.',
+      'Established permanent DESIGN.md and BRAND_GUIDELINES.md governance plus CI-validated content/public-status/registry.json.',
+      'Added dedicated Evaluation Center, Public Trust Center, Documentation Hub, and Unified Downloads Center while preserving Forged, ForgerEMS, CodeForge paused policy, and Kayla Copilot.',
+    ],
+  },
+  {
+    date: '2026-10-08',
+    tag: 'Public Preview',
+    tone: 'preview' as const,
+    title: 'ForgerEMS v1.2.4-preview.1 Published for Windows x64',
+    items: [
+      'Published unsigned portable ZIP (ForgerEMS-v1.2.4.zip) and EXE installer (ForgerEMS-Setup-v1.2.4.exe) on GitHub Releases from commit fc54150.',
+      'Added full SHA-256 verification checksums, SmartScreen honesty disclosure, and feature preview walkthrough on /forgerems/.',
+    ],
+  },
+  {
+    date: '2026-08-29',
+    tag: 'Product Update',
+    tone: 'paused' as const,
+    title: 'CodeForge v0.2.0 & Distribution Pause Notice',
+    items: [
+      'Documented CodeForge free-first ForgeZero execution boundaries and workspace controls.',
+      'Temporarily paused Windows executable installer distribution while preserving the SHA-256-verified source snapshot archive (CodeForge-source-6b0770b.zip) on /forged.',
+    ],
+  },
+  {
+    date: '2026-08-22',
+    tag: 'Engineering Log',
+    tone: 'release' as const,
+    title: 'FDS Website V2 Foundation & Kayla Copilot Launch',
+    items: [
+      'Established static Astro architecture on GitHub Pages with offline-capable Kayla canonical knowledge routing and a hardened Cloudflare Worker.',
+      'Published initial Engineering Field Notes, Hardware Donation inquiry guidelines, and strict release-boundary documentation.',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Changelog — Website, Platform & Release History"
+  description="Transparent chronological changelog of public website milestones, software releases, governance upgrades, and corrections at Forger Digital Solutions."
+  accent="fds-cobalt"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/releases/">Releases</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Changelog</span>
+  </nav>
+
+  <header class="page-head">
+    <p class="page-eyebrow">FDS Engineering Record // Public History</p>
+    <h1 class="page-title">Changelog</h1>
+    <p class="page-description">
+      A transparent timeline of verified public milestones, governance additions, software package changes, and documented corrections across Forger Digital Solutions.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Chronological changelog entries">
+    <ol class="cl-list">
+      {changelogEntries.map((entry) => (
+        <li class="cl-item">
+          <div class="cl-date">
+            <time datetime={entry.date}>{entry.date}</time>
+            <StatusPill label={entry.tag} tone={entry.tone} />
+          </div>
+          <div class="fds-panel cl-card">
+            <h2>{entry.title}</h2>
+            <ul>
+              {entry.items.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>
+
+<style>
+  .cl-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 1.75rem; }
+  .cl-item {
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .cl-date { display: grid; gap: 0.55rem; align-content: start; padding-top: 0.25rem; }
+  .cl-date time {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .cl-card { padding: 1.5rem 1.75rem; }
+  .cl-card h2 { margin: 0 0 0.9rem; font-size: 1.25rem; letter-spacing: -0.02em; }
+  .cl-card ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.55rem;
+    color: var(--color-text-muted);
+    font-size: 0.93rem;
+    line-height: 1.62;
+  }
+
+  @media (max-width: 760px) {
+    .cl-item { grid-template-columns: 1fr; gap: 0.75rem; }
+    .cl-date { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+  }
+</style>
