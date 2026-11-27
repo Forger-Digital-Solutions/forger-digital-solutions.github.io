@@ -511,7 +511,15 @@ export async function handleKaylaChat(
     // continuity, multi-entity synthesis, high-risk overrides); every other
     // turn falls through undefined and the standalone canonical/retrieval
     // lane below remains authoritative.
-    sources = retrieved[0]?.settled && retrieved[0]?.id === 'portfolio-status'
+    const isSettledFlagshipOrPortfolio = Boolean(
+      retrieved[0]?.settled && (
+        retrieved[0]?.id === 'portfolio-status'
+        || retrieved[0]?.id?.startsWith('registry-')
+        || retrieved[0]?.id === 'fds-solutions'
+        || retrieved[0]?.id === 'fds-api-licensing'
+      )
+    );
+    sources = isSettledFlagshipOrPortfolio
       ? retrieved
       : composed && composed.length
         ? composed
@@ -750,7 +758,15 @@ export async function* streamKaylaChat(
   const localProvider = createProvider();
   const retrieved = await localProvider.search(message, context, history);
   const composed = conversationAnswer(conversation);
-  const sources = composed && composed.length ? composed : (retrieved.length ? retrieved : []);
+  const isSettledFlagshipOrPortfolio = Boolean(
+    retrieved[0]?.settled && (
+      retrieved[0]?.id === 'portfolio-status'
+      || retrieved[0]?.id?.startsWith('registry-')
+      || retrieved[0]?.id === 'fds-solutions'
+      || retrieved[0]?.id === 'fds-api-licensing'
+    )
+  );
+  const sources = isSettledFlagshipOrPortfolio ? retrieved : (composed && composed.length ? composed : (retrieved.length ? retrieved : []));
   const actions = rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
   taskPlan.recommendedActions = actions;
   if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };

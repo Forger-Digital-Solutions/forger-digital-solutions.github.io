@@ -70,15 +70,51 @@ test.describe('Operation Digital Forge visual & interactive system', () => {
     }
   });
 
-  test('passes serious WCAG 2.2 AA accessibility checks across the homepage', async ({ page }) => {
-    await page.goto('/');
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa'])
-      .exclude('iframe')
-      .analyze();
-    const serious = results.violations.filter(
-      (violation) => violation.impact === 'critical' || violation.impact === 'serious'
-    );
-    expect(serious, 'Serious accessibility issues on homepage').toEqual([]);
+  test('passes serious WCAG 2.2 AA accessibility checks across homepage, Solutions, BattleVerse Arena, and Contact', async ({ page }) => {
+    test.setTimeout(90_000);
+    for (const route of ['/', '/solutions/', '/products/battleverse/arena/', '/contact/']) {
+      await page.goto(route);
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa'])
+        .exclude('iframe')
+        .analyze();
+      const serious = results.violations.filter(
+        (violation) => violation.impact === 'critical' || violation.impact === 'serious'
+      );
+      expect(serious, `Serious accessibility issues on ${route}`).toEqual([]);
+    }
+  });
+
+  test('interactive Alexandrite convergence, Hackmanite & Cinnabar workforces, BattleVerse Arena, and Commercial Inquiry Composer work cleanly', async ({ page }) => {
+    test.setTimeout(90_000);
+
+    // Alexandrite 7-stage explorer
+    await page.goto('/models/alexandrite/');
+    await page.locator('#alex-tab-05').click();
+    await expect(page.locator('#alex-stage-panel [data-alex-field="step"]')).toHaveText('STAGE 05 / 07');
+
+    // Hackmanite 10-role workforce explorer
+    await page.goto('/models/hackmanite/');
+    await page.locator('#hack-wf-tab-multiplayer-engineer').click();
+    await expect(page.locator('#hack-wf-panel [data-wf-field="role"]')).toHaveText('Multiplayer Engineer');
+
+    // Cinnabar 8-role creative workforce explorer
+    await page.goto('/models/cinnabar/');
+    await page.locator('#cin-wf-tab-continuity-specialist').click();
+    await expect(page.locator('#cin-wf-panel [data-wf-field="role"]')).toHaveText('Continuity Specialist');
+
+    // BattleVerse Arena illustrative scenario switcher
+    await page.goto('/products/battleverse/arena/');
+    await page.locator('#arena-tab-kestrel-vs-aegis').click();
+    await expect(page.locator('#arena-panel-kestrel-vs-aegis')).toBeVisible();
+    await expect(page.locator('#arena-panel-aegis-vs-vesper')).toBeHidden();
+
+    // Commercial Inquiry Composer honors ?track=enterprise query parameter
+    await page.goto('/contact/?track=enterprise');
+    const entTrack = page.locator('[data-track-id="enterprise"]');
+    await expect(entTrack).toHaveAttribute('aria-checked', 'true');
+    const mailtoHref = await page.locator('[data-inquiry-mailto]').getAttribute('href');
+    expect(mailtoHref).toContain('mailto:forgerdigisolsupport@gmail.com');
+    expect(mailtoHref).toContain('Enterprise');
   });
 });

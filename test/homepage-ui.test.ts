@@ -8,12 +8,12 @@ const jaspiliteWorkbench = readFileSync(new URL('../src/components/JaspiliteWork
 const productShowcase = readFileSync(new URL('../src/components/ProductShowcase.astro', import.meta.url), 'utf8');
 
 describe('homepage Operation Digital Forge presentation contract', () => {
-  it('keeps the company wordmark and exposes the six institutional navigation domains', () => {
+  it('keeps the company wordmark and exposes the seven institutional navigation domains', () => {
     expect(header).toContain('Forger Digital Solutions');
-    for (const domain of ['Models', 'Products', 'Research', 'Developers', 'Studio', 'Company']) {
+    for (const domain of ['Models', 'Products', 'Solutions', 'Research', 'Developers', 'Studio', 'Company']) {
       expect(header).toContain(domain);
     }
-    for (const route of ['/models/', '/products/', '/research/', '/developers/', '/studio/', '/company/', '/downloads/']) {
+    for (const route of ['/models/', '/products/', '/solutions/', '/research/', '/developers/', '/studio/', '/company/', '/downloads/', '/contact/']) {
       expect(header).toContain(route);
     }
     expect(header).not.toContain('Support FDS');

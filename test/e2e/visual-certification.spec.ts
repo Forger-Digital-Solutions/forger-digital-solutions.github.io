@@ -29,7 +29,9 @@ const CERTIFICATION_WIDTHS = [390, 768, 1440, 1920];
 const CAPTURE_PAGES = [
   { path: '/', name: 'homepage' },
   { path: '/models/', name: 'models' },
+  { path: '/solutions/', name: 'solutions' },
   { path: '/products/jaspilite/', name: 'jaspilite' },
+  { path: '/products/battleverse/arena/', name: 'battleverse-arena' },
   { path: '/research/project-forge/', name: 'project-forge' },
   { path: '/studio/state-lines/', name: 'state-lines' },
   { path: '/forged', name: 'forged' },
@@ -120,7 +122,7 @@ test.describe('Visual certification captures', () => {
       await expect(page.locator('main')).toBeVisible();
       await settle(page);
       await expectRevealed(page, `${path} @ 1440px reduced motion`);
-      const name = path === '/' ? 'homepage' : 'gems';
+      const name = path === '/' ? 'homepage' : 'models';
       await page.screenshot({ path: resolve(CAPTURES_DIR, `${name}-1440-reduced-motion.png`), fullPage: true, animations: 'disabled' });
     });
   }

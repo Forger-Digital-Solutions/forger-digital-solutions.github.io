@@ -66,6 +66,19 @@ const notDownloadable = new Set<string>([
   ...projects
     .filter((entry) => !products.some((product) => (product.projectSlug || product.slug) === entry.slug && product.downloadUrl))
     .map((entry) => entry.name.toLowerCase()),
+  'alexandrite',
+  'hackmanite',
+  'hackmanite prime',
+  'hackmanite reasoning',
+  'cinnabar',
+  'cinnabar oracle',
+  'jaspilite',
+  'forge battleverse',
+  'battleverse',
+  'battleverse arena',
+  'battleverse creator studio',
+  'project forge',
+  'state lines',
   'kyrablox',
   'gems',
   'training grounds',
@@ -102,6 +115,19 @@ const entityNames: string[] = [
   ...projects.map((p) => p.name),
   ...projects.flatMap((p) => (p.shortName ? [p.shortName] : [])),
   ...products.map((p) => p.name),
+  'Alexandrite',
+  'Hackmanite',
+  'Hackmanite Prime',
+  'Hackmanite Reasoning',
+  'Cinnabar',
+  'Cinnabar Oracle',
+  'Jaspilite',
+  'Forge BattleVerse',
+  'BattleVerse',
+  'BattleVerse Arena',
+  'BattleVerse Creator Studio',
+  'Project Forge',
+  'State Lines',
   'KyraBlox',
   'GEMS',
   'Training Grounds',
@@ -135,7 +161,10 @@ function entitiesIn(sentence: string): string[] {
 function checkVersions(sentence: string, violations: CanonViolation[]): void {
   // Version-shaped mentions: "v0.2.0", "version 9.0", "release 2.1", "CodeForge 9.0".
   // Bare decimals are left alone unless preceded by an FDS entity name, so model names
-  // like Qwen2.5-Coder and platform names like Windows 10/11 do not trip the check.
+  // like Qwen3.8-27B and platform names like Windows 10/11 do not trip the check.
+  // Documented Cinnabar Oracle historical lineage labels (v1-v4.1) are permitted when
+  // the sentence refers to Oracle / Cinnabar lineages.
+  const mentionsOracleLineage = /\b(?:cinnabar|oracle)\b/i.test(sentence);
   const matches = [
     ...sentence.matchAll(/\bv(\d+(?:\.\d+){1,3}[a-z0-9.\-]*)/gi),
     ...sentence.matchAll(/\b(?:version|release|build)\s+v?(\d+(?:\.\d+){0,3}[a-z0-9.\-]*)/gi),
@@ -144,6 +173,7 @@ function checkVersions(sentence: string, violations: CanonViolation[]): void {
   for (const match of matches) {
     const claimed = normalizeVersion(match[1]);
     if (!claimed) continue;
+    if (mentionsOracleLineage && /^(?:1|2|3|4|4\.1)$/.test(claimed)) continue;
     const known = [...allowedVersions].some((allowed) => allowed === claimed || allowed.startsWith(`${claimed}.`) || claimed.startsWith(allowed));
     if (known) continue;
     // "There is no CodeForge v9.0" denies the version rather than claiming it.

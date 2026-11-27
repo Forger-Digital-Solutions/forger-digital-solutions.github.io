@@ -11,6 +11,7 @@ import { releases } from './releases';
 import { githubRepos } from './github';
 import { officialSites } from './sites';
 import { matchEntity, distinctiveTokens } from './entities';
+import publicStatusRaw from '../../../content/public-status/registry.json';
 
 export interface KaylaDocument {
   id: string;
@@ -431,10 +432,58 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     id: 'kayla-copilot',
     type: 'general',
     title: 'Kayla',
-    text: 'Kayla is the general AI assistant on the Forger Digital Solutions website. She can help with general questions and public information about FDS, its projects, releases, navigation, and support. Kayla AI Publisher is a separate FDS creative and publishing product. Kayla has no live external data.',
+    text: 'Kayla is the general AI assistant on the Forger Digital Solutions website. She can help with general questions and public information about FDS, its flagship models, applications, solutions, releases, navigation, and support. Kayla AI Publisher is a separate FDS creative and publishing product. Kayla has no live external data.',
     route: '/',
     entityId: 'kayla-copilot',
     tags: ['kayla', 'copilot', 'kayla copilot', 'assistant', 'guide'],
+    weight: 1.0
+  });
+
+  // Operation Digital Forge II flagship models, applications, research & studio records
+  const flagshipRegistryIds = new Set([
+    'alexandrite',
+    'hackmanite',
+    'hackmanite-prime',
+    'hackmanite-reasoning',
+    'cinnabar',
+    'jaspilite',
+    'battleverse',
+    'battleverse-arena',
+    'battleverse-creator-studio',
+    'project-forge',
+    'state-lines',
+  ]);
+  for (const entry of publicStatusRaw.entries) {
+    if (!flagshipRegistryIds.has(entry.id)) continue;
+    addDoc({
+      id: `registry-${entry.id}`,
+      type: entry.category === 'application' || entry.category === 'commercial-direction' ? 'app' : 'general',
+      title: entry.name,
+      text: `${entry.name} (${entry.division}). Status: ${entry.development_status}; availability: ${entry.availability}. ${entry.public_summary} ${entry.commercial_direction || ''} Limitations: ${entry.known_limitations.join(' ')} Non-claims: ${entry.non_claims.join(' ')}`,
+      route: entry.route,
+      entityId: entry.id,
+      tags: [entry.id, entry.name.toLowerCase(), entry.division.toLowerCase(), entry.category],
+      weight: 1.0
+    });
+  }
+
+  addDoc({
+    id: 'fds-solutions',
+    type: 'general',
+    title: 'Studio & Enterprise Solutions',
+    text: 'Forger Digital Solutions designs commercial pathways and future personalized AI workforces for game developers, gaming studios, anime and manga creators, animation studios, software engineering teams, and enterprises. Five customization layers (Customer Retrieval, Agent Configuration, Tool Integration, Domain Adaptation, Dedicated Deployment) keep customer data strictly segregated and never automatically used to train shared models.',
+    route: '/solutions/',
+    tags: ['solutions', 'studio', 'enterprise', 'private ai', 'workforce', 'gaming studio', 'animation studio'],
+    weight: 1.0
+  });
+
+  addDoc({
+    id: 'fds-api-licensing',
+    type: 'general',
+    title: 'Developers, Planned APIs & Commercial Licensing',
+    text: 'Forger Digital Solutions does not currently operate a public inference API, API key portal, or billing console. Planned Hackmanite and Cinnabar model APIs, SDKs, and commercial model licensing pathways (grounded in Apache-2.0 upstream bases for Hackmanite) are open for early scoping via /contact/.',
+    route: '/developers/',
+    tags: ['api', 'sdk', 'licensing', 'commercial', 'preview', 'tester', 'developers'],
     weight: 1.0
   });
 
