@@ -2,54 +2,104 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StatusPill from '../components/StatusPill.astro';
 import SpecimenMedia from '../components/SpecimenMedia.astro';
+import HubArchitectureFlow from '../components/HubArchitectureFlow.astro';
+import HubInvestigationPreview from '../components/HubInvestigationPreview.astro';
+import PilotBookingActions from '../components/PilotBookingActions.astro';
 import EcosystemGraph from '../components/EcosystemGraph.astro';
 import JaspiliteWorkbench from '../components/JaspiliteWorkbench.astro';
 import ProjectForgeGraph from '../components/ProjectForgeGraph.astro';
 import SupportDialog from '../components/SupportDialog.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
+import { siteConfig } from '../config/site';
 import {
   companyProfile,
   getRegistryEntry,
   modelFamiliesData,
-  projectForgeData,
   newsUpdatesData,
-  solutionsData,
+  studioIntelligenceHubData,
 } from '../data/registry';
 
-const alexandrite = getRegistryEntry('alexandrite');
+const hub = studioIntelligenceHubData;
 const hackmanite = getRegistryEntry('hackmanite');
-const cinnabar = getRegistryEntry('cinnabar');
-const jaspilite = getRegistryEntry('jaspilite');
 const battleverse = getRegistryEntry('battleverse');
+const jaspilite = getRegistryEntry('jaspilite');
+const alexandrite = getRegistryEntry('alexandrite');
+const cinnabar = getRegistryEntry('cinnabar');
 const stateLines = getRegistryEntry('state-lines');
 
-const alexModel = modelFamiliesData.find((f) => f.id === 'alexandrite')!;
 const hackModel = modelFamiliesData.find((f) => f.id === 'hackmanite')!;
 const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
+const alexModel = modelFamiliesData.find((f) => f.id === 'alexandrite')!;
+
+const hierarchyRail = [
+  {
+    idx: '01',
+    name: 'Studio Intelligence Hub',
+    detail: 'Lead Commercial Pilot · Roblox & Unreal',
+    href: '/solutions/studio-intelligence-hub/',
+  },
+  {
+    idx: '02',
+    name: 'Project Forge & AI Research',
+    detail: 'Engineering Context · Alexandrite · Cinnabar',
+    href: '/research/project-forge/',
+  },
+  {
+    idx: '03',
+    name: 'Hackmanite & BattleVerse',
+    detail: 'Game Dev AI · Fictional Intelligence',
+    href: '/models/hackmanite/',
+  },
+  {
+    idx: '04',
+    name: 'Jaspilite & FDS Releases',
+    detail: 'Coding Agent · State Lines · ForgerEMS',
+    href: '/products/jaspilite/',
+  },
+];
+
+const homepageServiceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: hub.name,
+  serviceType: 'Managed Engineering Intelligence Pilot for Game Studios',
+  provider: {
+    '@type': 'Organization',
+    name: siteConfig.name,
+    url: siteConfig.siteUrl,
+  },
+  url: new URL(hub.route, siteConfig.siteUrl).href,
+  description:
+    'Managed four-week engineering intelligence pilot connecting Roblox Studio (Luau) and Unreal Engine (C++) source code with studio technical documentation, design documents, and engine references.',
+};
 ---
 
 <BaseLayout
-  description="Forger Digital Solutions is an independent AI research laboratory, commercial AI technology provider, autonomous software engineering company, and original entertainment studio building Alexandrite, Hackmanite, Cinnabar, Jaspilite, Forge BattleVerse, Project Forge, and State Lines."
+  title="FDS Studio Intelligence Hub & Game Engineering AI"
+  description="Connect your game studio's source code, technical documentation, engine references, and design knowledge. FDS Studio Intelligence Hub delivers managed four-week engineering intelligence pilots for Roblox Studio and Unreal Engine teams."
+  ogImage={hub.hero.image}
+  accent="fds-cobalt"
+  jsonLd={homepageServiceSchema}
 >
-  <!-- Section A: Compact factual announcement strip -->
-  <div class="announce-strip" role="region" aria-label="Latest update">
-    <span class="announce-strip__tag">Update</span>
+  <!-- Compact Factual Announcement Strip -->
+  <div class="announce-strip" role="region" aria-label="Studio Intelligence Hub pilot availability">
+    <span class="announce-strip__tag">Pilot Open</span>
     <p class="announce-strip__text">
-      FDS Commercial AI &amp; Studio Solutions pathways open for early scoping · ForgerEMS v1.2.4-preview.1 remains publicly available for Windows.
+      FDS Studio Intelligence Hub four-week managed pilots open for Roblox Studio &amp; Unreal Engine teams · First five Founding Studios receive 50% off the applicable pilot fee.
     </p>
-    <a class="announce-strip__link" href="/solutions/">Explore Solutions <span aria-hidden="true">→</span></a>
+    <a class="announce-strip__link" href="/solutions/studio-intelligence-hub/">Explore the Hub <span aria-hidden="true">→</span></a>
   </div>
 
-  <!-- Section B: Editorial Hero with Bespoke Computational Convergence Visual -->
+  <!-- SECTION A: HERO — STUDIO INTELLIGENCE HUB FIRST -->
   <section class="hero" aria-labelledby="hero-heading">
     <div class="hero__backdrop" aria-hidden="true">
       <picture>
-        <source media="(max-width: 760px)" srcset="/images/forge/hero-manifold-sm.webp" type="image/webp" />
+        <source media="(max-width: 760px)" srcset={hub.hero.imageSm} type="image/webp" />
         <img
-          src="/images/forge/hero-manifold.webp"
+          src={hub.hero.image}
           alt=""
           width="1600"
-          height="893"
+          height="900"
           loading="eager"
           fetchpriority="high"
           decoding="sync"
@@ -61,83 +111,268 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     <div class="hero__inner">
       <p class="fds-eyebrow">
         <span class="fds-eyebrow__rule"></span>
-        Forger Digital Solutions · Commercial AI, Research &amp; Original Studio
+        FDS Studio Intelligence Hub · Managed Engineering Intelligence Pilot
       </p>
       <h1 id="hero-heading" class="hero__title">
-        Specialized intelligence.<br />Extraordinary worlds.
+        Your Game Studio's Knowledge.<br />Connected.
       </h1>
       <p class="hero__lead">
-        {companyProfile.supportingCopy}
+        {hub.hero.supportingCopy}
       </p>
+
       <div class="hero__actions">
-        <a href="/models/" class="btn btn-primary">Explore Our Models <span aria-hidden="true">→</span></a>
-        <a href="/solutions/" class="btn btn-outline">Studio &amp; Enterprise Solutions</a>
-        <a href="/research/" class="btn btn-ghost">Discover Our Research</a>
+        <PilotBookingActions
+          variant="pilot"
+          primaryLabel={hub.hero.primaryCta}
+          secondaryLabel={hub.hero.secondaryCta}
+          secondaryHref="/solutions/studio-intelligence-hub/"
+          showEmailFallback
+        />
       </div>
+
+      <p class="hero__scope-note">
+        Managed four-week pilot for <strong>Roblox Studio (Luau)</strong> and <strong>Unreal Engine (C++)</strong> teams · Read-only project access · Customer-owned API keys · Pricing discussed during pilot assessment.
+      </p>
+
       <p class="hero__heritage">
-        <span>Studio Creed</span>
+        <span>Forger Digital Solutions</span>
         <strong>{companyProfile.heritageSlogan}</strong>
       </p>
     </div>
 
-    <!-- Clean 4-pillar institutional division rail -->
-    <div class="division-rail" aria-label="Forger Digital Solutions four core pillars">
-      {companyProfile.divisions.map((div, i) => (
-        <a href={div.route} class="division-rail__item">
-          <span class="division-rail__idx">0{i + 1}</span>
-          <span class="division-rail__name">{div.name}</span>
-          <span class="division-rail__flagships">{div.flagships.join(' · ')}</span>
+    <!-- Product Hierarchy Rail -->
+    <div class="division-rail" aria-label="Forger Digital Solutions product hierarchy">
+      {hierarchyRail.map((item) => (
+        <a href={item.href} class="division-rail__item">
+          <span class="division-rail__idx">{item.idx}</span>
+          <span class="division-rail__name">{item.name}</span>
+          <span class="division-rail__flagships">{item.detail}</span>
         </a>
       ))}
     </div>
   </section>
 
-  <!-- Section C: Flagship AI Model Families -->
-  <section class="page-section" aria-labelledby="models-heading">
+  <!-- SECTION B: THE PROBLEM -->
+  <section class="page-section page-section--surface" aria-labelledby="problem-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Intelligence · Commercial &amp; Research Model Families</p>
-        <h2 id="models-heading">Focused intelligence, built for the worlds we create.</h2>
-        <p>
-          Rather than chasing generic all-purpose claims, FDS develops specialized AI model families for game engineering, anime and animation production, and long-term collective convergence—backed by verified Apache-2.0 open-weight foundations and Project Forge research.
-        </p>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>{hub.problem.eyebrow}</p>
+        <h2 id="problem-heading">{hub.problem.headline}</h2>
+        <p>{hub.problem.lead}</p>
       </div>
-      <div class="head-links">
-        <a href="/models/" class="text-link">Model catalog <span aria-hidden="true">→</span></a>
-        <a href="/model-cards/" class="text-link">Model cards <span aria-hidden="true">→</span></a>
+      <a href="/solutions/studio-intelligence-hub/" class="text-link">Full Studio Intelligence Hub overview <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ol class="problem-ledger">
+      {hub.problem.painPoints.map((pt) => (
+        <li class="problem-ledger__row">
+          <span class="problem-ledger__idx">{pt.code}</span>
+          <h3 class="problem-ledger__title">{pt.title}</h3>
+          <p class="problem-ledger__detail">{pt.detail}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- SECTION C: THE SOLUTION (PROJECT FORGE ARCHITECTURE) -->
+  <section class="page-section" aria-labelledby="solution-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>{hub.architecture.eyebrow}</p>
+        <h2 id="solution-heading">{hub.architecture.headline}</h2>
+        <p>{hub.architecture.lead}</p>
+      </div>
+      <a href="/solutions/studio-intelligence-hub/#architecture" class="text-link">Inspect technical architecture <span aria-hidden="true">→</span></a>
+    </div>
+
+    <HubArchitectureFlow showBoundaries />
+  </section>
+
+  <!-- SECTION D: WHAT DEVELOPERS CAN ASK -->
+  <section class="page-section page-section--surface" aria-labelledby="questions-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>What Developers Can Ask</p>
+        <h2 id="questions-heading">Answers backed by your files, docs, and engine references.</h2>
+        <p>
+          Unlike generic coding assistants that guess from isolated snippets, the Studio Intelligence Hub connects gameplay scripts, technical specifications, and engine references so developers can trace real evidence in seconds.
+        </p>
       </div>
     </div>
 
-    <!-- Flagship Spotlight: Alexandrite (Horizontal Split — not a generic card) -->
-    <article class="alex-spotlight" data-accent="alexandrite">
-      <div class="alex-spotlight__copy">
-        <div class="flagship-meta-row">
-          <span class="flagship-kicker">Flagship Research Vision · Collective Intelligence</span>
-          <StatusPill status={alexandrite.development_status} />
-        </div>
-        <h3><a href="/models/alexandrite/">Alexandrite</a></h3>
-        <p class="flagship-tagline">Intelligence, converged.</p>
-        <p class="flagship-body">{alexModel.summary}</p>
-        <p class="flagship-boundary">
-          <strong>Verification status:</strong> Long-term convergence architecture. No collective training run has completed and no public model endpoint is advertised.
+    <HubInvestigationPreview idPrefix="home-hub-q" />
+  </section>
+
+  <!-- SECTION E: SUPPORTED ENGINES -->
+  <section class="page-section" aria-labelledby="engines-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Supported Engines</p>
+        <h2 id="engines-heading">Scoped for Roblox Studio and Unreal Engine codebases.</h2>
+        <p>
+          Every pilot focuses on verified text-source and documentation workflows—with upfront honesty about what is and is not supported today.
         </p>
-        <div class="flagship-actions">
-          <a href="/models/alexandrite/" class="btn btn-outline">Explore Alexandrite <span aria-hidden="true">→</span></a>
-          <a href="/evaluations/" class="text-link">Evaluation standards</a>
-        </div>
       </div>
-      <div class="alex-spotlight__visual">
-        <SpecimenMedia
-          src={alexModel.image}
-          mobileSrc={alexModel.imageSm}
-          alt={alexModel.imageAlt}
-          label={alexModel.imageLabel}
+      <a href="/solutions/studio-intelligence-hub/#supported-engines" class="text-link">View engine scope details <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="engines-grid">
+      {hub.supportedEngines.map((eng) => (
+        <article class="fds-panel engine-card" data-accent={eng.accent}>
+          <div class="engine-card__top">
+            <span class="engine-card__badge">{eng.badge}</span>
+            <StatusPill status="commercial-direction" label="Managed Pilot" />
+          </div>
+          <h3>{eng.name}</h3>
+          <p class="engine-card__summary">{eng.summary}</p>
+          <ul class="engine-card__list">
+            {eng.covered.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <p class="flagship-boundary">
+            <strong>Scope Boundary:</strong> {eng.honestyBoundary}
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- SECTION F: HOW THE PILOT WORKS -->
+  <section class="page-section page-section--surface" aria-labelledby="pilot-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>How the Pilot Works</p>
+        <h2 id="pilot-heading">Four weeks from scoping to verified studio handoff.</h2>
+        <p>
+          We run the Studio Intelligence Hub as a hands-on managed engagement. Exact project scope, access rules, and deliverables are agreed before Week 1 begins.
+        </p>
+      </div>
+    </div>
+
+    <ol class="timeline-grid">
+      {hub.pilotWeeks.map((step) => (
+        <li class="timeline-cell">
+          <span class="timeline-cell__week">{step.week}</span>
+          <h3>{step.title}</h3>
+          <p>{step.summary}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- SECTION G: SECURITY AND CONTROL -->
+  <section class="page-section" aria-labelledby="security-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Security &amp; Control</p>
+        <h2 id="security-heading">Read-only access. Isolated data. Customer-owned credentials.</h2>
+        <p>
+          Your studio keeps control of its repositories, deployment environment, and AI provider credentials throughout the pilot.
+        </p>
+      </div>
+      <a href="/trust/" class="text-link">FDS Trust Center <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="security-grid">
+      {hub.securityControls.map((ctrl) => (
+        <article class="security-cell">
+          <span class="security-cell__code">{ctrl.code}</span>
+          <h3>{ctrl.title}</h3>
+          <p>{ctrl.detail}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- SECTION H: FOUNDING STUDIO PROGRAM -->
+  <section class="page-section page-section--surface" aria-labelledby="founding-heading">
+    <div class="founding-banner">
+      <div class="founding-banner__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>{hub.foundingProgram.eyebrow}</p>
+        <h2 id="founding-heading">{hub.foundingProgram.headline}</h2>
+        <p class="founding-banner__lead">{hub.foundingProgram.summary}</p>
+        <p class="founding-banner__benefit">
+          <strong>Founding Partner Offer:</strong> {hub.foundingProgram.benefit}
+        </p>
+        <p class="founding-banner__pricing">{hub.foundingProgram.pricingNote}</p>
+      </div>
+      <div class="founding-banner__cta">
+        <PilotBookingActions
+          variant="founding"
+          primaryLabel={hub.foundingProgram.ctaLabel}
+          secondaryLabel="Explore Pilot Details"
+          secondaryHref="/solutions/studio-intelligence-hub/"
+          showEmailFallback
         />
       </div>
-    </article>
+    </div>
+  </section>
 
-    <!-- Specialist Model Pair: Hackmanite & Cinnabar -->
+  <!-- SECTION I: FINAL HUB CTA -->
+  <section class="page-section" aria-labelledby="final-hub-cta-heading">
+    <div class="fds-panel hub-final-cta">
+      <div class="hub-final-cta__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Book Your Technical Assessment</p>
+        <h2 id="final-hub-cta-heading">Let's Make Your Studio's Engineering Knowledge Work Harder.</h2>
+        <p>
+          Talk directly with FDS engineering about your Roblox Studio or Unreal Engine project, review what qualifies for a four-week pilot, and discuss pilot pricing and Founding Studio spots.
+        </p>
+      </div>
+      <div class="hub-final-cta__actions">
+        <PilotBookingActions
+          variant="pilot"
+          primaryLabel="Book a Pilot Call"
+          secondaryLabel="Read Pilot FAQ"
+          secondaryHref="/solutions/studio-intelligence-hub/#faq"
+          showEmailFallback
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       SUBORDINATE FDS PRODUCT & RESEARCH ECOSYSTEM (Hierarchy #2 through #6)
+       ====================================================================== -->
+
+  <!-- #2: FDS AI & Engineering Capabilities (Project Forge, Ecosystem Map, Research) -->
+  <section class="page-section page-section--surface" id="fds-capabilities" data-accent="project-forge" aria-labelledby="capabilities-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS AI &amp; Engineering Capabilities</p>
+        <h2 id="capabilities-heading">Built on Project Forge research and strict verification discipline.</h2>
+        <p>
+          Beyond our Studio Intelligence Hub pilot service, Forger Digital Solutions maintains a long-term engineering research foundation (<a href="/research/project-forge/">Project Forge</a>) and specialized AI initiatives—keeping verified commercial services cleanly separated from active development and long-term research.
+        </p>
+      </div>
+      <div class="head-links">
+        <a href="/research/project-forge/" class="text-link">Project Forge <span aria-hidden="true">→</span></a>
+        <a href="/models/" class="text-link">Model catalog <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <ProjectForgeGraph compact />
+
+    <div class="eco-embed-wrap">
+      <EcosystemGraph />
+    </div>
+  </section>
+
+  <!-- #3 & #4: Hackmanite & Forge BattleVerse -->
+  <section class="page-section" id="fds-ecosystem-products" aria-labelledby="ecosystem-products-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Broader FDS Product Ecosystem</p>
+        <h2 id="ecosystem-products-heading">Specialized game-dev AI, fictional intelligence, and coding tools.</h2>
+        <p>
+          Our broader product families remain active parts of the Forger Digital Solutions ecosystem, each with transparent development status and clear boundaries.
+        </p>
+      </div>
+      <a href="/products/" class="text-link">All products &amp; portfolio <span aria-hidden="true">→</span></a>
+    </div>
+
     <div class="specialist-grid">
+      <!-- #3: Hackmanite -->
       <article class="specialist-panel" data-accent="hackmanite">
         <SpecimenMedia
           src={hackModel.image}
@@ -147,7 +382,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
         />
         <div class="specialist-panel__body">
           <div class="flagship-meta-row">
-            <span class="flagship-kicker">Universal Gaming AI</span>
+            <span class="flagship-kicker">03 · Universal Gaming AI Specialization</span>
             <StatusPill status={hackmanite.development_status} />
           </div>
           <h3><a href="/models/hackmanite/">Hackmanite</a></h3>
@@ -156,80 +391,66 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
           <ul class="model-line-list">
             <li>
               <a href="/models/hackmanite/prime/"><strong>Hackmanite Prime</strong></a>
-              <span>Planned base: <code>Qwen/Qwen3.8-27B</code> · coding &amp; implementation</span>
+              <span>Planned Apache-2.0 base: <code>Qwen/Qwen3.8-27B</code> · coding &amp; implementation</span>
             </li>
             <li>
               <a href="/models/hackmanite/reasoning/"><strong>Hackmanite Reasoning</strong></a>
-              <span>Planned base: <code>openai/gpt-oss-120b</code> · architecture &amp; debugging</span>
+              <span>Planned Apache-2.0 base: <code>openai/gpt-oss-120b</code> · architecture &amp; debugging</span>
             </li>
           </ul>
-          <a href="/models/hackmanite/" class="text-link">Inspect Hackmanite family <span aria-hidden="true">→</span></a>
+          <p class="flagship-boundary">
+            <strong>Status honesty:</strong> Commercial specialist model training is planned and has not completed. No public model endpoint is offered today.
+          </p>
+          <div class="flagship-actions">
+            <a href="/models/hackmanite/" class="text-link">Inspect Hackmanite family <span aria-hidden="true">→</span></a>
+          </div>
         </div>
       </article>
 
-      <article class="specialist-panel" data-accent="cinnabar">
+      <!-- #4: Forge BattleVerse (and Cinnabar) -->
+      <article class="specialist-panel" data-accent="battleverse">
         <SpecimenMedia
-          src={cinModel.image}
-          mobileSrc={cinModel.imageSm}
-          alt={cinModel.imageAlt}
-          label={cinModel.imageLabel}
+          src="/images/forge/battleverse-combat-sim.webp"
+          mobileSrc="/images/forge/battleverse-combat-sim-sm.webp"
+          alt="Two original armored silhouettes mid-clash in an abstract spatial physics arena overlaid with cobalt ballistic vectors and Gaussian probability envelopes."
+          label="Illustrative Simulation Concept — Original Silhouettes"
         />
         <div class="specialist-panel__body">
           <div class="flagship-meta-row">
-            <span class="flagship-kicker">Anime · Manga · Animation AI</span>
-            <StatusPill status={cinnabar.development_status} />
+            <span class="flagship-kicker">04 · Anime, Manga &amp; Fictional Intelligence</span>
+            <StatusPill status={battleverse.development_status} />
           </div>
-          <h3><a href="/models/cinnabar/">Cinnabar</a></h3>
-          <p class="flagship-tagline">Intelligence for the art of storytelling.</p>
-          <p class="flagship-body">{cinModel.summary}</p>
-          <ul class="model-line-list">
-            <li>
-              <a href="/models/cinnabar/oracle/"><strong>Cinnabar Oracle (v1–v4.1)</strong></a>
-              <span>Documented text lineages for canonical intelligence &amp; combat analysis</span>
-            </li>
-            <li>
-              <strong>Strict Modality Boundary</strong>
-              <span>Text Oracle models are not native video generators; animation workflows use external tools</span>
-            </li>
-          </ul>
-          <a href="/models/cinnabar/" class="text-link">Inspect Cinnabar family <span aria-hidden="true">→</span></a>
+          <h3><a href="/products/battleverse/">Forge BattleVerse</a></h3>
+          <p class="flagship-tagline">Beyond opinion. Built on evidence.</p>
+          <p class="flagship-body">
+            A standalone fictional-universe intelligence, canonical version-tracking, and creative-production platform spanning <strong>BattleVerse Arena</strong> and <strong>BattleVerse Creator Studio</strong>—architected to pair with FDS's <a href="/models/cinnabar/">Cinnabar</a> narrative text models while maintaining its own distinct product identity.
+          </p>
+          <p class="flagship-boundary">
+            <strong>Status honesty:</strong> Active development with no public download or live web simulator. Simulation outputs model stated assumptions and uncertainty—never objective canonical fact.
+          </p>
+          <div class="flagship-actions">
+            <a href="/products/battleverse/" class="text-link">Explore BattleVerse <span aria-hidden="true">→</span></a>
+            <a href="/products/battleverse/arena/" class="text-link">Arena</a>
+            <a href="/products/battleverse/creator-studio/" class="text-link">Creator Studio</a>
+          </div>
         </div>
       </article>
     </div>
-  </section>
 
-  <!-- Section D: Interactive Ecosystem Architecture Visualization -->
-  <section class="page-section page-section--surface" aria-label="Interactive FDS ecosystem architecture">
-    <EcosystemGraph />
-  </section>
-
-  <!-- Section E: Independent Applications (Jaspilite & Forge BattleVerse) -->
-  <section class="page-section" aria-labelledby="apps-heading">
-    <div class="fds-section-head">
-      <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Applications · Standalone Platforms</p>
-        <h2 id="apps-heading">Software built to orchestrate intelligence and audit evidence.</h2>
-        <p>
-          FDS applications stand independently from our model research — engineered for autonomous software development, reproducible fictional physics analysis, and real Windows utility workflows.
-        </p>
-      </div>
-      <a href="/products/" class="text-link">All products &amp; portfolio <span aria-hidden="true">→</span></a>
-    </div>
-
-    <!-- Jaspilite Asymmetric Showcase -->
+    <!-- #5: Jaspilite -->
     <article class="app-feature" data-accent="jaspilite">
       <div class="app-feature__copy">
         <div class="flagship-meta-row">
-          <span class="flagship-kicker">Autonomous Development Platform</span>
+          <span class="flagship-kicker">05 · AI Coding-Agent Environment</span>
           <StatusPill status={jaspilite.development_status} />
         </div>
         <h3><a href="/products/jaspilite/">Jaspilite</a></h3>
         <p class="flagship-tagline">Your intelligence. One development workspace.</p>
         <p class="flagship-body">
-          A project-aware autonomous development and multi-agent orchestration workspace operating across three explicit governance modes — <strong>Auto</strong>, <strong>Meld</strong>, and <strong>Solo</strong> — built to work with local models, customer-provided API keys, and supported provider integrations where verified. Customers use their own AI provider credentials; FDS does not route consumer subscriptions or bundle AI inference.
+          FDS's autonomous software engineering and multi-agent coding environment operating across <strong>Auto</strong>, <strong>Meld</strong>, and <strong>Solo</strong> modes using local models, customer-owned API keys, and supported provider integrations where verified. FDS does not route consumer subscriptions or bundle AI inference.
         </p>
         <p class="flagship-boundary">
-          Supersedes legacy Forge Control branding. Private builds remain unpublished until installer verification completes.
+          <strong>Independent from the Hub:</strong> Jaspilite is <em>not</em> a prerequisite for the Studio Intelligence Hub—Project Forge operates through your studio's existing external MCP-compatible development tools. Private Jaspilite builds remain unpublished until certified.
         </p>
         <div class="flagship-actions">
           <a href="/products/jaspilite/" class="btn btn-outline">Explore Jaspilite <span aria-hidden="true">→</span></a>
@@ -241,130 +462,44 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
       </div>
     </article>
 
-    <!-- Forge BattleVerse Reversed Asymmetric Showcase -->
-    <article class="app-feature app-feature--reverse" data-accent="battleverse">
-      <div class="app-feature__visual">
-        <SpecimenMedia
-          src="/images/forge/battleverse-combat-sim.webp"
-          mobileSrc="/images/forge/battleverse-combat-sim-sm.webp"
-          alt="Two original armored silhouettes mid-clash in an abstract spatial physics arena overlaid with cobalt ballistic vectors and Gaussian probability envelopes."
-          label="Illustrative Simulation Concept — Original Silhouettes"
-        />
-      </div>
-      <div class="app-feature__copy">
+    <!-- #6: Other FDS Research & Entertainment Initiatives -->
+    <div class="initiatives-strip" aria-label="Additional FDS research and entertainment initiatives">
+      <article class="initiative-item" data-accent="alexandrite">
         <div class="flagship-meta-row">
-          <span class="flagship-kicker">Fictional Intelligence &amp; Simulation</span>
-          <StatusPill status={battleverse.development_status} />
+          <span class="flagship-kicker">Long-Term Research Vision</span>
+          <StatusPill status={alexandrite.development_status} />
         </div>
-        <h3><a href="/products/battleverse/">Forge BattleVerse</a></h3>
-        <p class="flagship-tagline">Beyond opinion. Built on evidence.</p>
-        <p class="flagship-body">
-          An independent fictional intelligence, canonical version-tracking, and combat-simulation platform combining mathematical physics bounds, independent claim auditing, and explicit statistical uncertainty. Designed to integrate with Cinnabar Oracle while remaining a separate standalone application.
-        </p>
-        <p class="flagship-boundary">
-          Simulation outputs model explicit assumptions and uncertainty bounds — never marketed as objective canonical facts.
-        </p>
-        <div class="flagship-actions">
-          <a href="/products/battleverse/" class="btn btn-outline">Explore BattleVerse <span aria-hidden="true">→</span></a>
-          <a href="/products/battleverse/arena/" class="text-link">Arena</a>
-          <a href="/products/battleverse/creator-studio/" class="text-link">Creator Studio</a>
-        </div>
-      </div>
-    </article>
-  </section>
+        <h3><a href="/models/alexandrite/">Alexandrite</a></h3>
+        <p>{alexModel.summary}</p>
+        <a href="/models/alexandrite/" class="text-link">Research architecture <span aria-hidden="true">→</span></a>
+      </article>
 
-  <!-- Section E2: Studio & Enterprise Commercial Solutions -->
-  <section class="page-section page-section--surface" aria-labelledby="solutions-home-heading">
-    <div class="solutions-feature">
-      <div class="solutions-feature__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Commercial Solutions · Studio &amp; Enterprise AI</p>
-        <h2 id="solutions-home-heading">Personalized AI workforces built for your codebase, engine, and creative pipeline.</h2>
-        <p class="flagship-body">
-          Whether you are an independent game developer, an animation studio protecting original IP, or an enterprise engineering organization seeking customer-segregated AI, FDS architects specialized retrieval, multi-agent roles, and private deployment pathways tailored to real production workflows.
-        </p>
-        <div class="solutions-pill-links" aria-label="Commercial solution pathways">
-          {solutionsData.audienceSolutions.map((sol) => (
-            <a href={`/solutions/${sol.slug}/`} class="sol-chip">{sol.name} →</a>
-          ))}
-        </div>
-        <div class="flagship-actions">
-          <a href="/solutions/" class="btn btn-primary">Explore Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
-          <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
-        </div>
-        <p class="flagship-boundary">
-          Private deployments and commercial model licensing are active commercial directions with strict customer data segregation — no unverified turnkey SLA or SOC 2/ISO badge is claimed today.
-        </p>
-      </div>
-      <div class="solutions-feature__visual">
-        <SpecimenMedia
-          src={solutionsData.heroVisual.src}
-          mobileSrc={solutionsData.heroVisual.mobileSrc}
-          alt={solutionsData.heroVisual.alt}
-          label={solutionsData.heroVisual.label}
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- Section F: Project Forge Research Foundation -->
-  <section class="page-section" data-accent="project-forge" aria-labelledby="forge-heading">
-    <div class="fds-section-head">
-      <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Research · Project Forge</p>
-        <h2 id="forge-heading">Research that becomes capability.</h2>
-        <p>
-          Project Forge is the permanent 15-division research and engineering intelligence foundation behind every FDS specialist model — enforcing strict provenance clearance, executable experiments, retrieval grounding, and independent holdout evaluation.
-        </p>
-      </div>
-      <div class="head-links">
-        <a href="/research/project-forge/" class="text-link">Explore Project Forge <span aria-hidden="true">→</span></a>
-        <a href="/research/training/" class="text-link">Training methodology <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-
-    <ProjectForgeGraph compact />
-  </section>
-
-  <!-- Section G: State Lines Cinematic Original Entertainment Showcase -->
-  <section class="page-section page-section--surface" data-accent="state-lines" aria-labelledby="statelines-heading">
-    <div class="statelines-banner">
-      <div class="statelines-banner__media">
-        <picture>
-          <source media="(max-width: 760px)" srcset="/images/forge/state-lines-concept-sm.webp" type="image/webp" />
-          <img
-            src="/images/forge/state-lines-concept.webp"
-            alt="Atmospheric concept illustration at dusk overlooking a steel cantilever river bridge, weathered brick industrial skyline, misty freight yard, and rain-slicked highway inspired by the NY/NJ/PA corridor."
-            width="1600"
-            height="893"
-            loading="lazy"
-            decoding="async"
-          />
-        </picture>
-        <div class="statelines-banner__scrim"></div>
-      </div>
-
-      <div class="statelines-banner__content">
+      <article class="initiative-item" data-accent="cinnabar">
         <div class="flagship-meta-row">
-          <span class="statelines-kicker">FDS Original Productions · Open-World Narrative</span>
+          <span class="flagship-kicker">Storytelling Text Lineages</span>
+          <StatusPill status={cinnabar.development_status} />
+        </div>
+        <h3><a href="/models/cinnabar/">Cinnabar</a></h3>
+        <p>{cinModel.summary} Text Oracle lineages (v1–v4.1)—not native video generators.</p>
+        <a href="/models/cinnabar/" class="text-link">Inspect Cinnabar <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="initiative-item" data-accent="state-lines">
+        <div class="flagship-meta-row">
+          <span class="flagship-kicker">Original Game · Preproduction</span>
           <StatusPill status={stateLines.development_status} label="Preproduction · Private" tone="private" />
         </div>
-        <h2 id="statelines-heading" class="statelines-title">State Lines</h2>
-        <p class="statelines-copy">
-          An original AAA-ambition open-world organized-crime narrative rooted in the industrial corridors, bridges, and border towns of New York, New Jersey, and Pennsylvania. Grounded characters, regional authenticity, and long-form cinematic storytelling.
+        <h3><a href="/studio/state-lines/">State Lines</a></h3>
+        <p>
+          Original AAA-ambition open-world narrative set in the NY/NJ/PA corridor. Concept Art — Work in Progress (Not Gameplay or In-Engine Capture). No release date announced.
         </p>
-        <div class="flagship-actions">
-          <a href="/studio/state-lines/" class="btn btn-primary">Enter State Lines <span aria-hidden="true">→</span></a>
-          <a href="/studio/productions/" class="btn btn-outline">All Original Productions</a>
-        </div>
-        <p class="statelines-label">
-          <strong>Asset Notice:</strong> Concept Art — Work in Progress (Not Gameplay or In-Engine Capture). No release date, platform, or pricing announced.
-        </p>
-      </div>
+        <a href="/studio/state-lines/" class="text-link">Explore State Lines <span aria-hidden="true">→</span></a>
+      </article>
     </div>
   </section>
 
-  <!-- Section H: Newsroom & Research Updates Ledger -->
-  <section class="page-section" aria-labelledby="updates-heading">
+  <!-- Newsroom & Engineering Journal Ledger -->
+  <section class="page-section page-section--surface" aria-labelledby="updates-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Newsroom &amp; Engineering Journal</p>
@@ -392,49 +527,6 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     </ul>
   </section>
 
-  <!-- Section I: Responsible Development & Non-Conflation Transparency -->
-  <section class="page-section page-section--surface" aria-labelledby="transparency-heading">
-    <div class="fds-section-head">
-      <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Responsible Development &amp; Trust</p>
-        <h2 id="transparency-heading">Four lines we never cross.</h2>
-        <p>
-          Credibility comes from refusing to blur research activity into product availability. Every model card, benchmark, and product page across FDS enforces four strict boundaries.
-        </p>
-      </div>
-      <a href="/trust/" class="text-link">Open Trust Center <span aria-hidden="true">→</span></a>
-    </div>
-
-    <div class="axiom-grid">
-      {projectForgeData.axioms.map((axiom, idx) => (
-        <article class="axiom-cell">
-          <span class="axiom-cell__idx">0{idx + 1}</span>
-          <h3>{axiom.left} <span class="axiom-neq" aria-label="does not equal">≠</span> {axiom.right}</h3>
-          <p>{axiom.explanation}</p>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <!-- Section J: Commercial Engagement & Partnership Pathways -->
-  <section class="page-section" aria-labelledby="commercial-cta-heading">
-    <div class="commercial-band">
-      <div class="commercial-band__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Work With Forger Digital Solutions</p>
-        <h2 id="commercial-cta-heading">Build with specialized intelligence — on evidence, not hype.</h2>
-        <p>
-          Register interest for upcoming developer previews, scope personalized gaming or animation studio AI workforces, discuss future model licensing, or connect with Project Forge research.
-        </p>
-      </div>
-      <div class="commercial-band__actions">
-        <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Interest in Developer Preview <span aria-hidden="true">→</span></a>
-        <a href="/contact/?track=studio-workforce" class="btn btn-outline">Register Studio Interest</a>
-        <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
-        <a href="/contact/?track=research-partnership" class="btn btn-ghost">Explore Research Partnerships</a>
-      </div>
-    </div>
-  </section>
-
   <!-- Verified Software Distribution Portal (Preserved release contract) -->
   <section class="page-section page-section--tight" aria-labelledby="distribution-title">
     <div class="distribution-portal">
@@ -457,7 +549,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     <div class="support-close__row">
       <p class="support-close__body">
         Forger Digital Solutions is an independent New Jersey studio. <a class="text-link" href="/support">Development support</a>,
-        <a class="text-link" href="/support/hardware">hardware donations</a>, and <a class="text-link" href="/community-impact">community impact</a> routes remain strictly separated from software products and research releases. Contributions should not be assumed to be tax-deductible charitable donations.
+        <a class="text-link" href="/support/hardware">hardware donations</a>, and <a class="text-link" href="/community-impact">community impact</a> routes remain strictly separated from commercial services and software releases. Contributions should not be assumed to be tax-deductible charitable donations.
       </p>
       <div class="support-close__counter">
         <VisitorCounter />
@@ -485,10 +577,10 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
 
   .announce-strip__tag {
     padding: 0.16rem 0.48rem;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid rgba(111, 160, 255, 0.45);
     border-radius: 3px;
-    background: var(--color-surface);
-    color: var(--color-text);
+    background: rgba(59, 123, 248, 0.12);
+    color: #dbeafe;
     font-family: var(--font-mono);
     font-size: 0.65rem;
     font-weight: 600;
@@ -531,7 +623,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     height: 100%;
     object-fit: cover;
     object-position: right center;
-    opacity: 0.88;
+    opacity: 0.9;
   }
 
   .hero__scrim {
@@ -539,9 +631,9 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     inset: 0;
     background: linear-gradient(
       95deg,
-      rgba(8, 9, 12, 0.96) 0%,
-      rgba(8, 9, 12, 0.88) 46%,
-      rgba(8, 9, 12, 0.32) 76%,
+      rgba(8, 9, 12, 0.97) 0%,
+      rgba(8, 9, 12, 0.9) 48%,
+      rgba(8, 9, 12, 0.35) 78%,
       rgba(8, 9, 12, 0.14) 100%
     );
   }
@@ -561,32 +653,28 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     color: var(--color-text);
   }
 
-  .support-close__row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem 2rem;
-  }
-
-  .support-close__counter {
-    flex-shrink: 0;
-  }
-
   .hero__lead {
-    max-width: 38rem;
+    max-width: 40rem;
     margin: 1.35rem 0 0;
     color: var(--color-text-muted);
-    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    font-size: clamp(1rem, 1.45vw, 1.12rem);
     line-height: 1.68;
   }
 
   .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 2rem;
+    margin-top: 1.9rem;
+  }
+
+  .hero__scope-note {
+    max-width: 42rem;
+    margin: 1.15rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: 0.84rem;
+    line-height: 1.58;
+  }
+
+  .hero__scope-note strong {
+    color: var(--color-text-muted);
   }
 
   .hero__heritage {
@@ -594,8 +682,8 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.45rem 0.85rem;
-    margin: 2.25rem 0 0;
-    padding-top: 1.1rem;
+    margin: 1.85rem 0 0;
+    padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
@@ -615,7 +703,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     font-weight: 500;
   }
 
-  /* Division Rail */
+  /* Hierarchy Rail */
   .division-rail {
     position: relative;
     z-index: 2;
@@ -643,7 +731,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
   }
 
   .division-rail__idx {
-    color: var(--color-text-subtle);
+    color: var(--color-accent-bright);
     font-family: var(--font-mono);
     font-size: 0.64rem;
     font-weight: 600;
@@ -663,24 +751,270 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     font-size: 0.78rem;
   }
 
+  /* Problem Ledger */
+  .problem-ledger {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border-structural);
+    list-style: none;
+  }
+
+  .problem-ledger__row {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 18rem) minmax(0, 1fr);
+    gap: 0.6rem 1.75rem;
+    align-items: baseline;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .problem-ledger__idx {
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+  }
+
+  .problem-ledger__title {
+    margin: 0;
+    font-size: 1.04rem;
+    line-height: 1.35;
+  }
+
+  .problem-ledger__detail {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.62;
+  }
+
+  /* Engines */
+  .engines-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .engine-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem;
+    border-top: 2px solid var(--page-accent);
+  }
+
+  .engine-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .engine-card__badge {
+    color: var(--page-accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .engine-card h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: -0.025em;
+  }
+
+  .engine-card__summary {
+    margin: 0.65rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.93rem;
+    line-height: 1.64;
+  }
+
+  .engine-card__list {
+    display: grid;
+    gap: 0.45rem;
+    margin: 1rem 0 auto;
+    padding-left: 1.15rem;
+    color: var(--color-text);
+    font-size: 0.87rem;
+    line-height: 1.56;
+  }
+
+  /* 4-Week Pilot Timeline */
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .timeline-cell {
+    padding: 1.45rem 1.35rem;
+    background: var(--color-bg);
+  }
+
+  .timeline-cell__week {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .timeline-cell h3 {
+    margin: 0.5rem 0 0.5rem;
+    font-size: 1.02rem;
+    line-height: 1.34;
+  }
+
+  .timeline-cell p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  /* Security Grid */
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .security-cell {
+    padding: 1.35rem 1.45rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .security-cell:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 16rem) minmax(0, 1fr);
+    gap: 0.4rem 1.5rem;
+    align-items: baseline;
+  }
+
+  .security-cell:last-child h3 {
+    margin: 0;
+  }
+
+  .security-cell__code {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .security-cell h3 {
+    margin: 0.4rem 0 0.4rem;
+    font-size: 1.02rem;
+  }
+
+  .security-cell p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+
+  /* Founding Studio Banner */
+  .founding-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+    gap: 1.75rem 2.5rem;
+    align-items: center;
+    padding: clamp(1.6rem, 3.5vw, 2.5rem);
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--accent-project-forge);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    box-shadow: var(--surface-highlight);
+  }
+
+  .founding-banner h2 {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .founding-banner__lead {
+    margin: 0.85rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+
+  .founding-banner__benefit {
+    margin: 0.9rem 0 0;
+    color: var(--color-text);
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+
+  .founding-banner__pricing {
+    margin: 0.7rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: 0.85rem;
+    line-height: 1.56;
+  }
+
+  /* Final Hub CTA */
+  .hub-final-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2.5rem;
+    padding: clamp(1.65rem, 3.5vw, 2.4rem);
+  }
+
+  .hub-final-cta__copy {
+    max-width: 39rem;
+  }
+
+  .hub-final-cta h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.7vw, 2.1rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+
+  .hub-final-cta p {
+    margin: 0.7rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.64;
+  }
+
+  /* Subordinate Ecosystem Styles */
   .head-links {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem 1.4rem;
   }
 
-  /* Model Families */
-  .alex-spotlight {
-    display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    gap: 2rem 2.5rem;
-    align-items: center;
-    padding: clamp(1.35rem, 3vw, 2.25rem);
-    border: 1px solid var(--color-border-structural);
-    border-top: 2px solid var(--accent-alexandrite);
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.045), rgba(16, 18, 23, 0.96) 45%, rgba(139, 92, 246, 0.04));
-    box-shadow: var(--surface-highlight);
+  .eco-embed-wrap {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--color-border);
   }
 
   .flagship-meta-row {
@@ -701,66 +1035,10 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     text-transform: uppercase;
   }
 
-  .alex-spotlight h3,
-  .specialist-panel h3,
-  .app-feature h3 {
-    margin: 0;
-    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
-    letter-spacing: -0.03em;
-  }
-
-  .alex-spotlight h3 a,
-  .specialist-panel h3 a,
-  .app-feature h3 a {
-    color: var(--color-text);
-  }
-
-  .alex-spotlight h3 a:hover,
-  .specialist-panel h3 a:hover,
-  .app-feature h3 a:hover {
-    color: var(--page-accent, var(--color-accent-bright));
-  }
-
-  .flagship-tagline {
-    margin: 0.3rem 0 0;
-    color: var(--color-brand-silver);
-    font-size: 1.02rem;
-    font-weight: 500;
-  }
-
-  .flagship-body {
-    margin: 0.85rem 0 0;
-    color: var(--color-text-muted);
-    font-size: 0.94rem;
-    line-height: 1.68;
-  }
-
-  .flagship-boundary {
-    margin: 1rem 0 0;
-    padding-left: 0.85rem;
-    border-left: 2px solid var(--color-border-strong);
-    color: var(--color-text-subtle);
-    font-size: 0.84rem;
-    line-height: 1.55;
-  }
-
-  .flagship-boundary strong {
-    color: var(--color-text-muted);
-  }
-
-  .flagship-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.9rem 1.25rem;
-    margin-top: 1.45rem;
-  }
-
   .specialist-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
-    margin-top: 1.5rem;
   }
 
   .specialist-panel {
@@ -781,11 +1059,65 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     margin-top: 1.25rem;
   }
 
+  .specialist-panel h3,
+  .app-feature h3 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+    letter-spacing: -0.03em;
+  }
+
+  .specialist-panel h3 a,
+  .app-feature h3 a,
+  .initiative-item h3 a {
+    color: var(--color-text);
+  }
+
+  .specialist-panel h3 a:hover,
+  .app-feature h3 a:hover,
+  .initiative-item h3 a:hover {
+    color: var(--page-accent, var(--color-accent-bright));
+  }
+
+  .flagship-tagline {
+    margin: 0.3rem 0 0;
+    color: var(--color-brand-silver);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .flagship-body {
+    margin: 0.8rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.93rem;
+    line-height: 1.66;
+  }
+
+  .flagship-boundary {
+    margin: 1rem 0 0;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--color-border-strong);
+    color: var(--color-text-subtle);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .flagship-boundary strong {
+    color: var(--color-text-muted);
+  }
+
+  .flagship-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.25rem;
+    margin-top: 1.35rem;
+  }
+
   .model-line-list {
     display: grid;
-    gap: 0.65rem;
-    margin: 1.1rem 0 1.35rem;
-    padding: 1rem 0 0;
+    gap: 0.6rem;
+    margin: 1rem 0 0;
+    padding: 0.95rem 0 0;
     border-top: 1px solid var(--color-border);
     list-style: none;
   }
@@ -804,117 +1136,48 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     color: var(--color-text-muted);
   }
 
-  .model-line-list code {
-    padding: 0.08rem 0.32rem;
-    border: 1px solid var(--color-border-structural);
-    border-radius: 3px;
-    background: var(--color-recessed);
-    color: var(--color-brand-silver);
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-  }
-
-  .specialist-panel__body > .text-link {
-    margin-top: auto;
-  }
-
-  /* Applications Asymmetric Showcases */
   .app-feature {
     display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-    gap: 2rem 2.75rem;
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    gap: 2rem 2.5rem;
     align-items: center;
-    padding: 2rem 0;
+    margin-top: 2rem;
+    padding-top: 2rem;
     border-top: 1px solid var(--color-border);
   }
 
-  .app-feature--reverse {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  }
-
-  /* State Lines Widescreen Cinematic Banner */
-  .statelines-banner {
-    position: relative;
-    min-height: 31rem;
-    display: flex;
-    align-items: flex-end;
-    border: 1px solid rgba(197, 160, 89, 0.28);
-    border-radius: var(--radius-lg);
-    background: #100f0d;
+  .initiatives-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: 2.25rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
     overflow: hidden;
-    box-shadow: var(--shadow-panel);
   }
 
-  .statelines-banner__media {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+  .initiative-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.4rem;
+    background: var(--color-bg-secondary);
   }
 
-  .statelines-banner__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 42%;
+  .initiative-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
   }
 
-  .statelines-banner__scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(12, 11, 10, 0.22) 0%,
-      rgba(12, 11, 10, 0.65) 48%,
-      rgba(10, 9, 8, 0.96) 100%
-    );
+  .initiative-item p {
+    margin: 0 0 auto;
+    color: var(--color-text-muted);
+    font-size: 0.87rem;
+    line-height: 1.6;
   }
 
-  .statelines-banner__content {
-    position: relative;
-    z-index: 2;
-    max-width: 48rem;
-    padding: clamp(1.75rem, 4vw, 3.25rem);
-  }
-
-  .statelines-kicker {
-    color: var(--accent-state-lines);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  .statelines-title {
-    margin: 0.25rem 0 0;
-    font-family: var(--font-serif);
-    font-weight: 400;
-    font-size: clamp(2.8rem, 6vw, 4.75rem);
-    line-height: 0.96;
-    letter-spacing: -0.015em;
-    color: #f6efe2;
-  }
-
-  .statelines-copy {
-    margin: 1rem 0 0;
-    color: #d3cbbd;
-    font-size: 1rem;
-    line-height: 1.68;
-  }
-
-  .statelines-label {
-    margin: 1.35rem 0 0;
-    color: #a99f8e;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    line-height: 1.5;
-  }
-
-  .statelines-label strong {
-    color: #d8c398;
-  }
-
-  /* Ledger styling */
+  /* Newsroom Ledger */
   .ledger-date {
     color: var(--color-text-subtle);
     font-family: var(--font-mono);
@@ -923,10 +1186,10 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
 
   .ledger-cat {
     display: inline-block;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
     color: var(--color-accent-bright);
     font-family: var(--font-mono);
-    font-size: 0.64rem;
+    font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -934,9 +1197,8 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
 
   .ledger-title {
     margin: 0;
-    font-size: 1.04rem;
-    line-height: 1.35;
-    letter-spacing: -0.015em;
+    font-size: 1.02rem;
+    line-height: 1.32;
   }
 
   .ledger-title a {
@@ -950,80 +1212,43 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
   .ledger-summary {
     margin: 0;
     color: var(--color-text-muted);
-    font-size: 0.88rem;
-    line-height: 1.58;
+    font-size: 0.87rem;
+    line-height: 1.56;
   }
 
   .ledger-link {
     white-space: nowrap;
   }
 
-  /* 4-Axiom Transparency Matrix */
-  .axiom-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    border: 1px solid var(--color-border-structural);
-    border-radius: var(--radius-md);
-    background: var(--color-border);
-    overflow: hidden;
-  }
-
-  .axiom-cell {
-    padding: 1.35rem;
-    background: var(--color-bg-secondary);
-  }
-
-  .axiom-cell__idx {
-    color: var(--color-text-subtle);
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-  }
-
-  .axiom-cell h3 {
-    margin: 0.65rem 0 0.45rem;
-    font-size: 1.06rem;
-    letter-spacing: -0.02em;
-  }
-
-  .axiom-neq {
-    color: var(--color-accent-bright);
-    margin: 0 0.15rem;
-  }
-
-  .axiom-cell p {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
-    line-height: 1.6;
-  }
-
   /* Distribution Portal */
   .distribution-portal {
-    display: grid;
-    grid-template-columns: minmax(0, 1.4fr) auto;
-    gap: 1.5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    padding: 1.75rem 2rem;
+    justify-content: space-between;
+    gap: 1.5rem 2.25rem;
+    padding: 1.85rem 2rem;
     border: 1px solid var(--color-border-structural);
-    border-left: 2px solid var(--color-accent-bright);
     border-radius: var(--radius-md);
     background: var(--color-bg-secondary);
+    box-shadow: var(--surface-highlight);
+  }
+
+  .distribution-portal__content {
+    max-width: 42rem;
   }
 
   .distribution-portal__title {
     margin: 0;
-    font-size: clamp(1.3rem, 2.4vw, 1.68rem);
+    font-size: clamp(1.35rem, 2.3vw, 1.75rem);
     letter-spacing: -0.025em;
   }
 
   .distribution-portal__desc {
     margin: 0.6rem 0 0;
     color: var(--color-text-muted);
-    font-size: 0.94rem;
-    line-height: 1.65;
+    font-size: 0.92rem;
+    line-height: 1.62;
   }
 
   .distribution-portal__actions {
@@ -1032,118 +1257,86 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     gap: 0.75rem;
   }
 
-  .solutions-feature {
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: 2.25rem;
-    align-items: center;
-  }
-
-  .solutions-feature__copy h2 {
-    margin: 0.45rem 0 0.75rem;
-    font-size: clamp(1.6rem, 2.9vw, 2.25rem);
-    letter-spacing: -0.03em;
-  }
-
-  .solutions-pill-links {
+  /* Support Close */
+  .support-close__row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1.15rem 0 1.4rem;
-  }
-
-  .sol-chip {
-    display: inline-flex;
     align-items: center;
-    padding: 0.34rem 0.72rem;
-    border: 1px solid var(--color-border-structural);
-    border-radius: var(--radius-xs);
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    transition: border-color 160ms ease, color 160ms ease;
-  }
-
-  .sol-chip:hover {
-    border-color: var(--color-brand-cobalt-bright);
-    color: var(--color-brand-cobalt-bright);
-  }
-
-  .commercial-band {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 2.15rem;
-    border: 1px solid var(--color-border-structural);
-    border-radius: var(--radius-md);
-    background: linear-gradient(180deg, rgba(59, 123, 248, 0.06) 0%, var(--color-bg-secondary) 60%);
-  }
-
-  .commercial-band__copy h2 {
-    margin: 0.4rem 0 0.55rem;
-    font-size: clamp(1.5rem, 2.8vw, 2.1rem);
-    letter-spacing: -0.03em;
-  }
-
-  .commercial-band__copy p {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: 0.96rem;
-    line-height: 1.65;
-    max-width: 52rem;
-  }
-
-  .commercial-band__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    justify-content: space-between;
+    gap: 1rem 2rem;
   }
 
   .support-close__body {
-    max-width: 56rem;
+    max-width: 52rem;
     margin: 0;
     color: var(--color-text-subtle);
-    font-size: 0.88rem;
-    line-height: 1.7;
+    font-size: 0.84rem;
+    line-height: 1.62;
   }
 
-  @media (max-width: 1024px) {
-    .division-rail {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .division-rail__item {
-      border-bottom: 1px solid var(--color-border);
-    }
-    .alex-spotlight,
-    .specialist-grid,
-    .app-feature,
-    .app-feature--reverse,
-    .solutions-feature,
-    .distribution-portal {
-      grid-template-columns: 1fr;
-    }
-    .app-feature--reverse .app-feature__visual {
-      order: 2;
-    }
-    .axiom-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .support-close__counter {
+    flex-shrink: 0;
   }
 
-  @media (max-width: 640px) {
-    .hero__scrim {
-      background: linear-gradient(180deg, rgba(8, 9, 12, 0.84) 0%, rgba(8, 9, 12, 0.95) 60%, #08090c 100%);
-    }
+  @media (max-width: 1040px) {
     .division-rail,
-    .axiom-grid {
-      grid-template-columns: 1fr;
+    .timeline-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .division-rail__item {
+
+    .division-rail__item:nth-child(2) {
       border-right: 0;
     }
-    .distribution-portal,
-    .commercial-band {
+
+    .division-rail__item:nth-child(n + 3) {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .engines-grid,
+    .founding-banner,
+    .specialist-grid,
+    .app-feature,
+    .initiatives-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .security-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .hero__scrim {
+      background: linear-gradient(
+        180deg,
+        rgba(8, 9, 12, 0.94) 0%,
+        rgba(8, 9, 12, 0.9) 62%,
+        rgba(8, 9, 12, 0.72) 100%
+      );
+    }
+
+    .division-rail,
+    .problem-ledger__row,
+    .timeline-grid,
+    .security-grid,
+    .security-cell:last-child {
+      grid-template-columns: 1fr;
+    }
+
+    .division-rail__item {
+      border-right: 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .division-rail__item:first-child {
+      border-top: 0;
+    }
+
+    .problem-ledger__row {
+      gap: 0.35rem;
+    }
+
+    .distribution-portal {
       padding: 1.35rem;
     }
   }

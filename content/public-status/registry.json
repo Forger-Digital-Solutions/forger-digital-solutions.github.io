@@ -1,7 +1,48 @@
 {
   "schema_version": "1.1.0",
-  "last_updated": "2026-11-26",
+  "last_updated": "2026-11-27",
   "entries": [
+    {
+      "id": "studio-intelligence-hub",
+      "name": "FDS Studio Intelligence Hub",
+      "category": "commercial-direction",
+      "division": "FDS Commercial Solutions",
+      "flagship": true,
+      "version": "Managed Four-Week Pilot Service",
+      "development_status": "commercial-direction",
+      "availability": "early-interest-open",
+      "base_architecture": "Project Forge retrieval & indexing pipeline connected to external MCP-compatible developer tools",
+      "parameter_count": null,
+      "modalities": ["Source Code (Luau / Unreal C++)", "Technical & Design Docs", "Engine References", "MCP Investigation Workflows"],
+      "license_info": "Managed four-week pilot engagement (exact scope and pricing confirmed during pilot assessment; Founding Studio cohort receives 50% off applicable pilot fee)",
+      "commercial_direction": "FDS's lead commercial offering: a managed four-week engineering intelligence pilot for independent Roblox Studio and Unreal Engine game studios.",
+      "verified_capabilities": [
+        "Scoped four-week managed pilot structure (Assessment -> Indexing -> Investigations -> Review & Handoff)",
+        "Read-only project intake with isolated per-project data, customer-owned AI provider API keys, and defined data-deletion procedures",
+        "Operates with existing external MCP-compatible development tools without requiring Jaspilite"
+      ],
+      "planned_capabilities": [
+        "Expanded engine coverage and future Unreal Engine Blueprint visual logic indexing once implemented and validated",
+        "Broader studio workflow integrations informed directly by Founding Studio pilot feedback"
+      ],
+      "known_limitations": [
+        "Managed pilot service—not yet a finished, generally available self-serve SaaS platform",
+        "Unreal Engine pilots cover C++ source code and written technical/design documentation; Blueprint logic indexing is not yet implemented or validated",
+        "AI-assisted investigation outputs require human engineering verification against cited sources; guaranteed answer accuracy is never claimed"
+      ],
+      "non_claims": [
+        "Not a finished commercial SaaS platform or production-proven multi-tenant hosting service",
+        "Does not advertise complete Blueprint understanding, universal engine support, or fully autonomous development",
+        "Does not claim certified enterprise security compliance badges (SOC 2 / ISO 27001) or guaranteed answer accuracy",
+        "Does not bundle AI inference or route consumer AI subscriptions; customers supply their own API keys and pay their AI provider directly"
+      ],
+      "public_summary": "A managed four-week engineering intelligence pilot connecting a game studio's source code, technical documentation, design specs, and engine references for grounded, source-referenced AI investigation.",
+      "public_evidence": "Authoritative FDS Phase III-C Studio Intelligence Hub pilot scope, read-only boundaries, and Roblox/Unreal support boundaries documented November 27, 2026.",
+      "route": "/solutions/studio-intelligence-hub/",
+      "accent": "fds-cobalt",
+      "last_verified": "2026-11-27",
+      "approved_for_publication": true
+    },
     {
       "id": "alexandrite",
       "name": "Alexandrite",

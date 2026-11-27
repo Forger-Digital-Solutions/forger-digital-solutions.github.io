@@ -1,0 +1,304 @@
+{
+  "last_updated": "2026-11-27",
+  "route": "/solutions/studio-intelligence-hub/",
+  "name": "FDS Studio Intelligence Hub",
+  "eyebrow": "Managed Pilot Service · Game Studio Engineering Intelligence",
+  "statusLabel": "Managed Four-Week Pilot · Founding Cohort Open",
+  "hero": {
+    "headline": "Your Game Studio's Knowledge. Connected.",
+    "supportingCopy": "Bring your source code, technical documentation, engine references and design knowledge together. FDS Studio Intelligence Hub helps your developers understand how their projects work, investigate dependencies and find the evidence behind their engineering decisions.",
+    "primaryCta": "Book a Pilot Call",
+    "secondaryCta": "Explore the Studio Intelligence Hub",
+    "image": "/images/forge/studio-intelligence-hub.webp",
+    "imageSm": "/images/forge/studio-intelligence-hub-sm.webp",
+    "imageAlt": "Architectural obsidian visualization of three layered dark smoked-glass planes representing source code, engineering documentation, and game engine references linked by silver, cobalt, and amber conduits into a single connected hub.",
+    "imageLabel": "Architectural Concept — Connected Studio Engineering Knowledge"
+  },
+  "problem": {
+    "eyebrow": "The Studio Problem",
+    "headline": "Your Studio's Knowledge Shouldn't Be Scattered.",
+    "lead": "Game studios accumulate years of technical decisions across source repositories, wikis, design documents, engine references, and different project branches. Generic AI coding tools only see isolated code snippets—leaving developers to hunt manually for the engineering context behind every system.",
+    "painPoints": [
+      {
+        "code": "01",
+        "title": "Where systems are actually implemented",
+        "detail": "Gameplay mechanics rarely live in one file. Tracing where damage, progression, inventory, or physics logic executes across client and server scripts burns senior engineering hours."
+      },
+      {
+        "code": "02",
+        "title": "Which components depend on them",
+        "detail": "Hidden coupling across modules, components, remote events, and engine subsystems turns routine feature work into risky trial-and-error."
+      },
+      {
+        "code": "03",
+        "title": "Which documents explain the design intent",
+        "detail": "Design specs, onboarding notes, and architecture decisions drift away from code in separate folders, wikis, and historical discussions."
+      },
+      {
+        "code": "04",
+        "title": "Which engine references apply to your version",
+        "detail": "Roblox Studio APIs and Unreal Engine C++ headers evolve continuously. Developers need references tied to the engine version their studio actually ships on."
+      },
+      {
+        "code": "05",
+        "title": "What could be affected by a change",
+        "detail": "Without connected code-and-doc context, engineers struggle to inspect blast radius, edge cases, and upstream assumptions before modifying production systems."
+      }
+    ]
+  },
+  "architecture": {
+    "eyebrow": "The Solution · Powered by Project Forge",
+    "headline": "One Connected View of Your Engineering Knowledge.",
+    "lead": "Project Forge indexes your approved source files, technical documentation, design notes, and engine references into an isolated retrieval layer—so developers can investigate their project through MCP-compatible AI tools and verify every answer against real project evidence.",
+    "boundaryNote": "The workflow below represents the Studio Intelligence Hub service architecture delivered through scoped four-week managed pilots. It is not a finished self-serve SaaS platform; exact ingestion sources and tool hooks are confirmed during your Week 1 technical assessment.",
+    "stages": [
+      {
+        "step": "01",
+        "label": "CUSTOMER PROJECT",
+        "title": "Approved Studio Knowledge Sources",
+        "detail": "Read-only access to scoped repository branches, technical docs, design specs, and project notes approved by your studio."
+      },
+      {
+        "step": "02",
+        "label": "PROJECT FORGE",
+        "title": "Managed Indexing & Provenance Pipeline",
+        "detail": "FDS configures Project Forge to structure, cross-link, and index approved code and documentation inside your isolated pilot boundary."
+      },
+      {
+        "step": "03",
+        "label": "CODE + DOCUMENTATION + ENGINE REFERENCES",
+        "title": "Unified Engineering Knowledge Layer",
+        "detail": "Connects Luau or Unreal C++ source files with studio design documents, technical specs, and engine version references."
+      },
+      {
+        "step": "04",
+        "label": "GROUNDED ENGINEERING CONTEXT",
+        "title": "Scoped Evidence Retrieval",
+        "detail": "Retrieves exact code paths, symbol definitions, related documentation sections, and dependency context relevant to each developer query."
+      },
+      {
+        "step": "05",
+        "label": "AI-ASSISTED INVESTIGATION",
+        "title": "Works With External MCP-Compatible Tools",
+        "detail": "Connects into your existing MCP-compatible development environment using customer-owned AI provider API keys. Jaspilite is not required."
+      },
+      {
+        "step": "06",
+        "label": "SOURCE-REFERENCED ANSWERS",
+        "title": "Inspectable, Evidence-Backed Results",
+        "detail": "Developers receive answers linked back to concrete files, docs, and engine references so engineers can verify every conclusion directly."
+      }
+    ],
+    "verifiedVsDeveloping": {
+      "verifiedTitle": "Included & Verified for Pilot Scoping",
+      "verifiedItems": [
+        "Managed configuration and scoped indexing of approved text source files (Roblox Luau and Unreal Engine C++).",
+        "Indexing and cross-referencing of studio technical documentation, Markdown/text design docs, and scoped engine references.",
+        "Read-only repository intake with isolated per-project retrieval data and customer-owned AI provider API keys.",
+        "MCP-compatible retrieval integration into existing external developer workflows—no Jaspilite prerequisite."
+      ],
+      "developingTitle": "In Active Development · Not Yet Advertised",
+      "developingItems": [
+        "Unreal Engine Blueprint visual graph logic indexing (not yet implemented or validated; excluded from current pilot scope).",
+        "Self-serve multi-tenant SaaS hosting, automated billing portals, or turnkey universal engine coverage.",
+        "Unattended autonomous code generation or guaranteed-accuracy claims without human engineering verification."
+      ]
+    }
+  },
+  "exampleQuestions": [
+    {
+      "id": "combat-damage",
+      "engine": "Roblox Studio · Luau",
+      "question": "Where is combat damage calculated?",
+      "summary": "Traces melee and ranged damage multipliers across server combat services, weapon tables, and the studio's combat balance specification.",
+      "sources": [
+        { "kind": "SOURCE CODE", "path": "src/ServerScriptService/Combat/DamagePipeline.luau:118-174", "note": "Server-authoritative armor mitigation, crit multiplier & state modifiers." },
+        { "kind": "SOURCE CODE", "path": "src/ReplicatedStorage/Config/WeaponStats.luau:42-89", "note": "Base damage curves and status-effect coefficients referenced by DamagePipeline." },
+        { "kind": "DESIGN DOC", "path": "docs/combat/damage-formula-v2.md#mitigation-order", "note": "Explains why armor reduction applies before elemental vulnerability." },
+        { "kind": "ENGINE REF", "path": "Roblox API · Humanoid:TakeDamage (Engine Ref)", "note": "Documents ForceField interaction and health clamping behavior." }
+      ],
+      "evidenceNote": "Illustrative investigation trace showing how Project Forge links source files, design docs, and engine references for developer review."
+    },
+    {
+      "id": "vehicle-dependencies",
+      "engine": "Unreal Engine · C++",
+      "question": "Which systems depend on this vehicle component?",
+      "summary": "Maps direct C++ includes, component delegates, and technical architecture notes referencing a core vehicle physics component before refactoring.",
+      "sources": [
+        { "kind": "SOURCE CODE", "path": "Source/VehicleCore/Public/VehicleSuspensionComponent.h:34-92", "note": "Declares FOnWheelContactChanged delegate and spring-damper parameters." },
+        { "kind": "SOURCE CODE", "path": "Source/Gameplay/Private/ChassisDamageSubsystem.cpp:204", "note": "Subscribes to impact impulse callbacks to trigger structural wear." },
+        { "kind": "SOURCE CODE", "path": "Source/Audio/Private/VehicleSurfaceAudio.cpp:88", "note": "Reads tire slip ratios and surface material tags per physics substep." },
+        { "kind": "TECH DOC", "path": "Docs/Architecture/vehicle-physics-ownership.md#substep-order", "note": "Documents tick-group dependency constraints and replication assumptions." }
+      ],
+      "evidenceNote": "Illustrative C++ dependency investigation. Blueprint-only graphs referencing this component are NOT automatically indexed in the current pilot."
+    },
+    {
+      "id": "unreal-api-version",
+      "engine": "Unreal Engine · C++",
+      "question": "What does this Unreal Engine API do in our engine version?",
+      "summary": "Cross-checks an Unreal C++ engine API signature against the studio's targeted engine version reference and local project wrappers.",
+      "sources": [
+        { "kind": "ENGINE REF", "path": "Unreal Engine C++ Reference · UAbilitySystemComponent", "note": "Version-scoped behavior for ApplyGameplayEffectSpecToSelf and prediction keys." },
+        { "kind": "SOURCE CODE", "path": "Source/Combat/Private/StudioAbilityComponent.cpp:151", "note": "Project subclass overriding effect application hooks for server authority." },
+        { "kind": "TECH DOC", "path": "Docs/Engine/ue-upgrade-notes.md#gas-changes", "note": "Internal studio notes flagging deprecation warnings from your last engine upgrade." }
+      ],
+      "evidenceNote": "Illustrative engine-version reference trace. Always verify API changes against your compiled engine headers."
+    },
+    {
+      "id": "mechanic-doc-to-code",
+      "engine": "Roblox Studio · Luau",
+      "question": "Where is this mechanic documented, and what code implements it?",
+      "summary": "Bridges a gameplay mechanic written up in the studio's design documentation directly to the Luau modules and remotes enforcing it.",
+      "sources": [
+        { "kind": "DESIGN DOC", "path": "docs/systems/stamina-and-dodge.md#invulnerability-frames", "note": "Specifies dodge cooldown, stamina cost, and server validation tolerance." },
+        { "kind": "SOURCE CODE", "path": "src/ServerScriptService/Movement/DodgeValidator.luau:61-114", "note": "Enforces server-side cooldown timestamps and stamina deduction." },
+        { "kind": "SOURCE CODE", "path": "src/StarterPlayerScripts/Movement/DodgeClient.luau:28-79", "note": "Triggers local animation state and invokes DodgeRequest RemoteEvent." }
+      ],
+      "evidenceNote": "Illustrative doc-to-code trace highlighting where documentation and implementation align—or diverge."
+    },
+    {
+      "id": "player-progression",
+      "engine": "Roblox Studio · Luau",
+      "question": "Which scripts control player progression?",
+      "summary": "Surfaces the scripts, datastore schemas, and progression tables governing XP, unlocks, and save-version migrations.",
+      "sources": [
+        { "kind": "SOURCE CODE", "path": "src/ServerScriptService/Progression/ProgressionService.luau:19-140", "note": "Handles XP awards, level thresholds, and unlock event dispatch." },
+        { "kind": "SOURCE CODE", "path": "src/ServerScriptService/Data/ProfileSchema.luau:12-67", "note": "Defines persisted player profile fields and schema version migrations." },
+        { "kind": "SOURCE CODE", "path": "src/ReplicatedStorage/Config/MilestoneTable.luau:1-95", "note": "Shared milestone requirements read by UI and server reward grants." },
+        { "kind": "TECH DOC", "path": "docs/data/progression-migration-policy.md", "note": "Rules for backwards-compatible profile updates without wiping live saves." }
+      ],
+      "evidenceNote": "Illustrative progression-system map assembled from approved project source and internal studio docs."
+    }
+  ],
+  "supportedEngines": [
+    {
+      "id": "roblox-studio",
+      "name": "Roblox Studio",
+      "badge": "Luau + Documentation",
+      "accent": "fds-cobalt",
+      "summary": "Built for Roblox development studios working with Luau codebases, Rojo or exported script trees, game design documents, and Roblox engine references.",
+      "covered": [
+        "Luau server, client, and shared ModuleScript repositories",
+        "RemoteEvent / RemoteFunction architecture and gameplay service dependencies",
+        "Studio design documents, onboarding guides, and datastore schema notes",
+        "Roblox API reference alignment for your active development workflows"
+      ],
+      "honestyBoundary": "Pilot scope covers exported or repository-managed Luau scripts and text documentation. Binary .rbxl place inspection details are confirmed during your Week 1 technical assessment."
+    },
+    {
+      "id": "unreal-engine",
+      "name": "Unreal Engine",
+      "badge": "C++ + Documentation",
+      "accent": "hackmanite",
+      "summary": "Built for Unreal Engine teams working with C++ gameplay modules, custom subsystems, technical architecture docs, and version-specific engine references.",
+      "covered": [
+        "Unreal C++ header (.h) and source (.cpp) modules, plugins, and build configs",
+        "Component relationships, gameplay systems, and cross-module code traces",
+        "Internal technical specifications, design documents, and engine upgrade notes",
+        "Version-scoped Unreal Engine C++ API references"
+      ],
+      "honestyBoundary": "Blueprint Transparency: Current Unreal pilots cover C++ code and written technical/design documentation. Visual Blueprint logic indexing has NOT been implemented or validated yet and is explicitly excluded until proven."
+    }
+  ],
+  "pilotWeeks": [
+    {
+      "week": "Week 01",
+      "title": "Project Assessment, Approved Access & Configuration",
+      "summary": "Confirm engine setup, define exact repository and document scope, establish read-only access boundaries, and configure your isolated environment."
+    },
+    {
+      "week": "Week 02",
+      "title": "Source & Documentation Indexing, Initial Validation",
+      "summary": "Ingest approved source files, design documents, and engine references through Project Forge, then verify retrieval coverage against studio baselines."
+    },
+    {
+      "week": "Week 03",
+      "title": "Engineering Questions, Investigations & Workflow Demos",
+      "summary": "Put the Hub to work on real studio questions, dependency traces, and onboarding scenarios through MCP-compatible developer tools."
+    },
+    {
+      "week": "Week 04",
+      "title": "Results, Review, Recommendations & Handoff",
+      "summary": "Review verified outcomes and gaps with your engineering leads, deliver structured documentation recommendations, and complete clean handoff or data deletion."
+    }
+  ],
+  "securityControls": [
+    {
+      "code": "01",
+      "title": "Read-Only Project Access",
+      "detail": "Pilot ingestion operates strictly on read-only snapshots or read-only access scopes approved by your studio."
+    },
+    {
+      "code": "02",
+      "title": "Customer-Controlled Environment",
+      "detail": "Deployment boundaries are agreed before kickoff so your studio stays in control of where project context lives and who can query it."
+    },
+    {
+      "code": "03",
+      "title": "Customer-Owned API Keys",
+      "detail": "Your studio supplies and controls its own AI provider API keys and pays its chosen AI provider directly. FDS does not route consumer subscriptions or mark up token bills."
+    },
+    {
+      "code": "04",
+      "title": "No Unauthorized Repository Modifications",
+      "detail": "The Hub is built for investigation and evidence retrieval—it never pushes commits, rewrites files, or mutates your repository without explicit developer action."
+    },
+    {
+      "code": "05",
+      "title": "Isolated Project Data",
+      "detail": "Each pilot's indexed source code, design documents, and notes remain logically isolated per project and are never commingled across studios."
+    },
+    {
+      "code": "06",
+      "title": "No Training Without Written Permission",
+      "detail": "Your studio's code, design documents, and technical knowledge are never used to train FDS or shared AI models without explicit written authorization."
+    },
+    {
+      "code": "07",
+      "title": "Defined Data-Deletion Procedures",
+      "detail": "Clear retention boundaries and documented deletion procedures are established at pilot kickoff and executed upon request or pilot closeout."
+    }
+  ],
+  "foundingProgram": {
+    "eyebrow": "Founding Studio Program · Limited to 5 Studios",
+    "headline": "Join the First Five Founding Studios.",
+    "summary": "We are onboarding five early studio partners for our initial managed pilot cohort. Founding studios work directly with FDS engineering to validate real Roblox Studio and Unreal Engine workflows.",
+    "benefit": "Founding participants receive 50% off the applicable pilot fee in exchange for structured weekly engineering feedback and an honest end-of-pilot review.",
+    "pricingNote": "Exact pilot scope and pricing are discussed transparently during your initial pilot assessment call—never locked behind opaque seat tiers or hidden inference markups.",
+    "ctaLabel": "Apply for a Founding Studio Pilot"
+  },
+  "faqs": [
+    {
+      "q": "Is the Studio Intelligence Hub a self-serve SaaS product I can sign up for today?",
+      "a": "No. FDS Studio Intelligence Hub is delivered as a managed, scoped four-week pilot service—not a finished, generally available SaaS platform. Every engagement begins with a technical assessment call to verify that your repository layout, engine, and documentation fit supported pilot configurations."
+    },
+    {
+      "q": "Does the Unreal Engine pilot index Blueprints?",
+      "a": "No—not yet. Our Unreal Engine pilot covers C++ source code, headers, module structure, technical documentation, design specs, and version-scoped engine references. Blueprint visual graph indexing has not been implemented or validated yet, so we do not advertise or promise Blueprint understanding."
+    },
+    {
+      "q": "Do we have to install Jaspilite to use the Studio Intelligence Hub?",
+      "a": "No. Jaspilite is not a prerequisite for the Studio Intelligence Hub. Project Forge is designed to connect into existing external MCP-compatible development tools your engineers already use."
+    },
+    {
+      "q": "How do AI models and API billing work during the pilot?",
+      "a": "Your studio uses its own AI provider API keys and pays your chosen AI provider directly under your provider's own terms. FDS does not bundle unlimited AI inference, does not route consumer subscriptions through our software, and does not add opaque token markups."
+    },
+    {
+      "q": "How is pilot pricing structured?",
+      "a": "Pilot pricing depends on your engine, codebase scope, and project configuration, and is discussed clearly during your initial pilot assessment call before any commitment. The first five Founding Studios receive 50% off the applicable pilot fee in exchange for structured feedback."
+    },
+    {
+      "q": "How does FDS protect our unannounced game code and design documents?",
+      "a": "Pilots operate with read-only project access, isolated per-project data, customer-owned API keys, no unauthorized repository modifications, defined data-deletion procedures, and zero training on customer data without explicit written permission. We also stay honest about governance: FDS does not claim SOC 2, ISO 27001, or third-party enterprise compliance certifications."
+    },
+    {
+      "q": "Does the Hub guarantee 100% accurate AI answers?",
+      "a": "No AI system can guarantee perfect accuracy. The Hub is designed to reduce guesswork by grounding answers in your actual source files, documentation, and engine references with inspectable citations so your engineers can verify every answer directly."
+    },
+    {
+      "q": "What engines are supported right now?",
+      "a": "Our current pilot configurations focus on Roblox Studio (Luau projects and documentation) and Unreal Engine (C++ codebases and technical documentation). If your team uses another engine, mention it when booking a pilot call and we will give you a straightforward answer on feasibility."
+    }
+  ]
+}

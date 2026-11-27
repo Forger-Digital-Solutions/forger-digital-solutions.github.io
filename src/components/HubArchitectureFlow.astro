@@ -1,0 +1,227 @@
+---
+import { studioIntelligenceHubData } from '../data/registry';
+
+interface Props {
+  showBoundaries?: boolean;
+}
+
+const { showBoundaries = true } = Astro.props;
+const { stages, verifiedVsDeveloping, boundaryNote } = studioIntelligenceHubData.architecture;
+---
+
+<div class="hub-arch">
+  <div class="hub-arch__chain" role="region" aria-label="Project Forge Studio Intelligence Hub architecture flow">
+    <ol class="hub-arch__steps">
+      {stages.map((stage, idx) => (
+        <li class="hub-arch__step">
+          <div class="hub-arch__node">
+            <div class="hub-arch__node-top">
+              <span class="hub-arch__idx">{stage.step}</span>
+              <span class="hub-arch__label">{stage.label}</span>
+            </div>
+            <h3>{stage.title}</h3>
+            <p>{stage.detail}</p>
+          </div>
+          {idx < stages.length - 1 && (
+            <div class="hub-arch__connector" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                <path d="M12 4v14m0 0l-5-5m5 5l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="fds-callout hub-arch__note">
+    <strong>Service Architecture Scope:</strong> {boundaryNote}
+  </div>
+
+  {showBoundaries && (
+    <div class="hub-arch__boundaries">
+      <article class="hub-boundary-col hub-boundary-col--verified">
+        <p class="hub-boundary-col__kicker">Verified for Pilot Scoping</p>
+        <h3>{verifiedVsDeveloping.verifiedTitle}</h3>
+        <ul>
+          {verifiedVsDeveloping.verifiedItems.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+
+      <article class="hub-boundary-col hub-boundary-col--developing">
+        <p class="hub-boundary-col__kicker">Not Yet Advertised / Roadmap</p>
+        <h3>{verifiedVsDeveloping.developingTitle}</h3>
+        <ul>
+          {verifiedVsDeveloping.developingItems.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
+  )}
+</div>
+
+<style>
+  .hub-arch {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .hub-arch__chain {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--accent-project-forge);
+    border-radius: var(--radius-md);
+    background: var(--color-recessed);
+    box-shadow: var(--surface-highlight);
+  }
+
+  .hub-arch__steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hub-arch__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hub-arch__node {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    height: 100%;
+    padding: 1.15rem 1.2rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+  }
+
+  .hub-arch__node-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 0.6rem;
+  }
+
+  .hub-arch__idx {
+    color: var(--accent-project-forge);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .hub-arch__label {
+    color: var(--color-brand-silver);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+  }
+
+  .hub-arch__node h3 {
+    margin: 0.15rem 0 0;
+    font-size: 1rem;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  .hub-arch__node p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+    line-height: 1.56;
+  }
+
+  .hub-arch__connector {
+    display: none;
+    justify-content: center;
+    padding: 0.35rem 0;
+    color: var(--accent-project-forge);
+  }
+
+  .hub-arch__note {
+    margin: 0;
+  }
+
+  .hub-arch__boundaries {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .hub-boundary-col {
+    padding: 1.45rem 1.5rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .hub-boundary-col__kicker {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hub-boundary-col--verified .hub-boundary-col__kicker {
+    color: #34d399;
+  }
+
+  .hub-boundary-col--developing .hub-boundary-col__kicker {
+    color: var(--accent-project-forge);
+  }
+
+  .hub-boundary-col h3 {
+    margin: 0.45rem 0 0.85rem;
+    font-size: 1.08rem;
+  }
+
+  .hub-boundary-col ul {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding-left: 1.15rem;
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.58;
+  }
+
+  @media (max-width: 960px) {
+    .hub-arch__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hub-arch__boundaries {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hub-arch__chain {
+      padding: 1rem;
+    }
+
+    .hub-arch__steps {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .hub-arch__connector {
+      display: flex;
+    }
+  }
+</style>

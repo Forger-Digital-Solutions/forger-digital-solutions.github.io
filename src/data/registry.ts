@@ -7,6 +7,7 @@ import releasesRaw from '../../content/releases/releases.json' with { type: 'jso
 import updatesRaw from '../../content/publications/updates.json' with { type: 'json' };
 import companyRaw from '../../content/company/profile.json' with { type: 'json' };
 import solutionsRaw from '../../content/solutions/solutions.json' with { type: 'json' };
+import studioIntelligenceHubRaw from '../../content/solutions/studio-intelligence-hub.json' with { type: 'json' };
 
 export type RegistryCategory =
   | 'ai-model-family'
@@ -140,6 +141,7 @@ export const publicReleasesData = releasesRaw.releases;
 export const newsUpdatesData = updatesRaw.updates;
 export const companyProfile = companyRaw;
 export const solutionsData = solutionsRaw;
+export const studioIntelligenceHubData = studioIntelligenceHubRaw;
 
 export function getRegistryEntry(id: string): PublicRegistryEntry {
   const found = registryById[id];

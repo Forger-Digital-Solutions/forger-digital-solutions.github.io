@@ -7,27 +7,31 @@ const ecosystemGraph = readFileSync(new URL('../src/components/EcosystemGraph.as
 const jaspiliteWorkbench = readFileSync(new URL('../src/components/JaspiliteWorkbench.astro', import.meta.url), 'utf8');
 const productShowcase = readFileSync(new URL('../src/components/ProductShowcase.astro', import.meta.url), 'utf8');
 
-describe('homepage Operation Digital Forge presentation contract', () => {
-  it('keeps the company wordmark and exposes the seven institutional navigation domains', () => {
+describe('homepage Phase III-C Studio Intelligence Hub presentation contract', () => {
+  it('keeps the company wordmark, exposes all seven institutional domains, and prioritizes Studio Intelligence Hub', () => {
     expect(header).toContain('Forger Digital Solutions');
-    for (const domain of ['Models', 'Products', 'Solutions', 'Research', 'Developers', 'Studio', 'Company']) {
+    expect(header).toContain('/solutions/studio-intelligence-hub/');
+    expect(header).toContain('Book a Pilot Call');
+    for (const domain of ['Solutions', 'Models', 'Products', 'Research', 'Developers', 'Studio', 'Company']) {
       expect(header).toContain(domain);
     }
-    for (const route of ['/models/', '/products/', '/solutions/', '/research/', '/developers/', '/studio/', '/company/', '/downloads/', '/contact/']) {
+    for (const route of ['/solutions/', '/models/', '/products/', '/research/', '/developers/', '/studio/', '/company/', '/downloads/', '/contact/']) {
       expect(header).toContain(route);
     }
     expect(header).not.toContain('Support FDS');
   });
 
-  it('leads with the FDS AI studio headline, mission, and heritage slogan', () => {
-    expect(homepage).toContain('Specialized intelligence.<br />Extraordinary worlds.');
-    expect(homepage).toContain('Explore Our Models');
-    expect(homepage).toContain('Discover Our Research');
+  it('leads with the FDS Studio Intelligence Hub headline, pilot CTAs, and heritage slogan', () => {
+    expect(homepage).toContain("Your Game Studio's Knowledge.<br />Connected.");
+    expect(homepage).toContain('/solutions/studio-intelligence-hub/');
+    expect(homepage).toContain('Book a Pilot Call');
     expect(homepage).toContain('companyProfile.heritageSlogan');
     expect(homepage).not.toContain('hero__support');
   });
 
-  it('renders the interactive seven-flagship ecosystem graph and registry-backed flagships', () => {
+  it('renders the interactive Hub investigation trace, architecture flow, and subordinate FDS ecosystem', () => {
+    expect(homepage).toContain('<HubArchitectureFlow');
+    expect(homepage).toContain('<HubInvestigationPreview');
     expect(homepage).toContain('<EcosystemGraph />');
     expect(homepage).toContain('<JaspiliteWorkbench />');
     expect(homepage).toContain('<ProjectForgeGraph');

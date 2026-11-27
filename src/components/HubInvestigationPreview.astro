@@ -1,0 +1,380 @@
+---
+import { studioIntelligenceHubData } from '../data/registry';
+
+interface Props {
+  idPrefix?: string;
+}
+
+const { idPrefix = 'hub-q' } = Astro.props;
+const questions = studioIntelligenceHubData.exampleQuestions;
+---
+
+<div class="hub-trace" data-hub-trace>
+  <div class="hub-trace__topbar">
+    <div class="hub-trace__brand">
+      <span class="hub-trace__mark" aria-hidden="true"></span>
+      <span>PROJECT FORGE // CONNECTED KNOWLEDGE INVESTIGATION</span>
+    </div>
+    <span class="hub-trace__meta">MCP-Compatible · Read-Only Project Context</span>
+  </div>
+
+  <div class="hub-trace__grid">
+    <div class="hub-trace__list" role="tablist" aria-label="Example studio engineering questions">
+      {questions.map((item, idx) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${idPrefix}-tab-${item.id}`}
+          aria-selected={idx === 0 ? 'true' : 'false'}
+          aria-controls={`${idPrefix}-panel-${item.id}`}
+          class:list={['hub-q-btn', idx === 0 && 'is-active']}
+          data-hub-tab={item.id}
+        >
+          <span class="hub-q-btn__engine">{item.engine}</span>
+          <span class="hub-q-btn__text">“{item.question}”</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="hub-trace__panels">
+      {questions.map((item, idx) => (
+        <div
+          id={`${idPrefix}-panel-${item.id}`}
+          role="tabpanel"
+          aria-labelledby={`${idPrefix}-tab-${item.id}`}
+          class:list={['hub-panel', idx !== 0 && 'is-hidden']}
+          data-hub-panel={item.id}
+        >
+          <div class="hub-panel__head">
+            <span class="hub-panel__engine">{item.engine}</span>
+            <h3 class="hub-panel__question">“{item.question}”</h3>
+            <p class="hub-panel__summary">{item.summary}</p>
+          </div>
+
+          <div class="hub-sources-wrap">
+            <p class="hub-sources-label">Linked Project Evidence Retrieved</p>
+            <ul class="hub-sources">
+              {item.sources.map((src) => (
+                <li class="hub-source-row">
+                  <div class="hub-source-row__top">
+                    <span class={`hub-kind hub-kind--${src.kind.toLowerCase().replace(/\s+/g, '-')}`}>
+                      {src.kind}
+                    </span>
+                    <code class="hub-source-path">{src.path}</code>
+                  </div>
+                  <p class="hub-source-note">{src.note}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p class="hub-panel__note">{item.evidenceNote}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <p class="hub-trace__footer">
+    <strong>Illustrative Workflow Preview:</strong> Representative source-referenced investigation trace showing how Project Forge connects code, documentation, and engine references — not a live SaaS console or guaranteed-accuracy claim. Engineers verify every citation directly.
+  </p>
+</div>
+
+<style>
+  .hub-trace {
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--color-accent-hover);
+    border-radius: var(--radius-md);
+    background: #0a0c10;
+    box-shadow: var(--shadow-panel), var(--surface-highlight);
+    overflow: hidden;
+  }
+
+  .hub-trace__topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem 1rem;
+    padding: 0.85rem 1.2rem;
+    border-bottom: 1px solid var(--color-border);
+    background: #0f1218;
+  }
+
+  .hub-trace__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--color-brand-silver);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .hub-trace__mark {
+    width: 0.52rem;
+    height: 0.52rem;
+    border-radius: 2px;
+    background: var(--color-accent-hover);
+    flex-shrink: 0;
+  }
+
+  .hub-trace__meta {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .hub-trace__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.35fr);
+  }
+
+  .hub-trace__list {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--color-border);
+    background: #0d1015;
+  }
+
+  .hub-q-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 100%;
+    padding: 1rem 1.15rem;
+    border: 0;
+    border-bottom: 1px solid var(--color-border);
+    border-left: 2px solid transparent;
+    background: transparent;
+    color: var(--color-text-muted);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  }
+
+  .hub-q-btn:last-child {
+    border-bottom: 0;
+  }
+
+  .hub-q-btn:hover {
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--color-text);
+  }
+
+  .hub-q-btn.is-active {
+    border-left-color: var(--color-accent-bright);
+    background: rgba(59, 123, 248, 0.09);
+    color: var(--color-text);
+  }
+
+  .hub-q-btn__engine {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .hub-q-btn.is-active .hub-q-btn__engine {
+    color: var(--color-accent-bright);
+  }
+
+  .hub-q-btn__text {
+    font-family: var(--font-display);
+    font-size: 0.94rem;
+    font-weight: 500;
+    line-height: 1.38;
+  }
+
+  .hub-trace__panels {
+    padding: 1.35rem 1.4rem;
+    background: #090b0f;
+  }
+
+  .hub-panel.is-hidden {
+    display: none;
+  }
+
+  .hub-panel__engine {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hub-panel__question {
+    margin: 0.35rem 0 0;
+    font-size: 1.24rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .hub-panel__summary {
+    margin: 0.65rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .hub-sources-wrap {
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .hub-sources-label {
+    margin: 0 0 0.7rem;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hub-sources {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hub-source-row {
+    padding: 0.72rem 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    background: #10131a;
+  }
+
+  .hub-source-row__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.65rem;
+  }
+
+  .hub-kind {
+    display: inline-block;
+    padding: 0.14rem 0.44rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 3px;
+    background: #161a24;
+    color: var(--color-brand-silver);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .hub-kind--source-code {
+    border-color: rgba(111, 160, 255, 0.42);
+    color: #93c5fd;
+  }
+
+  .hub-kind--design-doc,
+  .hub-kind--tech-doc {
+    border-color: rgba(229, 159, 42, 0.42);
+    color: #f6c970;
+  }
+
+  .hub-kind--engine-ref {
+    border-color: rgba(190, 126, 255, 0.42);
+    color: #d6b2ff;
+  }
+
+  .hub-source-path {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    word-break: break-word;
+  }
+
+  .hub-source-note {
+    margin: 0.4rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .hub-panel__note {
+    margin: 1rem 0 0;
+    padding-left: 0.8rem;
+    border-left: 2px solid var(--color-border-strong);
+    color: var(--color-text-subtle);
+    font-size: 0.8rem;
+    line-height: 1.55;
+  }
+
+  .hub-trace__footer {
+    margin: 0;
+    padding: 0.78rem 1.2rem;
+    border-top: 1px solid var(--color-border);
+    background: #06070a;
+    color: var(--color-text-subtle);
+    font-size: 0.76rem;
+    line-height: 1.52;
+  }
+
+  .hub-trace__footer strong {
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 900px) {
+    .hub-trace__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hub-trace__list {
+      border-right: 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .hub-trace__panels {
+      padding: 1.15rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-hub-trace]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-hub-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-hub-panel]'));
+
+    const activate = (id: string) => {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.hubTab === id;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-selected', String(active));
+      });
+      panels.forEach((panel) => {
+        panel.classList.toggle('is-hidden', panel.dataset.hubPanel !== id);
+      });
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        if (tab.dataset.hubTab) activate(tab.dataset.hubTab);
+      });
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp' && event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') {
+          return;
+        }
+        event.preventDefault();
+        const delta = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+        const next = tabs[(index + delta + tabs.length) % tabs.length];
+        next.focus();
+        if (next.dataset.hubTab) activate(next.dataset.hubTab);
+      });
+    });
+  });
+</script>

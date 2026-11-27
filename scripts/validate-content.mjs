@@ -62,7 +62,7 @@ const cfgBool = (key) => {
 };
 const isHttpUrl = (v) => /^https:\/\/[^\s"'<>]+$/.test(v);
 
-const urlKeys = ['siteUrl', 'githubUrl', 'youtubeUrl', 'discordUrl', 'linkedinUrl', 'tiktokUrl', 'supportUrl', 'kofiUrl', 'cashAppUrl'];
+const urlKeys = ['siteUrl', 'githubUrl', 'youtubeUrl', 'discordUrl', 'linkedinUrl', 'tiktokUrl', 'supportUrl', 'kofiUrl', 'cashAppUrl', 'pilotBookingUrl'];
 const urlValues = {};
 for (const key of urlKeys) {
   const v = cfgValue(key);
@@ -72,6 +72,9 @@ for (const key of urlKeys) {
   if (!isHttpUrl(v)) err(`site.ts: ${key} is not a valid HTTPS URL: "${v}"`);
 }
 
+if (urlValues.pilotBookingUrl && !/^https:\/\/(?:[a-z0-9-]+\.)?(?:cal\.com|calendly\.com)\//i.test(urlValues.pilotBookingUrl)) {
+  err(`site.ts: pilotBookingUrl must be an approved Cal.com or Calendly HTTPS URL`);
+}
 if (urlValues.tiktokUrl && !/tiktok\.com\//i.test(urlValues.tiktokUrl)) err(`site.ts: tiktokUrl must be a tiktok.com profile URL`);
 if (urlValues.kofiUrl && !/ko-fi\.com\//i.test(urlValues.kofiUrl)) err(`site.ts: kofiUrl must be a ko-fi.com URL`);
 if (!/^https:\/\/cash\.app\/\$[A-Za-z0-9._-]+$/.test(urlValues.cashAppUrl || '')) err(`site.ts: cashAppUrl must look like https://cash.app/$Handle`);
@@ -172,6 +175,7 @@ const PRIVATE_LEAK_PATTERNS = [
   { label: 'Unverified SOC 2 / ISO compliance claim', regex: /\b(?:SOC\s*2\s*(?:Type|certified|compliant)|ISO\s*27001\s*certified|HIPAA\s*compliant)\b/i },
   { label: 'Secret API key pattern', regex: /\b(?:sk-or-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{30,})\b/ },
   { label: 'Unapproved internal revenue scenario figure', regex: /\$39,957\.50|\$479,490/ },
+  { label: 'Internal pilot pricing figure (must not be published)', regex: /\$(?:1,500|750|2,500|1,250|3,500|1,750)\b/ },
 ];
 
 const registryPath = join(root, 'content/public-status/registry.json');

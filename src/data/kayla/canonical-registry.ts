@@ -81,6 +81,7 @@ export const CANONICAL_INTERNAL_ROUTES = [
   '/products/battleverse/arena',
   '/products/battleverse/creator-studio',
   '/solutions',
+  '/solutions/studio-intelligence-hub',
   '/solutions/game-developers',
   '/solutions/gaming-studios',
   '/solutions/anime-manga-creators',

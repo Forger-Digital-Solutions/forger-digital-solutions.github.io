@@ -2,14 +2,16 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StatusPill from '../../components/StatusPill.astro';
 import SpecimenMedia from '../../components/SpecimenMedia.astro';
-import { solutionsData } from '../../data/registry';
+import PilotBookingActions from '../../components/PilotBookingActions.astro';
+import { solutionsData, studioIntelligenceHubData } from '../../data/registry';
 
-const { heroVisual, markets, audienceSolutions, personalizationLayers } = solutionsData;
+const { markets, audienceSolutions, personalizationLayers } = solutionsData;
+const hub = studioIntelligenceHubData;
 ---
 
 <BaseLayout
-  title="Solutions — Studio & Enterprise AI Workforces"
-  description="Commercial AI pathways, personalized studio AI workforces, segregated private deployments, and specialized solutions for game developers, gaming studios, anime and animation teams, software engineers, and enterprises."
+  title="Solutions — FDS Studio Intelligence Hub & Commercial AI Pathways"
+  description="Explore FDS Studio Intelligence Hub four-week managed engineering intelligence pilots for Roblox Studio and Unreal Engine studios, alongside commercial studio and enterprise AI pathways."
   accent="fds-cobalt"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -20,34 +22,53 @@ const { heroVisual, markets, audienceSolutions, personalizationLayers } = soluti
   <header class="sol-hero">
     <div class="sol-hero__copy">
       <div class="hero-badges">
-        <span class="page-eyebrow">FDS Commercial Solutions // Studio &amp; Enterprise</span>
-        <StatusPill status="commercial-direction" label="Commercial Direction · Scoping Open" />
+        <span class="page-eyebrow">FDS Commercial Solutions // Lead Pilot Service</span>
+        <StatusPill status="commercial-direction" label={hub.statusLabel} />
       </div>
-      <h1 class="page-title">Personalized AI workforces built around your pipeline.</h1>
+      <h1 class="page-title">FDS Studio Intelligence Hub &amp; Personalized AI workforces.</h1>
       <p class="page-description">
-        Forger Digital Solutions designs specialized AI models, autonomous software engineering platforms, and customer-segregated AI workforces configured around your codebase, engine, creative standards, and security policies.
+        Our lead commercial offering is the <a href="/solutions/studio-intelligence-hub/"><strong>FDS Studio Intelligence Hub</strong></a> — a managed four-week engineering intelligence pilot connecting your game studio's source code, technical documentation, engine references, and design knowledge. Alongside the Hub, explore FDS's broader commercial AI pathways built around customer-segregated pipelines.
       </p>
       <div class="sol-hero__actions">
-        <a href="/contact/?track=studio-workforce" class="btn btn-primary">Register Studio Interest <span aria-hidden="true">→</span></a>
-        <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
+        <PilotBookingActions
+          variant="pilot"
+          primaryLabel="Book a Pilot Call"
+          secondaryLabel="Explore Studio Intelligence Hub"
+          secondaryHref="/solutions/studio-intelligence-hub/"
+          showEmailFallback={false}
+        />
       </div>
       <div class="fds-callout">
-        <strong>Commercial Honesty Boundary:</strong> Studio workforces, private deployments, and commercial model licensing represent active product and commercial directions. No unverified turnkey enterprise SLA, unearned SOC 2/ISO certification, or live self-serve checkout is claimed today.
+        <strong>Commercial Honesty Boundary:</strong> FDS Studio Intelligence Hub is delivered as a scoped four-week managed pilot service — not a finished self-serve SaaS platform. Broader studio workforces and commercial model licensing represent active commercial directions; no unverified turnkey SLA or SOC 2/ISO certification is claimed today.
       </div>
     </div>
     <div class="sol-hero__visual">
       <SpecimenMedia
-        src={heroVisual.src}
-        mobileSrc={heroVisual.mobileSrc}
-        alt={heroVisual.alt}
-        label={heroVisual.label}
+        src={hub.hero.image}
+        mobileSrc={hub.hero.imageSm}
+        alt={hub.hero.imageAlt}
+        label={hub.hero.imageLabel}
         eager
       />
     </div>
   </header>
 
+  <!-- Lead Commercial Offering: FDS Studio Intelligence Hub -->
+  <section class="page-section page-section--surface" aria-labelledby="lead-hub-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Lead Commercial Product · Managed Four-Week Pilot</p>
+        <h2 id="lead-hub-heading">FDS Studio Intelligence Hub — for Roblox Studio &amp; Unreal Engine teams.</h2>
+        <p>
+          Connect Luau or Unreal C++ source code with design documents, architecture notes, and version-scoped engine references through Project Forge—operated via external MCP-compatible developer tools with read-only access and customer-owned API keys. First five Founding Studios receive 50% off the applicable pilot fee.
+        </p>
+      </div>
+      <a href="/solutions/studio-intelligence-hub/" class="btn btn-primary">Explore Studio Intelligence Hub <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
   <!-- Three Core Commercial Markets -->
-  <section class="page-section page-section--surface" aria-labelledby="markets-heading">
+  <section class="page-section" aria-labelledby="markets-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Three Primary Markets</p>

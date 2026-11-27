@@ -6312,6 +6312,62 @@
       ],
       "expectActions": true,
       "expectSources": true
+    },
+    {
+      "id": "t1-hub-01",
+      "tier": 1,
+      "category": "commercial-pilot",
+      "question": "What is the FDS Studio Intelligence Hub?",
+      "require": [
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "four-week"
+        ],
+        [
+          "Roblox Studio"
+        ],
+        [
+          "Unreal Engine"
+        ],
+        [
+          "Blueprint"
+        ]
+      ],
+      "forbid": [
+        "$1,500",
+        "$2,500",
+        "$750",
+        "complete Blueprint understanding",
+        "finished SaaS"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-hub-02",
+      "tier": 1,
+      "category": "commercial-pilot",
+      "question": "How does the Founding Studio pilot program work?",
+      "require": [
+        [
+          "Founding Studio"
+        ],
+        [
+          "50% off"
+        ],
+        [
+          "pilot assessment"
+        ]
+      ],
+      "forbid": [
+        "$750",
+        "$1,250",
+        "$1,750"
+      ],
+      "expectActions": true,
+      "expectSources": true
     }
   ]
 }

@@ -5,12 +5,24 @@ const currentYear = new Date().getFullYear();
 
 const columns: { title: string; links: { label: string; href: string; external?: boolean }[] }[] = [
   {
+    title: 'Solutions',
+    links: [
+      { label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+      { label: 'Solutions Overview', href: '/solutions/' },
+      { label: 'Game Developers', href: '/solutions/game-developers/' },
+      { label: 'Gaming Studios', href: '/solutions/gaming-studios/' },
+      { label: 'Anime & Manga', href: '/solutions/anime-manga-creators/' },
+      { label: 'Software Teams', href: '/solutions/software-engineering/' },
+      { label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/' },
+    ],
+  },
+  {
     title: 'Models',
     links: [
-      { label: 'Model Catalog', href: '/models/' },
-      { label: 'Alexandrite', href: '/models/alexandrite/' },
       { label: 'Hackmanite', href: '/models/hackmanite/' },
       { label: 'Cinnabar', href: '/models/cinnabar/' },
+      { label: 'Alexandrite', href: '/models/alexandrite/' },
+      { label: 'Model Catalog', href: '/models/' },
       { label: 'Model Cards', href: '/model-cards/' },
       { label: 'Evaluations', href: '/evaluations/' },
     ],
@@ -18,25 +30,13 @@ const columns: { title: string; links: { label: string; href: string; external?:
   {
     title: 'Products',
     links: [
-      { label: 'Jaspilite', href: '/products/jaspilite/' },
       { label: 'Forge BattleVerse', href: '/products/battleverse/' },
       { label: 'BattleVerse Arena', href: '/products/battleverse/arena/' },
       { label: 'Creator Studio', href: '/products/battleverse/creator-studio/' },
+      { label: 'Jaspilite', href: '/products/jaspilite/' },
       { label: 'ForgerEMS', href: '/projects/forgerems' },
       { label: 'Downloads & Releases', href: '/downloads/' },
       { label: 'Extended Portfolio', href: '/projects' },
-    ],
-  },
-  {
-    title: 'Solutions',
-    links: [
-      { label: 'Studio & Enterprise', href: '/solutions/' },
-      { label: 'Game Developers', href: '/solutions/game-developers/' },
-      { label: 'Gaming Studios', href: '/solutions/gaming-studios/' },
-      { label: 'Anime & Manga', href: '/solutions/anime-manga-creators/' },
-      { label: 'Animation Studios', href: '/solutions/animation-studios/' },
-      { label: 'Software Teams', href: '/solutions/software-engineering/' },
-      { label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/' },
     ],
   },
   {
@@ -58,7 +58,7 @@ const columns: { title: string; links: { label: string; href: string; external?:
       { label: 'Company & Vision', href: '/company/' },
       { label: 'About FDS', href: '/about' },
       { label: 'Newsroom', href: '/news/' },
-      { label: 'Contact & Inquiries', href: '/contact/' },
+      { label: 'Book a Pilot / Contact', href: '/contact/' },
       { label: 'Support FDS', href: '/support' },
     ],
   },
@@ -74,7 +74,7 @@ const columns: { title: string; links: { label: string; href: string; external?:
       </a>
       <p class="footer-slogan">Build the tools. Build the worlds.</p>
       <p class="footer-description">
-        Independent AI research laboratory, commercial technology company, autonomous software engineering provider, and original entertainment studio based in New Jersey.
+        Independent engineering intelligence and specialized AI studio building the FDS Studio Intelligence Hub for game studios alongside Hackmanite, BattleVerse, Jaspilite, Project Forge, and original worlds.
       </p>
       <ul class="footer-social" aria-label="Verified Forger Digital Solutions social channels">
         <li><a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a></li>

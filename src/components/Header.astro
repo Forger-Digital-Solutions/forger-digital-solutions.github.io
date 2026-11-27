@@ -1,8 +1,10 @@
 ---
 import { siteConfig } from '../config/site';
+import { getPilotBookingDestination } from '../lib/booking';
 
 const { githubUrl } = siteConfig;
 const pathname = Astro.url.pathname;
+const pilotBooking = getPilotBookingDestination('pilot');
 
 interface NavLinkItem {
   label: string;
@@ -21,14 +23,30 @@ interface NavGroup {
 
 const navGroups: NavGroup[] = [
   {
+    id: 'solutions',
+    label: 'Solutions',
+    href: '/solutions/',
+    lead: 'FDS Studio Intelligence Hub managed pilots, studio engineering intelligence & private AI pathways.',
+    items: [
+      { label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/', meta: 'Managed 4-week pilot for Roblox & Unreal studios', accent: 'fds-cobalt' },
+      { label: 'Solutions Overview', href: '/solutions/', meta: 'Commercial offerings & data segregation layers', accent: 'fds-cobalt' },
+      { label: 'Game Developers', href: '/solutions/game-developers/', meta: 'Solo & indie engine, shader & code workflows', accent: 'hackmanite' },
+      { label: 'Gaming Studios', href: '/solutions/gaming-studios/', meta: 'Private game-engineering intelligence pathways', accent: 'hackmanite' },
+      { label: 'Anime & Manga Creators', href: '/solutions/anime-manga-creators/', meta: 'Creator-owned story, panel & continuity tools', accent: 'cinnabar' },
+      { label: 'Animation Studios', href: '/solutions/animation-studios/', meta: 'Pre-production & pipeline orchestration', accent: 'battleverse' },
+      { label: 'Software Engineering Teams', href: '/solutions/software-engineering/', meta: 'Jaspilite local models & BYOK orchestration', accent: 'jaspilite' },
+      { label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/', meta: 'Segregated deployment & commercial licensing', accent: 'fds-cobalt' },
+    ],
+  },
+  {
     id: 'models',
     label: 'Models',
     href: '/models/',
     lead: 'Specialized AI model families & collective intelligence research.',
     items: [
-      { label: 'Alexandrite', href: '/models/alexandrite/', meta: 'Collective intelligence flagship vision', accent: 'alexandrite' },
-      { label: 'Hackmanite', href: '/models/hackmanite/', meta: 'Universal gaming AI & 10-role workforce', accent: 'hackmanite' },
+      { label: 'Hackmanite', href: '/models/hackmanite/', meta: 'Universal gaming AI specialization (Training Planned)', accent: 'hackmanite' },
       { label: 'Cinnabar', href: '/models/cinnabar/', meta: 'Anime, manga, animation & Oracle lineages', accent: 'cinnabar' },
+      { label: 'Alexandrite', href: '/models/alexandrite/', meta: 'Collective intelligence flagship vision', accent: 'alexandrite' },
       { label: 'Model Catalog', href: '/models/', meta: 'Overview, licenses & provenance' },
       { label: 'Model Cards', href: '/model-cards/', meta: 'Base architectures, status & limitations' },
       { label: 'Evaluations', href: '/evaluations/', meta: 'Methodology, baselines & verification' },
@@ -38,38 +56,23 @@ const navGroups: NavGroup[] = [
     id: 'products',
     label: 'Products',
     href: '/products/',
-    lead: 'Autonomous software engineering, simulation & creative production platforms.',
+    lead: 'Standalone applications across fictional intelligence, coding agents & technician utilities.',
     items: [
-      { label: 'Jaspilite', href: '/products/jaspilite/', meta: 'Autonomous AI engineering (Auto · Meld · Solo)', accent: 'jaspilite' },
       { label: 'Forge BattleVerse', href: '/products/battleverse/', meta: 'Fictional intelligence & creative platform', accent: 'battleverse' },
       { label: 'BattleVerse Arena', href: '/products/battleverse/arena/', meta: 'Evidence-audited combat simulation', accent: 'battleverse' },
       { label: 'BattleVerse Creator Studio', href: '/products/battleverse/creator-studio/', meta: 'Anime, manga & animation workflow direction', accent: 'cinnabar' },
+      { label: 'Jaspilite', href: '/products/jaspilite/', meta: 'AI coding-agent environment (Auto · Meld · Solo)', accent: 'jaspilite' },
       { label: 'Downloads & Releases', href: '/downloads/', meta: 'ForgerEMS preview & verified archives' },
       { label: 'Extended Portfolio', href: '/projects', meta: 'CodeForge, ForgerEMS & legacy records' },
-    ],
-  },
-  {
-    id: 'solutions',
-    label: 'Solutions',
-    href: '/solutions/',
-    lead: 'Commercial pathways, personalized studio AI workforces & private deployments.',
-    items: [
-      { label: 'Studio & Enterprise Hub', href: '/solutions/', meta: 'Personalized AI workforces & data isolation', accent: 'fds-cobalt' },
-      { label: 'Game Developers', href: '/solutions/game-developers/', meta: 'Solo & indie engine, shader & code workflows', accent: 'hackmanite' },
-      { label: 'Gaming Studios', href: '/solutions/gaming-studios/', meta: '10-role private game-engineering workforces', accent: 'hackmanite' },
-      { label: 'Anime & Manga Creators', href: '/solutions/anime-manga-creators/', meta: 'Creator-owned story, panel & continuity tools', accent: 'cinnabar' },
-      { label: 'Animation Studios', href: '/solutions/animation-studios/', meta: '8-role pre-production & pipeline orchestration', accent: 'battleverse' },
-      { label: 'Software Engineering Teams', href: '/solutions/software-engineering/', meta: 'Jaspilite multi-agent & local-first routing', accent: 'jaspilite' },
-      { label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/', meta: 'Segregated deployment & commercial licensing', accent: 'fds-cobalt' },
     ],
   },
   {
     id: 'research',
     label: 'Research',
     href: '/research/',
-    lead: 'Permanent scientific foundation turning verified research into capability.',
+    lead: 'Project Forge foundation powering connected engineering intelligence & model research.',
     items: [
-      { label: 'Project Forge', href: '/research/project-forge/', meta: '15 research divisions & 8-stage lifecycle', accent: 'project-forge' },
+      { label: 'Project Forge', href: '/research/project-forge/', meta: 'Indexing, verification, retrieval & 15 divisions', accent: 'project-forge' },
       { label: 'Gaming & Engines', href: '/research/gaming/', meta: 'Graphics, physics, gameplay & technical art' },
       { label: 'Animation & Storytelling', href: '/research/animation/', meta: 'Anime, manga, cinematography & narrative' },
       { label: 'Artificial Intelligence', href: '/research/artificial-intelligence/', meta: 'Distillation, specialist models & retrieval' },
@@ -108,13 +111,13 @@ const navGroups: NavGroup[] = [
     id: 'company',
     label: 'Company',
     href: '/company/',
-    lead: 'Commercial AI technology, engineering & original entertainment studio.',
+    lead: 'Engineering intelligence, specialized AI & original entertainment studio.',
     items: [
       { label: 'Company & Mission', href: '/company/', meta: 'Commercial positioning, divisions & roadmap' },
       { label: 'About FDS', href: '/about', meta: 'Founder, principles & studio background' },
       { label: 'Newsroom', href: '/news/', meta: 'Official announcements & engineering journal' },
       { label: 'Trust & Transparency', href: '/trust/', meta: 'Data segregation, IP ethics & governance' },
-      { label: 'Commercial Inquiries & Contact', href: '/contact/', meta: 'Previews, studio workforces & enterprise' },
+      { label: 'Commercial Inquiries & Contact', href: '/contact/', meta: 'Pilot calls, studios & direct email' },
       { label: 'Independent Support', href: '/support', meta: 'Development & hardware support disclosure' },
     ],
   },
@@ -215,7 +218,14 @@ const isGroupActive = (group: NavGroup): boolean => {
             </a>
           )}
           <a href="/downloads/" class="nav-cta nav-cta--ghost">Releases</a>
-          <a href="/contact/" class="nav-cta">Contact FDS</a>
+          <a
+            href={pilotBooking.href}
+            class="nav-cta"
+            target={pilotBooking.external ? '_blank' : undefined}
+            rel={pilotBooking.external ? 'noopener noreferrer' : undefined}
+          >
+            Book a Pilot Call
+          </a>
         </li>
       </ul>
     </div>

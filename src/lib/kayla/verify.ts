@@ -66,6 +66,8 @@ const notDownloadable = new Set<string>([
   ...projects
     .filter((entry) => !products.some((product) => (product.projectSlug || product.slug) === entry.slug && product.downloadUrl))
     .map((entry) => entry.name.toLowerCase()),
+  'studio intelligence hub',
+  'fds studio intelligence hub',
   'alexandrite',
   'hackmanite',
   'hackmanite prime',
@@ -97,6 +99,7 @@ const allowedUrls = new Set<string>(
     siteConfig.kofiUrl,
     siteConfig.cashAppUrl,
     siteConfig.supportUrl,
+    siteConfig.pilotBookingUrl,
     ...products.flatMap((p) => [p.downloadUrl, p.docsUrl, p.releaseNotesUrl, p.videoUrl]),
     ...projects.flatMap((p) => [p.githubUrl, p.websiteUrl, p.documentationUrl])
   ].filter((value): value is string => Boolean(value)).map((value) => value.toLowerCase())
@@ -115,6 +118,8 @@ const entityNames: string[] = [
   ...projects.map((p) => p.name),
   ...projects.flatMap((p) => (p.shortName ? [p.shortName] : [])),
   ...products.map((p) => p.name),
+  'Studio Intelligence Hub',
+  'FDS Studio Intelligence Hub',
   'Alexandrite',
   'Hackmanite',
   'Hackmanite Prime',

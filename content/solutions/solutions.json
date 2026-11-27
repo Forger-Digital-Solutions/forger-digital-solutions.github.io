@@ -483,6 +483,13 @@
   },
   "inquiryTracks": [
     {
+      "id": "studio-intelligence-hub",
+      "label": "Studio Intelligence Hub Pilot",
+      "audience": "Roblox Studio & Unreal Engine game studios (4-week managed pilot)",
+      "subjectPrefix": "[FDS Studio Intelligence Hub Pilot]",
+      "description": "Book a pilot call or apply for one of the first five Founding Studio spots (50% off the applicable pilot fee in exchange for structured feedback). Exact scope and pricing are discussed during your technical assessment."
+    },
+    {
       "id": "developer-preview",
       "label": "Developer Preview Interest",
       "audience": "Individual developers, game devs & preview testers",
