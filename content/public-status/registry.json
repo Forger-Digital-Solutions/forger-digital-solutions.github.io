@@ -217,24 +217,24 @@
       ],
       "planned_capabilities": [
         "Project-aware multi-agent planning, decomposition, coding, debugging, and verification sessions",
-        "Unified routing across local open-weight models and user-provided eligible subscriptions",
+        "Unified routing across local open-weight models, customer-provided API keys, and supported provider integrations where verified",
         "Auditable workspace permissions, cost-aware routing, and signed public desktop installers"
       ],
       "known_limitations": [
         "No publicly verified installer is distributed on this website yet; private Windows builds remain private",
-        "Third-party provider integrations require user-owned credentials/subscriptions and remain subject to provider terms and quotas",
+        "Third-party provider integrations require customer-provided API keys and remain subject to each provider's own billing, terms, and quotas; no AI provider is included with Jaspilite",
         "Conceptual architecture visualizations on this site are not live desktop screenshots of a public release"
       ],
       "non_claims": [
         "Not a foundation AI model",
-        "Does not bundle unlimited third-party subscriptions or bypass provider usage terms",
+        "Does not route consumer AI subscriptions through Jaspilite, does not include an AI provider with Jaspilite, and does not provide unlimited AI inference",
         "Not currently shipping as a publicly downloadable commercial product"
       ],
-      "public_summary": "Autonomous AI software engineering and multi-agent orchestration platform built around Auto, Meld, and Solo operating modes with local model discovery and user-connected accounts.",
+      "public_summary": "Autonomous AI software engineering and multi-agent orchestration platform built around Auto, Meld, and Solo operating modes using local models, customer-provided API keys, and verified provider integrations.",
       "public_evidence": "Approved product architecture, operating modes, and provider verification model documented in Operation Digital Forge II; private Windows builds await owner publication.",
       "route": "/products/jaspilite/",
       "accent": "jaspilite",
-      "last_verified": "2026-11-26",
+      "last_verified": "2026-11-27",
       "approved_for_publication": true
     },
     {

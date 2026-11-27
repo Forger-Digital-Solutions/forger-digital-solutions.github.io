@@ -68,6 +68,10 @@ describe('Operation Digital Forge II — Commercial & Kayla Verification Suite',
       const text = readFileSync(file, 'utf8');
       expect(text, `Unapproved revenue scenario leak in ${file}`).not.toMatch(/\$39,957\.50|\$479,490/);
       expect(text, `Unapproved public tier price leak in ${file}`).not.toMatch(/\$9\.99|\$19\.99|\$49\.99|\$299\+|\$1,999\+/);
+      expect(
+        text,
+        `Disallowed Jaspilite user-subscription wording in ${file}`
+      ).not.toMatch(/user-provided (?:eligible )?subscriptions?|user-connected subscriptions?|user-authorized cloud subscriptions?|user subscriptions,\s*and planned connectors|User-Provided Subscriptions & API Keys/i);
     }
   });
 

@@ -6085,14 +6085,19 @@
           "Jaspilite"
         ],
         [
-          "user-provided"
+          "does not route consumer"
         ],
         [
-          "does not bundle unlimited"
+          "customer-provided API keys"
+        ],
+        [
+          "does not provide unlimited AI inference"
         ]
       ],
       "forbid": [
-        "unlimited free subscriptions"
+        "unlimited free subscriptions",
+        "eligible subscriptions",
+        "user-provided subscriptions"
       ],
       "expectActions": true,
       "expectSources": true

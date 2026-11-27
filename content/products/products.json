@@ -26,7 +26,7 @@
         {
           "name": "Solo",
           "label": "Focused Single-Model Control",
-          "summary": "Pins a development session to one explicitly chosen local or connected provider model for predictable, transparent step-by-step engineering without automated multi-agent switching.",
+          "summary": "Pins a development session to one explicitly chosen local model or verified customer-provided API route for predictable, transparent step-by-step engineering without automated multi-agent switching.",
           "governance": "Direct developer control over every prompt turn, diff, and tool call."
         }
       ],
@@ -37,19 +37,19 @@
           "detail": "Connect locally hosted open-weight models (e.g., OpenAI-compatible local runtimes) running directly on developer hardware with zero external token egress."
         },
         {
-          "tier": "User-Provided Subscriptions & API Keys",
-          "status": "User-Authorized Connection Model",
-          "detail": "Designed to work with accounts and API credentials supplied directly by the developer under each provider's own terms and rate limits — never pooled or unlimited."
+          "tier": "Customer-Provided API Keys",
+          "status": "Bring-Your-Own-Key Model",
+          "detail": "Customers connect their own AI provider API keys and pay their chosen provider directly under that provider's own billing, terms, and rate limits. FDS does not route consumer subscriptions through Jaspilite, does not include an AI provider with Jaspilite, and does not offer unlimited AI inference."
         },
         {
-          "tier": "Verified Execution-Ready Routes",
+          "tier": "Supported Provider Integrations (Where Verified)",
           "status": "Strict Publication Gate",
-          "detail": "Specific third-party provider connectors are promoted to 'Verified Execution-Ready' on this site only after public end-to-end verification and legal compatibility confirmation."
+          "detail": "Specific third-party provider API integrations are listed as verified on this site only after public end-to-end execution testing and provider-terms compatibility confirmation."
         },
         {
           "tier": "Experimental & Planned Connectors",
           "status": "In Development / Unverified",
-          "detail": "Additional CLI agents and cloud model gateways under active engineering investigation; never implied to represent official vendor partnerships."
+          "detail": "Additional CLI agents and cloud model API gateways under active engineering investigation; never implied to represent official vendor partnerships or bundled inference."
         }
       ]
     },

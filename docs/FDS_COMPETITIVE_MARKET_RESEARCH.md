@@ -26,7 +26,7 @@
 - **Key Market Dynamics (Late 2026):**
   - Coding assistants evolved into multi-agent fleets with repository-checked agent rules, background cloud tasks, and pooled credit pricing (e.g., GitHub Copilot Enterprise at ~\$39/user/month with credit allowances plus third-party agent support; Cursor and Claude Code emphasizing usage-scaled pools).
   - Developers increasingly resist single-vendor lock-in, opaque credit burn, and unverified agent edits without deterministic test gates.
-- **FDS Strategic Gap (**Jaspilite**):** A workspace-owned, provider-neutral autonomous orchestration app (`Auto`, `Meld`, `Solo`) that cleanly combines **local open-weight inference** with **user-connected accounts**, backed by an honest 5-tier connector verification ladder (`Discovered` → `Production-Certified`) and explicit human approval gates.
+- **FDS Strategic Gap (**Jaspilite**):** A workspace-owned, provider-neutral autonomous orchestration app (`Auto`, `Meld`, `Solo`) that cleanly combines **local open-weight inference** with **customer-provided API keys** and verified provider integrations (never routing consumer subscriptions), backed by an honest 5-tier connector verification ladder (`Discovered` → `Production-Certified`) and explicit human approval gates.
 
 ---
 

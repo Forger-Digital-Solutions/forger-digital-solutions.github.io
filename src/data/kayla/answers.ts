@@ -1487,11 +1487,11 @@ function flagshipPortfolioAnswer(query: string): CanonicalAnswer | undefined {
     };
   }
 
-  // 6. Jaspilite & Connecting Existing AI Subscriptions
+  // 6. Jaspilite & Provider Credentials / Consumer Subscriptions Boundary
   if (/\bconnect\b.{0,30}\b(existing|my|own)\b.{0,25}\b(ai\s+)?(subscriptions?|accounts?|providers?|api\s+keys?)\b/.test(q)
-    || (/\bjaspilite\b/.test(q) && /\b(subscriptions?|accounts?|local\s+models?|providers?|unlimited)\b/.test(q))) {
+    || (/\bjaspilite\b/.test(q) && /\b(subscriptions?|accounts?|local\s+models?|providers?|api\s+keys?|unlimited)\b/.test(q))) {
     return {
-      text: 'Jaspilite is being architected to discover local open-weight models and connect to user-provided provider accounts, API keys, and eligible subscriptions under each provider’s own terms and quotas. It does not bundle unlimited third-party models or bypass provider subscription restrictions, and specific connectors are promoted through a five-tier verification ladder from discovered to production-certified. Jaspilite is still in active development with no public download yet.',
+      text: 'No — FDS does not route consumer AI subscriptions through Jaspilite, does not include an AI provider with Jaspilite, and does not provide unlimited AI inference. Jaspilite is being architected to work with local open-weight models, customer-provided API keys, and supported provider integrations where verified—customers use their own AI provider credentials under each provider’s own billing, terms, and quotas, and connectors advance through a five-tier verification ladder from discovered to production-certified. Jaspilite is still in active development with no public download yet.',
       actions: [
         { type: 'OPEN_PAGE', label: 'Explore Jaspilite', href: '/products/jaspilite/' },
         { type: 'OPEN_PAGE', label: 'Register Preview Interest', href: '/contact/?track=developer-preview' }
@@ -1518,7 +1518,7 @@ function flagshipPortfolioAnswer(query: string): CanonicalAnswer | undefined {
       };
     }
     return {
-      text: 'Jaspilite is FDS’s autonomous software engineering and multi-agent orchestration application (replacing legacy Forge Control branding). It organizes repository-aware planning, coding, debugging, and verification across three official operating modes—Auto (adaptive routing), Meld (multi-agent lead, sidekick, and specialist collaboration), and Solo (focused single-model control)—with local model discovery and user-connected accounts. Jaspilite is in active development with no public installer yet.',
+      text: 'Jaspilite is FDS’s autonomous software engineering and multi-agent orchestration application (replacing legacy Forge Control branding). It organizes repository-aware planning, coding, debugging, and verification across three official operating modes—Auto (adaptive routing), Meld (multi-agent lead, sidekick, and specialist collaboration), and Solo (focused single-model control)—using local models, customer-provided API keys, and verified provider integrations. FDS does not route consumer subscriptions or bundle AI inference, and Jaspilite is in active development with no public installer yet.',
       actions: [
         { type: 'OPEN_PAGE', label: 'Explore Jaspilite', href: '/products/jaspilite/' },
         { type: 'OPEN_PAGE', label: 'Software Team Solutions', href: '/solutions/software-engineering/' }

@@ -52,7 +52,7 @@
       ],
       "proposedWorkflows": [
         "Hackmanite Game Engineer for gameplay mechanics, shader drafting, and engine scripting (training planned on Qwen/Qwen3.8-27B & openai/gpt-oss-120b).",
-        "Jaspilite Auto, Meld, and Solo workspace orchestration across local open-weight models and user-connected subscriptions.",
+        "Jaspilite Auto, Meld, and Solo workspace orchestration across local open-weight models, customer-provided API keys, and supported provider integrations where verified.",
         "Project Forge-backed architecture guidance spanning graphics, physics, networking, and automated regression harnesses."
       ],
       "availabilityBoundary": "Hackmanite specialist checkpoints and Jaspilite public installers are not yet commercially released. Early developer preview inquiries are open via /contact/?track=developer-preview.",
@@ -140,11 +140,11 @@
       "challenges": [
         { "title": "Vendor Lock-In & Runaway Token Bills", "detail": "Single-vendor coding tools trap teams inside opaque credit pools and volatile usage pricing." },
         { "title": "Unverified Agent Edits", "detail": "Autonomous agents that edit files without clear scope locks, diff verification, and test gates introduce costly regressions." },
-        { "title": "Local vs. Frontier Flexibility", "detail": "Teams want to combine fast local open-weight models for routine work with user-authorized cloud subscriptions for complex reasoning." }
+        { "title": "Local vs. Cloud API Flexibility", "detail": "Teams want to combine fast local open-weight models for routine work with customer-provided cloud API keys for complex reasoning." }
       ],
       "proposedWorkflows": [
         "Auto mode for adaptive task routing, Meld mode for multi-agent lead/sidekick/specialist execution, and Solo mode for single-model precision.",
-        "Local open-weight model discovery paired with user-provided API keys and eligible subscriptions under each provider's own terms.",
+        "Local open-weight model discovery paired with customer-provided API keys and supported provider integrations where verified under each provider's own billing and terms—never routing consumer subscriptions.",
         "Workspace permission gates, live progress reporting, file-ownership boundaries, and automated verification before commit."
       ],
       "availabilityBoundary": "Jaspilite is in active platform development with private builds only. ForgerEMS v1.2.4-preview.1 is publicly downloadable today for Windows technicians; CodeForge installer downloads are temporarily paused.",
@@ -424,13 +424,13 @@
     "imageLabel": "Conceptual Architecture Visualization — Not a Live Desktop Screenshot",
     "providerMaturityLadder": [
       { "stage": "01", "tier": "Discovered Provider", "meaning": "Local runtime or external CLI/endpoint detected on the workstation; no credentials or execution tests yet." },
-      { "stage": "02", "tier": "Authenticated Provider", "meaning": "User-supplied account, local socket, or API key passes authentication check under the user's own terms." },
-      { "stage": "03", "tier": "Available Model", "meaning": "Model identifier is enumerated and reachable for basic prompt inspection within current account quotas." },
+      { "stage": "02", "tier": "Authenticated Provider", "meaning": "Local model socket or customer-provided API key passes authentication check under the customer's own provider credentials and terms." },
+      { "stage": "03", "tier": "Available Model", "meaning": "Model identifier is enumerated and reachable for basic prompt inspection within the customer's provider API quotas." },
       { "stage": "04", "tier": "Execution-Verified Route", "meaning": "End-to-end tool execution, structured diff edits, and command safety checks pass reproducible harness validation." },
       { "stage": "05", "tier": "Production-Certified Integration", "meaning": "Publicly documented, legally clear, regression-tested connector approved by FDS for release support." }
     ],
     "architecturePillars": [
-      { "title": "User-Connected Accounts & Local Discovery", "detail": "Discovers local open-weight runtimes alongside user-authorized provider accounts—never pooling or bypassing third-party subscription terms." },
+      { "title": "Local Models & Customer-Provided API Keys", "detail": "Discovers local open-weight runtimes alongside customer-provided API keys and supported provider integrations where verified—never routing consumer subscriptions or bundling AI inference." },
       { "title": "Planning, Decomposition & Multi-Agent Execution", "detail": "Breaks complex repository goals into auditable tasks across Auto, Meld (lead/sidekick/specialist), and Solo execution flows." },
       { "title": "Repository Awareness & Live Progress", "detail": "Tracks workspace files, git diffs, build outputs, and verification status continuously inside one unified engineering session." },
       { "title": "Permissions, Cost Routing & Human Oversight", "detail": "Enforces workspace ownership, command approval gates, cost-aware model selection, and explicit human review before shipping." }

@@ -15,14 +15,14 @@ const modes: ModeSpec[] = [
     id: 'auto',
     name: 'Auto',
     label: 'Adaptive Multi-Model Routing',
-    routing: 'Dynamic task-to-model matching across connected local & authorized providers',
+    routing: 'Dynamic task-to-model matching across local models, customer-provided API keys, and verified providers',
     concurrency: 'Single or staged handoff based on task scope',
     governance: 'Workspace scope lock · command approval gate · secret redaction',
     summary:
       'Auto evaluates task complexity and routes planning, code synthesis, debugging, and verification to eligible configured models while keeping every repository write inspectable.',
     steps: [
       'Inspect repository graph & open session context',
-      'Select eligible local or user-connected model route',
+      'Select eligible local model or verified customer-provided API route',
       'Execute bounded edits, tests & diff review under approval policy',
     ],
   },
@@ -45,13 +45,13 @@ const modes: ModeSpec[] = [
     id: 'solo',
     name: 'Solo',
     label: 'Deterministic Single-Model Session',
-    routing: 'Pinned to one explicitly selected local or user-connected provider model',
+    routing: 'Pinned to one explicitly selected local model or verified customer-provided API route',
     concurrency: 'Sequential single-agent turn execution',
     governance: 'Direct step-by-step developer approval · zero automatic model switching',
     summary:
       'Solo locks a workspace session to one chosen model — ideal when an engineer wants exact behavioral predictability, local-only execution, or direct model comparison.',
     steps: [
-      'Pin explicit local runtime or user-authorized model',
+      'Pin explicit local runtime or customer-provided API key model',
       'Run interactive repository edits and shell verification',
       'Audit exact prompt context, file diffs, and tool outputs',
     ],
