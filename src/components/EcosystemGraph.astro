@@ -1,0 +1,631 @@
+---
+import { getRegistryEntry, statusDisplayLabels, availabilityDisplayLabels } from '../data/registry';
+
+interface EcoNodeDetail {
+  id: string;
+  name: string;
+  layer: string;
+  accent: string;
+  color: string;
+  tagline: string;
+  status: string;
+  availability: string;
+  summary: string;
+  relationships: string;
+  boundary: string;
+  route: string;
+}
+
+const buildNode = (
+  id: string,
+  layer: string,
+  color: string,
+  tagline: string,
+  relationships: string,
+  boundary: string
+): EcoNodeDetail => {
+  const entry = getRegistryEntry(id);
+  return {
+    id,
+    name: entry.name,
+    layer,
+    accent: entry.accent,
+    color,
+    tagline,
+    status: statusDisplayLabels[entry.development_status],
+    availability: availabilityDisplayLabels[entry.availability],
+    summary: entry.public_summary,
+    relationships,
+    boundary,
+    route: entry.route,
+  };
+};
+
+const nodes: EcoNodeDetail[] = [
+  buildNode(
+    'project-forge',
+    'FDS Research · Infrastructure Foundation',
+    '#e59f2a',
+    'Research that becomes capability.',
+    'Supplies source verification, engineering experiments, retrieval indices, dataset-eligibility gates, and independent evaluation to Hackmanite, Cinnabar, and future Alexandrite work.',
+    'Project Forge is shared research infrastructure — not a public inference model. Research archives are never conflated with cleared training datasets.'
+  ),
+  buildNode(
+    'hackmanite',
+    'FDS Intelligence · Specialist Model Family',
+    '#a855f7',
+    'Intelligence built for games.',
+    'Built atop Project Forge game-engineering research. Planned specialist lineup (Prime on Qwen/Qwen3.8-27B; Reasoning on openai/gpt-oss-120b) is a future teacher stream for Alexandrite.',
+    'Adapted open-weight foundations, not from-scratch foundation models. Base model availability does not imply completed FDS fine-tuning.'
+  ),
+  buildNode(
+    'cinnabar',
+    'FDS Intelligence · Specialist Model Family',
+    '#e04338',
+    'Intelligence for the art of storytelling.',
+    'Built atop Project Forge anime, manga, animation, and narrative research. Oracle text lineages (v1–v4.1 documented) support Forge BattleVerse analysis and future Alexandrite distillation.',
+    'Cinnabar Oracle models are text-based analytical specialists — NOT native video/animation generators and NOT the name of the BattleVerse application.'
+  ),
+  buildNode(
+    'alexandrite',
+    'FDS Intelligence · Collective Intelligence Vision',
+    '#10b981',
+    'Intelligence, converged.',
+    'Long-term research program targeting multi-teacher distillation from independently verified Hackmanite and Cinnabar specialists — never naive unverified weight merging.',
+    'Research vision only. No collective model has completed training, no public endpoint exists, and independent applications do NOT depend on Alexandrite.'
+  ),
+  buildNode(
+    'jaspilite',
+    'FDS Applications · Autonomous Development',
+    '#dc2626',
+    'Your intelligence. One development workspace.',
+    'Independent desktop & orchestration platform operating in Auto, Meld, and Solo modes across local models and user-provided subscriptions. Supersedes legacy Forge Control branding.',
+    'Standalone engineering application — not a foundation model and does not require Alexandrite. Private builds remain unpublished until certified.'
+  ),
+  buildNode(
+    'battleverse',
+    'FDS Applications · Fictional Intelligence',
+    '#3b82f6',
+    'Beyond opinion. Built on evidence.',
+    'Independent simulation and evidence-auditing platform architected to integrate with Cinnabar Oracle text models while running physics and statistical uncertainty models separately.',
+    'Standalone application — not the Cinnabar model family. Simulation outputs model stated assumptions, not objective canonical facts.'
+  ),
+  buildNode(
+    'state-lines',
+    'FDS Original Productions · Entertainment Studio',
+    '#c5a059',
+    'Original AAA-ambition open-world narrative.',
+    'Original NY/NJ/PA organized-crime open-world game production informed over time by FDS game-engineering and creative tooling alongside Dead Trails West.',
+    'Original game in preproduction / private development — not an AI model, no announced release date, and concept art is never gameplay.'
+  ),
+];
+
+const initialNode = nodes[3]; // Alexandrite selected by default
+---
+
+<section class="eco-arch" aria-labelledby="eco-arch-title">
+  <div class="eco-arch__head">
+    <div>
+      <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Ecosystem Architecture</p>
+      <h2 id="eco-arch-title">Interconnected research. Clear system boundaries.</h2>
+    </div>
+    <p class="eco-arch__intro">
+      Select any node to inspect its role, verified development status, and exact architectural boundary.
+      Connected streams represent research, retrieval, and planned distillation pathways — never unverified weight merging or hidden dependencies.
+    </p>
+  </div>
+
+  <div class="eco-arch__layout">
+    <div class="eco-canvas" role="group" aria-label="Interactive FDS ecosystem map">
+      <svg class="eco-svg" viewBox="0 0 760 450" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="grad-forge-hack" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e59f2a" stop-opacity="0.7" />
+            <stop offset="100%" stop-color="#a855f7" stop-opacity="0.7" />
+          </linearGradient>
+          <linearGradient id="grad-forge-cin" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e59f2a" stop-opacity="0.7" />
+            <stop offset="100%" stop-color="#e04338" stop-opacity="0.7" />
+          </linearGradient>
+          <linearGradient id="grad-hack-alex" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a855f7" stop-opacity="0.65" />
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.75" />
+          </linearGradient>
+          <linearGradient id="grad-cin-alex" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#e04338" stop-opacity="0.65" />
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.75" />
+          </linearGradient>
+        </defs>
+
+        <!-- Layer dividers -->
+        <line x1="24" y1="104" x2="478" y2="104" stroke="#20242e" stroke-dasharray="3 5" />
+        <line x1="24" y1="246" x2="478" y2="246" stroke="#20242e" stroke-dasharray="3 5" />
+        <line x1="500" y1="24" x2="500" y2="426" stroke="#20242e" />
+
+        <!-- Research & Planned Distillation Paths (Left intelligence spine) -->
+        <path d="M 250 78 C 250 116, 138 112, 138 148" fill="none" stroke="url(#grad-forge-hack)" stroke-width="1.6" />
+        <path d="M 250 78 C 250 116, 362 112, 362 148" fill="none" stroke="url(#grad-forge-cin)" stroke-width="1.6" />
+        <path d="M 138 220 C 138 265, 224 275, 240 302" fill="none" stroke="url(#grad-hack-alex)" stroke-width="1.6" stroke-dasharray="5 4" />
+        <path d="M 362 220 C 362 265, 276 275, 260 302" fill="none" stroke="url(#grad-cin-alex)" stroke-width="1.6" stroke-dasharray="5 4" />
+
+        <!-- Optional integration link: Cinnabar Oracle -> Forge BattleVerse (dotted = API/model integration, not identity) -->
+        <path d="M 454 184 C 488 184, 496 232, 528 232" fill="none" stroke="#3b82f6" stroke-opacity="0.55" stroke-width="1.4" stroke-dasharray="3 4" />
+
+        <!-- Subtle directional dots -->
+        <circle cx="250" cy="78" r="3" fill="#e59f2a" />
+        <circle cx="138" cy="148" r="3" fill="#a855f7" />
+        <circle cx="362" cy="148" r="3" fill="#e04338" />
+        <circle cx="250" cy="304" r="3.5" fill="#10b981" />
+      </svg>
+
+      <!-- Accessible Keyboard-Navigable Node Grid positioned cleanly over structural zones -->
+      <div class="eco-zones">
+        <div class="eco-spine">
+          <div class="eco-tier">
+            <span class="eco-tier__label">01 · Research Infrastructure</span>
+            <button
+              type="button"
+              class="eco-node"
+              data-eco-id="project-forge"
+              style="--node-color: #e59f2a"
+              aria-pressed="false"
+            >
+              <span class="eco-node__name">Project Forge</span>
+              <span class="eco-node__role">Research · Verification · Training · Evals</span>
+            </button>
+          </div>
+
+          <div class="eco-tier">
+            <span class="eco-tier__label">02 · Specialist AI Model Families</span>
+            <div class="eco-tier__pair">
+              <button
+                type="button"
+                class="eco-node"
+                data-eco-id="hackmanite"
+                style="--node-color: #a855f7"
+                aria-pressed="false"
+              >
+                <span class="eco-node__name">Hackmanite</span>
+                <span class="eco-node__role">Gaming &amp; Engine AI</span>
+              </button>
+              <button
+                type="button"
+                class="eco-node"
+                data-eco-id="cinnabar"
+                style="--node-color: #e04338"
+                aria-pressed="false"
+              >
+                <span class="eco-node__name">Cinnabar</span>
+                <span class="eco-node__role">Anime · Manga · Oracle AI</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="eco-tier">
+            <span class="eco-tier__label">03 · Collective Convergence Vision (Planned Distillation)</span>
+            <button
+              type="button"
+              class="eco-node is-selected"
+              data-eco-id="alexandrite"
+              style="--node-color: #10b981"
+              aria-pressed="true"
+            >
+              <span class="eco-node__name">Alexandrite</span>
+              <span class="eco-node__role">Collective Intelligence Program</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="eco-peers">
+          <div class="eco-tier">
+            <span class="eco-tier__label">04 · Independent Applications</span>
+            <div class="eco-tier__stack">
+              <button
+                type="button"
+                class="eco-node"
+                data-eco-id="jaspilite"
+                style="--node-color: #dc2626"
+                aria-pressed="false"
+              >
+                <span class="eco-node__name">Jaspilite</span>
+                <span class="eco-node__role">Autonomous Dev · Auto · Meld · Solo</span>
+              </button>
+              <button
+                type="button"
+                class="eco-node"
+                data-eco-id="battleverse"
+                style="--node-color: #3b82f6"
+                aria-pressed="false"
+              >
+                <span class="eco-node__name">Forge BattleVerse</span>
+                <span class="eco-node__role">Fictional Intelligence &amp; Simulation</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="eco-tier">
+            <span class="eco-tier__label">05 · Original Productions</span>
+            <button
+              type="button"
+              class="eco-node"
+              data-eco-id="state-lines"
+              style="--node-color: #c5a059"
+              aria-pressed="false"
+            >
+              <span class="eco-node__name">State Lines</span>
+              <span class="eco-node__role">Open-World Game · Preproduction</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <p class="eco-legend">
+        <span><strong>Solid paths:</strong> Research &amp; evaluation pipeline</span>
+        <span><strong>Dashed paths:</strong> Planned multi-teacher distillation &amp; optional integration (no weight merging implied)</span>
+      </p>
+    </div>
+
+    <aside class="eco-inspector" id="eco-inspector" aria-live="polite" style={`--inspector-color: ${initialNode.color}`}>
+      <p class="eco-inspector__layer" data-field="layer">{initialNode.layer}</p>
+      <div class="eco-inspector__title-row">
+        <h3 data-field="name">{initialNode.name}</h3>
+        <span class="eco-inspector__status" data-field="status">{initialNode.status}</span>
+      </div>
+      <p class="eco-inspector__tagline" data-field="tagline">{initialNode.tagline}</p>
+      <p class="eco-inspector__summary" data-field="summary">{initialNode.summary}</p>
+
+      <dl class="eco-inspector__facts">
+        <div>
+          <dt>Availability</dt>
+          <dd data-field="availability">{initialNode.availability}</dd>
+        </div>
+        <div>
+          <dt>Ecosystem Connections</dt>
+          <dd data-field="relationships">{initialNode.relationships}</dd>
+        </div>
+        <div>
+          <dt>Architecture Boundary</dt>
+          <dd data-field="boundary">{initialNode.boundary}</dd>
+        </div>
+      </dl>
+
+      <a class="btn btn-outline eco-inspector__cta" data-field="cta" href={initialNode.route}>
+        Inspect {initialNode.name} <span aria-hidden="true">→</span>
+      </a>
+    </aside>
+  </div>
+
+  <!-- Embedded static JSON payload for client inspector -->
+  <script is:inline id="eco-nodes-data" type="application/json" set:html={JSON.stringify(nodes)}></script>
+
+  <!-- Progressive-enhancement static fallback directory for no-JS / screen readers -->
+  <noscript>
+    <ul class="eco-noscript">
+      {nodes.map((n) => (
+        <li><a href={n.route}><strong>{n.name}</strong></a> ({n.layer} — {n.status}): {n.summary}</li>
+      ))}
+    </ul>
+  </noscript>
+</section>
+
+<style>
+  .eco-arch__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 1.5rem 2.5rem;
+    align-items: end;
+    margin-bottom: 2rem;
+  }
+
+  .eco-arch__head h2 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+  }
+
+  .eco-arch__intro {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .eco-arch__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(19rem, 0.85fr);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .eco-canvas {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.4rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+    box-shadow: var(--surface-highlight);
+    overflow: hidden;
+  }
+
+  .eco-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .eco-zones {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .eco-spine,
+  .eco-peers {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .eco-peers {
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .eco-tier {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .eco-tier__label {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .eco-tier__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .eco-tier__stack {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .eco-node {
+    display: grid;
+    gap: 0.2rem;
+    width: 100%;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--color-border-structural);
+    border-left: 2.5px solid var(--node-color, var(--color-accent-bright));
+    border-radius: var(--radius-sm);
+    background: rgba(10, 12, 16, 0.92);
+    color: var(--color-text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s ease;
+  }
+
+  .eco-node:hover {
+    border-color: var(--node-color, var(--color-border-strong));
+    background: var(--color-surface);
+    transform: translateY(-1px);
+  }
+
+  .eco-node.is-selected {
+    border-color: var(--node-color, var(--color-accent-bright));
+    background: color-mix(in srgb, var(--node-color, #6fa0ff) 11%, #101217);
+  }
+
+  .eco-node__name {
+    font-family: var(--font-display);
+    font-size: 0.96rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+  }
+
+  .eco-node__role {
+    color: var(--color-text-muted);
+    font-size: 0.76rem;
+    line-height: 1.38;
+  }
+
+  .eco-legend {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1.4rem;
+    margin: 1.35rem 0 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font-size: 0.76rem;
+  }
+
+  .eco-legend strong {
+    color: var(--color-text-muted);
+  }
+
+  .eco-inspector {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--inspector-color, var(--color-accent-bright));
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--surface-highlight);
+  }
+
+  .eco-inspector__layer {
+    margin: 0;
+    color: var(--inspector-color, var(--color-accent-bright));
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .eco-inspector__title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.55rem;
+  }
+
+  .eco-inspector__title-row h3 {
+    margin: 0;
+    font-size: 1.45rem;
+    letter-spacing: -0.025em;
+  }
+
+  .eco-inspector__status {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .eco-inspector__tagline {
+    margin: 0.35rem 0 0;
+    color: var(--color-brand-silver);
+    font-weight: 500;
+    font-size: 0.94rem;
+  }
+
+  .eco-inspector__summary {
+    margin: 0.75rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.62;
+  }
+
+  .eco-inspector__facts {
+    display: grid;
+    gap: 0.85rem;
+    margin: 1.15rem 0 1.35rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .eco-inspector__facts dt {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .eco-inspector__facts dd {
+    margin: 0.25rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .eco-inspector__cta {
+    margin-top: auto;
+    width: fit-content;
+  }
+
+  .eco-noscript {
+    margin-top: 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 1024px) {
+    .eco-arch__head,
+    .eco-arch__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .eco-svg {
+      display: none;
+    }
+    .eco-zones {
+      grid-template-columns: 1fr;
+    }
+    .eco-peers {
+      padding-left: 0;
+      padding-top: 1.25rem;
+      border-left: 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .eco-tier__pair {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const dataEl = document.getElementById('eco-nodes-data');
+  const inspector = document.getElementById('eco-inspector');
+  if (dataEl && inspector) {
+    const nodes = JSON.parse(dataEl.textContent || '[]');
+    const byId = Object.fromEntries(nodes.map((n: any) => [n.id, n]));
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-eco-id]'));
+
+    const selectNode = (id: string) => {
+      const node = byId[id];
+      if (!node) return;
+      buttons.forEach((btn) => {
+        const active = btn.dataset.ecoId === id;
+        btn.classList.toggle('is-selected', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+      inspector.style.setProperty('--inspector-color', node.color);
+      const set = (field: string, text: string) => {
+        const el = inspector.querySelector(`[data-field="${field}"]`);
+        if (el) el.textContent = text;
+      };
+      set('layer', node.layer);
+      set('name', node.name);
+      set('status', node.status);
+      set('tagline', node.tagline);
+      set('summary', node.summary);
+      set('availability', node.availability);
+      set('relationships', node.relationships);
+      set('boundary', node.boundary);
+      const cta = inspector.querySelector<HTMLAnchorElement>('[data-field="cta"]');
+      if (cta) {
+        cta.href = node.route;
+        cta.innerHTML = `Inspect ${node.name} <span aria-hidden="true">→</span>`;
+      }
+    };
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.ecoId) selectNode(btn.dataset.ecoId);
+      });
+    });
+  }
+</script>

@@ -1,0 +1,79 @@
+---
+import { statusDisplayLabels, type DevelopmentStatus } from '../data/registry';
+
+interface Props {
+  status?: DevelopmentStatus;
+  label?: string;
+  tone?: 'release' | 'preview' | 'dev' | 'research' | 'vision' | 'private' | 'paused';
+}
+
+const { status, label, tone } = Astro.props;
+
+const toneFromStatus = (s?: DevelopmentStatus): NonNullable<Props['tone']> => {
+  switch (s) {
+    case 'public-release':
+    case 'capability-certified':
+      return 'release';
+    case 'public-preview':
+      return 'preview';
+    case 'active-development':
+    case 'training-in-progress':
+      return 'dev';
+    case 'research-vision':
+      return 'vision';
+    case 'experimental':
+    case 'training-planned':
+    case 'foundation-available':
+    case 'fine-tuning-completed':
+    case 'evaluated':
+      return 'research';
+    case 'private-development':
+    default:
+      return 'private';
+  }
+};
+
+const resolvedTone = tone ?? toneFromStatus(status);
+const resolvedLabel = label ?? (status ? statusDisplayLabels[status] : 'In Development');
+---
+
+<span class={`fds-status fds-status--${resolvedTone}`}>
+  <span class="fds-status__dot" aria-hidden="true"></span>
+  <span>{resolvedLabel}</span>
+</span>
+
+<style>
+  .fds-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    width: fit-content;
+    padding: 0.26rem 0.62rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: rgba(16, 18, 23, 0.85);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .fds-status__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-color, var(--color-text-subtle));
+    flex-shrink: 0;
+  }
+
+  .fds-status--release { --dot-color: #34d399; color: #b7f5dc; border-color: rgba(52, 211, 153, 0.3); }
+  .fds-status--preview { --dot-color: #60a5fa; color: #c7e0ff; border-color: rgba(96, 165, 250, 0.32); }
+  .fds-status--dev { --dot-color: #f59e0b; color: #fde1a9; border-color: rgba(245, 158, 11, 0.32); }
+  .fds-status--research { --dot-color: #a78bfa; color: #dfd4ff; border-color: rgba(167, 139, 250, 0.32); }
+  .fds-status--vision { --dot-color: #2dd4bf; color: #bdf6ee; border-color: rgba(45, 212, 191, 0.32); }
+  .fds-status--private { --dot-color: #94a3b8; color: #cbd5e1; border-color: rgba(148, 163, 184, 0.28); }
+  .fds-status--paused { --dot-color: #fbbf24; color: #fde68a; border-color: rgba(251, 191, 36, 0.32); }
+</style>

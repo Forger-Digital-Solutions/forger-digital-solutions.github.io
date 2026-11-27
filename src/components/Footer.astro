@@ -1,75 +1,87 @@
 ---
-/**
- * The footer is company navigation, not a content section: products first,
- * research and engineering next, company and legal last. Social links moved
- * here from the header; builder/hosting credit lives in a small colophon.
- */
 import { siteConfig } from '../config/site';
 
 const currentYear = new Date().getFullYear();
 
 const columns: { title: string; links: { label: string; href: string; external?: boolean }[] }[] = [
   {
+    title: 'Models',
+    links: [
+      { label: 'Model Catalog', href: '/models/' },
+      { label: 'Alexandrite', href: '/models/alexandrite/' },
+      { label: 'Hackmanite', href: '/models/hackmanite/' },
+      { label: 'Cinnabar', href: '/models/cinnabar/' },
+      { label: 'Model Cards', href: '/model-cards/' },
+      { label: 'Evaluations', href: '/evaluations/' },
+    ],
+  },
+  {
     title: 'Products',
     links: [
-      { label: 'CodeForge', href: '/projects/codeforge' },
+      { label: 'Jaspilite', href: '/products/jaspilite/' },
+      { label: 'Forge BattleVerse', href: '/products/battleverse/' },
       { label: 'ForgerEMS', href: '/projects/forgerems' },
-      { label: 'Forge Control', href: '/projects/forge-control' },
-      { label: 'Dead Trails West', href: '/projects/dead-trails-west' },
-      { label: 'Kayla Publisher', href: '/projects/kayla-ai-publisher' },
-      { label: 'We The People', href: '/projects/we-the-people' },
-      { label: 'FarmStand Finder', href: '/projects/farmstand-finder' },
+      { label: 'CodeForge', href: '/projects/codeforge' },
+      { label: 'Downloads', href: '/downloads/' },
+      { label: 'Extended Portfolio', href: '/projects' },
     ],
   },
   {
-    title: 'CodeForge',
+    title: 'Research',
     links: [
-      { label: 'Forge AAA architecture', href: '/projects/codeforge#forge-aaa' },
-      { label: 'CodeForge releases', href: '/forged' },
-      { label: 'Engineering', href: '/lab' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About', href: '/about' },
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Community Impact', href: '/community-impact' },
-      { label: 'Support', href: '/support' },
+      { label: 'Project Forge', href: '/research/project-forge/' },
+      { label: 'Training Methodology', href: '/research/training/' },
+      { label: 'Engineering Lab', href: '/research/laboratory/' },
+      { label: 'Publications', href: '/research/publications/' },
+      { label: 'Trust Center', href: '/trust/' },
     ],
   },
   {
     title: 'Developers',
     links: [
+      { label: 'Developer Hub', href: '/developers/' },
+      { label: 'Documentation', href: '/docs/' },
+      { label: 'Releases (Forged)', href: '/forged' },
+      { label: 'Changelog', href: '/changelog/' },
+      { label: 'Technology Map', href: '/technology' },
       { label: 'GitHub', href: siteConfig.githubUrl, external: true },
-      { label: 'Releases', href: '/forged' },
-      { label: 'Engineering Log', href: '/notes' },
     ],
   },
   {
-    title: 'Legal',
+    title: 'Studio & Company',
     links: [
-      { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'Terms of Use', href: '/terms' },
+      { label: 'State Lines', href: '/studio/state-lines/' },
+      { label: 'Original Productions', href: '/studio/productions/' },
+      { label: 'About FDS', href: '/about' },
+      { label: 'Newsroom', href: '/news/' },
+      { label: 'Contact', href: '/contact/' },
+      { label: 'Support FDS', href: '/support' },
+      { label: 'FAQ', href: '/faq' },
     ],
   },
 ];
 ---
+
 <footer class="footer">
   <div class="footer-container">
     <div class="footer-brand">
-      <p class="footer-kicker"><span></span> FDS // INDEPENDENT STUDIO</p>
-      <h2 class="footer-logo"><span>F</span><span>D</span><span>S</span></h2>
+      <a href="/" class="footer-mark" aria-label="Forger Digital Solutions home">
+        <img src="/images/brand/fds-logo.png" width="34" height="34" alt="" loading="lazy" />
+        <span>Forger Digital Solutions</span>
+      </a>
+      <p class="footer-slogan">Build the tools. Build the worlds.</p>
       <p class="footer-description">
-        An independent AI and software company based in New Jersey. Real products where they are ready;
-        transparent research where they are not.
+        Independent artificial intelligence research and engineering studio based in New Jersey.
+        Specialized intelligence, autonomous development platforms, and original worlds — presented with strict evidence boundaries.
       </p>
-      <ul class="footer-social" aria-label="FDS on other platforms">
+      <ul class="footer-social" aria-label="Verified Forger Digital Solutions social channels">
         <li><a href={siteConfig.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a></li>
         <li><a href={siteConfig.youtubeUrl} target="_blank" rel="noopener noreferrer">YouTube</a></li>
         <li><a href={siteConfig.discordUrl} target="_blank" rel="noopener noreferrer">Discord</a></li>
         <li><a href={siteConfig.linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-        {siteConfig.tiktokUrl && <li><a href={siteConfig.tiktokUrl} target="_blank" rel="noopener noreferrer">TikTok</a></li>}
+        {siteConfig.tiktokUrl && (
+          <li><a href={siteConfig.tiktokUrl} target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        )}
       </ul>
     </div>
 
@@ -83,7 +95,9 @@ const columns: { title: string; links: { label: string; href: string; external?:
                 href={link.href}
                 target={link.external ? '_blank' : undefined}
                 rel={link.external ? 'noopener noreferrer' : undefined}
-              >{link.label}</a>
+              >
+                {link.label}
+              </a>
             </li>
           ))}
         </ul>
@@ -92,143 +106,173 @@ const columns: { title: string; links: { label: string; href: string; external?:
   </div>
 
   <div class="footer-bottom">
-    <p class="footer-system-line">FORGER DIGITAL SOLUTIONS // AI SYSTEMS, SOFTWARE ENGINEERING, DEVELOPER TOOLS</p>
-    <p class="footer-colophon">&copy; {currentYear} Forger Digital Solutions <span class="footer-colophon__detail">(site: Astro, GitHub Pages)</span></p>
+    <div class="footer-legal">
+      <a href="/privacy">Privacy Policy</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms">Terms of Use</a>
+      <span aria-hidden="true">·</span>
+      <a href="/trust/">Trust Center</a>
+      <span aria-hidden="true">·</span>
+      <a href="/community-impact">Community Impact</a>
+    </div>
+    <p class="footer-colophon">
+      &copy; {currentYear} Forger Digital Solutions · New Jersey, USA
+    </p>
   </div>
 </footer>
 
-<script is:inline>
-  (() => {
-    const el = document.querySelector('.footer');
-    if (!el || !('IntersectionObserver' in window)) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          el.removeAttribute('data-footer-paused');
-        } else {
-          el.setAttribute('data-footer-paused', '');
-        }
-      });
-    }, { rootMargin: '100px 0px 100px 0px', threshold: 0.02 });
-    obs.observe(el);
-  })();
-</script>
-
 <style>
-.footer {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(10,16,27,.94), #05080e);
-  border-top: 1px solid var(--color-border);
-  margin-top: 3rem;
-  padding: 2.25rem 0 1.5rem;
-}
-.footer[data-footer-paused] .footer-kicker span,
-:global([data-bg-paused]) .footer-kicker span {
-  animation-play-state: paused;
-}
-.footer::before { position: absolute; inset: 0; background-image: linear-gradient(rgba(104,149,230,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(104,149,230,.045) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, #000, transparent 75%); content: ''; pointer-events: none; }
+  .footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 3.5rem;
+    padding: 3.25rem 0 2rem;
+    border-top: 1px solid var(--color-border-structural);
+    background: var(--color-recessed);
+  }
 
-.footer-container {
-  position: relative;
-  /* Same centered measure as .site-main — the footer must never run flush to
-     the viewport edge on wide screens. */
-  width: min(calc(100% - 2.5rem), var(--content-width));
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) repeat(5, minmax(0, 1fr));
-  gap: 1.5rem 1.6rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
-}
-.footer-kicker { display: flex; align-items: center; gap: .5rem; margin: 0 0 .85rem; color: var(--color-accent-bright); font: 700 .62rem/1 var(--font-mono); letter-spacing: .13em; }.footer-kicker span { width: .42rem; height: .42rem; border-radius: 50%; background: var(--color-accent-bright); box-shadow: 0 0 12px rgba(87,150,255,.8); animation: footer-pulse 3s ease-in-out infinite; }
+  .footer-container {
+    width: min(calc(100% - 2.5rem), var(--content-width));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) repeat(5, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
 
-.footer-logo {
-  font-family: var(--font-mono);
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin: 0 0 .6rem;
-  color: var(--color-silver);
-  letter-spacing: .14em;
-}
-.footer-logo span:nth-child(1), .footer-logo span:nth-child(3) { color: var(--color-accent-bright); }
+  .footer-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 0.96rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
 
-.footer-description {
-  max-width: 24rem;
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.83rem;
-  line-height: 1.55;
-}
+  .footer-mark img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: contain;
+  }
 
-.footer-social { display: flex; flex-wrap: wrap; gap: .3rem .9rem; margin: .9rem 0 0; padding: 0; list-style: none; }
-.footer-social a { color: var(--color-text-subtle); font-size: .78rem; }
-.footer-social a:hover { color: var(--color-text); }
+  .footer-slogan {
+    margin: 0.85rem 0 0;
+    color: var(--color-brand-silver);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
 
-.footer-links h3 {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-text-subtle);
-  margin: 0 0 .7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: var(--font-mono);
-}
+  .footer-description {
+    max-width: 22rem;
+    margin: 0.55rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+    line-height: 1.6;
+  }
 
-.footer-links ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+  .footer-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.95rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
 
-.footer-links li {
-  margin-bottom: 0.35rem;
-}
+  .footer-social a {
+    color: var(--color-text-subtle);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
 
-.footer-links a {
-  color: var(--color-text-muted);
-  font-size: 0.83rem;
-  transition: color 0.2s;
-}
+  .footer-social a:hover {
+    color: var(--color-text);
+  }
 
-.footer-links a:hover {
-  color: var(--color-text);
-}
+  .footer-links h3 {
+    margin: 0 0 0.85rem;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
 
-.footer-bottom {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .4rem 1.5rem;
-  align-items: baseline;
-  justify-content: space-between;
-  width: min(calc(100% - 2.5rem), var(--content-width));
-  margin: .75rem auto 0;
-  padding-top: 1rem;
-  /* The Kayla launcher is fixed in the bottom-right corner. At the very end of
-     the page it sat on top of the copyright line, so the last row keeps that
-     corner clear rather than the whole footer growing to avoid it. */
-  padding-inline-end: 14.5rem;
-  margin-top: .75rem;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-subtle);
-  font-size: 0.72rem;
-}
-.footer-bottom p { margin: 0; }
-.footer-system-line { color: var(--color-accent-bright); font: 650 .6rem/1.4 var(--font-mono); letter-spacing: .12em; }
-.footer-colophon__detail { color: var(--color-text-subtle); opacity: .75; }
-@keyframes footer-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .42; } }
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-@media (max-width: 1150px) {
-  .footer-container { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .footer-brand { grid-column: 1 / -1; }
-}
-@media (max-width: 700px) {
-  .footer-container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Narrow screens cannot spare a 12rem gutter, so clear the launcher below. */
-  .footer-bottom { padding-inline-end: 0; padding-bottom: 3.5rem; }
-}
-@media (max-width: 420px) {
-  .footer-container { gap: 1.25rem 1.5rem; }
-}
-@media (prefers-reduced-motion: reduce) { .footer-kicker span { animation: none; } }
+  .footer-links li {
+    margin-bottom: 0.45rem;
+  }
+
+  .footer-links a {
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-text);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    width: min(calc(100% - 2.5rem), var(--content-width));
+    margin: 1.25rem auto 0;
+    /* Reserve clearance for fixed Kayla Copilot launcher in bottom-right corner */
+    padding-inline-end: 14.5rem;
+    color: var(--color-text-subtle);
+    font-size: 0.78rem;
+  }
+
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .footer-legal a {
+    color: var(--color-text-subtle);
+  }
+
+  .footer-legal a:hover {
+    color: var(--color-text);
+  }
+
+  .footer-colophon {
+    margin: 0;
+  }
+
+  @media (max-width: 1120px) {
+    .footer-container {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .footer-container {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .footer-bottom {
+      padding-inline-end: 0;
+      padding-bottom: 4rem;
+    }
+  }
 </style>

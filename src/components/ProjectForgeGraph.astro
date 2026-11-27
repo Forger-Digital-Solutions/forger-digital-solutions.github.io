@@ -1,0 +1,141 @@
+---
+import { projectForgeData } from '../data/registry';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div class:list={['forge-pipeline', compact && 'forge-pipeline--compact']}>
+  <div class="forge-pipeline__visual" aria-hidden="true">
+    <svg viewBox="0 0 880 210" role="presentation" focusable="false">
+      <defs>
+        <linearGradient id="pf-rail" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#525a69" />
+          <stop offset="45%" stop-color="#e59f2a" />
+          <stop offset="100%" stop-color="#f2c94c" />
+        </linearGradient>
+      </defs>
+      <!-- Computational knowledge graph curves feeding the 8-stage pipeline -->
+      <g stroke="#292e38" stroke-width="1" fill="none">
+        <path d="M 40 38 C 120 38, 130 96, 190 96" />
+        <path d="M 40 96 L 190 96" />
+        <path d="M 40 154 C 120 154, 130 96, 190 96" />
+        <path d="M 190 96 C 260 96, 290 48, 360 48 C 430 48, 460 96, 530 96" />
+        <path d="M 190 96 C 260 96, 290 144, 360 144 C 430 144, 460 96, 530 96" />
+      </g>
+      <!-- Main governed pipeline axis -->
+      <line x1="60" y1="96" x2="820" y2="96" stroke="url(#pf-rail)" stroke-width="2" />
+
+      <!-- 8 pipeline stage nodes -->
+      {[
+        { x: 70, n: '01', label: 'RESEARCH' },
+        { x: 175, n: '02', label: 'VERIFY' },
+        { x: 280, n: '03', label: 'EXPERIMENTS' },
+        { x: 385, n: '04', label: 'RETRIEVAL' },
+        { x: 490, n: '05', label: 'ELIGIBILITY' },
+        { x: 595, n: '06', label: 'TRAINING' },
+        { x: 700, n: '07', label: 'EVALUATION' },
+        { x: 805, n: '08', label: 'CERTIFY' },
+      ].map((node, i) => (
+        <g transform={`translate(${node.x}, 96)`}>
+          <circle r="14" fill="#101217" stroke={i >= 4 ? '#e59f2a' : '#64748b'} stroke-width="1.5" />
+          <text y="4" text-anchor="middle" fill="#f4f5f7" font-family="monospace" font-size="9.5" font-weight="600">{node.n}</text>
+          <text y="34" text-anchor="middle" fill="#a7afbc" font-family="monospace" font-size="8.5" letter-spacing="1">{node.label}</text>
+        </g>
+      ))}
+
+      <!-- Provenance gate callout -->
+      <line x1="438" y1="30" x2="438" y2="168" stroke="#e59f2a" stroke-dasharray="3 4" stroke-opacity="0.7" />
+      <text x="438" y="20" text-anchor="middle" fill="#f2c94c" font-family="monospace" font-size="8.5" letter-spacing="1.2">
+        PROVENANCE &amp; RIGHTS CLEARANCE GATE
+      </text>
+      <text x="438" y="188" text-anchor="middle" fill="#838c9e" font-family="monospace" font-size="8">
+        RESEARCH ARCHIVES NEVER AUTOMATICALLY ENTER TRAINING WEIGHTS
+      </text>
+    </svg>
+  </div>
+
+  <ol class="forge-stage-grid">
+    {projectForgeData.lifecycle.map((stage) => (
+      <li class="forge-stage">
+        <span class="forge-stage__step">{stage.step}</span>
+        <h3>{stage.name}</h3>
+        <p>{stage.summary}</p>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .forge-pipeline__visual {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--accent-project-forge);
+    border-radius: var(--radius-md);
+    background: var(--color-recessed);
+    overflow-x: auto;
+  }
+
+  .forge-pipeline__visual svg {
+    display: block;
+    width: 100%;
+    min-width: 38rem;
+    height: auto;
+  }
+
+  .forge-stage-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .forge-stage {
+    padding: 1.15rem 1.15rem 1.25rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .forge-stage__step {
+    display: inline-block;
+    color: var(--accent-project-forge);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .forge-stage h3 {
+    margin: 0.45rem 0 0.35rem;
+    font-size: 0.98rem;
+    letter-spacing: -0.015em;
+  }
+
+  .forge-stage p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.83rem;
+    line-height: 1.56;
+  }
+
+  @media (max-width: 960px) {
+    .forge-stage-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .forge-stage-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
