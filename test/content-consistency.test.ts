@@ -65,9 +65,9 @@ describe('content consistency guards (Phase 28)', () => {
     expect(read('src/data/kayla/canonical-registry.ts')).toContain('/projects/forgerems');
   });
 
-  it('keeps the homepage status strip fed from the manifest', () => {
-    expect(homepage).toContain('statusStripEntries');
-    expect(homepage).toContain('canonicalStatusLabels');
+  it('keeps the homepage fed from the canonical public status registry and preserves legacy status strip entries', () => {
+    expect(homepage).toContain("from '../data/registry'");
+    expect(homepage).toContain('getRegistryEntry');
     expect(statusStripEntries.map((e) => e.id)).toEqual(['codeforge', 'forgerems', 'forge-control', 'dead-trails-west']);
   });
 
@@ -171,15 +171,16 @@ describe('content consistency guards (Phase 28)', () => {
     expect(homepage).toContain('href="/support"');
   });
 
-  it('navigates company-first without the old nav labels', () => {
-    expect(header).toContain("label: 'Products'");
-    expect(header).toContain("label: 'CodeForge'");
-    expect(header).toContain("label: 'Forge Control'");
-    expect(header).toContain("label: 'Dead Trails West'");
-    expect(header).toContain("label: 'Releases'");
-    expect(header).toContain("label: 'Engineering'");
-    expect(header).toContain('Get CodeForge');
-    expect(header).not.toContain(">Forged<\n");
+  it('navigates company-first with the six institutional domain labels', () => {
+    for (const domain of ['Models', 'Products', 'Research', 'Developers', 'Studio', 'Company']) {
+      expect(header).toContain(domain);
+    }
+    expect(header).toContain('/models/');
+    expect(header).toContain('/products/');
+    expect(header).toContain('/research/');
+    expect(header).toContain('/developers/');
+    expect(header).toContain('/studio/');
+    expect(header).toContain('/company/');
     expect(header).not.toContain('Support FDS');
   });
 

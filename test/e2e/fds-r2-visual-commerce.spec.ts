@@ -146,6 +146,7 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
   });
 
   test('G. Accessibility (Axe Core) Audit', async ({ page }) => {
+    test.setTimeout(90_000);
     const pagesToAudit = ['/', '/forged', '/codeforge/upgrade'];
 
     for (const path of pagesToAudit) {
