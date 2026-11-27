@@ -121,6 +121,7 @@
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
+  scroll-padding-bottom: 5.5rem;
   background-color: var(--color-bg);
   color-scheme: dark;
 }
@@ -428,6 +429,37 @@ img {
   color: var(--color-text-muted);
   font-size: 1rem;
   line-height: 1.68;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --section-space: 1.85rem;
+    --section-space-tight: 1.25rem;
+  }
+
+  .site-main {
+    width: calc(100% - 1.5rem);
+  }
+
+  .page-section--surface {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .fds-section-head {
+    gap: 0.5rem 1rem;
+    margin-bottom: 1.05rem;
+  }
+
+  .fds-section-head h2 {
+    font-size: clamp(1.32rem, 5.6vw, 1.65rem);
+  }
+
+  .fds-section-head p {
+    margin-top: 0.4rem;
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
 }
 
 .fds-panel {
@@ -806,11 +838,3 @@ img {
   }
 }
 
-@media (max-width: 640px) {
-  .site-main {
-    width: min(calc(100% - 2rem), var(--content-width));
-  }
-  .page-section {
-    padding: 3rem 0;
-  }
-}

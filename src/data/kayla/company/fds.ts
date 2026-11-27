@@ -5,14 +5,14 @@ export const fds: KaylaCompany = {
   name: siteConfig.name,
   shortName: siteConfig.shortName,
   description: siteConfig.description,
-  mission: 'Independent software and AI engineering across autonomous development, technician tools, game development, publishing, civic information, and local discovery.',
+  mission: 'Independent AI research and software engineering studio leading with the FDS Studio Intelligence Hub—managed four-week engineering intelligence pilots for Roblox Studio and Unreal Engine game studios—alongside Project Forge research, specialized model families (Hackmanite, Cinnabar, Alexandrite), standalone software platforms (Jaspilite, Forge BattleVerse, ForgerEMS), and original games.',
   vision: {
-    current: 'Shipping and testing focused products: autonomous repository engineering, engineering governance, a historically grounded game, long-form publishing, civic information, local-food discovery, and Windows technician workflows.',
-    activeDevelopment: 'Active work spans CodeForge, Forge Control, Dead Trails West, Kayla AI Publisher, FarmStand Finder, private civic technology, and the ForgerEMS public preview.',
-    research: 'FDS research explores engineering reliability, evaluation, adaptive computation, and evidence-driven development. Work is described publicly only where its status and evidence are verified.',
-    planned: 'Near-term product work covers CodeForge verification and routing, Forge Control implementation, Dead Trails West world systems, publishing workflows, official-source civic navigation, and local-food discovery. Community programs remain concepts.',
+    current: 'Focused on managed Studio Intelligence Hub pilots (currently in testing on FDS’s own Roblox and Unreal projects), alongside Project Forge research, active application development, verified public software releases, and original productions—with clear boundaries between tested pilot scope, released software, and work in development.',
+    activeDevelopment: 'Active work spans FDS Studio Intelligence Hub pilots (in testing), Project Forge research, Jaspilite, Forge BattleVerse, State Lines, CodeForge, Forge Control, Dead Trails West, Kayla AI Publisher, FarmStand Finder, private civic technology, and the ForgerEMS public preview.',
+    research: 'FDS research runs through Project Forge across gaming intelligence (Hackmanite), storytelling models (Cinnabar), collective convergence vision (Alexandrite), evaluation systems, and evidence-driven engineering. Work is described publicly only where its status and evidence are verified.',
+    planned: 'Near-term focus covers Studio Intelligence Hub managed pilots for Roblox Studio and Unreal Engine studios, scoped engine reference packs, Jaspilite multi-agent engineering workflows, Hackmanite and Cinnabar model development, and verified releases. Community programs remain concepts.',
     aspirational: 'Exploring affordable-community concepts, community gardens, technology reuse programs, and open planning tools that help people understand and manage shared infrastructure.',
-    longTerm: 'Let lessons from shipped engineering tools, model experiments, creative products, and community-facing software improve one another while each product keeps its own purpose and technical boundaries.'
+    longTerm: 'Let lessons from Studio Intelligence Hub pilots, Project Forge research, specialized models, and shipped tools improve one another while each product keeps explicit technical boundaries.'
   },
   philosophy: [
     'Evidence over assumptions — results should provide evidence that the intended objective was achieved.',
@@ -21,13 +21,14 @@ export const fds: KaylaCompany = {
     'Build through experimentation — research findings should become reusable architecture only after surviving meaningful real-world use.'
   ],
   productEcosystem: [
-    'CodeForge — free-first autonomous software-engineering platform',
-    'Forge Control — active development; no public release or integrations verified',
-    'Dead Trails West — private Unreal Engine game development',
-    'Kayla AI Publisher — continuous creative-project and publishing workspace',
-    'We The People — private-development civic technology platform',
-    'FarmStand Finder — community-focused local discovery application',
-    'ForgerEMS — Windows technician workbench and engineering maintenance suite'
+    'FDS Studio Intelligence Hub — managed four-week engineering intelligence pilot for Roblox Studio & Unreal Engine teams (in testing)',
+    'Project Forge — permanent 15-division research and engineering foundation',
+    'Hackmanite, Cinnabar & Alexandrite — specialized AI model families & collective intelligence research vision',
+    'Jaspilite — autonomous multi-agent coding-agent environment (Auto, Meld, Solo; active development)',
+    'Forge BattleVerse — fictional intelligence & creative-production platform (Arena & Creator Studio)',
+    'State Lines — original AAA-ambition open-world game (preproduction / private development)',
+    'CodeForge — free-first autonomous software-engineering platform (downloads temporarily paused)',
+    'ForgerEMS — Windows technician workbench and engineering maintenance suite (public preview)'
   ],
   currentProjects: [
     'CodeForge (RELEASED + ACTIVE DEVELOPMENT)',

@@ -432,7 +432,7 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     id: 'kayla-copilot',
     type: 'general',
     title: 'Kayla',
-    text: 'Kayla is the general AI assistant on the Forger Digital Solutions website. She can help with general questions and public information about FDS, its flagship models, applications, solutions, releases, navigation, and support. Kayla AI Publisher is a separate FDS creative and publishing product. Kayla has no live external data.',
+    text: 'Kayla is the AI assistant on the Forger Digital Solutions website, focused on the FDS Studio Intelligence Hub pilot, code security and Trust Center disclosures, MCP-compatible tools like Cursor, FDS model families, standalone products, verified releases, navigation, and support. Kayla AI Publisher is a separate FDS creative product. Kayla has no live external data.',
     route: '/',
     entityId: 'kayla-copilot',
     tags: ['kayla', 'copilot', 'kayla copilot', 'assistant', 'guide'],
@@ -472,9 +472,29 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     id: 'fds-solutions',
     type: 'general',
     title: 'Studio Intelligence Hub & Commercial Solutions',
-    text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ lead commercial offering: a managed four-week engineering intelligence pilot powered by Project Forge for Roblox Studio (Luau) and Unreal Engine (C++) studios, currently in testing on FDS’s own Roblox and Unreal projects. It connects source code, technical documentation, and design specs (scoped engine references are in development) via external MCP-compatible tools without requiring Jaspilite. Cannot modify your repository — read-only by design, with isolated project data and customer-owned API keys. Blueprint logic indexing is not yet implemented. First five Founding Studios receive 50% off the applicable pilot fee; pricing is discussed during the pilot assessment.',
-    route: '/solutions/',
-    tags: ['solutions', 'studio intelligence hub', 'pilot', 'founding studio', 'roblox', 'unreal', 'studio', 'enterprise', 'private ai', 'workforce', 'gaming studio', 'animation studio'],
+    text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ lead commercial offering: a managed four-week engineering intelligence pilot powered by Project Forge for Roblox Studio (Luau) and Unreal Engine (C++) studios, currently in testing on FDS’s own Roblox and Unreal projects. It connects source code, technical documentation, and design specs (scoped engine references are in development) via external MCP-compatible tools—Cursor connection has been tested while the full workflow is still in testing—without requiring Jaspilite. Cannot modify your repository — read-only by design, with isolated project data and customer-owned API keys. Blueprint logic indexing is not yet implemented. First five Founding Studios receive 50% off the applicable pilot fee; pricing is discussed during the pilot assessment.',
+    route: '/solutions/studio-intelligence-hub/',
+    tags: ['solutions', 'studio intelligence hub', 'pilot', 'founding studio', 'roblox', 'unreal', 'cursor', 'mcp', 'studio', 'enterprise', 'private ai', 'workforce', 'gaming studio', 'animation studio'],
+    weight: 1.0
+  });
+
+  addDoc({
+    id: 'fds-trust',
+    type: 'general',
+    title: 'FDS Trust Center',
+    text: 'Forger Digital Solutions does not claim SOC 2, ISO 27001, HIPAA, FedRAMP, or third-party enterprise security certifications. Studio Intelligence Hub pilots enforce read-only project access (cannot modify your repository), isolated per-project data, customer-owned AI provider API keys, zero training on studio code or documentation without explicit written permission, and defined data-deletion procedures.',
+    route: '/trust/',
+    tags: ['trust', 'trust center', 'security', 'soc 2', 'soc2', 'iso 27001', 'hipaa', 'fedramp', 'certification', 'certifications', 'compliance', 'audit', 'read-only', 'safe'],
+    weight: 1.0
+  });
+
+  addDoc({
+    id: 'fds-contact',
+    type: 'general',
+    title: 'Contact FDS & Pilot Booking',
+    text: `Book a Studio Intelligence Hub pilot call, apply as a Founding Studio, or reach Forger Digital Solutions via /contact/ or ${fds.supportEmail}.`,
+    route: '/contact/',
+    tags: ['contact', 'book', 'pilot call', 'schedule', 'email', 'inquiry'],
     weight: 1.0
   });
 

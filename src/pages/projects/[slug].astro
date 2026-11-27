@@ -95,9 +95,19 @@ const softwareSchema = releaseProduct ? {
   downloadUrl: releaseProduct.downloadUrl,
   author: { '@type': 'Organization', name: 'Forger Digital Solutions', url: 'https://forgerdigitalsolutions.com' }
 } : null;
+
+const projectMetaDescriptions: Record<string, string> = {
+  codeforge: 'Free-first autonomous software-engineering platform for Windows, CLI, and editor work under explicit developer control.',
+  'dead-trails-west': 'Original historical open-world game in private Unreal Engine 4.27 development, set across 1882–1900. No public build.',
+  'forge-control': 'Active-development orchestration product intended to coordinate coding agents and verification. No public release yet.',
+  forgerems: 'Windows technician workbench for diagnostics, USB toolkit creation, drive validation, driver guidance, and local tools.',
+  'kayla-ai-publisher': 'Continuous creative workspace for manuscripts, chapters, characters, revision, visual storytelling, and publishing prep.',
+  'we-the-people': 'Offline-first knowledge library keeping civics, public information, science, engineering, and practical reference local.',
+};
+const metaDescription = projectMetaDescriptions[project.slug] ?? project.summary.slice(0, 157);
 ---
 
-<BaseLayout title={project.name} description={project.summary} ogImage={ogImage}>
+<BaseLayout title={project.name} description={metaDescription} ogImage={ogImage}>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {softwareSchema && <script is:inline type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />}
   <nav class="breadcrumbs" aria-label="Breadcrumb">

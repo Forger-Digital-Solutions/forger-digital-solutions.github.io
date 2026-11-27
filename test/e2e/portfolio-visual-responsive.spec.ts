@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Phase III-C Studio Intelligence Hub & FDS visual system', () => {
-  test('leads homepage with Studio Intelligence Hub while preserving the FDS ecosystem and heritage slogan', async ({ page }) => {
+  test('leads homepage with Studio Intelligence Hub while preserving the FDS ecosystem strip and heritage slogan', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('#hero-heading')).toContainText("Your Game Studio's Knowledge.");
     await expect(page.locator('#hero-heading')).toContainText('Connected.');
@@ -10,27 +10,34 @@ test.describe('Phase III-C Studio Intelligence Hub & FDS visual system', () => {
     await expect(page.locator('[data-pilot-booking-cta]').first()).toBeVisible();
 
     const main = page.locator('main');
-    for (const flagship of [
+    for (const term of [
       'Studio Intelligence Hub',
       'Roblox Studio',
       'Unreal Engine',
       'Founding Studio',
+      'Also from FDS',
       'Hackmanite',
       'BattleVerse',
       'Jaspilite',
       'Project Forge',
       'Alexandrite',
       'Cinnabar',
-      'State Lines',
+      'Newsroom',
     ]) {
-      await expect(main).toContainText(flagship);
+      await expect(main).toContainText(term);
     }
-    await expect(main).toContainText('Qwen/Qwen3.8-27B');
-    await expect(main).toContainText('openai/gpt-oss-120b');
-    await expect(main).toContainText('Concept Art — Work in Progress (Not Gameplay');
     // Verify internal pilot prices never appear on the rendered homepage
     const bodyText = await main.innerText();
     expect(bodyText).not.toMatch(/\$(?:1,500|750|2,500|1,250|3,500|1,750)\b/);
+
+    // Verify moved model provenance and State Lines concept art disclosures on their dedicated pages
+    await page.goto('/models/hackmanite/');
+    await expect(page.locator('main')).toContainText('Qwen/Qwen3.8-27B');
+    await expect(page.locator('main')).toContainText('openai/gpt-oss-120b');
+
+    await page.goto('/studio/state-lines/');
+    await expect(page.locator('main')).toContainText('State Lines');
+    await expect(page.locator('main')).toContainText(/Concept Art/i);
   });
 
   test('Studio Intelligence Hub investigation explorer switches between Roblox Luau and Unreal C++ questions cleanly', async ({ page }) => {
@@ -57,7 +64,7 @@ test.describe('Phase III-C Studio Intelligence Hub & FDS visual system', () => {
     await page.addInitScript(() => {
       try { window.localStorage.setItem('fds_support_dismissed_at', String(Date.now())); } catch { /* ignore */ }
     });
-    await page.goto('/');
+    await page.goto('/products/');
     const bench = page.locator('[data-jasp-bench]').first();
     await expect(bench).toBeVisible();
 

@@ -48,20 +48,23 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
     expect(facetCount).toBeGreaterThanOrEqual(4);
   });
 
-  test('C. Homepage Software Distribution Portal', async ({ page }) => {
+  test('C. Homepage Software Distribution & Also from FDS Strip', async ({ page }) => {
     await page.goto('/');
 
     // Verify raw available list is gone
     const rawList = page.locator('.available__list');
     await expect(rawList).toHaveCount(0);
 
-    // Verify distribution portal exists
-    const portal = page.locator('.distribution-portal');
-    await expect(portal).toBeVisible();
-    await expect(portal.locator('h2')).toHaveText('Looking for ready-to-run software?');
+    // Verify compact Also from FDS strip links to models, products, research, newsroom, and /forged
+    const strip = page.locator('#also-from-fds');
+    await expect(strip).toBeVisible();
+    await expect(strip.locator('a[href="/models/"]')).toBeVisible();
+    await expect(strip.locator('a[href="/products/"]')).toBeVisible();
+    await expect(strip.locator('a[href="/research/"]')).toBeVisible();
+    await expect(strip.locator('a[href="/news/"]')).toBeVisible();
 
     // Link must route to /forged
-    const forgedLink = portal.locator('a[href="/forged"]');
+    const forgedLink = strip.locator('a[href="/forged"]');
     await expect(forgedLink).toBeVisible();
   });
 
@@ -195,7 +198,7 @@ test.describe('FDS Website R2 — Visual Identity, Distribution & Commerce E2E',
       await expect(page.locator('.distribution-badges')).toBeVisible();
 
       await page.goto('/');
-      await expect(page.locator('.distribution-portal')).toBeVisible();
+      await expect(page.locator('#also-from-fds')).toBeVisible();
     }
   });
 });

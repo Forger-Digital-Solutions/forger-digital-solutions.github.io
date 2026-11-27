@@ -516,7 +516,11 @@ export async function handleKaylaChat(
         retrieved[0]?.id === 'portfolio-status'
         || retrieved[0]?.id?.startsWith('registry-')
         || retrieved[0]?.id === 'fds-solutions'
+        || retrieved[0]?.id === 'fds-trust'
+        || retrieved[0]?.id === 'fds-company'
+        || retrieved[0]?.id === 'fds-contact'
         || retrieved[0]?.id === 'fds-api-licensing'
+        || retrieved[0]?.id === 'scope-boundary'
       )
     );
     sources = isSettledFlagshipOrPortfolio
@@ -526,7 +530,11 @@ export async function handleKaylaChat(
         : (retrieved.length ? retrieved : []);
     const actions = sources[0]?.id === 'portfolio-status'
       ? (sources[0].actions || [])
-      : rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
+      : rankConversationActions(
+        isSettledFlagshipOrPortfolio ? { ...conversation, needsClarification: false } : conversation,
+        [...(sources[0]?.actions || []), ...taskPlan.recommendedActions],
+        context
+      );
     taskPlan.recommendedActions = actions;
     if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };
   } catch {
@@ -763,11 +771,21 @@ export async function* streamKaylaChat(
       retrieved[0]?.id === 'portfolio-status'
       || retrieved[0]?.id?.startsWith('registry-')
       || retrieved[0]?.id === 'fds-solutions'
+      || retrieved[0]?.id === 'fds-trust'
+      || retrieved[0]?.id === 'fds-company'
+      || retrieved[0]?.id === 'fds-contact'
       || retrieved[0]?.id === 'fds-api-licensing'
+      || retrieved[0]?.id === 'scope-boundary'
     )
   );
   const sources = isSettledFlagshipOrPortfolio ? retrieved : (composed && composed.length ? composed : (retrieved.length ? retrieved : []));
-  const actions = rankConversationActions(conversation, [...(sources[0]?.actions || []), ...taskPlan.recommendedActions], context);
+  const actions = sources[0]?.id === 'portfolio-status'
+    ? (sources[0].actions || [])
+    : rankConversationActions(
+      isSettledFlagshipOrPortfolio ? { ...conversation, needsClarification: false } : conversation,
+      [...(sources[0]?.actions || []), ...taskPlan.recommendedActions],
+      context
+    );
   taskPlan.recommendedActions = actions;
   if (sources[0]) sources[0] = { ...sources[0], actions, action: actions[0] };
 

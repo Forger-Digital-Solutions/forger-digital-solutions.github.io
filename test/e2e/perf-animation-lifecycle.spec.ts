@@ -4,13 +4,12 @@ test.describe('Animation Performance & Lifecycle Regression Gates', () => {
   test('flagship surfaces and ecosystem architecture do not run continuous background animations', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
     const animationNames = await page
-      .locator('.hero, .hub-trace, .founding-banner, .eco-arch, .specialist-panel, .app-feature')
+      .locator('.hero, .hub-trace, .founding-banner, .hub-final-cta, .also-grid, .engines-grid')
       .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).animationName));
     expect(animationNames.length).toBeGreaterThanOrEqual(6);
     expect(animationNames.every((name) => name === 'none')).toBe(true);
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(150);
+    await page.goto('/company/', { waitUntil: 'networkidle' });
     await page.locator('.eco-arch').scrollIntoViewIfNeeded();
     const restored = await page.locator('.eco-arch').evaluate((element) => getComputedStyle(element).animationName);
     expect(restored).toBe('none');
@@ -45,33 +44,37 @@ test.describe('Animation Performance & Lifecycle Regression Gates', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
     const motionStyles = await page.evaluate(() => ({
       visitorDot: getComputedStyle(document.querySelector('.visitor-counter__dot')!).animationName,
-      ecoArch: getComputedStyle(document.querySelector('.eco-arch')!).animationName,
+      hubTrace: getComputedStyle(document.querySelector('.hub-trace')!).animationName,
       hero: getComputedStyle(document.querySelector('.hero')!).animationName,
     }));
     expect(motionStyles).toEqual({
       visitorDot: 'none',
-      ecoArch: 'none',
+      hubTrace: 'none',
       hero: 'none',
     });
     await context.close();
   });
 
-  test('Mobile flagship layouts remain stacked in a single column and do not overflow', async ({ page }) => {
+  test('Mobile homepage stays under 12 phone screens, stacks cleanly, and does not overflow', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    const divisionCols = await page
-      .locator('.division-rail')
+    const engineCols = await page
+      .locator('.engines-grid')
       .evaluate((el) => getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
-    expect(divisionCols).toBe(1);
+    expect(engineCols).toBe(1);
 
-    const specialistCols = await page
-      .locator('.specialist-grid')
+    const problemCols = await page
+      .locator('.problem-ledger__row')
+      .first()
       .evaluate((el) => getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
-    expect(specialistCols).toBe(1);
+    expect(problemCols).toBe(1);
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
+
+    const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    expect(scrollHeight / 844).toBeLessThan(12.2);
   });
 
   test('Pointer lighting is throttled and does not update continuously on touch/coarse devices', async ({ browser }) => {

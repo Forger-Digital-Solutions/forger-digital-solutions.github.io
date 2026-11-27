@@ -75,7 +75,7 @@ conversationCases.push(
   { name: 'support without pressure', category: 'goals', turns: [
     { message: 'I want to help.', action: '/support' },
     { message: 'Where does the money go?', includes: ['development', 'hardware'], action: '/support' },
-    { message: 'Can I just learn more first?', action: '/about' }
+    { message: 'Can I just learn more first?', action: '/solutions/studio-intelligence-hub/' }
   ] },
   { name: 'explicit action negation', category: 'negation', turns: [
     { message: 'Download CodeForge.', action: '/projects/codeforge' },

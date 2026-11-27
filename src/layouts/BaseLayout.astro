@@ -16,20 +16,28 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogImageWebp?: string;
   noindex?: boolean;
   robots?: string;
   accent?: RegistryAccent;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, ogImage, noindex, robots, accent, jsonLd } = Astro.props;
+const { title, description, ogImage, ogImageWebp, noindex, robots, accent, jsonLd } = Astro.props;
 const robotsDirective = robots || (noindex ? 'noindex, nofollow' : undefined);
-const pageTitle = title ? `${title} | ${siteConfig.name}` : `${siteConfig.name} — Specialized Intelligence & Original Worlds`;
+const pageTitle = title ? `${title} | ${siteConfig.name}` : `${siteConfig.name} — Studio Intelligence Hub & Game Engineering AI`;
 const pageDesc =
   description ||
-  'Forger Digital Solutions is an independent artificial intelligence research and engineering studio developing specialized AI models, autonomous development systems, and original interactive experiences.';
+  'Forger Digital Solutions builds the Studio Intelligence Hub for Roblox and Unreal teams, specialized AI models, developer software, and original games.';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).href;
-const ogImageUrl = new URL(ogImage || siteConfig.ogImage, siteConfig.siteUrl).href;
+const primaryOgPath = ogImage || siteConfig.ogImage;
+const ogImageUrl = new URL(primaryOgPath, siteConfig.siteUrl).href;
+const ogImageType = primaryOgPath.endsWith('.png')
+  ? 'image/png'
+  : primaryOgPath.endsWith('.webp')
+    ? 'image/webp'
+    : 'image/jpeg';
+const ogImageWebpUrl = ogImageWebp ? new URL(ogImageWebp, siteConfig.siteUrl).href : undefined;
 const kaylaPageContext = buildPageContext(Astro.url.pathname);
 const isHomepage = Astro.url.pathname === '/';
 
@@ -82,6 +90,19 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content={ogImageType} />
+    {ogImageType !== 'image/webp' && (
+      <>
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+      </>
+    )}
+    {ogImageWebpUrl && (
+      <>
+        <meta property="og:image" content={ogImageWebpUrl} />
+        <meta property="og:image:type" content="image/webp" />
+      </>
+    )}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDesc} />

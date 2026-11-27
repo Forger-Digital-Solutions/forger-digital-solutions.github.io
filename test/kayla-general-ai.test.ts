@@ -279,3 +279,20 @@ describe('No internal vocabulary in the public response', () => {
     expect(JSON.stringify(response)).not.toMatch(INTERNALS);
   });
 });
+
+describe('Off-topic budget protection', () => {
+  it('steers poems and homework back to FDS deterministically without spending the AI daily budget', async () => {
+    for (const prompt of ['Write me a poem about space.', 'Can you do my algebra homework?', 'Write a 500 word essay about Rome.']) {
+      const consumeAIAllowance = vi.fn(async () => true);
+      const endpoint = {
+        ...liveEndpoint(),
+        consumeAIAllowance
+      };
+      const response = await ask(prompt, endpoint);
+      expect(response.mode, prompt).toBe('local');
+      expect(response.routeMode, prompt).toBe('deterministic');
+      expect(response.answer, prompt).toMatch(/Forger Digital Solutions|Studio Intelligence Hub/i);
+      expect(consumeAIAllowance, `${prompt} must not spend AI budget`).not.toHaveBeenCalled();
+    }
+  });
+});

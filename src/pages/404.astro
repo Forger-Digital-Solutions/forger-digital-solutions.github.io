@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Page Not Found">
+<BaseLayout
+  title="Page Not Found"
+  description="The requested page on Forger Digital Solutions could not be found. Return home or explore the Studio Intelligence Hub, models, and products."
+>
   <div class="notfound-page">
     <p class="notfound-code">SYSTEM PATH NOT FOUND</p>
     <h1 class="notfound-title">404</h1>
@@ -10,6 +13,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </p>
     <div class="notfound-actions">
       <a href="/" class="btn btn-primary">Return Home</a>
+      <a href="/solutions/studio-intelligence-hub/" class="btn btn-outline">Studio Intelligence Hub</a>
       <a href="/models/" class="btn btn-outline">Explore Models</a>
       <a href="/products/" class="btn btn-outline">Explore Products</a>
     </div>
@@ -26,7 +30,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <style>
   .notfound-page {
     text-align: center;
-    max-width: 500px;
+    max-width: 680px;
     margin: 0 auto;
     padding: 6rem var(--space-3) 8rem;
     min-height: 60vh;

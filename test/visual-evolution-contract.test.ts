@@ -31,13 +31,22 @@ describe('product portfolio visual contract', () => {
     expect(homepage).not.toMatch(/GEMS|KyraBlox|Training Grounds/);
   });
 
-  it('keeps the flagship ecosystem technologies distinct and availability-qualified on the homepage', () => {
-    for (const id of ['alexandrite', 'hackmanite', 'cinnabar', 'jaspilite', 'battleverse', 'state-lines']) {
-      expect(homepage).toContain(`getRegistryEntry('${id}')`);
-    }
+  it('keeps the Hub and flagship ecosystem technologies distinct and availability-qualified across their pages', () => {
+    const pagesById: Record<string, string> = {
+      alexandrite: readFileSync(new URL('../src/pages/models/alexandrite.astro', import.meta.url), 'utf8'),
+      hackmanite: readFileSync(new URL('../src/pages/models/hackmanite/index.astro', import.meta.url), 'utf8'),
+      cinnabar: readFileSync(new URL('../src/pages/models/cinnabar/index.astro', import.meta.url), 'utf8'),
+      jaspilite: readFileSync(new URL('../src/pages/products/jaspilite.astro', import.meta.url), 'utf8'),
+      battleverse: readFileSync(new URL('../src/pages/products/battleverse/index.astro', import.meta.url), 'utf8'),
+      'state-lines': readFileSync(new URL('../src/pages/studio/state-lines.astro', import.meta.url), 'utf8'),
+    };
+
+    expect(homepage).toContain("getRegistryEntry('studio-intelligence-hub')");
     expect(homepage).toContain('<StatusPill');
-    expect(homepage).toContain('ForgerEMS v1.2.4-preview.1');
-    expect(homepage).toContain('Concept Art — Work in Progress (Not Gameplay');
+    for (const [id, content] of Object.entries(pagesById)) {
+      expect(content, `${id} page`).toContain(`getRegistryEntry('${id}')`);
+    }
+    expect(pagesById['state-lines']).toMatch(/Concept Art/i);
   });
 
   it('labels conceptual art and unverified integrations instead of presenting them as evidence', () => {

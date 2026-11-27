@@ -15,11 +15,11 @@ export const supportInfo = {
 export const faqs: { q: string; a: string }[] = [
   {
     q: 'What is Forger Digital Solutions?',
-    a: 'FDS is an independent software company building developer tools, technician software, game projects, publishing tools, civic information, and local discovery.'
+    a: 'Forger Digital Solutions (FDS) is an independent AI research and software engineering studio leading with the FDS Studio Intelligence Hub—managed four-week engineering intelligence pilots for Roblox Studio and Unreal Engine teams—alongside Project Forge research, specialized AI model families (Hackmanite, Cinnabar, Alexandrite), standalone software platforms (Jaspilite, Forge BattleVerse, ForgerEMS, CodeForge), and original games.'
   },
   {
     q: 'What does FDS build?',
-    a: 'Work spans CodeForge and its Forge AAA architecture workstream, Forge Control, Dead Trails West, Kayla AI Publisher, We The People, FarmStand Finder, and ForgerEMS.'
+    a: 'FDS leads with the FDS Studio Intelligence Hub managed pilot service for game studios, backed by Project Forge research, specialized AI model families (Hackmanite, Cinnabar, Alexandrite), standalone platforms (Jaspilite, Forge BattleVerse, CodeForge, ForgerEMS, Forge Control, Kayla AI Publisher, We The People, FarmStand Finder), and original games (State Lines, Dead Trails West).'
   },
   {
     q: 'Are FDS projects open source?',
