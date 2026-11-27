@@ -4,7 +4,7 @@ import { statusDisplayLabels, type DevelopmentStatus } from '../data/registry';
 interface Props {
   status?: DevelopmentStatus;
   label?: string;
-  tone?: 'release' | 'preview' | 'dev' | 'research' | 'vision' | 'private' | 'paused';
+  tone?: 'release' | 'preview' | 'dev' | 'research' | 'vision' | 'private' | 'paused' | 'commercial';
 }
 
 const { status, label, tone } = Astro.props;
@@ -13,20 +13,28 @@ const toneFromStatus = (s?: DevelopmentStatus): NonNullable<Props['tone']> => {
   switch (s) {
     case 'public-release':
     case 'capability-certified':
+    case 'commercially-available':
       return 'release';
     case 'public-preview':
       return 'preview';
+    case 'commercial-direction':
+      return 'commercial';
     case 'active-development':
     case 'training-in-progress':
       return 'dev';
     case 'research-vision':
       return 'vision';
+    case 'active-research':
+    case 'experimental-checkpoint':
     case 'experimental':
     case 'training-planned':
     case 'foundation-available':
     case 'fine-tuning-completed':
+    case 'internal-evaluation':
     case 'evaluated':
       return 'research';
+    case 'private-alpha':
+    case 'private-beta':
     case 'private-development':
     default:
       return 'private';
@@ -71,6 +79,7 @@ const resolvedLabel = label ?? (status ? statusDisplayLabels[status] : 'In Devel
 
   .fds-status--release { --dot-color: #34d399; color: #b7f5dc; border-color: rgba(52, 211, 153, 0.3); }
   .fds-status--preview { --dot-color: #60a5fa; color: #c7e0ff; border-color: rgba(96, 165, 250, 0.32); }
+  .fds-status--commercial { --dot-color: #6fa0ff; color: #dbeafe; border-color: rgba(111, 160, 255, 0.34); }
   .fds-status--dev { --dot-color: #f59e0b; color: #fde1a9; border-color: rgba(245, 158, 11, 0.32); }
   .fds-status--research { --dot-color: #a78bfa; color: #dfd4ff; border-color: rgba(167, 139, 250, 0.32); }
   .fds-status--vision { --dot-color: #2dd4bf; color: #bdf6ee; border-color: rgba(45, 212, 191, 0.32); }

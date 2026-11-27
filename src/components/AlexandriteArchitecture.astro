@@ -1,0 +1,295 @@
+---
+import { solutionsData } from '../data/registry';
+
+const { stages, orchestrationVsCollective } = solutionsData.alexandriteConvergence;
+---
+
+<div class="alex-arch" data-alex-arch>
+  <div class="alex-arch__head">
+    <div>
+      <span class="alex-arch__eyebrow">ALEXANDRITE // 7-STAGE CONVERGENCE PIPELINE</span>
+      <p class="alex-arch__hint">Select any stage to inspect verification gates between specialist research and collective deployment.</p>
+    </div>
+    <span class="alex-arch__badge">Interactive Architecture Model</span>
+  </div>
+
+  <div class="alex-stage-rail" role="tablist" aria-label="Alexandrite seven-stage convergence pipeline">
+    {stages.map((item, idx) => (
+      <button
+        type="button"
+        role="tab"
+        id={`alex-tab-${item.step}`}
+        aria-selected={idx === 0 ? 'true' : 'false'}
+        aria-controls="alex-stage-panel"
+        class={`alex-stage-btn ${idx === 0 ? 'is-active' : ''}`}
+        data-alex-step={item.step}
+        data-alex-title={item.title}
+        data-alex-state={item.state}
+        data-alex-detail={item.detail}
+      >
+        <span class="alex-stage-btn__num">{item.step}</span>
+        <span class="alex-stage-btn__title">{item.title}</span>
+        <span class="alex-stage-btn__state">{item.state}</span>
+      </button>
+    ))}
+  </div>
+
+  <div id="alex-stage-panel" class="alex-inspector" role="tabpanel" aria-live="polite" aria-labelledby="alex-tab-01">
+    <div class="alex-inspector__meta">
+      <span class="alex-inspector__step" data-alex-field="step">STAGE 01 / 07</span>
+      <span class="alex-inspector__state" data-alex-field="state">{stages[0].state}</span>
+    </div>
+    <h3 class="alex-inspector__title" data-alex-field="title">{stages[0].title}</h3>
+    <p class="alex-inspector__detail" data-alex-field="detail">{stages[0].detail}</p>
+  </div>
+
+  <div class="alex-distinction">
+    <div class="alex-distinction__head">
+      <span class="alex-arch__eyebrow">ARCHITECTURAL CLARITY</span>
+      <h3>Multi-Model Orchestration vs. Separately Trained Collective Model</h3>
+      <p>
+        Combining model names or averaging unrelated weights does not automatically produce stronger intelligence. FDS separates runtime orchestration (Jaspilite) from long-horizon multi-teacher distillation (Alexandrite).
+      </p>
+    </div>
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Dimension</th>
+            <th scope="col">Multi-Model Orchestration (e.g., Jaspilite)</th>
+            <th scope="col">Trained Collective Model (Alexandrite Vision)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orchestrationVsCollective.map((row) => (
+            <tr>
+              <th scope="row">{row.dimension}</th>
+              <td>{row.orchestration}</td>
+              <td>{row.collective}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-alex-arch]').forEach((root) => {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-alex-step]'));
+    const panel = root.querySelector<HTMLElement>('#alex-stage-panel');
+    const stepEl = root.querySelector<HTMLElement>('[data-alex-field="step"]');
+    const stateEl = root.querySelector<HTMLElement>('[data-alex-field="state"]');
+    const titleEl = root.querySelector<HTMLElement>('[data-alex-field="title"]');
+    const detailEl = root.querySelector<HTMLElement>('[data-alex-field="detail"]');
+
+    const activate = (btn: HTMLButtonElement) => {
+      buttons.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      const step = btn.dataset.alexStep || '01';
+      if (panel) panel.setAttribute('aria-labelledby', btn.id);
+      if (stepEl) stepEl.textContent = `STAGE ${step} / 07`;
+      if (stateEl) stateEl.textContent = btn.dataset.alexState || '';
+      if (titleEl) titleEl.textContent = btn.dataset.alexTitle || '';
+      if (detailEl) detailEl.textContent = btn.dataset.alexDetail || '';
+    };
+
+    buttons.forEach((btn, idx) => {
+      btn.addEventListener('click', () => activate(btn));
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = buttons[(idx + 1) % buttons.length];
+          next.focus();
+          activate(next);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prev = buttons[(idx - 1 + buttons.length) % buttons.length];
+          prev.focus();
+          activate(prev);
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .alex-arch {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.6rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.045) 0%, var(--color-bg-secondary) 36%);
+  }
+
+  .alex-arch__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .alex-arch__eyebrow {
+    display: block;
+    color: var(--accent-alexandrite);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .alex-arch__hint {
+    margin: 0.35rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+  }
+
+  .alex-arch__badge {
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: var(--radius-xs);
+    background: rgba(16, 185, 129, 0.09);
+    color: #a7f3d0;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .alex-stage-rail {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .alex-stage-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 0.8rem 0.75rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease;
+  }
+
+  .alex-stage-btn:hover {
+    border-color: rgba(16, 185, 129, 0.45);
+    background: var(--color-surface);
+  }
+
+  .alex-stage-btn.is-active {
+    border-color: var(--accent-alexandrite);
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  .alex-stage-btn__num {
+    color: var(--accent-alexandrite);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .alex-stage-btn__title {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .alex-stage-btn__state {
+    margin-top: auto;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+  }
+
+  .alex-inspector {
+    padding: 1.25rem 1.35rem;
+    border: 1px solid rgba(16, 185, 129, 0.32);
+    border-radius: var(--radius-sm);
+    background: var(--color-recessed);
+  }
+
+  .alex-inspector__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .alex-inspector__step {
+    color: var(--accent-alexandrite);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .alex-inspector__state {
+    padding: 0.18rem 0.52rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .alex-inspector__title {
+    margin: 0 0 0.45rem;
+    font-size: 1.2rem;
+  }
+
+  .alex-inspector__detail {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
+    max-width: 58rem;
+  }
+
+  .alex-distinction {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .alex-distinction__head h3 {
+    margin: 0.4rem 0 0.45rem;
+    font-size: 1.22rem;
+  }
+
+  .alex-distinction__head p {
+    margin: 0 0 1.1rem;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    max-width: 56rem;
+  }
+
+  @media (max-width: 1120px) {
+    .alex-stage-rail {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .alex-stage-rail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .alex-arch {
+      padding: 1.1rem;
+    }
+  }
+</style>

@@ -1,0 +1,332 @@
+---
+import { siteConfig } from '../config/site';
+import { solutionsData } from '../data/registry';
+
+const tracks = solutionsData.inquiryTracks;
+---
+
+<div class="inquiry-builder" data-inquiry-builder data-support-email={siteConfig.supportEmail}>
+  <div class="inquiry-builder__head">
+    <div>
+      <span class="inquiry-kicker">VERIFIED COMMERCIAL &amp; PREVIEW INQUIRY COMPOSER</span>
+      <h3>Prepare a structured inquiry directly for Forger Digital Solutions.</h3>
+      <p>
+        This static website never collects hidden form submissions or discards your message into a fake database. Selecting a pathway below builds a ready-to-send email directly to <code>{siteConfig.supportEmail}</code> or copies a structured brief to your clipboard.
+      </p>
+    </div>
+  </div>
+
+  <div class="inquiry-tracks" role="radiogroup" aria-label="Select commercial inquiry track">
+    {tracks.map((tr, idx) => (
+      <button
+        type="button"
+        role="radio"
+        aria-checked={idx === 0 ? 'true' : 'false'}
+        class={`track-pill ${idx === 0 ? 'is-active' : ''}`}
+        data-track-id={tr.id}
+        data-track-subject={tr.subjectPrefix}
+        data-track-desc={tr.description}
+        data-track-audience={tr.audience}
+      >
+        <span class="track-pill__label">{tr.label}</span>
+        <span class="track-pill__aud">{tr.audience}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="inquiry-form-grid">
+    <div class="inquiry-field">
+      <label for="inq-org">Name / Studio / Organization</label>
+      <input id="inq-org" type="text" placeholder="e.g. Independent Game Dev or Studio Name" autocomplete="organization" />
+    </div>
+
+    <div class="inquiry-field">
+      <label for="inq-focus">Primary Interest Area</label>
+      <select id="inq-focus">
+        <option value="Hackmanite (Gaming AI / Studio Workforce)">Hackmanite (Gaming AI / Studio Workforce)</option>
+        <option value="Cinnabar & BattleVerse Creator Studio">Cinnabar &amp; BattleVerse Creator Studio</option>
+        <option value="BattleVerse Arena (Preview Interest)">BattleVerse Arena (Preview Interest)</option>
+        <option value="Jaspilite (Autonomous Engineering)">Jaspilite (Autonomous Engineering)</option>
+        <option value="Alexandrite / Project Forge Research">Alexandrite / Project Forge Research</option>
+        <option value="Enterprise Private AI / Commercial Licensing">Enterprise Private AI / Commercial Licensing</option>
+        <option value="State Lines / Original Productions">State Lines / Original Productions</option>
+        <option value="General / Support / Accuracy Correction">General / Support / Accuracy Correction</option>
+      </select>
+    </div>
+
+    <div class="inquiry-field inquiry-field--full">
+      <label for="inq-summary">Workflow, Engine, or Partnership Summary (Optional)</label>
+      <textarea
+        id="inq-summary"
+        rows="3"
+        placeholder="Briefly describe your team size, engine or production pipeline, or questions for Forger Digital Solutions..."
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="inquiry-track-summary" aria-live="polite" data-track-summary>
+    <strong>{tracks[0].label}:</strong> {tracks[0].description}
+  </div>
+
+  <div class="inquiry-actions">
+    <a
+      href={`mailto:${siteConfig.supportEmail}?subject=${encodeURIComponent(tracks[0].subjectPrefix + ' Inquiry')}`}
+      class="btn btn-primary"
+      data-inquiry-mailto
+    >
+      Open Email Client to Send <span aria-hidden="true">→</span>
+    </a>
+    <button type="button" class="btn btn-outline" data-inquiry-copy>
+      Copy Structured Inquiry Brief
+    </button>
+    <span class="inquiry-status" aria-live="polite" data-inquiry-status></span>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-inquiry-builder]').forEach((root) => {
+    const email = root.dataset.supportEmail || 'forgerdigisolsupport@gmail.com';
+    const trackBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-track-id]'));
+    const orgInput = root.querySelector<HTMLInputElement>('#inq-org');
+    const focusSelect = root.querySelector<HTMLSelectElement>('#inq-focus');
+    const summaryInput = root.querySelector<HTMLTextAreaElement>('#inq-summary');
+    const summaryBanner = root.querySelector<HTMLElement>('[data-track-summary]');
+    const mailtoLink = root.querySelector<HTMLAnchorElement>('[data-inquiry-mailto]');
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-inquiry-copy]');
+    const statusEl = root.querySelector<HTMLElement>('[data-inquiry-status]');
+
+    let activeBtn = trackBtns[0];
+
+    const buildBody = () => {
+      const trackLabel = activeBtn?.querySelector('.track-pill__label')?.textContent?.trim() || 'FDS Inquiry';
+      const org = orgInput?.value.trim() || '(Not specified)';
+      const focus = focusSelect?.value || '(Not specified)';
+      const details = summaryInput?.value.trim() || '(Add workflow, team, or partnership details here)';
+      return [
+        `Inquiry Track: ${trackLabel}`,
+        `Organization / Name: ${org}`,
+        `Primary Interest: ${focus}`,
+        '',
+        'Summary:',
+        details,
+        '',
+        'Sent via forgerdigitalsolutions.com/contact/',
+      ].join('\n');
+    };
+
+    const syncMailto = () => {
+      if (!activeBtn || !mailtoLink) return;
+      const prefix = activeBtn.dataset.trackSubject || '[FDS Inquiry]';
+      const focus = focusSelect?.value || 'General';
+      const subject = `${prefix} ${focus}`;
+      const body = buildBody();
+      mailtoLink.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    };
+
+    const selectTrack = (btn: HTMLButtonElement) => {
+      activeBtn = btn;
+      trackBtns.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-checked', active ? 'true' : 'false');
+      });
+      if (summaryBanner) {
+        const label = btn.querySelector('.track-pill__label')?.textContent?.trim() || '';
+        const desc = btn.dataset.trackDesc || '';
+        summaryBanner.textContent = '';
+        const strong = document.createElement('strong');
+        strong.textContent = `${label}: `;
+        summaryBanner.appendChild(strong);
+        summaryBanner.appendChild(document.createTextNode(desc));
+      }
+      syncMailto();
+    };
+
+    // Preselect track from ?track= query parameter if valid
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const requested = params.get('track');
+      if (requested) {
+        const match = trackBtns.find((b) => b.dataset.trackId === requested);
+        if (match) selectTrack(match);
+      }
+    } catch {
+      /* ignore */
+    }
+
+    trackBtns.forEach((btn) => btn.addEventListener('click', () => selectTrack(btn)));
+    orgInput?.addEventListener('input', syncMailto);
+    focusSelect?.addEventListener('change', syncMailto);
+    summaryInput?.addEventListener('input', syncMailto);
+
+    copyBtn?.addEventListener('click', async () => {
+      const prefix = activeBtn?.dataset.trackSubject || '[FDS Inquiry]';
+      const payload = `To: ${email}\nSubject: ${prefix} ${focusSelect?.value || ''}\n\n${buildBody()}`;
+      try {
+        await navigator.clipboard.writeText(payload);
+        if (statusEl) statusEl.textContent = 'Inquiry brief copied to clipboard.';
+      } catch {
+        if (statusEl) statusEl.textContent = `Direct email: ${email}`;
+      }
+    });
+
+    syncMailto();
+  });
+</script>
+
+<style>
+  .inquiry-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.65rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+  }
+
+  .inquiry-kicker {
+    display: block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .inquiry-builder__head h3 {
+    margin: 0.45rem 0 0.45rem;
+    font-size: 1.35rem;
+  }
+
+  .inquiry-builder__head p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.62;
+    max-width: 56rem;
+  }
+
+  .inquiry-tracks {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .track-pill {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 150ms ease, background 150ms ease;
+  }
+
+  .track-pill:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface);
+  }
+
+  .track-pill.is-active {
+    border-color: var(--color-brand-cobalt-bright);
+    background: rgba(59, 123, 248, 0.12);
+  }
+
+  .track-pill__label {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .track-pill__aud {
+    color: var(--color-text-subtle);
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+
+  .inquiry-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .inquiry-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .inquiry-field--full {
+    grid-column: 1 / -1;
+  }
+
+  .inquiry-field label {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .inquiry-field input,
+  .inquiry-field select,
+  .inquiry-field textarea {
+    width: 100%;
+    padding: 0.72rem 0.85rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-recessed);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+  }
+
+  .inquiry-field textarea {
+    resize: vertical;
+    min-height: 5.5rem;
+  }
+
+  .inquiry-track-summary {
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.58;
+  }
+
+  .inquiry-track-summary strong {
+    color: var(--color-text);
+  }
+
+  .inquiry-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+
+  .inquiry-status {
+    color: #93c5fd;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 900px) {
+    .inquiry-tracks,
+    .inquiry-form-grid {
+      grid-template-columns: 1fr;
+    }
+    .inquiry-builder {
+      padding: 1.15rem;
+    }
+  }
+</style>

@@ -1,0 +1,282 @@
+---
+export interface WorkforceRole {
+  id: string;
+  role: string;
+  focus: string;
+  stack: string;
+}
+
+interface Props {
+  idPrefix: string;
+  eyebrow: string;
+  accent: 'hackmanite' | 'cinnabar';
+  roles: WorkforceRole[];
+  architectureNote: string;
+}
+
+const { idPrefix, eyebrow, accent, roles, architectureNote } = Astro.props;
+const accentColor = accent === 'hackmanite' ? 'var(--accent-hackmanite)' : 'var(--accent-cinnabar)';
+const accentSoft = accent === 'hackmanite' ? 'rgba(168, 85, 247, 0.11)' : 'rgba(242, 106, 94, 0.11)';
+const accentBorder = accent === 'hackmanite' ? 'rgba(168, 85, 247, 0.42)' : 'rgba(242, 106, 94, 0.42)';
+---
+
+<div
+  class="wf-explorer"
+  data-wf-explorer
+  style={`--wf-accent:${accentColor}; --wf-soft:${accentSoft}; --wf-border:${accentBorder};`}
+>
+  <div class="wf-header">
+    <span class="wf-eyebrow">{eyebrow}</span>
+    <span class="wf-count">{roles.length} Specialist Roles · Shared Model + Retrieval + Tool Stack</span>
+  </div>
+
+  <div class="wf-grid">
+    <div class="wf-list" role="tablist" aria-label={eyebrow}>
+      {roles.map((item, idx) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${idPrefix}-tab-${item.id}`}
+          aria-selected={idx === 0 ? 'true' : 'false'}
+          aria-controls={`${idPrefix}-panel`}
+          class={`wf-role-btn ${idx === 0 ? 'is-active' : ''}`}
+          data-wf-role={item.role}
+          data-wf-idx={String(idx + 1).padStart(2, '0')}
+          data-wf-focus={item.focus}
+          data-wf-stack={item.stack}
+        >
+          <span class="wf-role-btn__idx">{String(idx + 1).padStart(2, '0')}</span>
+          <span class="wf-role-btn__name">{item.role}</span>
+        </button>
+      ))}
+    </div>
+
+    <div
+      id={`${idPrefix}-panel`}
+      class="wf-panel"
+      role="tabpanel"
+      aria-live="polite"
+      aria-labelledby={`${idPrefix}-tab-${roles[0].id}`}
+    >
+      <span class="wf-panel__idx" data-wf-field="idx">ROLE 01 / {String(roles.length).padStart(2, '0')}</span>
+      <h3 class="wf-panel__title" data-wf-field="role">{roles[0].role}</h3>
+      <p class="wf-panel__focus" data-wf-field="focus">{roles[0].focus}</p>
+      <div class="wf-panel__stack">
+        <span class="wf-panel__stack-label">Proposed Execution Composition</span>
+        <p data-wf-field="stack">{roles[0].stack}</p>
+      </div>
+      <p class="wf-panel__note">{architectureNote}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-wf-explorer]').forEach((root) => {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-wf-role]'));
+    const panel = root.querySelector<HTMLElement>('[role="tabpanel"]');
+    const idxEl = root.querySelector<HTMLElement>('[data-wf-field="idx"]');
+    const roleEl = root.querySelector<HTMLElement>('[data-wf-field="role"]');
+    const focusEl = root.querySelector<HTMLElement>('[data-wf-field="focus"]');
+    const stackEl = root.querySelector<HTMLElement>('[data-wf-field="stack"]');
+    const total = String(buttons.length).padStart(2, '0');
+
+    const select = (btn: HTMLButtonElement) => {
+      buttons.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      if (panel) panel.setAttribute('aria-labelledby', btn.id);
+      if (idxEl) idxEl.textContent = `ROLE ${btn.dataset.wfIdx || '01'} / ${total}`;
+      if (roleEl) roleEl.textContent = btn.dataset.wfRole || '';
+      if (focusEl) focusEl.textContent = btn.dataset.wfFocus || '';
+      if (stackEl) stackEl.textContent = btn.dataset.wfStack || '';
+    };
+
+    buttons.forEach((btn, idx) => {
+      btn.addEventListener('click', () => select(btn));
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          const next = buttons[(idx + 1) % buttons.length];
+          next.focus();
+          select(next);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prev = buttons[(idx - 1 + buttons.length) % buttons.length];
+          prev.focus();
+          select(prev);
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .wf-explorer {
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+    overflow: hidden;
+  }
+
+  .wf-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.95rem 1.35rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-recessed);
+  }
+
+  .wf-eyebrow {
+    color: var(--wf-accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .wf-count {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .wf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+
+  .wf-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 1.25rem;
+    border-right: 1px solid var(--color-border);
+  }
+
+  .wf-role-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 150ms ease, background 150ms ease;
+  }
+
+  .wf-role-btn:hover {
+    border-color: var(--wf-border);
+    background: var(--color-surface);
+  }
+
+  .wf-role-btn.is-active {
+    border-color: var(--wf-accent);
+    background: var(--wf-soft);
+  }
+
+  .wf-role-btn__idx {
+    color: var(--wf-accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .wf-role-btn__name {
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .wf-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--color-bg);
+  }
+
+  .wf-panel__idx {
+    color: var(--wf-accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .wf-panel__title {
+    margin: 0;
+    font-size: 1.38rem;
+  }
+
+  .wf-panel__focus {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .wf-panel__stack {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-secondary);
+  }
+
+  .wf-panel__stack-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .wf-panel__stack p {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .wf-panel__note {
+    margin: auto 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 960px) {
+    .wf-grid {
+      grid-template-columns: 1fr;
+    }
+    .wf-list {
+      border-right: none;
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .wf-list {
+      grid-template-columns: 1fr;
+      padding: 0.9rem;
+    }
+    .wf-panel {
+      padding: 1.15rem;
+    }
+  }
+</style>

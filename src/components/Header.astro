@@ -27,9 +27,9 @@ const navGroups: NavGroup[] = [
     lead: 'Specialized AI model families & collective intelligence research.',
     items: [
       { label: 'Alexandrite', href: '/models/alexandrite/', meta: 'Collective intelligence flagship vision', accent: 'alexandrite' },
-      { label: 'Hackmanite', href: '/models/hackmanite/', meta: 'Gaming & game-development models (Prime, Reasoning)', accent: 'hackmanite' },
+      { label: 'Hackmanite', href: '/models/hackmanite/', meta: 'Universal gaming AI & 10-role workforce', accent: 'hackmanite' },
       { label: 'Cinnabar', href: '/models/cinnabar/', meta: 'Anime, manga, animation & Oracle lineages', accent: 'cinnabar' },
-      { label: 'Model Catalog', href: '/models/', meta: 'Overview & provenance across families' },
+      { label: 'Model Catalog', href: '/models/', meta: 'Overview, licenses & provenance' },
       { label: 'Model Cards', href: '/model-cards/', meta: 'Base architectures, status & limitations' },
       { label: 'Evaluations', href: '/evaluations/', meta: 'Methodology, baselines & verification' },
     ],
@@ -38,13 +38,29 @@ const navGroups: NavGroup[] = [
     id: 'products',
     label: 'Products',
     href: '/products/',
-    lead: 'Autonomous development platforms, simulation tools & verified software.',
+    lead: 'Autonomous software engineering, simulation & creative production platforms.',
     items: [
-      { label: 'Jaspilite', href: '/products/jaspilite/', meta: 'Autonomous AI development (Auto · Meld · Solo)', accent: 'jaspilite' },
-      { label: 'Forge BattleVerse', href: '/products/battleverse/', meta: 'Evidence-based fictional intelligence & simulation', accent: 'battleverse' },
-      { label: 'Product Catalog', href: '/products/', meta: 'Flagship platforms & extended software' },
+      { label: 'Jaspilite', href: '/products/jaspilite/', meta: 'Autonomous AI engineering (Auto · Meld · Solo)', accent: 'jaspilite' },
+      { label: 'Forge BattleVerse', href: '/products/battleverse/', meta: 'Fictional intelligence & creative platform', accent: 'battleverse' },
+      { label: 'BattleVerse Arena', href: '/products/battleverse/arena/', meta: 'Evidence-audited combat simulation', accent: 'battleverse' },
+      { label: 'BattleVerse Creator Studio', href: '/products/battleverse/creator-studio/', meta: 'Anime, manga & animation workflow direction', accent: 'cinnabar' },
       { label: 'Downloads & Releases', href: '/downloads/', meta: 'ForgerEMS preview & verified archives' },
       { label: 'Extended Portfolio', href: '/projects', meta: 'CodeForge, ForgerEMS & legacy records' },
+    ],
+  },
+  {
+    id: 'solutions',
+    label: 'Solutions',
+    href: '/solutions/',
+    lead: 'Commercial pathways, personalized studio AI workforces & private deployments.',
+    items: [
+      { label: 'Studio & Enterprise Hub', href: '/solutions/', meta: 'Personalized AI workforces & data isolation', accent: 'fds-cobalt' },
+      { label: 'Game Developers', href: '/solutions/game-developers/', meta: 'Solo & indie engine, shader & code workflows', accent: 'hackmanite' },
+      { label: 'Gaming Studios', href: '/solutions/gaming-studios/', meta: '10-role private game-engineering workforces', accent: 'hackmanite' },
+      { label: 'Anime & Manga Creators', href: '/solutions/anime-manga-creators/', meta: 'Creator-owned story, panel & continuity tools', accent: 'cinnabar' },
+      { label: 'Animation Studios', href: '/solutions/animation-studios/', meta: '8-role pre-production & pipeline orchestration', accent: 'battleverse' },
+      { label: 'Software Engineering Teams', href: '/solutions/software-engineering/', meta: 'Jaspilite multi-agent & local-first routing', accent: 'jaspilite' },
+      { label: 'Enterprise & Private AI', href: '/solutions/enterprise-private-ai/', meta: 'Segregated deployment & commercial licensing', accent: 'fds-cobalt' },
     ],
   },
   {
@@ -60,16 +76,16 @@ const navGroups: NavGroup[] = [
       { label: 'Training Methodology', href: '/research/training/', meta: 'Data eligibility, SFT, LoRA/QLoRA & evals' },
       { label: 'Engineering Laboratory', href: '/research/laboratory/', meta: 'Experiments, reliability & verification' },
       { label: 'Publications', href: '/research/publications/', meta: 'Approved research write-ups & field notes' },
-      { label: 'Trust Center', href: '/trust/', meta: 'Provenance, governance & transparency' },
+      { label: 'Trust Center', href: '/trust/', meta: 'Provenance, privacy & commercial integrity' },
     ],
   },
   {
     id: 'developers',
     label: 'Developers',
     href: '/developers/',
-    lead: 'Technical documentation, model cards, releases & transparent status.',
+    lead: 'Technical documentation, planned APIs & SDKs, model cards & releases.',
     items: [
-      { label: 'Developer Hub', href: '/developers/', meta: 'Architecture overview & integration boundaries' },
+      { label: 'Developer Hub', href: '/developers/', meta: 'Architecture, planned APIs & SDK roadmap' },
       { label: 'Documentation', href: '/docs/', meta: 'Guides, model availability & local inference' },
       { label: 'Model Cards', href: '/model-cards/', meta: 'Open-weight provenance & capabilities' },
       { label: 'Releases', href: '/releases/', meta: 'Versioned builds & SHA-256 checksums' },
@@ -81,7 +97,7 @@ const navGroups: NavGroup[] = [
     id: 'studio',
     label: 'Studio',
     href: '/studio/',
-    lead: 'Original open-world games and long-form cinematic entertainment.',
+    lead: 'Original AAA-ambition open-world games and cinematic entertainment.',
     items: [
       { label: 'State Lines', href: '/studio/state-lines/', meta: 'AAA-ambition open-world crime drama (Preproduction)', accent: 'state-lines' },
       { label: 'Original Productions', href: '/studio/productions/', meta: 'State Lines, Dead Trails West & studio slate' },
@@ -92,13 +108,13 @@ const navGroups: NavGroup[] = [
     id: 'company',
     label: 'Company',
     href: '/company/',
-    lead: 'Independent AI research and engineering studio based in New Jersey.',
+    lead: 'Commercial AI technology, engineering & original entertainment studio.',
     items: [
-      { label: 'Company & Mission', href: '/company/', meta: 'Ecosystem vision, divisions & roadmap' },
+      { label: 'Company & Mission', href: '/company/', meta: 'Commercial positioning, divisions & roadmap' },
       { label: 'About FDS', href: '/about', meta: 'Founder, principles & studio background' },
       { label: 'Newsroom', href: '/news/', meta: 'Official announcements & engineering journal' },
-      { label: 'Trust & Transparency', href: '/trust/', meta: 'Responsible AI & non-conflation principles' },
-      { label: 'Contact', href: '/contact/', meta: 'Direct email, Discord & hardware inquiries' },
+      { label: 'Trust & Transparency', href: '/trust/', meta: 'Data segregation, IP ethics & governance' },
+      { label: 'Commercial Inquiries & Contact', href: '/contact/', meta: 'Previews, studio workforces & enterprise' },
       { label: 'Independent Support', href: '/support', meta: 'Development & hardware support disclosure' },
     ],
   },
@@ -198,7 +214,8 @@ const isGroupActive = (group: NavGroup): boolean => {
               </svg>
             </a>
           )}
-          <a href="/downloads/" class="nav-cta">Releases</a>
+          <a href="/downloads/" class="nav-cta nav-cta--ghost">Releases</a>
+          <a href="/contact/" class="nav-cta">Contact FDS</a>
         </li>
       </ul>
     </div>
@@ -268,7 +285,7 @@ const isGroupActive = (group: NavGroup): boolean => {
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.1rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -286,11 +303,12 @@ const isGroupActive = (group: NavGroup): boolean => {
   .nav-group__link {
     display: inline-flex;
     align-items: center;
-    padding: 0.55rem 0.55rem 0.55rem 0.72rem;
+    padding: 0.5rem 0.35rem 0.5rem 0.55rem;
     color: var(--color-text-muted);
-    font-size: 0.86rem;
+    font-size: 0.84rem;
     font-weight: 500;
     letter-spacing: -0.005em;
+    white-space: nowrap;
   }
 
   .nav-group__link:hover,
@@ -533,7 +551,18 @@ const isGroupActive = (group: NavGroup): boolean => {
     transform: rotate(-45deg);
   }
 
-  @media (max-width: 1080px) {
+  .nav-cta--ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--color-text-muted);
+  }
+
+  .nav-cta--ghost:hover {
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  @media (max-width: 1180px) {
     .mobile-menu-btn {
       display: inline-flex;
     }
@@ -638,7 +667,7 @@ const isGroupActive = (group: NavGroup): boolean => {
   const mobileBtn = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
   const navLinks = document.getElementById('site-navigation');
   const navGroups = Array.from(document.querySelectorAll<HTMLLIElement>('.nav-group'));
-  const desktopQuery = window.matchMedia('(min-width: 1081px)');
+  const desktopQuery = window.matchMedia('(min-width: 1181px)');
 
   const closeAllMenus = () => {
     navGroups.forEach((group) => {
