@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { showBoundaries = true } = Astro.props;
-const { stages, verifiedVsDeveloping, boundaryNote } = studioIntelligenceHubData.architecture;
+const { stages, pilotScopeVsDeveloping, boundaryNote } = studioIntelligenceHubData.architecture;
 ---
 
 <div class="hub-arch">
@@ -40,21 +40,21 @@ const { stages, verifiedVsDeveloping, boundaryNote } = studioIntelligenceHubData
 
   {showBoundaries && (
     <div class="hub-arch__boundaries">
-      <article class="hub-boundary-col hub-boundary-col--verified">
-        <p class="hub-boundary-col__kicker">Verified for Pilot Scoping</p>
-        <h3>{verifiedVsDeveloping.verifiedTitle}</h3>
+      <article class="hub-boundary-col hub-boundary-col--pilot">
+        <p class="hub-boundary-col__kicker">{pilotScopeVsDeveloping.pilotScopeKicker}</p>
+        <h3>{pilotScopeVsDeveloping.pilotScopeTitle}</h3>
         <ul>
-          {verifiedVsDeveloping.verifiedItems.map((item) => (
+          {pilotScopeVsDeveloping.pilotScopeItems.map((item) => (
             <li>{item}</li>
           ))}
         </ul>
       </article>
 
       <article class="hub-boundary-col hub-boundary-col--developing">
-        <p class="hub-boundary-col__kicker">Not Yet Advertised / Roadmap</p>
-        <h3>{verifiedVsDeveloping.developingTitle}</h3>
+        <p class="hub-boundary-col__kicker">{pilotScopeVsDeveloping.developingKicker}</p>
+        <h3>{pilotScopeVsDeveloping.developingTitle}</h3>
         <ul>
-          {verifiedVsDeveloping.developingItems.map((item) => (
+          {pilotScopeVsDeveloping.developingItems.map((item) => (
             <li>{item}</li>
           ))}
         </ul>
@@ -177,8 +177,8 @@ const { stages, verifiedVsDeveloping, boundaryNote } = studioIntelligenceHubData
     text-transform: uppercase;
   }
 
-  .hub-boundary-col--verified .hub-boundary-col__kicker {
-    color: #34d399;
+  .hub-boundary-col--pilot .hub-boundary-col__kicker {
+    color: var(--color-accent-bright);
   }
 
   .hub-boundary-col--developing .hub-boundary-col__kicker {

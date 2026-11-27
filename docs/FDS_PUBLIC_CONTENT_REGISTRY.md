@@ -11,7 +11,7 @@
 
 Every technology, model family, commercial application, research infrastructure program, original entertainment production, and preserved legacy software item presented on `forgerdigitalsolutions.com` is governed by `content/public-status/registry.json`.
 
-Automated enforcement via `npm run validate:content`, `test/operation-digital-forge-ii.test.ts`, and `test/studio-intelligence-hub.test.ts` guarantees:
+Automated enforcement via `npm run validate:content`, `test/operation-digital-forge-ii.test.ts`, and `test/studio-intelligence-hub.test.ts` enforces:
 1. Every entry matches `FDS_MODEL_STATUS_SCHEMA.json` allowed `category`, `development_status`, and `availability` enums.
 2. Unreleased development statuses (`research-vision`, `training-planned`, `active-research`, `experimental-checkpoint`, `internal-evaluation`, `commercial-direction`, `private-development`) cannot claim `availability: "commercially-available"` or `"public-release"`.
 3. Every entry includes explicit `verified_capabilities`, `planned_capabilities`, `known_limitations`, `non_claims`, `public_evidence`, `commercial_direction`, `route`, and `last_verified` metadata.
@@ -50,7 +50,7 @@ Automated enforcement via `npm run validate:content`, `test/operation-digital-fo
 
 ## 4. Companion Structured Content Files
 
-- [`content/solutions/studio-intelligence-hub.json`](../content/solutions/studio-intelligence-hub.json) — Lead commercial FDS Studio Intelligence Hub data: problem points, 6-stage Project Forge flow, verified vs. developing boundaries, 5 Roblox Luau & Unreal C++ investigation traces, engine scope (with Blueprint transparency), 4-week pilot schedule, 7 security controls, Founding Studio Program, and FAQs.
+- [`content/solutions/studio-intelligence-hub.json`](../content/solutions/studio-intelligence-hub.json) — Lead commercial FDS Studio Intelligence Hub data: problem points, 6-stage Project Forge flow, pilot-scope-in-testing vs. in-development boundaries (marking scoped engine references in development), 5 Roblox Luau & Unreal C++ investigation traces, engine scope (with Blueprint transparency), 4-week pilot schedule, 7 security controls (read-only by design), Founding Studio Program, and FAQs.
 - [`content/solutions/solutions.json`](../content/solutions/solutions.json) — 3 commercial markets, 6 audience solution hubs, 5 studio personalization layers, Hackmanite 5 offerings / 12 segments / 10 roles, Cinnabar 17 R&D domains / 8 roles, BattleVerse Arena original-silhouette illustrative scenarios, Jaspilite 5-tier provider maturity ladder, Alexandrite 7-stage pipeline, and 7 inquiry tracks (led by `studio-intelligence-hub`).
 - [`content/company/profile.json`](../content/company/profile.json) — Company mission, 4 permanent divisions, founder info, contact email, and official social links.
 - [`content/evaluations/evaluations.json`](../content/evaluations/evaluations.json) — 11 mandatory benchmark disclosure fields, verified website/Kayla engineering baselines, and pending authorized export placeholders for Hackmanite and Cinnabar.

@@ -6340,7 +6340,10 @@
         "$2,500",
         "$750",
         "complete Blueprint understanding",
-        "finished SaaS"
+        "finished SaaS",
+        "Verified for Pilot Scoping",
+        "without explicit developer action",
+        "production-proven"
       ],
       "expectActions": true,
       "expectSources": true

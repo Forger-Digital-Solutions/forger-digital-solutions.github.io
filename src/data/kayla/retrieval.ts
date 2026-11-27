@@ -472,7 +472,7 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     id: 'fds-solutions',
     type: 'general',
     title: 'Studio Intelligence Hub & Commercial Solutions',
-    text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ lead commercial offering: a managed four-week engineering intelligence pilot powered by Project Forge for Roblox Studio (Luau) and Unreal Engine (C++) studios. It connects source code, technical documentation, design specs, and engine references with read-only access, isolated project data, and customer-owned API keys—without requiring Jaspilite. Blueprint logic indexing is not yet implemented or validated. First five Founding Studios receive 50% off the applicable pilot fee; pricing is discussed during the pilot assessment.',
+    text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ lead commercial offering: a managed four-week engineering intelligence pilot powered by Project Forge for Roblox Studio (Luau) and Unreal Engine (C++) studios, currently in testing on FDS’s own Roblox and Unreal projects. It connects source code, technical documentation, and design specs (scoped engine references are in development) via external MCP-compatible tools without requiring Jaspilite. Cannot modify your repository — read-only by design, with isolated project data and customer-owned API keys. Blueprint logic indexing is not yet implemented. First five Founding Studios receive 50% off the applicable pilot fee; pricing is discussed during the pilot assessment.',
     route: '/solutions/',
     tags: ['solutions', 'studio intelligence hub', 'pilot', 'founding studio', 'roblox', 'unreal', 'studio', 'enterprise', 'private ai', 'workforce', 'gaming studio', 'animation studio'],
     weight: 1.0

@@ -77,4 +77,37 @@ describe('Phase III-C — FDS Studio Intelligence Hub Governance & Commercial In
     expect(mailto).toContain('mailto:forgerdigisolsupport@gmail.com');
     expect(mailto).toContain('Studio%20Intelligence%20Hub');
   });
+
+  it('enforces honest in-testing pilot scope, in-development engine references, and read-only-by-design repository wording', () => {
+    const boundaries = studioIntelligenceHubData.architecture.pilotScopeVsDeveloping;
+    expect(boundaries.pilotScopeTitle).toBe(
+      "Pilot scope — in testing on FDS's own Roblox and Unreal projects"
+    );
+    expect(boundaries.pilotScopeItems.join(' ')).not.toMatch(/scoped engine ref/i);
+    expect(boundaries.developingItems.join(' ')).toMatch(/scoped engine references.*in development/i);
+
+    const noRepoMods = studioIntelligenceHubData.securityControls.find((c) => c.code === '04')!;
+    expect(noRepoMods.detail).toBe('Cannot modify your repository — read-only by design.');
+
+    const hubFiles = [
+      join(repoRoot, 'content/solutions/studio-intelligence-hub.json'),
+      join(repoRoot, 'src/components/HubArchitectureFlow.astro'),
+      join(repoRoot, 'src/components/HubInvestigationPreview.astro'),
+      join(repoRoot, 'src/pages/solutions/studio-intelligence-hub/index.astro'),
+    ];
+    for (const file of hubFiles) {
+      const text = readFileSync(file, 'utf8');
+      expect(text, `Stale "verified" capability label in ${file}`).not.toMatch(
+        /Included\s*(?:&|and)\s*Verified|Verified for Pilot Scoping|pilotScope.*Verified/i
+      );
+      expect(text, `Forbidden overclaim wording in ${file}`).not.toMatch(
+        /\b(?:guarantee(?:s|d)?|production-proven|proven|without explicit developer action)\b/i
+      );
+      // Allow import/symbol name `hasVerifiedBookingUrl` in landing page frontmatter, but no "verified" in rendered Hub copy
+      const textWithoutBookingImport = text.replace(/\bhasVerifiedBookingUrl\b/g, '');
+      expect(textWithoutBookingImport, `Unexpected "verified" claim for Hub capability in ${file}`).not.toMatch(
+        /\bverif(?:y|ied|ication)\b/i
+      );
+    }
+  });
 });

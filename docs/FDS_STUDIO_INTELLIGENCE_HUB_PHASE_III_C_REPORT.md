@@ -31,13 +31,13 @@
 - Covers all 12 required commercial & technical sections:
   1. Hero (`Your Game Studio's Knowledge. Connected.`) with managed 4-week pilot positioning and bespoke obsidian architectural visual (`public/images/forge/studio-intelligence-hub.webp` + `-sm.webp`).
   2. Customer problem ledger (`Your Studio's Knowledge Shouldn't Be Scattered.`).
-  3. Product differentiation (connected code + technical/design docs + engine references; external MCP-compatible tools; Jaspilite explicitly not required).
-  4. Project Forge 6-stage architecture flow ([`HubArchitectureFlow.astro`](../src/components/HubArchitectureFlow.astro)) with explicit **Verified for Pilot Scoping** vs. **In Active Development / Not Yet Advertised** disclosure.
-  5. Interactive developer investigation explorer ([`HubInvestigationPreview.astro`](../src/components/HubInvestigationPreview.astro)) with 5 realistic Roblox Luau & Unreal C++ engineering questions and source-referenced evidence traces.
-  6. Roblox Studio (Luau + docs) support scope.
-  7. Unreal Engine (C++ + docs) support scope with prominent, explicit **Blueprint Transparency** boundary stating Blueprint visual logic indexing is NOT implemented or validated yet and is excluded from current pilots.
+  3. Product differentiation (connected code + technical/design docs, with scoped engine references in development; external MCP-compatible tools; Jaspilite explicitly not required).
+  4. Project Forge 6-stage architecture flow ([`HubArchitectureFlow.astro`](../src/components/HubArchitectureFlow.astro)) with explicit **Pilot scope — in testing on FDS's own Roblox and Unreal projects** vs. **In Active Development / Not Yet Advertised** disclosure (marking scoped engine references as in development).
+  5. Interactive developer investigation explorer ([`HubInvestigationPreview.astro`](../src/components/HubInvestigationPreview.astro)) with 5 realistic Roblox Luau & Unreal C++ engineering questions and illustrative source-referenced evidence traces.
+  6. Roblox Studio (Luau + docs) pilot scope (in testing on FDS's own Roblox project).
+  7. Unreal Engine (C++ + docs) pilot scope (in testing on FDS's own Unreal project) with prominent, explicit **Blueprint Transparency** boundary stating Blueprint visual logic indexing has NOT been implemented yet and is excluded from current pilots.
   8. Four-week managed pilot schedule (Weeks 1–4) with upfront scope agreement notice.
-  9. Security & privacy controls (all 7 controls: read-only access, customer-controlled environment, customer-owned API keys, no unauthorized repository modifications, isolated project data, no training without written permission, defined data-deletion procedures) plus explicit non-claim disclosure (no SOC 2 / ISO 27001 / HIPAA badges claimed).
+  9. Security & privacy controls (all 7 controls: read-only access, customer-controlled environment, customer-owned API keys, cannot modify your repository — read-only by design, isolated project data, no training without written permission, defined data-deletion procedures) plus explicit non-claim disclosure (no SOC 2 / ISO 27001 / HIPAA badges claimed).
   10. Founding Studio Program (first 5 founding studios receive 50% off applicable pilot fee in exchange for structured feedback; zero public dollar figures).
   11. 8 candid technical & commercial FAQs (with `FAQPage` + `Service` JSON-LD).
   12. Final booking CTA with direct email fallback.

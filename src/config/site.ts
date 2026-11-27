@@ -42,7 +42,7 @@ I'd like to schedule a call to discuss a four-week FDS Studio Intelligence Hub p
 Studio / Team Name:
 Primary Engine (Roblox Studio / Unreal Engine / Other):
 Team Size:
-Knowledge Sources in Scope (source code, technical docs, design docs, engine refs):
+Knowledge Sources in Scope (source code, technical docs, design docs):
 Interested in Founding Studio Program (first 5 studios — 50% off applicable pilot fee): Yes / No
 Preferred Call Times (with time zone):
 
