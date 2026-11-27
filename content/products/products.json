@@ -1,0 +1,77 @@
+{
+  "last_updated": "2026-11-26",
+  "flagship_applications": [
+    {
+      "id": "jaspilite",
+      "name": "Jaspilite",
+      "tagline": "Your intelligence. One development workspace.",
+      "category": "Autonomous AI Development & Multi-Agent Orchestration",
+      "status": "Active Development · Private Builds Only",
+      "route": "/products/jaspilite/",
+      "accent": "jaspilite",
+      "legacyMigrationNote": "Jaspilite supersedes FDS's earlier Forge Control product branding as the primary autonomous development and orchestration identity. Historical Forge Control records remain preserved at /projects/forge-control.",
+      "operatingModes": [
+        {
+          "name": "Auto",
+          "label": "Adaptive Orchestration",
+          "summary": "Automatically selects eligible models and dispatches bounded planning, coding, debugging, and verification tasks across connected providers according to task complexity and user-configured rules.",
+          "governance": "Human approval gates remain enforceable for workspace writes, shell execution, and route selection."
+        },
+        {
+          "name": "Meld",
+          "label": "Multi-Agent Collaboration",
+          "summary": "Coordinates multiple specialized agents in parallel across independent repository surfaces, synthesizing architecture review, implementation, and test verification inside one shared session state.",
+          "governance": "Explicit file-ownership boundaries and conflict prevention govern concurrent work."
+        },
+        {
+          "name": "Solo",
+          "label": "Focused Single-Model Control",
+          "summary": "Pins a development session to one explicitly chosen local or connected provider model for predictable, transparent step-by-step engineering without automated multi-agent switching.",
+          "governance": "Direct developer control over every prompt turn, diff, and tool call."
+        }
+      ],
+      "providerTiers": [
+        {
+          "tier": "Local Inference Models",
+          "status": "Supported Target Architecture",
+          "detail": "Connect locally hosted open-weight models (e.g., OpenAI-compatible local runtimes) running directly on developer hardware with zero external token egress."
+        },
+        {
+          "tier": "User-Provided Subscriptions & API Keys",
+          "status": "User-Authorized Connection Model",
+          "detail": "Designed to work with accounts and API credentials supplied directly by the developer under each provider's own terms and rate limits — never pooled or unlimited."
+        },
+        {
+          "tier": "Verified Execution-Ready Routes",
+          "status": "Strict Publication Gate",
+          "detail": "Specific third-party provider connectors are promoted to 'Verified Execution-Ready' on this site only after public end-to-end verification and legal compatibility confirmation."
+        },
+        {
+          "tier": "Experimental & Planned Connectors",
+          "status": "In Development / Unverified",
+          "detail": "Additional CLI agents and cloud model gateways under active engineering investigation; never implied to represent official vendor partnerships."
+        }
+      ]
+    },
+    {
+      "id": "battleverse",
+      "name": "Forge BattleVerse",
+      "tagline": "Beyond opinion. Built on evidence.",
+      "category": "Fictional Intelligence, Simulation & Combat Analysis Platform",
+      "status": "Active Development · No Public Release",
+      "route": "/products/battleverse/",
+      "accent": "battleverse",
+      "image": "/images/forge/battleverse-combat-sim.webp",
+      "imageSm": "/images/forge/battleverse-combat-sim-sm.webp",
+      "imageAlt": "Two original dark metallic armored silhouettes mid-clash in an abstract spatial physics arena overlaid with electric cobalt trajectory vectors, impact rings, and Gaussian probability envelopes.",
+      "imageLabel": "Illustrative Simulation Concept — Original FDS Silhouettes",
+      "relationshipToCinnabar": "Forge BattleVerse is an independent application platform — NOT the name of the Cinnabar model family. BattleVerse is architected to integrate with Cinnabar Oracle text models for canonical extraction and evidence structuring while running deterministic physics calculations, claim auditing, and statistical simulation separately.",
+      "pillars": [
+        { "title": "Canonical Version Tracking", "detail": "Separates distinct source continuities, timelines, and narrative eras so feats from incompatible versions are never conflated." },
+        { "title": "Evidence Validation & Claim Auditing", "detail": "Every asserted capability requires an explicit source reference, context check, and independent claim audit flagging outliers or hyperbolic statements." },
+        { "title": "Fictional Physics & Scaling Calculations", "detail": "Applies transparent mathematical assumptions, energy/kinematics bounds, and documented parameter ranges rather than opaque fan-consensus tiers." },
+        { "title": "Statistical Uncertainty & Multi-Format Simulation", "detail": "Models 1v1 and multi-character scenarios with explicit win-probability distributions, sensitivity bounds, and replay diagnostics — never presenting simulated outcomes as objective canonical fact." }
+      ]
+    }
+  ]
+}

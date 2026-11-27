@@ -1,0 +1,36 @@
+{
+  "name": "Forger Digital Solutions",
+  "shortName": "FDS",
+  "domain": "https://forgerdigitalsolutions.com",
+  "founder": "Edward Schmidt",
+  "location": "New Jersey, United States",
+  "headline": "Specialized intelligence. Extraordinary worlds.",
+  "supportingCopy": "Forger Digital Solutions is an independent artificial intelligence research and engineering studio developing specialized AI models, autonomous development systems, and the research infrastructure behind next-generation interactive and cinematic experiences.",
+  "heritageSlogan": "Build the tools. Build the worlds.",
+  "divisions": [
+    {
+      "name": "FDS Intelligence",
+      "flagships": ["Alexandrite", "Hackmanite", "Cinnabar"],
+      "route": "/models/",
+      "summary": "Specialized AI model families built for gaming, game engineering, storytelling, animation craft, and long-term collective convergence."
+    },
+    {
+      "name": "FDS Applications",
+      "flagships": ["Jaspilite", "Forge BattleVerse"],
+      "route": "/products/",
+      "summary": "Autonomous software development orchestration and evidence-based fictional intelligence & simulation platforms."
+    },
+    {
+      "name": "FDS Research",
+      "flagships": ["Project Forge"],
+      "route": "/research/project-forge/",
+      "summary": "Permanent 15-division research, verification, retrieval, controlled training, and independent evaluation foundation."
+    },
+    {
+      "name": "FDS Original Productions",
+      "flagships": ["State Lines"],
+      "route": "/studio/",
+      "summary": "AAA-ambition original open-world game development and long-form cinematic storytelling."
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "last_updated": "2026-11-26",
+  "policy": "FDS publishes numerical benchmark scores ONLY when backed by an owner-approved public evaluation export specifying exact model version, benchmark version, test count, evaluation conditions (raw vs. guarded), baseline, uncertainty, and known limitations. Unrelated benchmarks are never aggregated, and no frontier-model outperformance claim is made without valid comparative evidence.",
+  "required_fields": [
+    "Model Name & Version",
+    "Benchmark Name & Version",
+    "Test Case Count (n)",
+    "Evaluation Conditions",
+    "Raw Result",
+    "Guarded Result",
+    "Comparison Baseline",
+    "Uncertainty / Confidence Interval",
+    "Known Limitations",
+    "Evaluation Date & Status"
+  ],
+  "records": [
+    {
+      "id": "fds-site-kayla-golden",
+      "model": "Kayla Copilot Local Canonical Router (Website Build)",
+      "benchmark": "FDS Kayla Golden Query Regression Suite v1",
+      "testCases": 345,
+      "conditions": "Offline deterministic local routing (no external LLM provider); Tier 1/2/3 invariant verification",
+      "rawResult": "Not applicable (deterministic canonical lookup)",
+      "guardedResult": "345 / 345 invariants passing in CI",
+      "baseline": "Target thresholds: Tier 1 = 100%, Tier 2 >= 95%, Tier 3 >= 90%",
+      "uncertainty": "Deterministic suite (0% sampling variance); measures repository-fact recall only, not open-ended reasoning",
+      "limitations": "Evaluates local canonical routing and safety invariants on this public website only; does not benchmark general LLM intelligence.",
+      "date": "2026-11-26",
+      "status": "Verified in Public Repository CI"
+    },
+    {
+      "id": "cinnabar-oracle-pending",
+      "model": "Cinnabar Oracle (v1–v4.1 Lineages)",
+      "benchmark": "Canonical Grounding & Fictional Analysis Suite",
+      "testCases": null,
+      "conditions": "Raw generation vs. guarded citation/verification evaluation",
+      "rawResult": "Pending owner-approved public export",
+      "guardedResult": "Pending owner-approved public export",
+      "baseline": "Base open-weight checkpoint under identical prompt conditions",
+      "uncertainty": "To be reported with confidence intervals upon public export",
+      "limitations": "Private evaluation holdouts remain isolated outside this public website repository until approved for publication.",
+      "date": "2026-11-26",
+      "status": "Pending Public Export"
+    },
+    {
+      "id": "hackmanite-specialist-pending",
+      "model": "Hackmanite Prime (Qwen/Qwen3.8-27B target) & Reasoning (openai/gpt-oss-120b target)",
+      "benchmark": "Game-Engine Implementation & Architecture Diagnostics Suite",
+      "testCases": null,
+      "conditions": "Tool-assisted compilation/verification + static reasoning tasks",
+      "rawResult": "Training & evaluation planned",
+      "guardedResult": "Training & evaluation planned",
+      "baseline": "Unadapted Qwen/Qwen3.8-27B and openai/gpt-oss-120b base models",
+      "uncertainty": "Not yet measured",
+      "limitations": "Specialist fine-tuning and independent evaluation have not been publicly exported.",
+      "date": "2026-11-26",
+      "status": "Planned"
+    },
+    {
+      "id": "alexandrite-convergence-pending",
+      "model": "Alexandrite (Collective Intelligence Program)",
+      "benchmark": "Cross-Domain Collective Certification Protocol",
+      "testCases": null,
+      "conditions": "Multi-domain holdout verification across gaming, software, and storytelling reasoning",
+      "rawResult": "Not trained",
+      "guardedResult": "Not trained",
+      "baseline": "Individual FDS specialist models (Hackmanite, Cinnabar)",
+      "uncertainty": "Not applicable prior to training",
+      "limitations": "Alexandrite is a long-term research vision; no collective checkpoint exists to evaluate.",
+      "date": "2026-11-26",
+      "status": "Research Vision"
+    }
+  ]
+}

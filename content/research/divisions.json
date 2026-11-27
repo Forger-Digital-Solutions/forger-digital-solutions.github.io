@@ -1,0 +1,38 @@
+{
+  "last_updated": "2026-11-26",
+  "name": "Project Forge",
+  "tagline": "Research that becomes capability.",
+  "axioms": [
+    { "left": "Research", "right": "Training", "explanation": "Collecting and studying domain knowledge never automatically authorizes or constitutes model training data." },
+    { "left": "Training", "right": "Evaluation", "explanation": "Completing a fine-tuning or distillation run proves only that optimization finished — never that capability improved." },
+    { "left": "Evaluation", "right": "Certification", "explanation": "Internal experimental scores or guarded test harnesses do not constitute independent capability certification." },
+    { "left": "Certification", "right": "Public Availability", "explanation": "Internal readiness does not guarantee public deployment, API access, or open-weight distribution." }
+  ],
+  "lifecycle": [
+    { "step": "01", "name": "Research", "summary": "Systematic technical study across FDS's 15 core engineering, scientific, gaming, and creative disciplines." },
+    { "step": "02", "name": "Source Verification", "summary": "Provenance auditing, primary-source grounding, license review, and strict separation of reference material from training corpora." },
+    { "step": "03", "name": "Engineering Experiments", "summary": "Executable prototypes, micro-benchmarks, and empirical software/simulation experiments testing concrete hypotheses." },
+    { "step": "04", "name": "Knowledge Retrieval", "summary": "Structured indexing, canonical schemas, and retrieval-augmented grounding (RAG) for auditable citation." },
+    { "step": "05", "name": "Dataset Eligibility", "summary": "Explicit rights clearance, contamination screening, deduplication, and quality filtering prior to any model training." },
+    { "step": "06", "name": "Controlled Training", "summary": "Reproducible SFT, LoRA/QLoRA, or multi-teacher distillation runs with logged hyperparameters and provenance manifests." },
+    { "step": "07", "name": "Independent Evaluation", "summary": "Raw vs. guarded testing on isolated holdout tasks with documented test counts, baselines, and uncertainty." },
+    { "step": "08", "name": "Capability Certification", "summary": "Final release-readiness gate verifying limitations, safety boundaries, and truthful public model-card disclosure." }
+  ],
+  "divisions": [
+    { "id": "universal-gaming", "name": "Universal Gaming", "route": "/research/gaming/", "focus": "Game design grammar, player assistance, mechanics systems, and cross-genre gameplay intelligence." },
+    { "id": "game-engineering", "name": "Game Engineering", "route": "/research/gaming/", "focus": "Engine internals, C++/C# gameplay architectures, memory layouts, networking, and automated verification." },
+    { "id": "software-engineering", "name": "Software Engineering", "route": "/research/laboratory/", "focus": "Repository-scale reasoning, multi-agent orchestration, diff verification, and fail-closed developer tooling." },
+    { "id": "artificial-intelligence", "name": "Artificial Intelligence", "route": "/research/artificial-intelligence/", "focus": "Specialist post-training, LoRA/QLoRA efficiency, multi-teacher distillation, and collective intelligence convergence." },
+    { "id": "anime-manga", "name": "Anime & Manga", "route": "/research/animation/", "focus": "Panel pacing, visual storytelling grammar, canonical continuity tracking, and production terminology." },
+    { "id": "animation", "name": "Animation", "route": "/research/animation/", "focus": "Keyframe timing, skeletal rigging workflows, motion principles, and tool-assisted animation pipelines." },
+    { "id": "cinematic-production", "name": "Cinematic Production", "route": "/research/animation/", "focus": "Camera choreography, lighting direction, scene blocking, storyboard structure, and editing cadence." },
+    { "id": "graphics-rendering", "name": "Graphics & Rendering", "route": "/research/gaming/", "focus": "PBR materials, shader programming, real-time lighting budgets, and GPU frame profiling." },
+    { "id": "physics-mathematics", "name": "Physics & Mathematics", "route": "/research/laboratory/", "focus": "Classical mechanics, collision geometry, kinematics bounds, numerical stability, and probabilistic uncertainty." },
+    { "id": "technical-art", "name": "Technical Art", "route": "/research/gaming/", "focus": "Procedural environments, Blender-to-engine asset validation, LOD automation, and UV/material pipelines." },
+    { "id": "narrative-development", "name": "Narrative Development", "route": "/research/animation/", "focus": "Long-form story bibles, character consistency, regional historical grounding, and branching world continuity." },
+    { "id": "audio-engineering", "name": "Audio Engineering", "route": "/research/laboratory/", "focus": "Interactive soundscapes, spatial audio architecture, dialogue pacing, and real-time mixing cues." },
+    { "id": "simulation", "name": "Simulation", "route": "/research/laboratory/", "focus": "Deterministic multi-entity combat and world-state simulations with reproducible scenario parameters." },
+    { "id": "evaluation", "name": "Evaluation", "route": "/evaluations/", "focus": "Holdout benchmark design, raw vs. guarded scoring protocols, baseline fairness, and statistical confidence reporting." },
+    { "id": "engineering-experiments", "name": "Original Engineering Experiments", "route": "/research/laboratory/", "focus": "First-party runtime benchmarks, routing reliability tests, and automated CI/browser verification harnesses." }
+  ]
+}

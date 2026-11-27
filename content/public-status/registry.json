@@ -1,0 +1,450 @@
+{
+  "schema_version": "1.0.0",
+  "last_updated": "2026-11-26",
+  "entries": [
+    {
+      "id": "alexandrite",
+      "name": "Alexandrite",
+      "category": "ai-model-family",
+      "division": "FDS Intelligence",
+      "flagship": true,
+      "version": "Research Architecture",
+      "development_status": "research-vision",
+      "availability": "not-publicly-available",
+      "base_architecture": "Multi-teacher specialist distillation target (research program)",
+      "parameter_count": null,
+      "modalities": ["Text", "Code", "Structured Reasoning (Planned)"],
+      "license_info": "Research program — license not yet finalized",
+      "verified_capabilities": [
+        "Documented multi-specialist convergence architecture connecting Project Forge, Hackmanite, and Cinnabar research streams"
+      ],
+      "planned_capabilities": [
+        "Collective intelligence distilled from independently verified specialist models",
+        "Cross-domain technical reasoning across software, game engineering, and creative production",
+        "Independent capability certification prior to any public release"
+      ],
+      "known_limitations": [
+        "No collective model checkpoint has completed training",
+        "No public API endpoint, weights download, or hosted inference exists",
+        "Dependent on upstream specialist validation and Project Forge certification gates"
+      ],
+      "non_claims": [
+        "Not an already trained or certified production supermodel",
+        "Not claiming frontier parity or artificial general intelligence",
+        "Does not imply every FDS application depends on Alexandrite"
+      ],
+      "public_summary": "FDS's long-term collective intelligence research vision designed to converge independently verified specialist capabilities from Hackmanite, Cinnabar, and Project Forge over time.",
+      "public_evidence": "Public architectural program documented in Operation Digital Forge; no trained collective weights are publicly verified.",
+      "route": "/models/alexandrite/",
+      "accent": "alexandrite",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "hackmanite",
+      "name": "Hackmanite",
+      "category": "ai-model-family",
+      "division": "FDS Intelligence",
+      "flagship": true,
+      "version": "Family Roadmap (Prime & Reasoning)",
+      "development_status": "training-planned",
+      "availability": "not-publicly-available",
+      "base_architecture": "Open-weight third-party foundations (Qwen/Qwen3.8-27B & openai/gpt-oss-120b planned)",
+      "parameter_count": "27B (Prime planned) · 120B (Reasoning planned)",
+      "modalities": ["Text", "Code", "Game Engine Workflows (Planned)"],
+      "license_info": "Subject to respective third-party open-weight base licenses plus FDS adaptation terms",
+      "verified_capabilities": [
+        "Publicly documented specialist scope across game programming, engines, graphics, physics, NPCs, multiplayer, and performance engineering",
+        "Explicit architectural split between implementation specialist (Prime) and deep reasoning specialist (Reasoning)"
+      ],
+      "planned_capabilities": [
+        "Game engine scripting, systems architecture, and C++/C#/shader implementation",
+        "Physics, collision, gameplay debugging, and frame-time performance optimization",
+        "Asset pipeline validation, animation rigging guidance, and simulation tooling"
+      ],
+      "known_limitations": [
+        "Third-party base-model availability does not equate to completed FDS fine-tuning or specialist certification",
+        "No public inference endpoint or public adapter weights are released on this website",
+        "Independent public benchmark exports are pending owner publication"
+      ],
+      "non_claims": [
+        "Not a foundation model trained from scratch by FDS",
+        "Not a generic chatbot or complete automated game generator",
+        "Planned capabilities are not presented as verified shipping features"
+      ],
+      "public_summary": "Universal gaming and game-development AI model family targeting game engines, gameplay engineering, physics, graphics, animation systems, and autonomous development workflows.",
+      "public_evidence": "Planned foundation mappings and research scope documented under Operation Digital Forge; completed training checkpoints are not publicly verified in this repository.",
+      "route": "/models/hackmanite/",
+      "accent": "hackmanite",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "hackmanite-prime",
+      "name": "Hackmanite Prime",
+      "category": "ai-model",
+      "division": "FDS Intelligence",
+      "flagship": false,
+      "version": "Planned Specialist Line",
+      "development_status": "training-planned",
+      "availability": "not-publicly-available",
+      "base_architecture": "Qwen/Qwen3.8-27B (third-party open-weight base)",
+      "parameter_count": "27B (base architecture)",
+      "modalities": ["Text", "Code"],
+      "license_info": "Inherits third-party Qwen base-model provenance; adaptation release license TBD",
+      "verified_capabilities": [
+        "Target foundation model (Qwen/Qwen3.8-27B) identified for specialist gaming assistance and code implementation"
+      ],
+      "planned_capabilities": [
+        "Responsive gameplay implementation, engine API usage, and interactive coding assistance",
+        "Shader, UI, and asset-pipeline scripting support",
+        "Local and developer-workstation deployment ergonomics"
+      ],
+      "known_limitations": [
+        "Base model availability is distinct from completed FDS post-training and evaluation",
+        "No public weights, adapters, or API access available"
+      ],
+      "non_claims": [
+        "Not trained from scratch by FDS",
+        "No certified specialist evaluation scores are currently published"
+      ],
+      "public_summary": "Planned 27B-class specialist model built on Qwen/Qwen3.8-27B for responsive game-development implementation, engine coding, and interactive technical assistance.",
+      "public_evidence": "Foundation model assignment documented in Operation Digital Forge; post-training completion is not independently verified here.",
+      "route": "/models/hackmanite/prime/",
+      "accent": "hackmanite",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "hackmanite-reasoning",
+      "name": "Hackmanite Reasoning",
+      "category": "ai-model",
+      "division": "FDS Intelligence",
+      "flagship": false,
+      "version": "Planned Reasoning Line",
+      "development_status": "training-planned",
+      "availability": "not-publicly-available",
+      "base_architecture": "openai/gpt-oss-120b (third-party open-weight base)",
+      "parameter_count": "120B (base architecture)",
+      "modalities": ["Text", "Code", "Multi-Step Technical Reasoning"],
+      "license_info": "Inherits third-party openai/gpt-oss-120b provenance; adaptation release license TBD",
+      "verified_capabilities": [
+        "Target foundation model (openai/gpt-oss-120b) identified for complex gaming architecture, debugging, and systems reasoning"
+      ],
+      "planned_capabilities": [
+        "Complex multi-system game architecture, networking synchronization, and physics debugging",
+        "Root-cause performance profiling and memory-layout analysis",
+        "Deep technical review across multi-file engine repositories"
+      ],
+      "known_limitations": [
+        "Base model availability does not imply completed FDS fine-tuning or specialist verification",
+        "No public inference endpoint or downloadable checkpoint exists"
+      ],
+      "non_claims": [
+        "Not trained from scratch by FDS",
+        "No frontier-model outperformance claim is made without public comparative benchmarks"
+      ],
+      "public_summary": "Planned 120B-class reasoning model built on openai/gpt-oss-120b for complex game-engine architecture, deep systems debugging, and technical performance analysis.",
+      "public_evidence": "Foundation model assignment documented in Operation Digital Forge; post-training and evaluation artifacts are pending public export.",
+      "route": "/models/hackmanite/reasoning/",
+      "accent": "hackmanite",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "cinnabar",
+      "name": "Cinnabar",
+      "category": "ai-model-family",
+      "division": "FDS Intelligence",
+      "flagship": true,
+      "version": "Oracle Lineages (v1–v4.1 documented)",
+      "development_status": "experimental",
+      "availability": "research-only",
+      "base_architecture": "Adapted open-weight language foundations (Oracle text lineages)",
+      "parameter_count": "Lineage-dependent (published per verified export)",
+      "modalities": ["Text", "Structured Narrative & Canonical Analysis"],
+      "license_info": "Internal research checkpoints; public release terms TBD",
+      "verified_capabilities": [
+        "Historically documented Oracle text-model lineage progression across v1, v2, v3, v4, and v4.1",
+        "Domain specialization across anime, manga, animation craft, narrative continuity, canonical research, and fictional combat analysis"
+      ],
+      "planned_capabilities": [
+        "Expanded storyboard structuring, cinematography language, and character-consistency tooling",
+        "Audited integration with external animation and visual production pipelines",
+        "Published guarded vs. raw evaluation exports through the FDS Evaluation Center"
+      ],
+      "known_limitations": [
+        "Cinnabar Oracle models are text-based analytical models, NOT native video or animation generators",
+        "Visual or animation synthesis workflows depend on external specialized tools",
+        "Public evaluation scorecards and operational default checkpoints await owner-approved public export"
+      ],
+      "non_claims": [
+        "Not a native video or animation rendering model",
+        "Not the same entity as the standalone Forge BattleVerse application",
+        "Does not distribute or claim rights over copyrighted anime or manga franchises"
+      ],
+      "public_summary": "Specialized AI model family focused on anime, manga, animation craft, narrative architecture, worldbuilding, canonical intelligence, and fictional combat analysis.",
+      "public_evidence": "Oracle v1–v4.1 historical lineage documented in Operation Digital Forge; private checkpoint weights and internal evaluation holdouts remain unpublished.",
+      "route": "/models/cinnabar/",
+      "accent": "cinnabar",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "jaspilite",
+      "name": "Jaspilite",
+      "category": "application",
+      "division": "FDS Applications",
+      "flagship": true,
+      "version": "Active Platform Development",
+      "development_status": "active-development",
+      "availability": "not-publicly-available",
+      "base_architecture": "Standalone autonomous development & multi-agent orchestration platform",
+      "parameter_count": null,
+      "modalities": ["Repository Context", "Multi-Agent Orchestration", "Code & Tool Workflows"],
+      "license_info": "Proprietary FDS application (public release terms published upon release)",
+      "verified_capabilities": [
+        "Owner-defined three-mode orchestration architecture: Auto, Meld, and Solo",
+        "Replaces legacy Forge Control branding as FDS's primary autonomous development platform direction"
+      ],
+      "planned_capabilities": [
+        "Project-aware multi-agent planning, coding, debugging, and verification sessions",
+        "Unified model routing across local models and user-provided model subscriptions",
+        "Auditable execution boundaries, approvals, and signed public desktop installers"
+      ],
+      "known_limitations": [
+        "No publicly verified installer is distributed on this website yet; private unsigned builds remain private",
+        "Third-party provider integrations require user-owned credentials/subscriptions and remain subject to provider terms and quotas",
+        "Verified execution-ready routes are strictly distinguished from experimental and planned provider connectors"
+      ],
+      "non_claims": [
+        "Not a foundation AI model",
+        "Does not promise unlimited third-party subscription usage or imply official partnerships with model providers",
+        "Architectural diagrams on this website are not misrepresented as screenshots of a public release"
+      ],
+      "public_summary": "Autonomous AI development workspace and multi-agent orchestration platform built around Auto, Meld, and Solo operating modes for project-aware software engineering.",
+      "public_evidence": "Approved product positioning and operating-mode taxonomy (Auto, Meld, Solo) established under Operation Digital Forge; public release installers remain pending owner publication.",
+      "route": "/products/jaspilite/",
+      "accent": "jaspilite",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "battleverse",
+      "name": "Forge BattleVerse",
+      "category": "application",
+      "division": "FDS Applications",
+      "flagship": true,
+      "version": "Active Platform Development",
+      "development_status": "active-development",
+      "availability": "not-publicly-available",
+      "base_architecture": "Standalone fictional intelligence, simulation & claim-auditing application",
+      "parameter_count": null,
+      "modalities": ["Structured Character Research", "Physics Calculations", "Combat Simulation", "Replay Analysis"],
+      "license_info": "Proprietary FDS application",
+      "verified_capabilities": [
+        "Defined evidence-first analytical methodology separating canonical citations, physical modeling, claim auditing, and statistical uncertainty",
+        "Designed as a standalone platform distinct from—and integrable with—the Cinnabar Oracle model family"
+      ],
+      "planned_capabilities": [
+        "Canonical version tracking and source-grounded character profiling",
+        "Multi-character combat simulation with explicit uncertainty intervals and audit trails",
+        "Replay visualization and original cinematic-production workflow integration"
+      ],
+      "known_limitations": [
+        "No public downloadable release or live web simulator is currently published on this site",
+        "Fictional combat simulations model stated assumptions and carry inherent interpretative uncertainty",
+        "Reproducible benchmark exports await owner publication approval"
+      ],
+      "non_claims": [
+        "Fictional simulation results are analytical models, NOT objective canonical facts",
+        "Not the name of the Cinnabar model family",
+        "Does not claim universal third-party scientific certification or use protected franchise art as branding"
+      ],
+      "public_summary": "Independent fictional intelligence, scientific simulation, canonical research, and evidence-audited combat-analysis platform designed to integrate with Cinnabar Oracle.",
+      "public_evidence": "Methodology, scientific integrity standards, and product boundaries documented under Operation Digital Forge; public release builds remain pending.",
+      "route": "/products/battleverse/",
+      "accent": "battleverse",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "project-forge",
+      "name": "Project Forge",
+      "category": "research-infrastructure",
+      "division": "FDS Research",
+      "flagship": true,
+      "version": "Active Research Infrastructure",
+      "development_status": "active-development",
+      "availability": "research-only",
+      "base_architecture": "15-division research, verification, retrieval, training & evaluation infrastructure",
+      "parameter_count": null,
+      "modalities": ["Research Indexes", "Source Verification", "Retrieval Pipelines", "Controlled Training & Evals"],
+      "license_info": "Internal FDS research infrastructure with public methodology documentation",
+      "verified_capabilities": [
+        "Permanent 15-division research taxonomy spanning gaming, AI, animation, graphics, physics, simulation, and evaluation",
+        "Strict 8-stage Research-to-Capability governance pipeline enforcing provenance and dataset-eligibility separation"
+      ],
+      "planned_capabilities": [
+        "Scheduled owner-approved public research snapshots with dated methodology and category disaggregation",
+        "Reproducible public benchmark releases feeding the FDS Evaluation Center"
+      ],
+      "known_limitations": [
+        "Private source collections, internal manifests, and raw training configurations are intentionally never exposed publicly",
+        "Numerical research-corpus metrics are published only when accompanied by category, snapshot date, and methodology"
+      ],
+      "non_claims": [
+        "Not a public inference model or chatbot",
+        "Research documents are never conflated with commercially cleared training examples",
+        "Historical overlapping dataset releases are never summed into inflated totals"
+      ],
+      "public_summary": "FDS's permanent research and engineering intelligence foundation supporting specialized model families through verified sourcing, experiments, retrieval, training, and independent evaluation.",
+      "public_evidence": "15-division structure, 8-stage lifecycle, and strict provenance governance documented under Operation Digital Forge; private research stores remain isolated.",
+      "route": "/research/project-forge/",
+      "accent": "project-forge",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "state-lines",
+      "name": "State Lines",
+      "category": "original-production",
+      "division": "FDS Original Productions",
+      "flagship": true,
+      "version": "Preproduction / Private Development",
+      "development_status": "private-development",
+      "availability": "private-development",
+      "base_architecture": "Original AAA-ambition open-world narrative game production",
+      "parameter_count": null,
+      "modalities": ["Interactive Open World", "Long-Form Narrative", "Cinematic Production"],
+      "license_info": "Original FDS intellectual property",
+      "verified_capabilities": [
+        "Approved creative direction: original organized-crime narrative rooted in New York, New Jersey, and Pennsylvania regional atmospheres",
+        "Original characters and historically and culturally grounded worldbuilding direction"
+      ],
+      "planned_capabilities": [
+        "Large-scale open-world interactive environments and prestige long-form narrative campaigns",
+        "Cinematic storytelling supported by FDS original production workflows"
+      ],
+      "known_limitations": [
+        "Currently in preproduction / private development — not a finished or playable game",
+        "No release date, target platforms, pricing, or system requirements have been announced",
+        "Concept imagery represents creative atmosphere only and is not in-engine gameplay"
+      ],
+      "non_claims": [
+        "Not an AI model",
+        "Concept art is never represented as actual gameplay or in-engine capture",
+        "No confidential story spoilers, character dossiers, or unapproved mission documents are disclosed"
+      ],
+      "public_summary": "Original AAA-ambition open-world organized-crime narrative game inspired by the New York, New Jersey, and Pennsylvania corridor, focused on cinematic storytelling and grounded worlds.",
+      "public_evidence": "Owner-approved creative direction documented in Operation Digital Forge; confidential narrative and engine production documents remain private.",
+      "route": "/studio/state-lines/",
+      "accent": "state-lines",
+      "last_verified": "2026-11-26",
+      "approved_for_publication": true
+    },
+    {
+      "id": "forgerems",
+      "name": "ForgerEMS",
+      "category": "legacy-product",
+      "division": "Extended Portfolio",
+      "flagship": false,
+      "version": "v1.2.4-preview.1",
+      "development_status": "public-preview",
+      "availability": "public-preview",
+      "base_architecture": "Windows desktop technician workbench (.NET 8 / WPF)",
+      "parameter_count": null,
+      "modalities": ["Windows Desktop Application"],
+      "license_info": "Proprietary public preview (GitHub Releases)",
+      "verified_capabilities": [
+        "Publicly downloadable Windows portable ZIP and installer on GitHub Releases (v1.2.4-preview.1)",
+        "USB toolkit creation, drive validation, USB/port intelligence, system info, driver guidance, and local-first diagnostics",
+        "Published SHA-256 verification checksums for both artifacts"
+      ],
+      "planned_capabilities": [
+        "Expanded technician recovery workflows and installer lifecycle certification"
+      ],
+      "known_limitations": [
+        "Windows only; prerelease public preview",
+        "Binaries are unsigned; Windows SmartScreen may show an unknown-publisher warning"
+      ],
+      "non_claims": [
+        "Not a production-certified or Microsoft Verified release"
+      ],
+      "public_summary": "Local-first Windows technician workbench for USB toolkit creation, drive validation, port intelligence, driver guidance, and hardware diagnostics.",
+      "public_evidence": "Verified GitHub Release v1.2.4-preview.1 (2026-10-08, commit fc54150844b36c2e6d6a4fd18d6ea9dd065fd4fb) with SHA-256 checksums.",
+      "route": "/forgerems/",
+      "accent": "fds-cobalt",
+      "last_verified": "2026-10-08",
+      "approved_for_publication": true
+    },
+    {
+      "id": "codeforge",
+      "name": "CodeForge",
+      "category": "legacy-product",
+      "division": "Extended Portfolio",
+      "flagship": false,
+      "version": "v0.2.0 (downloads paused)",
+      "development_status": "public-release",
+      "availability": "downloads-paused",
+      "base_architecture": "TypeScript / Electron / Node.js free-first coding agent",
+      "parameter_count": null,
+      "modalities": ["Windows Desktop", "CLI", "VS Code"],
+      "license_info": "FDS software (verified source ZIP archive published with SHA-256)",
+      "verified_capabilities": [
+        "Free-first repository inspection, planning, controlled editing, testing, and ForgeZero fail-closed zero-cost routing",
+        "Verified source archive CodeForge-source-6b0770b.zip hosted on /forged with SHA-256 digest"
+      ],
+      "planned_capabilities": [
+        "Updated release packaging and Forge AAA game-workflow architecture concepts"
+      ],
+      "known_limitations": [
+        "Previously listed Windows v0.2.0 installer downloads are temporarily paused while the release is updated",
+        "Free provider quotas are finite; no unlimited inference is promised"
+      ],
+      "non_claims": [
+        "No active checkout or paid commercial tiers exist on this site",
+        "Forge AAA does not generate complete AAA games"
+      ],
+      "public_summary": "Free-first autonomous software-engineering platform for Windows, CLI, and VS Code with ForgeZero fail-closed zero-cost routing; installer downloads currently paused.",
+      "public_evidence": "Verified v0.2.0 workspace screenshot and SHA-256-verified source archive CodeForge-source-6b0770b.zip in repository.",
+      "route": "/projects/codeforge",
+      "accent": "fds-cobalt",
+      "last_verified": "2026-10-19",
+      "approved_for_publication": true
+    },
+    {
+      "id": "dead-trails-west",
+      "name": "Dead Trails West",
+      "category": "original-production",
+      "division": "FDS Original Productions",
+      "flagship": false,
+      "version": "Private Development",
+      "development_status": "private-development",
+      "availability": "private-development",
+      "base_architecture": "Unreal Engine 4.27 & Blender asset pipeline",
+      "parameter_count": null,
+      "modalities": ["Historical Open-World Game"],
+      "license_info": "Original FDS intellectual property",
+      "verified_capabilities": [
+        "Documented 1882–1900 historical Western setting centered on Sundance, New Jersey and characters George and Edward Bauer"
+      ],
+      "planned_capabilities": [
+        "Settlement life, wildlife, survival, seasons, ranching, property, law, and consequence systems"
+      ],
+      "known_limitations": [
+        "Private development; no public playable build or release date exists",
+        "Owner-reported persistent-world simulation checks have not been independently reproduced in this repository"
+      ],
+      "non_claims": [
+        "No playable build, gameplay footage, or full-game certification is claimed"
+      ],
+      "public_summary": "Original historical Western open-world game project targeting Unreal Engine 4.27, spanning 1882–1900 in Sundance, New Jersey.",
+      "public_evidence": "Publicly verified scope in repository manifest (last reconciled 2026-10-21); live Unreal behavior remains private.",
+      "route": "/projects/dead-trails-west",
+      "accent": "neutral",
+      "last_verified": "2026-10-21",
+      "approved_for_publication": true
+    }
+  ]
+}
