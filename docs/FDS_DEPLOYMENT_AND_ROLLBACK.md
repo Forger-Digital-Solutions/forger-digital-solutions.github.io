@@ -1,81 +1,65 @@
-# Forger Digital Solutions — Deployment & Rollback Runbook
+# FDS Deployment & Rollback Runbook — Operation Digital Forge II
 
-**Hosting Target:** GitHub Pages (`public/CNAME` -> `forgerdigitalsolutions.com`)  
-**Workflow File:** [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)  
-**Baseline Production Commit (`main`):** `9550949234a4636bcd4824f1a39a6aea9af7c859`  
-**Redesign Branch:** `feature/operation-digital-forge`
-
----
-
-## 1. Deployment Safety Architecture
-
-Production deployment on `forgerdigitalsolutions.com` is **strictly gated by GitHub Actions**:
-
-- **Pull Requests targeting `main`:** Run `security` (dependency audits), `build` (Vitest, Kayla deploy check, Worker build, `npm run validate`, secret scan), and `browser-certification` (Playwright Chromium + Firefox/WebKit smoke). The `deploy` job has `if: github.event_name != 'pull_request'` and **never deploys on a PR**.
-- **Pushes / Merges to `main`:** Run all three gates sequentially; `deploy` publishes `./dist` to GitHub Pages **only** if every gate passes.
-- **DNS & Custom Domain Preservation:** `public/CNAME` (`forgerdigitalsolutions.com`) is committed verbatim and copied automatically to `dist/CNAME`. No DNS records, registrars, or hosting providers are altered.
+> **Repository:** `Forger-Digital-Solutions/forger-digital-solutions.github.io`
+> **Production Branch:** `main` (GitHub Pages custom domain: `forgerdigitalsolutions.com`)
+> **Development Candidate Branch:** `feature/operation-digital-forge`
+> **Workflow:** [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
+> **Last Updated:** 2026-11-26
 
 ---
 
-## 2. Pre-Deployment Verification Checklist (Owner Sign-Off Required)
+## 1. Non-Negotiable Production Safeguards
 
-Before merging `feature/operation-digital-forge` into `main`:
+1. **No Unapproved Production Deploys:** Automated agents must NEVER merge `feature/operation-digital-forge` into `main`, trigger GitHub Pages production deployment, deploy Cloudflare Workers (`worker/`), or alter DNS without explicit owner approval.
+2. **Pull Request CI Gate Only:** Opening a Pull Request against `main` executes:
+   - `security`: `npm ci`, `npm audit --audit-level=high`, `npm audit --omit=dev --audit-level=high`, `pnpm --dir worker install --frozen-lockfile`, `pnpm --dir worker audit --audit-level high`
+   - `build`: `npm test` (64 files / 1,063 tests), `npm run kayla:deploy:check`, `npm run worker:build` (dry-run), `npm run validate` (content schema, Kayla drift/inventory/365 golden queries, `astro check`, `astro build` across 69 pages, 7,916 internal link check), `npm run kayla:secret-scan`
+   - `browser-certification`: Full Playwright E2E across Chromium plus cross-browser smoke tests on Firefox and WebKit, uploading `visual-certification-captures`
+   - `deploy` is **explicitly skipped on Pull Requests** (`if: github.event_name != 'pull_request'`).
 
-1. Confirm explicit owner approval after reviewing the preview build and visual QA screenshots.
-2. Run locally or verify green GitHub Actions PR checks:
+---
+
+## 2. Owner Approval & Production Release Procedure
+
+Once the executive owner has reviewed the Pull Request, Visual Review Gallery, and green GitHub Actions checks:
+
+1. **Merge the Pull Request** (`feature/operation-digital-forge` → `main`) in GitHub UI using standard merge or squash merge.
+2. **Automatic GitHub Pages Deployment:** Merging to `main` triggers `.github/workflows/deploy.yml` (`security` → `build` → `browser-certification` → `deploy`), publishing `./dist` via `actions/deploy-pages@v5` to `https://forgerdigitalsolutions.com`.
+3. **Optional Cloudflare Worker Update (Separate Explicit Step):** Because Operation Digital Forge II expanded Kayla's canonical knowledge (`src/data/kayla/*`, `src/lib/kayla/*`) to cover all 7 flagships and 15 commercial queries, the owner should deploy the updated Kayla Worker AFTER reviewing and approving:
    ```bash
-   npm audit --audit-level=high
-   npm audit --omit=dev --audit-level=high
-   pnpm --dir worker install --frozen-lockfile
-   pnpm --dir worker audit --audit-level high
-   npm test
-   npm run kayla:deploy:check
-   npm run worker:build
-   npm run validate
-   npm run kayla:secret-scan
-   npm run test:e2e
+   npm run kayla:deploy
    ```
-3. Confirm `public/CNAME` still contains `forgerdigitalsolutions.com`.
-4. Confirm zero changes to Cloudflare Worker production deployment (`worker/` is built and audited in CI; deploy Worker separately via `wrangler` only if Worker behavior changes).
+   *(Runs `kayla:deploy:check` before `wrangler deploy`; requires authenticated Cloudflare Wrangler credentials. Static pages and offline deterministic fallback continue working safely even before the Worker is redeployed.)*
+4. **Post-Release Smoke Verification:**
+   - Verify `https://forgerdigitalsolutions.com/`, `/solutions/`, `/models/hackmanite/`, `/products/battleverse/arena/`, `/products/battleverse/creator-studio/`, and `/contact/?track=enterprise` return HTTP 200 with zero broken images.
+   - Verify `/forgerems/` and `/forged` download links and SHA-256 digests remain intact.
+   - Verify Kayla Copilot responds accurately to `"What is Hackmanite?"`, `"What is BattleVerse Creator Studio?"`, and `"Can FDS build a private AI for my gaming studio?"`.
 
 ---
 
-## 3. Controlled Rollout Procedure
+## 3. Instant Rollback Procedure
 
-1. Open and review a Pull Request from `feature/operation-digital-forge` -> `main`.
-2. Wait for all 3 GitHub Actions jobs (`security`, `build`, `browser-certification`) to pass green.
-3. Upon explicit owner approval, merge the PR into `main`.
-4. Monitor the triggered `Deploy to GitHub Pages` workflow run to completion.
-5. Verify live smoke checks on `https://forgerdigitalsolutions.com`:
-   - Homepage loads over HTTPS with `forgerdigitalsolutions.com` certificate intact.
-   - Primary routes (`/models/`, `/products/jaspilite/`, `/research/project-forge/`, `/studio/state-lines/`, `/downloads/`, `/forged`, `/forgerems/`, `/docs/`, `/trust/`) return HTTP 200.
-   - Kayla Copilot opens and responds cleanly.
-   - ForgerEMS download links & CodeForge SHA-256 ZIP (`/downloads/codeforge/CodeForge-source-6b0770b.zip`) resolve cleanly.
+If any defect appears after merging into `main`:
 
----
-
-## 4. Instant Rollback Procedure
-
-If any unexpected regression occurs after merging to `main`:
-
-### Option A — Git Revert (Recommended, preserves history)
+### Option A — GitHub Revert PR (Recommended, Preserves Full Audit Trail)
 ```bash
 git checkout main
 git pull origin main
-git revert -m 1 <MERGE_COMMIT_SHA>
+git revert -m 1 <merge-commit-sha>
 git push origin main
 ```
-GitHub Actions immediately validates and redeploys the exact prior state (`9550949` baseline) within ~3–5 minutes.
+GitHub Actions immediately rebuilds and redeploys the prior verified baseline (`9550949` or prior release commit) through the full `security → build → browser-certification → deploy` pipeline (~4–6 minutes).
 
-### Option B — Emergency Reset to Verified Baseline Commit (if revert conflicts)
+### Option B — Cloudflare Worker Rollback (If Worker Was Deployed)
 ```bash
-git checkout main
-git checkout -b rollback/to-9550949 9550949234a4636bcd4824f1a39a6aea9af7c859
-# Open fast-track PR or force-restore per repo branch protection rules
+cd worker
+npx wrangler deployments list
+npx wrangler rollback <previous-version-id>
 ```
 
-### Cloudflare Worker Rollback (if Worker is ever deployed independently)
-```bash
-cd worker && npx wrangler rollback
-```
-(Note: Operation Digital Forge only updated `worker/pnpm-workspace.yaml` & `worker/pnpm-lock.yaml` to patch a transitive `undici` CVE; Worker runtime code is unchanged.)
+---
+
+## 4. DNS & Custom Domain Integrity
+
+- `public/CNAME` (`forgerdigitalsolutions.com`) is preserved unchanged in `dist/CNAME`.
+- Zero DNS records (`A`, `AAAA`, `CNAME`, `TXT`) are modified by Operation Digital Forge II.

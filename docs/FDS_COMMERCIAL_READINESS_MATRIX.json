@@ -1,0 +1,281 @@
+{
+  "schema_version": "1.0.0",
+  "last_verified": "2026-11-26",
+  "organization": "Forger Digital Solutions",
+  "initiative": "Operation Digital Forge II",
+  "pricing_policy": "Unapproved internal pricing hypotheses and revenue projections are excluded from public commercial matrices until formally approved by the executive owner.",
+  "offerings": [
+    {
+      "id": "alexandrite",
+      "name": "Alexandrite",
+      "division": "FDS Intelligence",
+      "category": "ai-model-family",
+      "development_status": "research-vision",
+      "public_availability": "not-publicly-available",
+      "commercial_readiness": "research-horizon",
+      "target_customers": [
+        "Cross-domain studios",
+        "Research partners",
+        "Long-term enterprise AI adopters"
+      ],
+      "target_monetization_models": [
+        "Commercial API access (post-certification)",
+        "Enterprise licensing & deployment (post-certification)"
+      ],
+      "verified_foundations": [
+        "Documented 7-stage specialist convergence architecture",
+        "Explicit separation of runtime orchestration vs. separately trained collective model weights"
+      ],
+      "commercial_blockers": [
+        "Upstream Hackmanite & Cinnabar specialist evaluations and certification",
+        "Collective distillation research and independent holdout certification"
+      ],
+      "inquiry_track": "research",
+      "route": "/models/alexandrite/"
+    },
+    {
+      "id": "hackmanite",
+      "name": "Hackmanite",
+      "division": "FDS Intelligence",
+      "category": "ai-model-family",
+      "development_status": "training-planned",
+      "public_availability": "early-interest-open",
+      "commercial_readiness": "pre-training-architecture",
+      "upstream_foundations": [
+        {
+          "variant": "Hackmanite Prime",
+          "base_model": "Qwen/Qwen3.8-27B",
+          "license": "Apache-2.0",
+          "license_verified_date": "2026-11-26",
+          "fds_finetuning_complete": false
+        },
+        {
+          "variant": "Hackmanite Reasoning",
+          "base_model": "openai/gpt-oss-120b",
+          "license": "Apache-2.0",
+          "license_verified_date": "2026-11-26",
+          "fds_finetuning_complete": false
+        }
+      ],
+      "planned_product_lines": [
+        "Hackmanite Game Engineer",
+        "Hackmanite Gaming Assistant",
+        "Hackmanite Studio",
+        "Hackmanite Enterprise",
+        "Hackmanite Model API & SDK"
+      ],
+      "target_customers": [
+        "Solo indie developers",
+        "Indie studios (2-50 developers)",
+        "AA/AAA game studios",
+        "Modding teams & creators",
+        "Engine/tool builders",
+        "Gamers & competitive analysts"
+      ],
+      "target_monetization_models": [
+        "Developer & studio subscriptions (future)",
+        "Usage-metered Model API & SDK (future)",
+        "Private studio/enterprise workforce deployment & licensing (future)"
+      ],
+      "commercial_blockers": [
+        "Completed FDS specialist fine-tuning and authorized benchmark exports",
+        "Owner-approved public pricing, billing infrastructure, and SLA commitments"
+      ],
+      "inquiry_track": "gaming-studio",
+      "route": "/models/hackmanite/"
+    },
+    {
+      "id": "cinnabar",
+      "name": "Cinnabar",
+      "division": "FDS Intelligence",
+      "category": "ai-model-family",
+      "development_status": "experimental-checkpoint",
+      "public_availability": "research-only",
+      "commercial_readiness": "experimental-research",
+      "documented_lineages": ["Oracle v1", "Oracle v2", "Oracle v3", "Oracle v4", "Oracle v4.1"],
+      "explicit_modality_boundary": "Text-based storytelling, continuity, and craft intelligence; NOT a native video or animation generator.",
+      "target_customers": [
+        "Manga & webtoon creators",
+        "Anime & animation studios",
+        "Creative writers & lore directors",
+        "Publishers & story development teams"
+      ],
+      "target_monetization_models": [
+        "Creator & studio subscriptions via BattleVerse Creator Studio (future)",
+        "Private studio creative workforce adaptation & licensing (future)"
+      ],
+      "commercial_blockers": [
+        "Authorized export of fresh inference and confirmation evaluation reports",
+        "External creative-tool workflow integrations and creator-controlled IP agreements"
+      ],
+      "inquiry_track": "anime-studio",
+      "route": "/models/cinnabar/"
+    },
+    {
+      "id": "jaspilite",
+      "name": "Jaspilite",
+      "division": "FDS Applications",
+      "category": "application",
+      "development_status": "active-development",
+      "public_availability": "early-interest-open",
+      "commercial_readiness": "private-build-development",
+      "operating_modes": ["Auto", "Meld", "Solo"],
+      "provider_maturity_tiers": [
+        "Discovered",
+        "Authenticated",
+        "Available",
+        "Execution-Verified",
+        "Production-Certified"
+      ],
+      "target_customers": [
+        "Individual software engineers",
+        "Engineering teams",
+        "Independent game and software studios",
+        "Security-conscious enterprises"
+      ],
+      "target_monetization_models": [
+        "Commercial workspace licenses / team subscriptions (future)",
+        "Enterprise workspace & private routing deployment (future)"
+      ],
+      "commercial_blockers": [
+        "Signed public desktop release build and verification checksums",
+        "Execution-verified provider routing matrix export"
+      ],
+      "inquiry_track": "developer",
+      "route": "/products/jaspilite/"
+    },
+    {
+      "id": "battleverse-arena",
+      "name": "BattleVerse Arena",
+      "division": "FDS Applications",
+      "category": "application",
+      "development_status": "active-development",
+      "public_availability": "early-interest-open",
+      "commercial_readiness": "active-application-development",
+      "target_customers": [
+        "Anime, manga & comic fans",
+        "Fictional analysis & powerscaling researchers",
+        "Content creators & debate communities"
+      ],
+      "target_monetization_models": [
+        "Freemium consumer access & creator tiers (future)"
+      ],
+      "commercial_blockers": [
+        "Public application backend release",
+        "Verified canonical database export and simulation audit documentation"
+      ],
+      "inquiry_track": "general",
+      "route": "/products/battleverse/arena/"
+    },
+    {
+      "id": "battleverse-creator-studio",
+      "name": "BattleVerse Creator Studio",
+      "division": "FDS Applications",
+      "category": "commercial-direction",
+      "development_status": "commercial-direction",
+      "public_availability": "early-interest-open",
+      "commercial_readiness": "commercial-direction-scoping",
+      "target_customers": [
+        "Independent manga & webtoon creators",
+        "Anime & 2D/3D animation studios",
+        "Publishers & creative-production houses"
+      ],
+      "target_monetization_models": [
+        "Creator & studio workspace subscriptions (future)",
+        "Studio personalization & pipeline integration engagements (future)"
+      ],
+      "commercial_blockers": [
+        "Implementation verification and Cinnabar model readiness",
+        "External creative-tool bridge verification"
+      ],
+      "inquiry_track": "anime-studio",
+      "route": "/products/battleverse/creator-studio/"
+    },
+    {
+      "id": "project-forge",
+      "name": "Project Forge",
+      "division": "FDS Research",
+      "category": "research-infrastructure",
+      "development_status": "active-research",
+      "public_availability": "research-only",
+      "commercial_readiness": "internal-foundation-and-partnerships",
+      "target_customers": [
+        "Academic & industry research partners",
+        "Enterprise AI evaluation & provenance collaborators"
+      ],
+      "target_monetization_models": [
+        "Research partnerships & custom evaluation engagements (selective)"
+      ],
+      "commercial_blockers": [
+        "Owner-approved public research snapshot exports"
+      ],
+      "inquiry_track": "research",
+      "route": "/research/project-forge/"
+    },
+    {
+      "id": "state-lines",
+      "name": "State Lines",
+      "division": "FDS Original Productions",
+      "category": "original-production",
+      "development_status": "private-development",
+      "public_availability": "private-development",
+      "commercial_readiness": "preproduction",
+      "target_customers": [
+        "Players of prestige open-world narrative games",
+        "Future publishing & entertainment partners"
+      ],
+      "target_monetization_models": [
+        "Commercial game release (long-term, unannounced)"
+      ],
+      "commercial_blockers": [
+        "Preproduction & full production milestones",
+        "Official announcement of platforms, gameplay, and release window"
+      ],
+      "inquiry_track": "entertainment",
+      "route": "/studio/state-lines/"
+    },
+    {
+      "id": "forgerems",
+      "name": "ForgerEMS",
+      "division": "Extended Portfolio",
+      "category": "legacy-product",
+      "development_status": "public-preview",
+      "public_availability": "public-preview",
+      "commercial_readiness": "public-free-preview",
+      "version": "v1.2.4-preview.1",
+      "target_customers": [
+        "Windows technicians & PC builders",
+        "IT support professionals"
+      ],
+      "target_monetization_models": [
+        "Free public preview on GitHub Releases"
+      ],
+      "commercial_blockers": [
+        "Windows code-signing certificate for SmartScreen trust"
+      ],
+      "inquiry_track": "developer",
+      "route": "/forgerems/"
+    },
+    {
+      "id": "codeforge",
+      "name": "CodeForge",
+      "division": "Extended Portfolio",
+      "category": "legacy-product",
+      "development_status": "public-release",
+      "public_availability": "downloads-paused",
+      "commercial_readiness": "paused-installer-update",
+      "version": "v0.2.0",
+      "target_customers": [
+        "Local-first Windows developers"
+      ],
+      "target_monetization_models": [
+        "Free-first core; paid upgrade rail intentionally disabled (fail-closed)"
+      ],
+      "commercial_blockers": [
+        "Updated installer publication and release verification"
+      ],
+      "inquiry_track": "developer",
+      "route": "/projects/codeforge"
+    }
+  ]
+}

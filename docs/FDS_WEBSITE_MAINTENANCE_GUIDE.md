@@ -1,71 +1,62 @@
-# Forger Digital Solutions — Website Maintenance Guide
+# FDS Website Maintenance Guide — Operation Digital Forge II
 
-**Stack:** Astro 7 (Static Output) · TypeScript · Self-Hosted Fontsource Fonts · Cloudflare Worker (Kayla Copilot) · Vitest · Playwright  
-**Governance Docs:** Always read [`DESIGN.md`](../DESIGN.md) and [`BRAND_GUIDELINES.md`](../BRAND_GUIDELINES.md) before modifying UI or copy.
-
----
-
-## 1. Local Development Commands
-
-```bash
-npm install                               # Install website dependencies
-pnpm --dir worker install --frozen-lockfile  # Install Worker dependencies
-npm run dev                               # Start Astro dev server at http://localhost:4321
-npm run validate                          # Full content, Kayla, Astro check, build & link gate
-npm test                                  # Run Vitest unit & governance suite
-npm run test:e2e                          # Run Playwright browser certification suite
-npm run worker:build                      # Dry-run Cloudflare Worker bundle check
-```
+> **Audience:** Executive owner, engineering contributors, and future autonomous coding agents
+> **Canonical Governance:** [`DESIGN.md`](../DESIGN.md) · [`BRAND_GUIDELINES.md`](../BRAND_GUIDELINES.md) · [`docs/FDS_PUBLICATION_GOVERNANCE.md`](./FDS_PUBLICATION_GOVERNANCE.md)
+> **Last Updated:** 2026-11-26
 
 ---
 
-## 2. How to Update a Model, Product, or Project Status
+## 1. Single-Source-of-Truth Data Files
 
-**Never hardcode status text across multiple Astro files.** Update the canonical JSON registry:
+Avoid editing hardcoded status badges, routes, or solution summaries across multiple `.astro` files. Update the structured data layer first:
 
-1. Edit [`content/public-status/registry.json`](../content/public-status/registry.json) matching [`docs/FDS_MODEL_STATUS_SCHEMA.json`](../docs/FDS_MODEL_STATUS_SCHEMA.json).
-2. Update `last_verified` to the current ISO date (`YYYY-MM-DD`).
-3. If updating a model family narrative or lineage, also update [`content/models/models.json`](../content/models/models.json).
-4. Run `npm run validate:content && npm test` to verify schema compliance and non-conflation checks.
-
----
-
-## 3. How to Publish a New Software Release
-
-1. Verify binary artifacts, exact byte sizes, signing status, Git commit SHA, and 64-character SHA-256 checksums.
-2. Add or update the entry in [`content/releases/releases.json`](../content/releases/releases.json) (and `src/data/products.ts` / `src/data/manifest.ts` if modifying Forged/CodeForge/ForgerEMS).
-3. Add a dated entry in [`src/pages/changelog/index.astro`](../src/pages/changelog/index.astro) and [`content/publications/updates.json`](../content/publications/updates.json).
-4. Run `npm run validate && npm test` so Kayla canonical knowledge, internal links, and Forged checksum tests stay 100% synchronized.
+| Data File | What It Controls | Validation Script |
+| :--- | :--- | :--- |
+| `content/public-status/registry.json` | All 14 technology/model/product lifecycle statuses, availability badges, verified capabilities, limitations, non-claims, and Kayla retrieval entries | `npm run validate:content` + `npm run kayla:knowledge-check` |
+| `content/solutions/solutions.json` | 3 commercial markets, 6 audience solution pages (`/solutions/[slug]/`), 5 personalization layers, Hackmanite 10-role & Cinnabar 8-role workforces, BattleVerse illustrative Arena scenarios, Jaspilite 5-tier provider ladder, Alexandrite 7-stage pipeline, and 6 `/contact/` inquiry tracks | `npm test` (`test/operation-digital-forge-ii.test.ts`) |
+| `content/evaluations/evaluations.json` | 11 mandatory benchmark fields, website engineering baselines, and future authorized model benchmark exports | `npm run validate` |
+| `content/publications/updates.json` | Newsroom dispatches (`/news/`) | `npm run validate` |
+| `src/data/manifest.ts` | Legacy software versions, SHA-256 digests (`ForgerEMS`, `CodeForge`), and status strip metadata | `test/content-consistency.test.ts` |
+| `src/data/kayla/*` + `test/kayla/golden-queries.json` | Kayla Copilot canonical answers, safe actions, routes (`62`), and golden regression suite (`365` queries) | `npm run kayla:golden` + `npm test` |
 
 ---
 
-## 4. How to Publish Approved Evaluation Results
+## 2. How to Publish New Private Research, Models, or Builds Safely
 
-1. Confirm all 10 required fields in [`content/evaluations/evaluations.json`](../content/evaluations/evaluations.json) are backed by an owner-approved public export (including separate Raw vs. Guarded results and uncertainty bounds).
-2. Add the record to `content/evaluations/evaluations.json` and update the matching model's `development_status` in `content/public-status/registry.json` if certified.
-3. Never delete historical limitations or baseline disclosures.
+When local engineering milestones (`Hackmanite S22`, `Cinnabar Oracle` confirmation evals, `Jaspilite` signed installer, `BattleVerse` live release, or `State Lines` official media) are ready for publication:
+
+1. **Generate Sanitized Exports:** Produce the sanitized JSON/Markdown artifacts specified in [`docs/FDS_PRIVATE_EXPORT_REQUIREMENTS.md`](./FDS_PRIVATE_EXPORT_REQUIREMENTS.md) with zero local paths (`Z:\`, `C:\Users\`), credentials, or customer data.
+2. **Update `registry.json` & `evaluations.json`:** Transition `development_status` and `availability` only to schema-approved enum values in `docs/FDS_MODEL_STATUS_SCHEMA.json`. Attach all 11 mandatory benchmark disclosure fields before publishing any numeric model score.
+3. **Update Visual Assets Responsibly:** Optimize new photography/screenshots to dual-width WebP (`1600px` desktop + `800px` `-sm.webp` mobile) under `public/images/forge/`, add provenance entries to `BRAND_GUIDELINES.md`, and label concept art vs. real software output accurately.
+4. **Update Kayla & Golden Queries:** Confirm `src/data/kayla/answers.ts` and `test/kayla/golden-queries.json` reflect the newly verified release, and verify `npm run kayla:golden` stays at `100%` Tier 1.
+5. **Run the Mandatory Local Pre-Push Gate:**
+   ```bash
+   npm audit --audit-level=high
+   npm audit --omit=dev --audit-level=high
+   pnpm --dir worker audit --audit-level high
+   npm test
+   npm run kayla:deploy:check
+   npm run worker:build
+   npm run validate
+   npm run kayla:secret-scan
+   npm run test:e2e
+   ```
 
 ---
 
-## 5. How to Add Visual Assets Safely
+## 3. Adding or Updating Commercial Pricing (Owner Approval Gate)
 
-Follow [`BRAND_GUIDELINES.md`](../BRAND_GUIDELINES.md):
-
-- Mineral names inspire **accent tokens, geometric marks, and abstract computational forms** — NOT literal photographs of rocks, gemstones, or laboratory hardware.
-- Generate/save dual-width `.webp` images under `public/images/forge/`: desktop (`1600px` wide, target `< 220 KB`) and mobile (`800px` wide `*-sm.webp`, target `< 80 KB`).
-- Render via `<SpecimenMedia />` with honest provenance labeling (`Concept Art — Work in Progress (Not Gameplay)` for studio art; `Illustrative Architecture Visualization` for abstract model art).
-- Always specify explicit `width`/`height` attributes to keep CLS near zero.
+Unapproved internal pricing hypotheses and revenue projections are intentionally blocked from public pages by `scripts/validate-content.mjs` and `test/operation-digital-forge-ii.test.ts`. When the executive owner formally approves commercial pricing tiers:
+1. Document owner sign-off in the release PR description.
+2. Add approved tiers cleanly into `content/solutions/solutions.json` with explicit billing/currency disclosures and real payment/contract links (never fake checkout buttons).
+3. Update `test/operation-digital-forge-ii.test.ts` to assert exact approved tier values while continuing to block unapproved legacy internal forecast strings.
 
 ---
 
-## 6. Dependency Security Maintenance
+## 4. Preserving Visual & Accessibility Governance
 
-CI enforces zero high/critical advisories across both root `package.json` and `worker/`:
-
-```bash
-npm audit --audit-level=high
-npm audit --omit=dev --audit-level=high
-pnpm --dir worker audit --audit-level high
-```
-
-If a transitive Worker dependency reports a high-severity CVE, pin a minimal patched semver override in `worker/pnpm-workspace.yaml`, run `pnpm --dir worker install`, verify `pnpm --dir worker install --frozen-lockfile && pnpm --dir worker audit --audit-level high`, and test `npm run worker:build`.
+Before merging any UI change:
+- Verify contrast (`>= 4.5:1` normal text, `>= 3.0:1` large text/UI) against `DESIGN.md` tokens.
+- Verify `0px` horizontal overflow across `360px` to `2560px` and `0` critical/serious `@axe-core/playwright` WCAG 2.2 AA violations.
+- Verify `prefers-reduced-motion: reduce` leaves every section visible (`opacity: 1`).
+- Never introduce external font CDNs, third-party analytics trackers, fake forms, or copyrighted franchise artwork.

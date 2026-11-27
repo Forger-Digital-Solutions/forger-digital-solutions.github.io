@@ -1,39 +1,43 @@
-# Forger Digital Solutions — Mobile & Responsive QA Report
+# FDS Mobile & Responsive QA Report — Operation Digital Forge II
 
-**Audit Date:** 2026-11-26  
-**Target Viewports Verified:** `360×800` (compact Android), `390×844` (iPhone standard), `768×1024` (tablet portrait), `1024×768` (tablet landscape)
-
----
-
-## 1. Mobile Layout & Overflow Results
-
-Every audited page (all 20 representative routes including homepage, all 7 flagships, model cards, evaluations, trust, developers, docs, downloads, news, company, contact, legacy Forge Control, and 404) was rendered at `390×844` and `360×800` (homepage):
-
-- **Horizontal overflow (`scrollWidth - clientWidth`):** **`0px`** across all 20 routes at `390×844` and across `360×800`, `768×1024`, and `1024×768`.
-- **Responsive asset delivery:** All `<SpecimenMedia>` and hero `<picture>` elements serve mobile-optimized `800w` `*-sm.webp` assets (`30–79 KB`) under `(max-width: 760px)` rather than full `1600w` desktop textures.
-- **Data tables (`.fds-table-wrap`):** Model card specs, evaluation registers, release SHA-256 ledgers, and public status tables wrap inside horizontally scrollable bordered containers so wide hashes and version strings never break mobile page width.
-- **Bottom-right Kayla Copilot clearance:** Footer bottom padding reserves vertical clearance (`padding-bottom: 4rem` under `700px`) so legal links and colophon are never obscured by the circular Kayla launcher button.
+> **Test Environment:** Production static build (`dist/`) inspected in headless Google Chrome via Playwright across 8 viewport widths (`360px` to `2560px`) + Playwright mobile/zoom Kayla suite (`320px`, `360px`, `390px`, `430px`, keyboard-open simulation, and 200% zoom/text scaling)
+> **Date:** 2026-11-26
+> **Verdict:** **PASS — 0 px Horizontal Overflow Across All 144 Viewport-Route Pairs · 0 Mobile WCAG 2.2 AA Violations**
 
 ---
 
-## 2. Mobile Navigation Drawer Fix & Verification
+## 1. Eight-Viewport Responsive Matrix (18 Key Routes × 8 Viewports = 144 Checks)
 
-During Round 1 screenshot review (`after-home-390x844-menu-open.png`), opening the mobile drawer revealed that `.site-header`'s `backdrop-filter` created a containing block that clipped `#site-navigation` to the sticky header's `67px` height.
+Routes tested at every viewport: `/`, `/models/`, `/models/alexandrite/`, `/models/hackmanite/`, `/models/cinnabar/`, `/products/jaspilite/`, `/products/battleverse/`, `/products/battleverse/arena/`, `/products/battleverse/creator-studio/`, `/solutions/`, `/solutions/enterprise-private-ai/`, `/research/project-forge/`, `/studio/state-lines/`, `/contact/`, `/developers/`, `/evaluations/`, `/trust/`, `/downloads/`.
 
-**Fix verified in Round 2:**
-- Moved `backdrop-filter: blur(18px) saturate(125%)` to `.site-header::before` pseudo-element.
-- Set `height: calc(100dvh - var(--header-height)); z-index: 200;` on mobile `.nav-links`.
-- Re-captured `after-home-390x844-menu-open.png` and confirmed:
-  - `.mobile-menu-btn` toggles `aria-expanded="true"` / `"false"` accurately and animates hamburger to close icon.
-  - All 6 institutional accordion sections (`Models`, `Products`, `Research`, `Developers`, `Studio`, `Company`), GitHub icon link, and `Releases` CTA render cleanly inside the obsidian full-height drawer with comfortable tap targets (`>= 44px`).
+| Viewport | Device Class | Routes Checked | Max Horizontal Overflow | Overflowing Routes | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `360×800` | Compact Android mobile | 18 | **0 px** | 0 | **PASS** |
+| `390×844` | Modern iPhone / mobile (`2x` DPR) | 18 | **0 px** | 0 | **PASS** |
+| `768×1024` | Portrait tablet | 18 | **0 px** | 0 | **PASS** |
+| `1024×768` | Landscape tablet / small laptop | 18 | **0 px** | 0 | **PASS** |
+| `1280×800` | Standard laptop | 18 | **0 px** | 0 | **PASS** |
+| `1440×900` | Primary desktop | 18 | **0 px** | 0 | **PASS** |
+| `1920×1080` | Full HD desktop | 18 | **0 px** | 0 | **PASS** |
+| `2560×1440` | Ultrawide / QHD monitor | 18 | **0 px** | 0 | **PASS** |
 
 ---
 
-## 3. Touch Targets, Typography & Interactive Controls on Small Screens
+## 2. Mobile Navigation, Touch Targets & Visual Inspection (`390×844` @ 2x)
 
-- **Fluid display typography:** `<h1>` scales down gracefully from `64.8px` (`1920px`) to `37.6px` (`360px`–`768px`) with legible `16px` base prose and zero cramped wrapping.
-- **Interactive components on mobile:**
-  - `EcosystemGraph`: stacks cleanly into single-column node list + live inspector below.
-  - `JaspiliteWorkbench`: `Auto | Meld | Solo` tablist stays accessible with full-width stacked spec rows.
-  - `Docs`: sticky TOC collapses cleanly above searchable documentation cards; search input fills width comfortably.
-  - `Downloads`: SHA-256 strings wrap safely via `word-break: break-all` alongside accessible `Copy` buttons.
+Directly inspected captures (`22-mobile-home-hero-v2.png` through `26-mobile-contact-composer.png`):
+- **Mobile Header & Drawer (`22`, `23`):** Clean single-row header transitioning below `1180px` (`desktopQuery` aligned to `min-width: 1181px`); full-screen obsidian mobile drawer lists all 7 institutional pillars (`Models`, `Products`, `Solutions`, `Research`, `Developers`, `Studio`, `Company`) with full-width tap rows and `GitHub` / `Releases` / `Contact FDS` controls cleanly separated from the floating Kayla launcher.
+- **Commercial Pages on Mobile (`24-mobile-solutions.png`, `25-mobile-battleverse-arena.png`, `26-mobile-contact-composer.png`):** Typography wraps comfortably without orphan clipping, CTA buttons stack cleanly with full-width touch targets, and the `Commercial Honesty Boundary` callout and `Commercial Inquiry Composer` remain readable without overlap.
+- **Mobile Scrollable Tables:** Every wide comparison table (including `/solutions/` 5-layer customization matrix) scrolls horizontally inside a keyboard-focusable `.fds-table-wrap` (`tabindex="0" role="region"`) without stretching document width (`0px` page overflow).
+
+---
+
+## 3. Extreme Small-Screen, Virtual Keyboard & 200% Zoom Verification
+
+Executed via Playwright Chromium suite (`test/e2e/kayla-phase13-mobile-zoom.spec.ts` — **6/6 PASS**):
+- `320px × 568px` → keyboard-open `320px × 300px`: PASS
+- `360px × 640px` → keyboard-open `360px × 320px`: PASS
+- `390px × 700px` → keyboard-open `390px × 340px`: PASS
+- `430px × 750px` → keyboard-open `430px × 360px`: PASS
+- `200%` browser zoom & `200%` root text scaling: PASS (no Kayla-induced page overflow, composer operable, dialog closes cleanly)
+- Mobile WCAG 2.2 AA Axe scans across `/`, `/solutions/`, `/solutions/enterprise-private-ai/`, `/models/hackmanite/`, `/products/battleverse/arena/`, and `/contact/`: **0 violations**.

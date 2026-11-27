@@ -22,7 +22,7 @@ Before promoting any technology status in `content/public-status/registry.json` 
 
 - [ ] **Owner Approval:** Explicit owner sign-off for any public release, benchmark export, pricing, platform commitment, or production deployment.
 - [ ] **Exact Versioning:** Exact model lineage/checkpoint ID or software semantic version + Git commit SHA recorded.
-- [ ] **Evaluation Completeness (if publishing scores):** All 10 required fields populated — model version, benchmark version, test count (`n`), evaluation conditions, raw result, guarded result, comparison baseline, uncertainty interval, known limitations, and date.
+- [ ] **Evaluation Completeness (if publishing scores):** All 11 required fields populated — model name & version, base-model identity, benchmark name & version, evaluation date, test count (`n`), evaluation conditions, raw result, guarded result, comparison baseline, uncertainty interval, and known limitations.
 - [ ] **Binary Integrity (if publishing downloads):** Exact byte size, OS/architecture, signing posture (explicitly noting unsigned prereleases / SmartScreen warnings), and verified 64-character SHA-256 digest.
 - [ ] **Media Honesty Labeling:** Concept art explicitly labeled `Concept Art — Work in Progress (Not Gameplay)`; illustrative diagrams labeled as architecture schematics, never disguised as live application screenshots or gameplay captures.
 - [ ] **Zero Private Leakage:** Verified zero internal paths, local hostnames, API secrets, private cloud folder structures, or unreleased plot spoilers.
@@ -33,11 +33,11 @@ Before promoting any technology status in `content/public-status/registry.json` 
 ## 3. Prohibited Claims & Patterns
 
 - Never fabricate benchmark leaderboards, aggregate unrelated scores into synthetic indices, or claim to outperform named frontier models without valid owner-approved comparative evidence.
-- Never claim open-weight foundation availability (`Qwen/Qwen3.8-27B`, `openai/gpt-oss-120b`) as completed FDS fine-tuning.
+- Never claim open-weight foundation availability (`Qwen/Qwen3.8-27B` Apache-2.0, `openai/gpt-oss-120b` Apache-2.0) as completed FDS fine-tuning.
 - Never present Cinnabar Oracle text models as native video/animation generators or display unauthorized copyrighted anime/manga franchise artwork.
-- Never present Forge BattleVerse probabilistic simulation outputs as objective canonical truth.
-- Never publish fake API key generators, fake hosted inference playgrounds, fake commercial checkout flows, or unverified `SOC 2` / `ISO 27001` / `HIPAA` badges.
-- Never use obsolete mode names for Jaspilite — only owner-approved **`Auto`**, **`Meld`**, and **`Solo`**.
+- Never present Forge BattleVerse (`Arena` or `Creator Studio`) as the name of the Cinnabar model family, and never present probabilistic simulation outputs as objective canonical truth.
+- Never publish unapproved internal tier pricing, speculative revenue projections, fake API key generators, fake hosted inference playgrounds, fake commercial checkout flows, or unverified `SOC 2` / `ISO 27001` / `HIPAA` badges.
+- Never use obsolete mode names for Jaspilite — only owner-approved **`Auto`**, **`Meld`**, and **`Solo`** with the 5-tier provider maturity ladder.
 
 ---
 

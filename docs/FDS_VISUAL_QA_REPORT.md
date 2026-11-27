@@ -1,51 +1,37 @@
-# Forger Digital Solutions — Visual Quality Assurance Report
+# FDS Visual QA Report — Operation Digital Forge II
 
-**Audit Date:** 2026-11-26  
-**Browser Engine:** Headless Google Chrome via Playwright serving static production `dist/`  
-**Viewports Verified (8):** `360×800`, `390×844`, `768×1024`, `1024×768`, `1280×800`, `1440×900`, `1920×1080`, `2560×1440` + `prefers-reduced-motion: reduce`  
-**Routes Audited (20):** `/`, `/models/`, `/models/alexandrite/`, `/models/hackmanite/`, `/models/cinnabar/`, `/model-cards/`, `/products/jaspilite/`, `/products/battleverse/`, `/research/project-forge/`, `/studio/state-lines/`, `/evaluations/`, `/trust/`, `/developers/`, `/docs/`, `/downloads/`, `/news/`, `/company/`, `/contact/`, `/projects/forge-control/`, `/404.html`
-
----
-
-## 1. Art Direction & Visual Identity Verification
-
-Per explicit owner art-direction feedback during Operation Digital Forge, literal gemstone, rock, and laboratory-hardware photographs were removed and replaced with bespoke AI-research, software-engineering, 3D game-engine, original animation-craft, and prestige cinema imagery:
-
-- **Hero (`hero-manifold.webp`):** Converging emerald/violet computational manifold on obsidian canvas; headline *"Specialized intelligence. Extraordinary worlds."* sits cleanly on two lines at `1440×900` with studio creed and 4-division rail visible above the fold.
-- **Alexandrite (`alexandrite-architecture.webp`):** Multi-domain neural architecture graph with emerald/violet accents.
-- **Hackmanite (`hackmanite-gamedev.webp`):** Split UV-purple 3D game-engine topology wireframe and realistic PBR environment render (`GAME-DEVELOPMENT PIPELINE CONCEPT — NOT MODEL OUTPUT`).
-- **Cinnabar (`cinnabar-animation.webp`):** Original hand-drawn manga storyboard panels transitioning into a finished atmospheric anime keyframe (`ORIGINAL CREATIVE PRODUCTION CONCEPT — NOT MODEL OUTPUT`; zero copyrighted franchise IP).
-- **Jaspilite (`JaspiliteWorkbench.astro`):** Interactive vector/HTML black-and-crimson orchestration architecture explorer switching cleanly across **`Auto`**, **`Meld`**, and **`Solo`** modes without fabricated desktop UI screenshots.
-- **Forge BattleVerse (`battleverse-combat-sim.webp`):** Original armored silhouettes overlaid with cobalt physics vectors and Gaussian probability envelopes (`ILLUSTRATIVE SIMULATION CONCEPT — ORIGINAL FDS SILHOUETTES`).
-- **Project Forge (`ProjectForgeGraph.astro`):** Bespoke molten-amber 8-stage Research-to-Capability vector pipeline with Provenance & Rights Clearance Gate.
-- **State Lines (`state-lines-concept.webp`):** Prestige charcoal/aged-gold NY/NJ/PA industrial bridge dusk concept art paired with `Instrument Serif` display typography and explicit `Concept Art — Work in Progress (Not Gameplay)` disclosure.
+> **Test Environment:** Production static build (`dist/`, 69 routes) served locally via `astro preview` and inspected in headless Google Chrome (`/usr/bin/google-chrome`) via Playwright
+> **Date:** 2026-11-26
+> **Scope:** 35 major routes audited at `1440×900`, 8 viewports (`360px`–`2560px`) × 18 key routes (`144` viewport-route pairs), `prefers-reduced-motion: reduce`, and 26 full/above-the-fold visual review captures inspected directly by the execution agent.
+> **Verdict:** **PASS — 0 Visual Defects Remaining · 0 Broken Images · 0 Overflows · 0 Console Errors**
 
 ---
 
-## 2. Iterative Visual Defects Found & Fixed During Real-Browser QA
+## 1. Visual Inspection Scoreboard
 
-| Defect Found in Round 1 Screenshot Inspection | Root Cause | Resolution Applied & Verified in Round 2 |
-|---|---|---|
-| Mobile navigation drawer clipped to ~66px height when open at `390×844` | `backdrop-filter: blur(...)` on `.site-header` created a CSS containing block trapping `position: fixed` child `#site-navigation` | Moved `backdrop-filter` to `.site-header::before` pseudo-element and set explicit `height: calc(100dvh - var(--header-height))`; verified full-height drawer showing all 6 domains + GitHub + Releases |
-| `VISITORS` counter pill floated above the homepage announcement strip, pushing the hero down | `<VisitorCounter />` mounted at top of `index.astro` before `.announce-strip` | Relocated `<VisitorCounter />` into the quiet closing independent-support strip; hero and 4-division rail now frame cleanly above the `1440×900` fold |
-| Hero `<h1>` wrapped onto 4 lines at `1440×900` | Narrow `.hero__inner` (`44rem`) and oversized clamp ceiling (`4.4rem`) | Adjusted `.hero__inner` to `52rem` and `.hero__title` to `clamp(2.35rem, 4.4vw, 4.05rem)`; headline renders crisply across 2 balanced lines |
-| `/news/` category filter did not visually hide filtered rows | `.fds-ledger__row { display: grid; }` overrode browser default `[hidden]` | Added global `[hidden] { display: none !important; }` rule in `src/styles/global.css`; verified `/news/` `Releases` filter reduces 5 rows -> 1 visible row |
-| Cinnabar, Jaspilite, and 404 accent text dipped slightly under 4.5:1 WCAG AA contrast | `#E04338`, `#DC2626`, and `#2C64D8` small uppercase text on `#101217`/`#171A20` | Raised text-safe tokens to `#F26A5E`, `#F87171`, and `#6FA0FF` (`global.css` + `DESIGN.md`); verified **0 axe-core violations across all 20 routes** |
+| Metric | Measured Result | Target | Status |
+| :--- | :---: | :---: | :---: |
+| Desktop routes audited (`1440×900`) | **35 / 35** (HTTP 200) | 100% | PASS |
+| Broken images (`naturalWidth === 0`) | **0** | 0 | PASS |
+| Horizontal overflow across 144 viewport-route checks | **0 px** (0 routes) | 0 | PASS |
+| Browser console & page runtime errors | **0** | 0 | PASS |
+| Reduced-motion hidden sections (`opacity: 0`) | **0** across 5 key routes | 0 | PASS |
+| Visual review captures inspected | **26** desktop + mobile + interactive | Full coverage | PASS |
 
 ---
 
-## 3. Automated Visual & Rendering Integrity Matrix (Round 2)
+## 2. Visual Defects Found & Remediated During Real-Browser QA
 
-| Viewport | Overflow (px) | Broken Images | Console Errors | Header Height | `<h1>` Computed Size |
-|---|---:|---:|---:|---:|---:|
-| `360×800` | `0` | `0` | `0` | `67px` | `37.6px` |
-| `390×844` | `0` | `0` | `0` | `67px` | `37.6px` |
-| `768×1024` | `0` | `0` | `0` | `67px` | `37.6px` |
-| `1024×768` | `0` | `0` | `0` | `67px` | `45.1px` |
-| `1280×800` | `0` | `0` | `0` | `67px` | `56.3px` |
-| `1440×900` | `0` | `0` | `0` | `67px` | `63.4px` |
-| `1920×1080` | `0` | `0` | `0` | `67px` | `64.8px` |
-| `2560×1440` | `0` | `0` | `0` | `67px` | `64.8px` |
+Real-browser visual and automated QA caught and fixed three concrete defects prior to final build lock:
+1. **Hackmanite Ultraviolet Contrast on `#171A20` Panels (`/models/hackmanite/`):** Initial `#A855F7` `.offering-idx` text measured `4.4:1` on `#171A20` (0.1 below WCAG AA `4.5:1`). Upgraded `--accent-hackmanite` in [`src/styles/global.css`](../src/styles/global.css) to `#BE7EFF` (`6.27:1` on `#171A20`, `7.37:1` on `#08090C`) and synchronized `DESIGN.md` & `BRAND_GUIDELINES.md`. Re-verified visually in `08-hackmanite-v2.png` and via Axe (`0` violations).
+2. **Header JS/CSS Breakpoint Drift (`src/components/Header.astro`):** Aligned `desktopQuery` JavaScript media query from `(min-width: 1081px)` to `(min-width: 1181px)` to match the `1180px` CSS responsive breakpoint introduced for the 7-pillar desktop header (`Models · Products · Solutions · Research · Developers · Studio · Company`).
+3. **Scrollable Data Table Focus Indicator:** Added `tabindex="0" role="region" aria-label="Scrollable data table"` across all 17 `.fds-table-wrap` wrappers plus a crisp `2px solid var(--color-brand-cobalt-bright)` `:focus-visible` outline in `src/styles/global.css`.
 
-- **All 20 audited routes:** `0` broken images (`naturalWidth > 0`), `0` console errors, `0` uncaught page errors, `0` failed static asset requests.
-- **Reduced Motion (`prefers-reduced-motion: reduce`):** Verified `0px` overflow and clean static rendering.
+---
+
+## 3. Direct Visual Inspection Summary Across Key Surfaces
+
+- **Homepage (`01-home-hero-v2.png`, `02-home-full-v2.png`):** Single-row 7-pillar header (`Models · Products · Solutions · Research · Developers · Studio · Company`) + GitHub icon + `Releases` + `Contact FDS` fits comfortably at `1440px` with zero wrap; commercial hero CTAs (`Explore Our Models →`, `Studio & Enterprise Solutions`, `Discover Our Research`) anchor cleanly above the 4-division ledger; retained heritage slogan `Build the tools. Build the worlds.` remains intact.
+- **Solutions Mega-Menu (`20-nav-solutions-megamenu.png`) & Hub (`03-solutions-hub.png`, `04-solutions-gaming-studios.png`, `05-solutions-enterprise.png`):** Obsidian architectural panel cleanly presents all 6 audience pathways with selective mineral indicators, custom `solutions-studio-workforce.webp` artwork, 3 Primary Markets, and 5 Customization Layers table.
+- **Flagship Model & Product Pages (`07`–`15`):** `Alexandrite` 7-stage convergence explorer, `Hackmanite` 5 offerings + 10-role workforce explorer, `Cinnabar` 8-role creative workforce + 17 R&D domains, `Jaspilite` `Auto / Meld / Solo` + 5-tier provider maturity ladder + `jaspilite-orchestration.webp`, `BattleVerse Arena` original-silhouette illustrative showcase (`Aegis` vs `Vesper`), `BattleVerse Creator Studio` with `battleverse-creator-studio.webp`, `Project Forge` 11-stage / 8-gate schematic + 15 divisions + `project-forge-lab.webp`, and `State Lines` prestige serif hero + widescreen `Concept Art — Work in Progress (Not Gameplay)` all verified visually with crisp spacing, balanced contrast, and zero clipping.
+- **Commercial Inquiry Composer (`17-contact-composer.png`) & Kayla Copilot (`21-kayla-commercial-answer.png`):** `?track=enterprise` pre-highlights `"Enterprise & Private AI Solutions"` and updates the `mailto:forgerdigisolsupport@gmail.com` link dynamically; Kayla Copilot renders grounded commercial responses and direct action links cleanly inside its obsidian drawer.

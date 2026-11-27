@@ -1,42 +1,40 @@
-# Forger Digital Solutions — Accessibility Compliance Report (WCAG 2.2 AA)
+# FDS Accessibility Verification Report (WCAG 2.2 AA) — Operation Digital Forge II
 
-**Audit Date:** 2026-11-26  
-**Tooling:** `@axe-core/playwright` (`wcag2a`, `wcag2aa` rulesets) across **20 rendered static routes** + automated Playwright keyboard & ARIA assertions
-
----
-
-## 1. Audit Summary (Round 1 -> Round 2)
-
-| Metric | Round 1 Scan | Round 2 Scan (Final) |
-|---|---:|---:|
-| Routes audited with axe-core | 20 | **20** |
-| Critical violations | 0 | **0** |
-| Serious violations | 12 | **0** |
-| Moderate / Minor violations | 0 | **0** |
-| **Total WCAG 2.2 A/AA violations** | **12** | **0** |
+> **Audit Engine:** `@axe-core/playwright` (`axe-core 4.13`) targeting tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`
+> **Browsers Verified Locally:** Headless Google Chrome (`1440×900` desktop + `390×844` mobile + `prefers-reduced-motion: reduce` + forced-colors + keyboard-only navigation)
+> **Date:** 2026-11-26
+> **Final Verdict:** **PASS — 0 Accessibility Violations Across 35 Desktop Routes, 6 Mobile Routes, and All 10 Kayla Accessibility States**
 
 ---
 
-## 2. Specific Defects Remediated Between Round 1 & Round 2
+## 1. Automated Axe-Core WCAG 2.2 AA Audit Summary
 
-1. **Color Contrast (WCAG 1.4.3 — 4.5:1 minimum for normal text):**
-   - Raised `--accent-cinnabar` from `#E04338` to `#F26A5E` (~6.0:1 on `#101217`, ~5.6:1 on `#171A20`).
-   - Raised `--accent-jaspilite` from `#DC2626` to `#F87171` (~6.5:1 on `#101217`, ~5.9:1 on `#171A20`).
-   - Updated `/404.html` `.notfound-code` from `#2C64D8` to `var(--color-accent-bright)` (`#6FA0FF`, ~7.6:1 on `#08090C`).
-2. **Non-Color Link Distinction in Prose (WCAG 1.4.1 — `link-in-text-block`):**
-   - Added subtle persistent underlines (`text-decoration: underline; text-underline-offset: 0.2em; text-decoration-color: rgba(111, 160, 255, 0.58)`) on all inline links inside paragraphs, callouts, documentation bodies, and page descriptions while keeping button/navigation/card links visually clean.
+| Audit Suite | Scope | Violations Before Fix | Violations After Remediation | Status |
+| :--- | :--- | :---: | :---: | :---: |
+| Production Desktop Axe (`1440×900`) | 35 major routes (all flagships, Solutions + 6 audience pages, Arena/Creator Studio, Contact, Developers, Trust, Evaluations, Docs, Legacy) | 1 (`color-contrast` on `/models/hackmanite/`) | **0** | **PASS** |
+| Production Mobile Axe (`390×844`) | 6 high-density commercial & interactive routes (`/`, `/solutions/`, `/solutions/enterprise-private-ai/`, `/models/hackmanite/`, `/products/battleverse/arena/`, `/contact/`) | 2 (`scrollable-region-focusable` on `/solutions/`, `color-contrast` on `/models/hackmanite/`) | **0** | **PASS** |
+| Playwright Kayla A11y Spec (`kayla-phase13-a11y.spec.ts`) | 10 tests: closed, open empty, populated transcript, loading, error, rate-limited, mobile, reduced-motion, full keyboard-only journey, plus negative low-contrast detector guard | 0 | **0 (10/10 PASS)** | **PASS** |
+| Playwright Forced-Colors Spec (`kayla-phase13-forced-colors.spec.ts`) | High-contrast Windows forced-colors mode operability | 0 | **0 (PASS)** | **PASS** |
 
 ---
 
-## 3. Keyboard, Landmark, ARIA & Reduced-Motion Verification
+## 2. Remediations Completed in Operation Digital Forge II
 
-- **Skip Navigation:** Every page renders `<a class="skip-link" href="#main-content">Skip to main content</a>` as the first focusable element.
-- **Visible Focus Indicators:** Global `:focus-visible` rule renders a `2px solid #6FA0FF` outline with `3px` offset across links, buttons, tabs, inputs, and `<summary>` elements.
-- **Document Semantics:** Single `<h1>` verified on all 20 audited routes (`h1Count: 1`), semantic `<header>`, `<nav aria-label>`, `<main id="main-content">`, `<footer>`, breadcrumb `<nav aria-label="Breadcrumb">`, and proper `<th scope="col|row">` headers on all data tables.
-- **Interactive Widget ARIA Patterns:**
-  - `Header.astro`: Desktop mega-menus and mobile menu expose `aria-expanded` and `aria-controls`; Escape closes open menus cleanly.
-  - `EcosystemGraph.astro`: All 7 flagship node buttons support Tab focus, click/Enter activation, `aria-pressed`, and update an `aria-live="polite"` inspector panel, plus a full `<noscript>` fallback directory.
-  - `JaspiliteWorkbench.astro`: Implements proper `role="tablist"`, `role="tab"` (`aria-selected`, `aria-controls`), and `role="tabpanel"` (`aria-labelledby`).
-  - `docs/index.astro`: Live result count updates via `aria-live="polite"`; search input carries a screen-reader `<label class="sr-only">`.
-  - `news/index.astro`: Category filter buttons expose `aria-pressed="true|false"`.
-- **Reduced Motion (`prefers-reduced-motion: reduce`):** Decorative pulse/transition animations respect user reduced-motion preference with zero loss of readability or layout stability.
+1. **WCAG 2.2 AA Color Contrast Remediation (`#A855F7` → `#BE7EFF`):**
+   - *Finding:* `.offering-idx` numeric badges on `/models/hackmanite/` measured `4.4:1` contrast (`#A855F7` on `#171A20`), 0.1 below WCAG AA `4.5:1`.
+   - *Fix:* Upgraded `--accent-hackmanite` in [`src/styles/global.css`](../src/styles/global.css) to `#BE7EFF` (**6.27:1** on `#171A20`, **7.37:1** on `#08090C`), preserving the tenebrescent ultraviolet aesthetic while comfortably exceeding AA on every surface.
+2. **Keyboard-Focusable Scrollable Table Regions (`scrollable-region-focusable`):**
+   - *Finding:* Horizontal overflow table containers (`.fds-table-wrap`) on narrow mobile viewports required keyboard focusability for Safari/WebKit and keyboard-only users.
+   - *Fix:* Added `tabindex="0" role="region" aria-label="Scrollable data table"` across all 17 `.fds-table-wrap` elements site-wide and added a visible `2px solid var(--color-brand-cobalt-bright)` `:focus-visible` outline in `src/styles/global.css`.
+
+---
+
+## 3. Interactive Component & Motion Accessibility Verification
+
+- **ARIA Tablists & Live Regions Verified in Real Browser:**
+  - `AlexandriteArchitecture.astro`: 7-stage `role="tab"` switcher updates `aria-selected` and `aria-live="polite"` panel cleanly (`STAGE 05 / 07` verified).
+  - `SpecialistWorkforceExplorer.astro`: Hackmanite 10-role & Cinnabar 8-role `role="tab"` switchers update `aria-selected` and inspector details cleanly.
+  - `BattleVerseArenaDemo.astro`: Scenario tablist switches cleanly between original FDS silhouette comparisons.
+  - `CommercialInquiryBuilder.astro`: Track buttons expose `aria-pressed`, explicit `<label for="...">` bindings on every input, and deterministic `mailto:` / clipboard controls.
+- **Heading Hierarchy:** Verified **35/35** audited routes contain strictly one `<h1>` (`bad_h1: []`) with structured `h1 → h2 → h3` ordering.
+- **`prefers-reduced-motion: reduce`:** Verified **0** sections trapped at `opacity: 0` across `/`, `/solutions/`, `/models/alexandrite/`, `/products/battleverse/arena/`, and `/research/project-forge/`.

@@ -1,50 +1,48 @@
-# Forger Digital Solutions — Performance & Asset Efficiency Report
+# FDS Performance & Asset Optimization Report — Operation Digital Forge II
 
-**Audit Date:** 2026-11-26  
-**Build Target:** Astro 7 Static Site (`dist/`, 60 pages built in `3.06s`)
-
----
-
-## 1. Measurement Boundary Disclosure
-
-All runtime timings below were measured locally in headless Google Chrome (`1440×900`) against the built production `dist/` directory served over localhost. **These are local synthetic lab measurements, NOT real-user field Core Web Vitals (CrUX / RUM).** Real-user performance depends on visitor network latency, GitHub Pages CDN caching, and client device hardware.
+> **Test Environment:** Production static Astro 7 build (`dist/`, 69 static HTML pages) served locally via `astro preview` and profiled in headless Google Chrome (`1440×900`) via browser Performance API (`navigation`, `paint`, `resource` entries)
+> **Date:** 2026-11-26
+> **Disclosure:** Timings below are **local synthetic lab measurements** on the static `dist/` build inside the Linux VM (zero external CDN latency). Production GitHub Pages CDN timings depend on user geography and network conditions.
 
 ---
 
-## 2. Synthetic Homepage Load Measurements (Local Production `dist/`)
+## 1. Production Build & Static Footprint
 
-| Metric | Measured Value (Synthetic Local) | Notes |
-|---|---:|---|
-| `DOMContentLoaded` | `233 ms` | Static HTML + bundled CSS |
-| `loadEventEnd` | `256 ms` | Includes critical fonts & hero image |
-| First Contentful Paint (FCP) | `388 ms` | Self-hosted Fontsource fonts; zero external font round-trips |
-| Largest Contentful Paint (LCP) | `388 ms` | `hero-manifold.webp` pre-prioritized via `loading="eager"` + `fetchpriority="high"` |
-| Total Network Requests (Initial Load) | `15` | Zero third-party ad/analytics scripts |
-| Total Homepage Transfer (uncompressed local HTTP) | `1,599 KB` | Over GitHub Pages Brotli/gzip compression, text & font payloads drop substantially |
-
----
-
-## 3. Production Asset & Bundle Breakdown (`dist/`)
-
-- **Total built static site (`dist/` across 60 pages + legacy media + ZIP archive):** `12 MB`
-- **Global & Homepage CSS (uncompressed):**
-  - `BaseLayout.*.css`: `42 KB`
-  - `index.*.css`: `22 KB`
-- **Client JavaScript:** Zero heavy SPA framework runtime (no React/Vue/Next hydration payload on content pages). Interactive islands (`Header`, `EcosystemGraph`, `JaspiliteWorkbench`, `Docs` search, `News` filter) use lightweight vanilla TypeScript; `KaylaCopilot` script bundle is `66 KB` uncompressed.
-- **Self-Hosted Webfonts:** `Inter Variable`, `Space Grotesk Variable`, `JetBrains Mono Variable`, and `Instrument Serif` served directly from `_astro/` — eliminating external DNS lookups, TLS handshakes, and layout jitter from third-party CDNs.
+| Metric | Operation Digital Forge I | Operation Digital Forge II | Notes |
+| :--- | :---: | :---: | :--- |
+| Built static HTML pages | 60 | **69** (`+9`) | Added `/solutions/`, 6 audience pages, `/products/battleverse/arena/`, `/products/battleverse/creator-studio/` |
+| Full `astro build` time | ~3.5s | **3.57s – 3.79s** | Pure static HTML + Vite bundling |
+| Total `dist/` directory footprint | — | **14 MB** | Includes preserved `CodeForge-source-6b0770b.zip` (~2.5 MB) and self-hosted `@fontsource` fonts |
+| All 10 dual-width WebP pairs (`public/images/forge/`, 20 files) | 6 pairs (12 files) | **10 pairs (20 files) = 1.8 MB total** | Desktop `1600px` (`43–221 KB`) + mobile `800px` `-sm.webp` (`20–82 KB`) |
+| Third-party font / tracker / analytics requests | 0 | **0** | 100% self-hosted fonts & zero behavioral trackers |
 
 ---
 
-## 4. Optimized Image Pipeline (`public/images/forge/`)
+## 2. Local Synthetic Page Load Profile (Headless Chrome on `dist/`)
 
-All 6 custom marketing/concept visuals ship as dual-resolution WebP (`1600w` desktop + `800w` mobile via `<picture><source media="(max-width: 760px)">`) with explicit `width`/`height` attributes to prevent Cumulative Layout Shift (CLS):
+| Route | DOMContentLoaded | Load Event | First Contentful Paint (FCP) | Resource Requests | Total Transfer Size |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `/` (Homepage) | `474 ms` | `559 ms` | `672 ms` | 18 | `1,867.1 KB` |
+| `/solutions/` | `140 ms` | `177 ms` | `256 ms` | 9 | `969.5 KB` |
+| `/solutions/gaming-studios/` | `124 ms` | `170 ms` | `260 ms` | 8 | `863.4 KB` |
+| `/solutions/enterprise-private-ai/` | `135 ms` | `184 ms` | `248 ms` | 8 | `863.3 KB` |
+| `/models/` | `166 ms` | `225 ms` | `276 ms` | 11 | `1,338.0 KB` |
+| `/models/alexandrite/` | `160 ms` | `214 ms` | `344 ms` | 10 | `969.0 KB` |
+| `/models/hackmanite/` | `149 ms` | `197 ms` | `284 ms` | 9 | `1,018.4 KB` |
+| `/models/cinnabar/` | `155 ms` | `209 ms` | `328 ms` | 10 | `1,109.8 KB` |
+| `/products/jaspilite/` | `136 ms` | `185 ms` | `288 ms` | 9 | `909.9 KB` |
+| `/products/battleverse/` | `160 ms` | `220 ms` | `320 ms` | 12 | `1,231.0 KB` |
+| `/products/battleverse/arena/` | `125 ms` | `176 ms` | `240 ms` | 10 | `885.0 KB` |
+| `/products/battleverse/creator-studio/` | `128 ms` | `188 ms` | `264 ms` | 10 | `1,089.7 KB` |
+| `/research/project-forge/` | `142 ms` | `193 ms` | `280 ms` | 9 | `967.4 KB` |
+| `/studio/state-lines/` | `128 ms` | `187 ms` | `268 ms` | 11 | `1,001.1 KB` |
 
-| Asset | Desktop (`1600w`) | Mobile (`800w`) | Loading Strategy |
-|---|---:|---:|---|
-| `hero-manifold.webp` | `154 KB` | `52 KB` | `eager` + `fetchpriority="high"` |
-| `alexandrite-architecture.webp` | `101 KB` | `30 KB` | `lazy` on home, `eager` on Alexandrite page |
-| `hackmanite-gamedev.webp` | `150 KB` | `47 KB` | `lazy` on home, `eager` on Hackmanite page |
-| `cinnabar-animation.webp` | `221 KB` | `79 KB` | `lazy` on home, `eager` on Cinnabar page |
-| `battleverse-combat-sim.webp` | `140 KB` | `47 KB` | `lazy` on home, `eager` on BattleVerse page |
-| `state-lines-concept.webp` | `95 KB` | `36 KB` | `lazy` on home, `eager` on State Lines page |
-| **Total (`12` files)** | **`861 KB`** | **`291 KB`** | **Combined `1.2 MB`** |
+*(Note: Most of the ~863 KB baseline transfer across inner pages is the shared self-hosted variable font subset, cached once by the browser after initial visit.)*
+
+---
+
+## 3. Image & Script Discipline
+
+- **Zero Client-Side Framework Hydration Bloat:** All four new interactive Operation Digital Forge II components (`AlexandriteArchitecture`, `SpecialistWorkforceExplorer`, `BattleVerseArenaDemo`, `CommercialInquiryBuilder`) execute with tiny vanilla TypeScript/DOM scripts (`< 3 KB` each), adding zero React/Vue runtime overhead.
+- **Responsive Dual-Width WebP Delivery:** Every bespoke visual asset under `public/images/forge/` ships a mobile `800px` `-sm.webp` variant (as light as `20 KB` for `jaspilite-orchestration-sm.webp` and `37 KB` for `solutions-studio-workforce-sm.webp`) paired with `loading="lazy"` on below-the-fold frames and `loading="eager"` only on hero specimens.
+- **Cloudflare Worker Bundle:** `worker/` compiles cleanly via `wrangler deploy --dry-run` to `425.22 KiB` total (`111.36 KiB` gzipped), comfortably within Cloudflare Workers free-tier limits.

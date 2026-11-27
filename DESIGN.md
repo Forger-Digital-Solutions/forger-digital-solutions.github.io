@@ -1,7 +1,7 @@
 # DESIGN.md — Forger Digital Solutions Permanent Website Design Governance
 
 > **Authority:** Permanent design-system specification for `forgerdigitalsolutions.com`. Every human contributor and coding agent modifying this repository MUST read and obey this file before authoring or revising any page, component, or stylesheet.
-> **Last verified:** 2026-11-26 (Operation Digital Forge)
+> **Last verified:** 2026-11-26 (Operation Digital Forge II)
 
 ---
 
@@ -18,7 +18,7 @@ This specification operates as a three-part system:
 
 ## 2. Visual Identity Thesis: Scientific-Industrial Obsidian
 
-Forger Digital Solutions is an independent AI research laboratory, specialized model developer, autonomous software engineering company, and original entertainment studio.
+Forger Digital Solutions is an independent AI research laboratory, commercial AI technology provider, specialized model developer, autonomous software engineering company, and original entertainment studio.
 
 Our visual language combines:
 - **Architectural restraint** (Linear, Vercel, Anthropic): razor-crisp hairline rules, disciplined dark luminance steps, generous negative space, and full-width data tables where evidence belongs.
@@ -57,7 +57,7 @@ Accents are **strictly scoped** via `data-accent="..."` or CSS custom property `
 | Flagship | Primary Accent | Secondary / Shift Tone | Soft Tint Surface |
 | :--- | :--- | :--- | :--- |
 | **Alexandrite** | `#10B981` (Emerald) | `#8B5CF6` (Violet) / `#9F1239` (Deep Pleochroic Plum) | `rgba(16, 185, 129, 0.08)` |
-| **Hackmanite** | `#A855F7` (Ultraviolet) | `#EC4899` (Tenebrescent Magenta) / `#60A5FA` (Cobalt) | `rgba(168, 85, 247, 0.08)` |
+| **Hackmanite** | `#BE7EFF` (Ultraviolet — WCAG AA text-safe) | `#EC4899` (Tenebrescent Magenta) / `#60A5FA` (Cobalt) | `rgba(168, 85, 247, 0.08)` |
 | **Cinnabar** | `#F26A5E` (Vermilion — WCAG AA text-safe) | `#E0824F` (Copper) / `#F97316` (Ember) | `rgba(224, 67, 56, 0.08)` |
 | **Jaspilite** | `#F87171` (Banded Crimson — WCAG AA text-safe) | `#CBD5E1` (Brushed Silver) / `#090A0D` (Hematite Black) | `rgba(220, 38, 38, 0.08)` |
 | **Forge BattleVerse** | `#3B82F6` (Electric Cobalt) | `#818CF8` (Spectral Indigo) | `rgba(59, 130, 246, 0.08)` |
@@ -68,13 +68,14 @@ Accents are **strictly scoped** via `data-accent="..."` or CSS custom property `
 
 | Status Key | Display Label | Indicator Color | Meaning |
 | :--- | :--- | :--- | :--- |
-| `public-release` | Public Release | `#34D399` | Verified public software (note if downloads paused) |
+| `public-release` / `commercially-available` | Public Release / Commercially Available | `#34D399` | Verified public software or commercially available release (note if paused) |
 | `public-preview` | Public Preview | `#60A5FA` | Downloadable prerelease software (e.g., ForgerEMS) |
-| `active-development` | Active Development | `#F59E0B` | Actively engineered software without public release |
-| `research-program` | Active Research | `#A78BFA` | Ongoing research/model development; no public endpoint |
-| `research-vision` | Research Vision | `#2DD4BF` | Long-term architectural convergence program |
+| `active-development` / `private-alpha` / `private-beta` | Active Development / Private Alpha / Private Beta | `#F59E0B` | Actively engineered software or early controlled testing without general public release |
+| `active-research` / `research-program` / `experimental-checkpoint` / `internal-evaluation` | Active Research / Experimental Checkpoint / Internal Evaluation | `#A78BFA` | Ongoing research, model checkpoints, or internal verification; no public endpoint |
+| `research-vision` | Research Vision | `#2DD4BF` | Long-term architectural convergence program (Alexandrite) |
+| `commercial-direction` / `early-interest-open` | Commercial Direction / Early Interest Open | `#6FA0FF` | Proposed commercial product direction open for structured inquiries |
 | `private-development` | Private Development | `#94A3B8` | Private studio production (no public build) |
-| `planned` | Planned | `#9CA3AF` | Defined model/feature target; training not complete |
+| `training-planned` / `planned` | Training Planned / Planned | `#9CA3AF` | Defined model/feature target; FDS fine-tuning not verified complete |
 
 ---
 

@@ -1,40 +1,41 @@
-# Forger Digital Solutions — Public Claims & Truthfulness Audit
+# FDS Public Claims Audit — Operation Digital Forge II
 
-**Audit Date:** 2026-11-26  
-**Scope:** All 60 built pages in `dist/`, all 8 data collections under `content/`, all components in `src/components/`, and Kayla canonical knowledge (`src/data/kayla/`).
-
----
-
-## 1. Environment & Access Truthfulness Boundary
-
-This transformation ran in an isolated remote Linux workspace with access to:
-- The connected public repository `Forger-Digital-Solutions/forger-digital-solutions.github.io`
-- The live baseline public website (`https://forgerdigitalsolutions.com`)
-
-**Unreachable Private Assets:** Private local Windows directories (`Z:\My Drive\...`, `E:\...`, `D:\...`, `C:\Users\Daddy_FDS\...`) and private Google Drive documents are **not mounted or accessible** in this environment. Accordingly:
-- Zero unverified internal corpus counts, private benchmark tables, internal model weights, or unverified application screenshots were fabricated or inferred.
-- Every numerical metric published on this site is strictly grounded in verifiable public repository artifacts (e.g., 345/345 Kayla CI golden queries, exact ForgerEMS & CodeForge file byte sizes and SHA-256 digests).
+> **Audit Scope:** All 69 generated static pages (`dist/`), `content/*.json`, `src/data/kayla/*`, `public/images/forge/*`, and public `docs/*.md`
+> **Date:** 2026-11-26
+> **Audit Policy:** Zero invented capabilities, zero conflated research/training/evaluation/certification stages, zero fake compliance badges, zero unapproved pricing commitments, zero leaked private paths.
 
 ---
 
-## 2. Flagship-by-Flagship Claims Verification Matrix
+## 1. Non-Conflation Audit Matrix (Core Axioms)
 
-| Technology | Claimed Public Role | Verified Status & Availability | Explicit Non-Claims / Boundaries Verified |
-|---|---|---|---|
-| **Alexandrite** | Collective intelligence flagship vision | `research-vision` / `not-publicly-available` | Not trained; no public model weights; no hosted API; applications do not depend on Alexandrite |
-| **Hackmanite** | Universal gaming & game-dev AI family (`Prime` -> `Qwen/Qwen3.8-27B`; `Reasoning` -> `openai/gpt-oss-120b`) | `training-planned` / `not-publicly-available` | Explicitly separates upstream open-weight availability from completed FDS fine-tuning, evaluation, or certification |
-| **Cinnabar** | Anime, manga, animation craft & fictional intelligence (`Oracle v1–v4.1` text lineages) | `experimental` / `not-publicly-available` | Explicitly NOT a native video/animation generator; zero unauthorized copyrighted franchise artwork; distinct from BattleVerse |
-| **Jaspilite** | Autonomous AI development & multi-agent orchestration platform (`Auto`, `Meld`, `Solo`) | `private-development` / `private-development` | Supersedes legacy Forge Control (`/projects/forge-control` preserved with migration notice); no obsolete mode names; no fabricated desktop UI screenshots; no unpublished binary download |
-| **Forge BattleVerse** | Standalone fictional intelligence, canonical evidence & combat simulation platform | `private-development` / `private-development` | Standalone application distinct from Cinnabar; simulation outputs explicitly framed as probabilistic models, never canonical fact |
-| **Project Forge** | Permanent 15-division research & engineering foundation (8-stage lifecycle) | `active-development` / `research-only` | Shared research infrastructure, not a public inference model; enforces 4 non-conflation axioms (`Research ≠ Training`, `Training ≠ Evaluation`, `Evaluation ≠ Certification`, `Certification ≠ Public Availability`); zero summed/inflated corpus counts |
-| **State Lines** | Original AAA-ambition open-world organized-crime game (NY/NJ/PA inspired) | `private-development` / `private-development` | Concept art explicitly labeled `Concept Art — Work in Progress (Not Gameplay)`; zero story spoilers; zero unannounced release dates, platforms, or pricing |
+| Claim Area | Verified / Allowed Public Statement | Prohibited Conflation (Verified Absent) | Enforcement Mechanism |
+| :--- | :--- | :--- | :--- |
+| **Hackmanite Base Models** | `Qwen/Qwen3.8-27B` and `openai/gpt-oss-120b` are verified unmodified **Apache-2.0** upstream foundations on Hugging Face (checked 2026-11-26). | Claiming upstream availability equals completed FDS fine-tuning, evaluation, or commercial certification. | `registry.json`, `models/hackmanite/*.astro`, Kayla `answers.ts` |
+| **Hackmanite & Cinnabar Workforces** | 10 gaming roles and 8 creative-production roles represent structured studio workflow configurations and specialist scopes. | Claiming FDS has trained 10 or 8 separate foundation models or deployed live turnkey studio workforces today. | `SpecialistWorkforceExplorer.astro`, `solutions.json` |
+| **Cinnabar Modality Boundary** | Cinnabar Oracle (`v1–v4.1` documented) is a text-based storytelling, continuity, and craft intelligence lineage. | Claiming Cinnabar natively generates anime video, full animation frames, or audio without external tools. | `models/cinnabar/index.astro`, `registry.json`, Kayla `t1-odf2-04` |
+| **Cinnabar vs. Forge BattleVerse** | Cinnabar is the anime/manga/creative AI model family; Forge BattleVerse is a standalone commercial application platform (`Arena` + `Creator Studio`) that can integrate Cinnabar. | Conflating BattleVerse as the name of the model family or vice versa. | `products/battleverse/*.astro`, `models/cinnabar/index.astro`, Kayla `t1-odf2-05` |
+| **BattleVerse Arena Simulations** | Arena scenarios use structured citations, stated physics assumptions, probability bands, and explicit uncertainty ranges; on-site showcase uses explicitly labeled original FDS silhouettes (`Aegis`, `Vesper`, `Kestrel`). | Claiming simulation outputs are objective canonical truth, claiming a live backend engine on this static site, or using copyrighted franchise art. | `BattleVerseArenaDemo.astro`, `products/battleverse/arena.astro` |
+| **BattleVerse Creator Studio** | Explicitly labeled `Commercial Product Direction` open for studio inquiries. | Claiming downloadable Creator Studio software or completed implementation today. | `registry.json`, `products/battleverse/creator-studio.astro` |
+| **Alexandrite** | Long-term collective intelligence `Research Vision` with 7-stage convergence architecture distinguishing runtime orchestration from separately trained collective weights. | Claiming a trained collective checkpoint, live API, AGI claims, or superiority from naive weight merging. | `AlexandriteArchitecture.astro`, `models/alexandrite.astro` |
+| **Jaspilite vs. Forge Control** | Autonomous multi-agent software engineering platform (`Auto`, `Meld`, `Solo`) with 5-tier provider maturity ladder replacing legacy Forge Control naming. | Claiming signed public installers today, bundled unlimited third-party subscriptions, or unestablished vendor partnerships. | `products/jaspilite.astro`, `projects/forge-control.astro` |
+| **Project Forge** | Permanent 15-division research foundation enforcing `Research ≠ Training ≠ Evaluation ≠ Certification ≠ Public Availability`. | Summing overlapping dataset snapshots, exposing private local paths (`Z:\`, `My Drive`), or treating Project Forge as a public inference model. | `research/project-forge.astro`, `scripts/validate-content.mjs` |
+| **State Lines & Dead Trails West** | Preproduction / private development original entertainment IPs; concept art labeled `Concept Art — Work in Progress (Not Gameplay)`. | Announcing release dates, target platforms, pricing, playable builds, story spoilers, or verified Unreal gameplay. | `studio/state-lines.astro`, `test/content-consistency.test.ts` |
+| **ForgerEMS & CodeForge** | `ForgerEMS v1.2.4-preview.1` downloadable unsigned Windows preview with SHA-256 checksums; `CodeForge v0.2.0` paused Windows installers with verified source ZIP and fail-closed `/codeforge/upgrade`. | Claiming ForgerEMS is signed/production-certified or enabling fake CodeForge paid checkout. | `forgerems.astro`, `forged.astro`, `test/codeforge-commerce.test.ts` |
+| **Commercial Pricing & Compliance** | Early interest & partnership inquiries open via static `CommercialInquiryBuilder` (`mailto:` / copy brief); FDS explicitly discloses it does NOT hold SOC 2, ISO 27001, HIPAA, or FedRAMP certifications today. | Publishing unapproved internal tier pricing, hypothetical revenue projections, fake testimonials, fake customer logos, or fake compliance badges. | `scripts/validate-content.mjs`, `test/operation-digital-forge-ii.test.ts`, `/trust/`, `/solutions/enterprise-private-ai/` |
 
 ---
 
-## 3. Preserved Software, Legal & Compliance Claims Audit
+## 2. Private Research Access Boundary (Honesty Disclosure)
 
-- **ForgerEMS (`v1.2.4-preview.1`):** Exact GitHub Release download URLs, commit `fc54150844b36c2e6d6a4fd18d6ea9dd065fd4fb`, exact file sizes (`81,742,749 B` ZIP, `61,780,805 B` EXE), exact SHA-256 digests, and unsigned SmartScreen disclosure verified across `/forgerems/`, `/forged`, `/downloads/`, `/releases/`, and `content/releases/releases.json`.
-- **CodeForge (`v0.2.0`):** Installer downloads remain explicitly paused; fail-closed `/codeforge/upgrade` (`noindex, nofollow`, zero checkout states) preserved; verified `CodeForge-source-6b0770b.zip` (`304,287 B`, SHA-256 `a6e16d0056deebeeb8d8b99f7228f5fed43c380722e97012e45b26d5c6fe3208`) preserved.
-- **Public API & Playground Honesty:** `/developers/` and `/faq` explicitly state FDS operates no public inference API, API key portal, or billing console today.
-- **Compliance Honesty:** `/trust/` explicitly discloses that FDS does NOT claim uncompleted `SOC 2`, `ISO 27001`, `HIPAA`, or `FedRAMP` certifications.
-- **Automated Leak Scan:** Both `npm run validate:content`, `test/operation-digital-forge-governance.test.ts`, and `rg` across `dist/` verified **0 leaks** of private Windows/Drive paths, credentials, or fake enterprise certifications.
+During Operation Digital Forge II execution on this remote Linux environment:
+- **Accessible:** Public GitHub repository `Forger-Digital-Solutions/forger-digital-solutions.github.io`, upstream public Hugging Face model cards (`Qwen/Qwen3.8-27B`, `openai/gpt-oss-120b`), and public market references.
+- **Not Accessible:** Local Windows workspaces and private Google Drive archives (`Z:\My Drive\JaspiliteHackmaniteCinnabarAlexandrite`).
+- **Audit Result:** Zero fabricated numbers were substituted for private training runs (`Hackmanite S22`), fresh inference/confirmation evaluations (`Cinnabar Oracle`), `Lantern Quay` verification, or private desktop builds. Exact sanitized export requirements are documented in [`docs/FDS_PRIVATE_EXPORT_REQUIREMENTS.md`](./FDS_PRIVATE_EXPORT_REQUIREMENTS.md) and [`docs/FDS_PUBLICATION_EVIDENCE_MATRIX.json`](./FDS_PUBLICATION_EVIDENCE_MATRIX.json).
+
+---
+
+## 3. Automated Guard Verification
+
+- `npm run validate:content`: **PASS** (schema validation, unreleased-vs-commercial consistency, private path rejection, unapproved revenue figure rejection).
+- `test/operation-digital-forge-ii.test.ts`: **PASS** (blocks unapproved pricing/revenue leaks across `src/` and `content/`, verifies all 15 Kayla commercial queries against `verifyAgainstCanon()` and `validateSafeAction()`).
+- `npm run kayla:secret-scan`: **PASS** (zero secrets or credentials in source or built `dist/`).

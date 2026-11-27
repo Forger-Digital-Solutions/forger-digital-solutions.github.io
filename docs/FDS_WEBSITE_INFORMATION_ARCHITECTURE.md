@@ -1,87 +1,59 @@
-# Forger Digital Solutions — Website Information Architecture
+# FDS Website Information Architecture — Operation Digital Forge II
 
-**Operation:** Digital Forge  
-**Last Updated:** 2026-11-26  
-**Status:** Verified against 60 static Astro routes built in `dist/` (5,901 internal links, 0 broken)
-
----
-
-## 1. Strategic Architecture Model
-
-The Forger Digital Solutions public website is structured around **four interconnected studio divisions** surfaced through **six top-level navigation pillars**, preserving all legacy public routes and verified software distribution flows without breaking inbound links.
-
-| Division | Flagship Technologies | Primary Hub |
-|---|---|---|
-| **FDS Intelligence** | Alexandrite, Hackmanite (Prime & Reasoning), Cinnabar (Oracle v1–v4.1) | `/models/` |
-| **FDS Applications** | Jaspilite (`Auto` / `Meld` / `Solo`), Forge BattleVerse (+ preserved ForgerEMS & CodeForge) | `/products/` |
-| **FDS Research** | Project Forge (15 divisions, 8-stage lifecycle) | `/research/` |
-| **FDS Original Productions** | State Lines (+ preserved Dead Trails West) | `/studio/` |
+> **Domain:** `https://forgerdigitalsolutions.com`
+> **Framework:** Astro 7 Static Site Generation (`69` generated HTML routes)
+> **Top-Level Navigation:** **7 Institutional Pillars** (`Models`, `Products`, `Solutions`, `Research`, `Developers`, `Studio`, `Company`) + `Releases` & `Contact FDS` CTAs
+> **Last Updated:** 2026-11-26
 
 ---
 
-## 2. Primary Navigation (6 Institutional Pillars)
+## 1. Seven-Pillar Navigation Architecture (`src/components/Header.astro`)
 
-Defined in `src/components/Header.astro`. Top-level navigation stays strictly bounded to six clean institutional domains with keyboard- and click-accessible mega-menus on desktop and an accordion drawer on mobile (`#site-navigation`, `.mobile-menu-btn`). Support links are intentionally kept secondary inside Company/Footer and never occupy a top-level CTA slot.
+Desktop horizontal navigation transitions cleanly to the accessible mobile drawer at `1180px` (`@media (max-width: 1180px)`), preventing cramped wrapping across all standard laptop and desktop widths:
 
-1. **Models (`/models/`)**
-   - `/models/alexandrite/` — Collective intelligence flagship vision
-   - `/models/hackmanite/` — Universal gaming & game-dev AI family
-     - `/models/hackmanite/prime/` — Planned `Qwen/Qwen3.8-27B` coding & implementation target
-     - `/models/hackmanite/reasoning/` — Planned `openai/gpt-oss-120b` architecture & debugging target
-   - `/models/cinnabar/` — Anime, manga, animation craft & fictional intelligence family
-     - `/models/cinnabar/oracle/` — Documented Oracle text lineages (`v1`–`v4.1`)
-   - `/model-cards/` — Unified structured Model Card repository
-   - `/evaluations/` — Benchmarks, raw vs. guarded policy & public evaluation register
-2. **Products (`/products/`)**
-   - `/products/jaspilite/` — Autonomous AI development platform (`Auto`, `Meld`, `Solo`)
-   - `/products/battleverse/` — Standalone fictional intelligence & probabilistic combat simulation
-   - `/downloads/` — Unified verified downloads center (ForgerEMS preview + CodeForge archive)
-   - `/projects` — Extended portfolio directory (CodeForge, ForgerEMS, legacy Forge Control, Dead Trails West, Kayla AI Publisher, We The People Library, FarmStand Finder)
-3. **Research (`/research/`)**
-   - `/research/project-forge/` — Permanent 15-division foundation & 8-stage lifecycle
-   - `/research/gaming/` — Universal gaming & engine research track
-   - `/research/animation/` — Anime, manga & animation craft track
-   - `/research/artificial-intelligence/` — Specialist AI & distillation research track
-   - `/research/training/` — Training methodology, data eligibility & controlled runs
-   - `/research/laboratory/` — Engineering experiments & executable verification harnesses
-   - `/research/publications/` — Approved public research write-ups & field notes
-   - `/trust/` — Public Trust & Transparency Center (12 governance pillars)
-4. **Developers (`/developers/`)**
-   - `/docs/` — Searchable Technical Documentation Hub
-   - `/model-cards/` — Open-weight provenance & limitations
-   - `/releases/` — Chronological Release Index with SHA-256 ledger
-   - `/changelog/` — Website & platform revision log
-   - `/technology` — Preserved technology architecture matrix
-5. **Studio (`/studio/`)**
-   - `/studio/state-lines/` — Prestige cinematic State Lines dossier (Preproduction)
-   - `/studio/productions/` — Original Productions slate (State Lines & Dead Trails West)
-6. **Company (`/company/`)**
-   - `/about` — Founder (Edward Schmidt), studio philosophy & background
-   - `/news/` — Public Newsroom with category filtering + Field Notes
-   - `/trust/` — Governance & non-conflation axioms
-   - `/contact/` — Verified email, Discord, GitHub, YouTube, LinkedIn & hardware donations
-   - `/support` & `/support/hardware` — Development & hardware support disclosures
+| Pillar | Primary Route | Dropdown / Mega-Menu Destinations |
+| :--- | :--- | :--- |
+| **Models** | `/models/` | Model Catalog (`/models/`), Alexandrite (`/models/alexandrite/`), Hackmanite (`/models/hackmanite/`), Cinnabar (`/models/cinnabar/`), Model Cards (`/model-cards/`), Evaluations (`/evaluations/`) |
+| **Products** | `/products/` | Products Overview (`/products/`), Jaspilite (`/products/jaspilite/`), Forge BattleVerse (`/products/battleverse/`), BattleVerse Arena (`/products/battleverse/arena/`), BattleVerse Creator Studio (`/products/battleverse/creator-studio/`), ForgerEMS (`/forgerems/`), Downloads (`/downloads/`) |
+| **Solutions** *(New in ODF II)* | `/solutions/` | Solutions Overview (`/solutions/`), Game Developers (`/solutions/game-developers/`), Gaming Studios (`/solutions/gaming-studios/`), Anime & Manga Creators (`/solutions/anime-manga-creators/`), Animation Studios (`/solutions/animation-studios/`), Software Engineering (`/solutions/software-engineering/`), Enterprise & Private AI (`/solutions/enterprise-private-ai/`) |
+| **Research** | `/research/` | Research Hub (`/research/`), Project Forge (`/research/project-forge/`), Laboratory (`/research/laboratory/`), Training Methodology (`/research/training/`), Gaming AI (`/research/gaming/`), Animation AI (`/research/animation/`), Artificial Intelligence (`/research/artificial-intelligence/`), Publications (`/research/publications/`) |
+| **Developers** | `/developers/` | Developer Hub (`/developers/`), Documentation (`/docs/`), Releases / Forged (`/forged`), Downloads Center (`/downloads/`), Changelog (`/changelog/`) |
+| **Studio** | `/studio/` | Studio Hub (`/studio/`), State Lines (`/studio/state-lines/`), Original Productions (`/studio/productions/`) |
+| **Company** | `/company/` | Company & Vision (`/company/`), About FDS (`/about`), Newsroom (`/news/`), Trust Center (`/trust/`), Contact & Inquiries (`/contact/`), Support FDS (`/support`), Community Impact (`/community-impact`) |
 
 ---
 
-## 3. Preserved Legacy & Operational Routes
+## 2. Complete Route Inventory (69 Built Static Pages)
 
-Every pre-existing public route remains live and functional to protect bookmarks, search equity, Kayla canonical links, and release verification:
+### Core Flagship & Commercial Entry Routes (21 pages)
+- `/` — Institutional & Commercial Homepage (Hero + Flagship Portfolio + Studio & Enterprise Solutions Band + Ecosystem Convergence Map + Research/Productions/Releases + Commercial Partnership CTA)
+- `/models/`, `/models/alexandrite/`, `/models/hackmanite/`, `/models/hackmanite/prime/`, `/models/hackmanite/reasoning/`, `/models/cinnabar/`, `/models/cinnabar/oracle/`
+- `/model-cards/`, `/evaluations/`
+- `/products/`, `/products/jaspilite/`, `/products/battleverse/`, `/products/battleverse/arena/`, `/products/battleverse/creator-studio/`
+- `/solutions/`, `/solutions/game-developers/`, `/solutions/gaming-studios/`, `/solutions/anime-manga-creators/`, `/solutions/animation-studios/`, `/solutions/software-engineering/`, `/solutions/enterprise-private-ai/`
 
-- `/forged` — Forged software distribution & SHA-256 verified ZIP archive shelf (`CodeForge-source-6b0770b.zip`)
-- `/forgerems/` & `/projects/forgerems` — ForgerEMS `v1.2.4-preview.1` download links, SHA-256 checksums, video facade
-- `/projects/codeforge`, `/codeforge/sign-in`, `/codeforge/upgrade` — Paused installer policy & fail-closed commercial guardrails (`noindex, nofollow`)
-- `/projects/forge-control` — Preserved with an explicit migration banner redirecting attention to `/products/jaspilite/`
-- `/projects/dead-trails-west`, `/projects/kayla-ai-publisher`, `/projects/we-the-people`, `/projects/farmstand-finder`
-- `/notes` & `/notes/*` — Engineering Field Notes journal
-- `/lab`, `/faq`, `/privacy`, `/terms`, `/community-impact`, `/404.html`
+### Research & Original Studio Routes (11 pages)
+- `/research/`, `/research/project-forge/`, `/research/laboratory/`, `/research/training/`, `/research/gaming/`, `/research/animation/`, `/research/artificial-intelligence/`, `/research/publications/`
+- `/studio/`, `/studio/state-lines/`, `/studio/productions/`
+
+### Developer, Documentation, Release & Trust Routes (15 pages)
+- `/developers/`, `/docs/`, `/downloads/`, `/releases/`, `/changelog/`, `/forged/`, `/forgerems/`, `/trust/`, `/technology/`, `/lab/`, `/faq/`
+- `/news/`, `/notes/`, `/notes/codeforge-v0-2-free-first-engineering/`, `/notes/evidence-over-assumptions/`, `/notes/forgerems-technician-workbench/`, `/notes/introducing-fds-notes/`
+
+### Company, Contact, Support & Legal Routes (10 pages)
+- `/company/`, `/about/`, `/contact/` (with `?track=` Commercial Inquiry Composer), `/support/`, `/support/hardware/`, `/community-impact/`, `/privacy/`, `/terms/`, `/404.html`
+
+### Preserved Legacy Catalog & Fail-Closed Commerce Routes (10 pages)
+- `/projects/`, `/projects/codeforge/`, `/projects/forgerems/`, `/projects/forge-control/` (explicit historical migration reference pointing to Jaspilite), `/projects/dead-trails-west/`, `/projects/kayla-ai-publisher/`, `/projects/we-the-people/`, `/projects/farmstand-finder/`
+- `/codeforge/sign-in/`, `/codeforge/upgrade/` (preserved fail-closed boundary)
 
 ---
 
-## 4. Non-Conflation Structural Boundaries
+## 3. Footer Architecture (`src/components/Footer.astro`)
 
-- **Alexandrite vs. Specialist Models:** Alexandrite is positioned as a long-term research vision (not trained); Hackmanite and Cinnabar stand on their own specialist lineages.
-- **Cinnabar vs. Forge BattleVerse:** Cinnabar lives under `/models/cinnabar/` (AI model family); BattleVerse lives under `/products/battleverse/` (standalone application designed to integrate with Cinnabar Oracle).
-- **Jaspilite vs. Forge Control:** Jaspilite (`/products/jaspilite/`) is the active flagship brand with owner-approved `Auto`, `Meld`, and `Solo` modes; `/projects/forge-control` is preserved solely as a migration reference.
-- **Project Forge vs. Models:** Project Forge (`/research/project-forge/`) is shared research infrastructure, never advertised as a public inference model.
-- **Support vs. Products:** Development support (`/support`) and hardware donations (`/support/hardware`) stay visually and navigationally distinct from product releases and research claims.
+Five organized navigation columns alongside the FDS brand mark, retained heritage slogan (`Build the tools. Build the worlds.`), and verified social links (`GitHub`, `YouTube`, `Discord`, `LinkedIn`, `TikTok`):
+1. **Models** (6 links)
+2. **Products** (7 links — includes `Jaspilite`, `Forge BattleVerse`, `BattleVerse Arena`, `Creator Studio`, `ForgerEMS`, `Downloads & Releases`, `Extended Portfolio`)
+3. **Solutions** (7 links — Solutions hub + all 6 audience routes)
+4. **Research & Dev** (6 links)
+5. **Studio & Company** (7 links)
