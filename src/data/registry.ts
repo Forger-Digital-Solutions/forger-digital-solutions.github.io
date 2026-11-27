@@ -6,11 +6,13 @@ import evaluationsRaw from '../../content/evaluations/evaluations.json' with { t
 import releasesRaw from '../../content/releases/releases.json' with { type: 'json' };
 import updatesRaw from '../../content/publications/updates.json' with { type: 'json' };
 import companyRaw from '../../content/company/profile.json' with { type: 'json' };
+import solutionsRaw from '../../content/solutions/solutions.json' with { type: 'json' };
 
 export type RegistryCategory =
   | 'ai-model-family'
   | 'ai-model'
   | 'application'
+  | 'commercial-direction'
   | 'research-infrastructure'
   | 'original-production'
   | 'legacy-product';
@@ -28,26 +30,35 @@ export type RegistryAccent =
 
 export type DevelopmentStatus =
   | 'research-vision'
+  | 'active-research'
   | 'foundation-available'
   | 'training-planned'
   | 'training-in-progress'
   | 'fine-tuning-completed'
+  | 'experimental-checkpoint'
   | 'experimental'
+  | 'internal-evaluation'
   | 'evaluated'
   | 'capability-certified'
   | 'active-development'
+  | 'private-alpha'
+  | 'private-beta'
   | 'private-development'
+  | 'commercial-direction'
   | 'public-preview'
   | 'public-release'
+  | 'commercially-available'
   | 'deprecated';
 
 export type AvailabilityStatus =
   | 'not-publicly-available'
   | 'research-only'
+  | 'private-development'
+  | 'early-interest-open'
   | 'downloads-paused'
   | 'public-preview'
   | 'public-release'
-  | 'private-development';
+  | 'commercially-available';
 
 export interface PublicRegistryEntry {
   id: string;
@@ -62,6 +73,7 @@ export interface PublicRegistryEntry {
   parameter_count?: string | null;
   modalities?: string[];
   license_info?: string | null;
+  commercial_direction?: string | null;
   verified_capabilities: string[];
   planned_capabilities?: string[];
   known_limitations: string[];
@@ -76,27 +88,36 @@ export interface PublicRegistryEntry {
 
 export const statusDisplayLabels: Record<DevelopmentStatus, string> = {
   'research-vision': 'Research Vision',
+  'active-research': 'Active Research',
   'foundation-available': 'Foundation Available',
   'training-planned': 'Training Planned',
   'training-in-progress': 'Training in Progress',
   'fine-tuning-completed': 'Fine-Tuning Completed',
+  'experimental-checkpoint': 'Experimental Checkpoint',
   experimental: 'Experimental',
+  'internal-evaluation': 'Internal Evaluation',
   evaluated: 'Evaluated',
   'capability-certified': 'Capability Certified',
   'active-development': 'Active Development',
+  'private-alpha': 'Private Alpha',
+  'private-beta': 'Private Beta',
   'private-development': 'Private Development',
+  'commercial-direction': 'Commercial Direction',
   'public-preview': 'Public Preview',
   'public-release': 'Public Release',
+  'commercially-available': 'Commercially Available',
   deprecated: 'Deprecated',
 };
 
 export const availabilityDisplayLabels: Record<AvailabilityStatus, string> = {
   'not-publicly-available': 'Not Publicly Available',
   'research-only': 'Research Only',
+  'private-development': 'Private Development',
+  'early-interest-open': 'Early Interest Open',
   'downloads-paused': 'Downloads Paused',
   'public-preview': 'Public Preview Download',
   'public-release': 'Public Release',
-  'private-development': 'Private Development',
+  'commercially-available': 'Commercially Available',
 };
 
 export const publicRegistry = publicStatusRaw.entries as PublicRegistryEntry[];
@@ -118,9 +139,16 @@ export const evaluationsData = evaluationsRaw;
 export const publicReleasesData = releasesRaw.releases;
 export const newsUpdatesData = updatesRaw.updates;
 export const companyProfile = companyRaw;
+export const solutionsData = solutionsRaw;
 
 export function getRegistryEntry(id: string): PublicRegistryEntry {
   const found = registryById[id];
   if (!found) throw new Error(`Missing public registry entry for id: ${id}`);
+  return found;
+}
+
+export function getAudienceSolution(slug: string) {
+  const found = solutionsData.audienceSolutions.find((item) => item.slug === slug);
+  if (!found) throw new Error(`Missing audience solution for slug: ${slug}`);
   return found;
 }

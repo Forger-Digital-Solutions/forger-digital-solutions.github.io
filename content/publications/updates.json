@@ -2,6 +2,16 @@
   "last_updated": "2026-11-26",
   "updates": [
     {
+      "id": "operation-digital-forge-ii",
+      "date": "2026-11-26",
+      "category": "Announcements",
+      "title": "Operation Digital Forge II: Commercial AI Solutions, Studio Workforces & BattleVerse Sub-Platforms",
+      "summary": "Forger Digital Solutions expands its public identity with dedicated commercial solutions hubs for gaming studios, anime and animation teams, software teams, and private enterprise AI—alongside BattleVerse Arena, BattleVerse Creator Studio, Apache-2.0 upstream model disclosures, and expanded Kayla Copilot portfolio guidance.",
+      "readingTime": "4 min read",
+      "related": ["Hackmanite", "Cinnabar", "Jaspilite", "Forge BattleVerse"],
+      "href": "/solutions/"
+    },
+    {
       "id": "operation-digital-forge",
       "date": "2026-11-26",
       "category": "Announcements",

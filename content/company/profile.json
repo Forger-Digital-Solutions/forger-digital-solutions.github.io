@@ -5,32 +5,41 @@
   "founder": "Edward Schmidt",
   "location": "New Jersey, United States",
   "headline": "Specialized intelligence. Extraordinary worlds.",
-  "supportingCopy": "Forger Digital Solutions is an independent artificial intelligence research and engineering studio developing specialized AI models, autonomous development systems, and the research infrastructure behind next-generation interactive and cinematic experiences.",
+  "supportingCommercialLine": "Intelligence built for the worlds we create.",
+  "supportingCopy": "Forger Digital Solutions is an independent artificial intelligence research laboratory, commercial AI technology company, autonomous software engineering provider, and original entertainment studio building specialized AI models, autonomous engineering platforms, private studio workforces, and original worlds.",
   "heritageSlogan": "Build the tools. Build the worlds.",
+  "businessModelPillars": [
+    "Specialized AI model subscriptions & developer access (planned)",
+    "Professional autonomous development tools & multi-agent workspaces",
+    "Gaming, anime, manga, and animation production intelligence",
+    "Personalized studio AI workforces & private enterprise deployments",
+    "Commercial model licensing, developer APIs & SDKs (planned)",
+    "Original AAA-ambition games & entertainment properties"
+  ],
   "divisions": [
     {
       "name": "FDS Intelligence",
       "flagships": ["Alexandrite", "Hackmanite", "Cinnabar"],
       "route": "/models/",
-      "summary": "Specialized AI model families built for gaming, game engineering, storytelling, animation craft, and long-term collective convergence."
+      "summary": "Specialized AI model families for universal game development, anime & animation craft, and long-term collective intelligence."
     },
     {
       "name": "FDS Applications",
       "flagships": ["Jaspilite", "Forge BattleVerse"],
       "route": "/products/",
-      "summary": "Autonomous software development orchestration and evidence-based fictional intelligence & simulation platforms."
+      "summary": "Commercial autonomous software engineering workspaces, fictional intelligence arenas, and creative production platforms."
     },
     {
       "name": "FDS Research",
       "flagships": ["Project Forge"],
       "route": "/research/project-forge/",
-      "summary": "Permanent 15-division research, verification, retrieval, controlled training, and independent evaluation foundation."
+      "summary": "Permanent 15-division research, source verification, retrieval, controlled training, and independent evaluation foundation."
     },
     {
       "name": "FDS Original Productions",
       "flagships": ["State Lines"],
       "route": "/studio/",
-      "summary": "AAA-ambition original open-world game development and long-form cinematic storytelling."
+      "summary": "Original AAA-ambition open-world entertainment properties and long-form cinematic storytelling."
     }
   ]
 }

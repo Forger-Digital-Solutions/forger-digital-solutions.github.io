@@ -1,0 +1,528 @@
+{
+  "last_updated": "2026-11-26",
+  "heroVisual": {
+    "src": "/images/forge/solutions-studio-workforce.webp",
+    "mobileSrc": "/images/forge/solutions-studio-workforce-sm.webp",
+    "alt": "Architectural editorial illustration of isolated private AI compute clusters separated by smoked glass partitions with cobalt and emerald optical pathways.",
+    "label": "Private AI Architecture Concept — Illustrative Visualization"
+  },
+  "markets": [
+    {
+      "id": "individuals",
+      "code": "01",
+      "name": "Individual Developers, Gamers & Creators",
+      "summary": "Focused specialist AI tools for solo game developers, independent programmers, manga and animation creators, powerscaling researchers, and gaming communities.",
+      "offerings": ["Jaspilite (Auto / Meld / Solo)", "Hackmanite Game Engineer & Assistant (Planned)", "BattleVerse Arena (Active Development)"],
+      "ctaLabel": "Express Preview Interest",
+      "ctaHref": "/contact/?track=developer-preview"
+    },
+    {
+      "id": "studios",
+      "code": "02",
+      "name": "Professional Creators & Production Studios",
+      "summary": "Multi-discipline AI workflows tailored around real game engines, animation pipelines, continuity standards, and team-owned intellectual property.",
+      "offerings": ["Hackmanite Studio (Commercial Direction)", "BattleVerse Creator Studio (Commercial Direction)", "Personalized Studio AI Workforces (Planned)"],
+      "ctaLabel": "Register Studio Interest",
+      "ctaHref": "/contact/?track=studio-workforce"
+    },
+    {
+      "id": "enterprise",
+      "code": "03",
+      "name": "Enterprise & Private AI Organizations",
+      "summary": "Segregated private AI infrastructure, customer-specific knowledge retrieval, governed multi-agent engineering, and commercial model licensing.",
+      "offerings": ["Hackmanite Enterprise & Model API/SDK (Planned)", "Private Deployment & Model Licensing (Commercial Direction)", "Research & Technology Partnerships"],
+      "ctaLabel": "Discuss Enterprise Solutions",
+      "ctaHref": "/contact/?track=enterprise"
+    }
+  ],
+  "audienceSolutions": [
+    {
+      "slug": "game-developers",
+      "name": "Game Developers",
+      "eyebrow": "Solutions // Independent & Professional Developers",
+      "accent": "hackmanite",
+      "status": "commercial-direction",
+      "headline": "Specialist intelligence engineered for game code, shaders, physics, and shipping builds.",
+      "summary": "Designed for solo builders and small engineering teams working in Unreal, Unity, Godot, Roblox, FiveM/RedM, or custom C++/Rust engines who want domain-grounded assistance rather than generic web-dev chatbots.",
+      "flagships": ["Hackmanite Prime (Planned)", "Hackmanite Reasoning (Planned)", "Jaspilite"],
+      "challenges": [
+        { "title": "Engine-Specific Depth", "detail": "General-purpose models frequently hallucinate engine APIs, Blueprint/GDScript/Luau signatures, and frame-budget constraints." },
+        { "title": "Multi-File System Debugging", "detail": "Gameplay bugs span physics ticks, animation state machines, replication graphs, and memory lifecycles simultaneously." },
+        { "title": "Local-First Control", "detail": "Independent developers need predictable costs, local open-weight model options, and zero silent harvesting of unreleased game code." }
+      ],
+      "proposedWorkflows": [
+        "Hackmanite Game Engineer for gameplay mechanics, shader drafting, and engine scripting (training planned on Qwen/Qwen3.8-27B & openai/gpt-oss-120b).",
+        "Jaspilite Auto, Meld, and Solo workspace orchestration across local open-weight models and user-connected subscriptions.",
+        "Project Forge-backed architecture guidance spanning graphics, physics, networking, and automated regression harnesses."
+      ],
+      "availabilityBoundary": "Hackmanite specialist checkpoints and Jaspilite public installers are not yet commercially released. Early developer preview inquiries are open via /contact/?track=developer-preview.",
+      "ctaLabel": "Express Interest in Developer Preview",
+      "ctaHref": "/contact/?track=developer-preview"
+    },
+    {
+      "slug": "gaming-studios",
+      "name": "Gaming Studios",
+      "eyebrow": "Solutions // AAA, AA & Independent Studios",
+      "accent": "hackmanite",
+      "status": "commercial-direction",
+      "headline": "Personalized game-engineering AI workforces built around your studio's own engine and standards.",
+      "summary": "Explore how Hackmanite Studio and Jaspilite are being architected to configure specialized AI roles around a studio's proprietary codebase, internal documentation, custom tools, and security policies—without leaking studio IP into shared models.",
+      "flagships": ["Hackmanite Studio (Commercial Direction)", "Hackmanite 10-Role Workforce", "Jaspilite Meld"],
+      "challenges": [
+        { "title": "Proprietary Codebase Onboarding", "detail": "Large game repositories carry years of custom engine modifications, naming conventions, and internal tooling unseen by public models." },
+        { "title": "Cross-Discipline Bottlenecks", "detail": "Engineering, technical art, animation, multiplayer netcode, QA, and performance teams operate in silos with expensive handoff latency." },
+        { "title": "Strict IP & Pre-Announcement Secrecy", "detail": "Unannounced titles, narrative scripts, and source assets cannot leave studio security boundaries or train external third-party models." }
+      ],
+      "proposedWorkflows": [
+        "10 configurable specialist roles—from Game Engineer and World Architect to Technical Artist, Multiplayer Engineer, Performance Engineer, and Security Engineer—powered by shared models, retrieval, and studio tools.",
+        "Customer-specific retrieval over internal design docs, engine APIs, asset pipelines, and QA regression logs with strict tenant isolation.",
+        "Human-in-the-loop approval gates, repository diff ownership, and optional private deployment scoping as capabilities clear certification."
+      ],
+      "availabilityBoundary": "Personalized studio deployments are a commercial direction under active architecture and research. No pre-built turnkey enterprise SLA is claimed today; studios may register scoping interest directly.",
+      "ctaLabel": "Register Studio Interest",
+      "ctaHref": "/contact/?track=studio-workforce"
+    },
+    {
+      "slug": "anime-manga-creators",
+      "name": "Anime & Manga Creators",
+      "eyebrow": "Solutions // Independent Creators & Storytellers",
+      "accent": "cinnabar",
+      "status": "commercial-direction",
+      "headline": "Story craft, panel rhythm, worldbuilding, and continuity intelligence that respects creator ownership.",
+      "summary": "Built for manga artists, webtoon creators, writers, and independent animators who want rigorous narrative architecture, storyboard planning, combat choreography, and canon continuity tools without sacrificing artistic authorship.",
+      "flagships": ["Cinnabar", "BattleVerse Creator Studio (Commercial Direction)", "BattleVerse Arena"],
+      "challenges": [
+        { "title": "Long-Form Continuity Drift", "detail": "Multi-arc series accumulate complex timelines, power systems, character relationships, and visual references that are hard to audit manually." },
+        { "title": "Creator Consent & IP Anxiety", "detail": "Many generative platforms blur training provenance or threaten to replace the artist rather than strengthen the creator's own pipeline." },
+        { "title": "Pacing & Action Readability", "detail": "Translating multi-beat fight choreography, panel gutters, and camera cuts from script to storyboard demands disciplined craft vocabulary." }
+      ],
+      "proposedWorkflows": [
+        "Cinnabar text-model assistance for story arcs, character bibles, dialogue cadence, panel composition planning, and continuity auditing.",
+        "BattleVerse Creator Studio direction for coordinating external drawing, animation, and audio software under full human creative direction.",
+        "BattleVerse Arena methodology for testing fictional rule consistency, feat logic, and combat plausibility with explicit uncertainty."
+      ],
+      "availabilityBoundary": "Cinnabar checkpoints remain experimental research models and are NOT native video or animation generators. BattleVerse Creator Studio is a commercial product direction with no public release date yet.",
+      "ctaLabel": "Register Creator Interest",
+      "ctaHref": "/contact/?track=studio-workforce"
+    },
+    {
+      "slug": "animation-studios",
+      "name": "Animation Studios",
+      "eyebrow": "Solutions // Animation & Entertainment Production Houses",
+      "accent": "battleverse",
+      "status": "commercial-direction",
+      "headline": "Production-disciplined creative intelligence for pre-production, continuity, and studio pipelines.",
+      "summary": "How Cinnabar's 8-role creative specialist architecture and BattleVerse Creator Studio are designed to support pre-production planning, storyboarding, continuity verification, and external pipeline orchestration with segregated studio IP.",
+      "flagships": ["Cinnabar 8-Role Creative Workforce", "BattleVerse Creator Studio (Commercial Direction)", "Project Forge"],
+      "challenges": [
+        { "title": "Multi-Episode Production Complexity", "detail": "Directors, storyboard artists, keyframe leads, audio directors, and continuity supervisors must stay aligned across hundreds of scenes." },
+        { "title": "Tool-Chain Fragmentation", "detail": "Studios already rely on dedicated tools such as Toon Boom, Clip Studio Paint, Blender, Maya, and editorial suites—they need coordination, not replacement." },
+        { "title": "Rights, Provenance & Auditability", "detail": "Distributors and publishers increasingly require clear IP ownership chains and transparent provenance for every assisted production step." }
+      ],
+      "proposedWorkflows": [
+        "8 specialist creative roles (Manga Specialist, Anime Director, Animation Specialist, Character Designer, Combat Choreographer, Story Architect, Audio Director, Continuity Specialist) backed by shared Cinnabar models and studio retrieval.",
+        "External tool coordination for visual, animation, and audio pipelines—explicitly preserving human creative approval at every stage.",
+        "Private studio bibles and continuity indexes kept strictly segregated from shared FDS research corpora."
+      ],
+      "availabilityBoundary": "BattleVerse Creator Studio and private animation-studio deployments are commercial product directions under development. FDS does not claim native AI video synthesis or completed turnkey studio software today.",
+      "ctaLabel": "Discuss Studio Partnerships",
+      "ctaHref": "/contact/?track=studio-workforce"
+    },
+    {
+      "slug": "software-engineering",
+      "name": "Software Engineering Teams",
+      "eyebrow": "Solutions // Autonomous Development & Orchestration",
+      "accent": "jaspilite",
+      "status": "active-development",
+      "headline": "Governed autonomous engineering across local models and team-authorized providers.",
+      "summary": "Jaspilite brings Auto, Meld, and Solo multi-agent workflows to individual engineers and development teams that demand repository awareness, verifiable tests, cost transparency, and explicit human control.",
+      "flagships": ["Jaspilite", "CodeForge (Archived Source / Paused Installer)", "ForgerEMS (Public Preview)"],
+      "challenges": [
+        { "title": "Vendor Lock-In & Runaway Token Bills", "detail": "Single-vendor coding tools trap teams inside opaque credit pools and volatile usage pricing." },
+        { "title": "Unverified Agent Edits", "detail": "Autonomous agents that edit files without clear scope locks, diff verification, and test gates introduce costly regressions." },
+        { "title": "Local vs. Frontier Flexibility", "detail": "Teams want to combine fast local open-weight models for routine work with user-authorized cloud subscriptions for complex reasoning." }
+      ],
+      "proposedWorkflows": [
+        "Auto mode for adaptive task routing, Meld mode for multi-agent lead/sidekick/specialist execution, and Solo mode for single-model precision.",
+        "Local open-weight model discovery paired with user-provided API keys and eligible subscriptions under each provider's own terms.",
+        "Workspace permission gates, live progress reporting, file-ownership boundaries, and automated verification before commit."
+      ],
+      "availabilityBoundary": "Jaspilite is in active platform development with private builds only. ForgerEMS v1.2.4-preview.1 is publicly downloadable today for Windows technicians; CodeForge installer downloads are temporarily paused.",
+      "ctaLabel": "Express Interest in Jaspilite Preview",
+      "ctaHref": "/contact/?track=developer-preview"
+    },
+    {
+      "slug": "enterprise-private-ai",
+      "name": "Enterprise & Private AI",
+      "eyebrow": "Solutions // Segregated Infrastructure & Commercial Licensing",
+      "accent": "fds-cobalt",
+      "status": "commercial-direction",
+      "headline": "Customer-segregated AI architecture, model licensing, and disciplined technical transparency.",
+      "summary": "Forger Digital Solutions is building toward private enterprise AI workforces, commercial model licensing, and developer APIs/SDKs anchored on strict data isolation, Apache 2.0 open-weight foundations, and verifiable evaluation evidence.",
+      "flagships": ["Personalized AI Workforces", "Commercial Model Licensing (Planned)", "FDS Model API & SDK (Planned)"],
+      "challenges": [
+        { "title": "Data Commingling Risk", "detail": "Enterprises cannot risk proprietary source code, internal processes, or production IP leaking into shared training corpora." },
+        { "title": "Hype vs. Verifiable Readiness", "detail": "Procurement teams need honest separation between architecture proposals, internal evaluations, and production-certified software." },
+        { "title": "Licensing Clarity", "detail": "Commercial adopters need unambiguous upstream model licenses (such as Apache 2.0) and clear downstream ownership of customized workflows." }
+      ],
+      "proposedWorkflows": [
+        "Explicit 5-layer customization ladder separating Customer Retrieval, Agent Configuration, Tool Integration, Fine-Tuning, and Dedicated Model Deployment.",
+        "Zero automatic reuse of customer data to train shared FDS models; contractual and technical boundaries aligned strictly to demonstrated capability.",
+        "Transparent pre-release scoping for future commercial licensing of Hackmanite, Cinnabar, and Jaspilite enterprise editions."
+      ],
+      "availabilityBoundary": "FDS does NOT claim SOC 2, ISO 27001, HIPAA, or turnkey enterprise SLAs today. Private deployments and commercial licensing are planned offerings open for early architectural discovery.",
+      "ctaLabel": "Discuss Enterprise Solutions",
+      "ctaHref": "/contact/?track=enterprise"
+    }
+  ],
+  "personalizationLayers": [
+    {
+      "tier": "01",
+      "name": "Customer-Specific Retrieval (RAG)",
+      "isolation": "Tenant-Scoped Index",
+      "computeProfile": "Low latency · Zero weight modification",
+      "whatItDoes": "Grounds specialist models in a customer's approved codebases, engine docs, style bibles, and QA history at query time without modifying base model weights.",
+      "dataBoundary": "Customer index remains logically and physically segregated; never ingested into shared FDS training corpora."
+    },
+    {
+      "tier": "02",
+      "name": "Agent Configuration & Role Policy",
+      "isolation": "Workspace-Bound Configuration",
+      "computeProfile": "Zero extra GPU overhead",
+      "whatItDoes": "Defines specialist personas (e.g., Multiplayer Engineer, Continuity Specialist), coding standards, review checklists, and human approval thresholds tailored to studio workflow.",
+      "dataBoundary": "Policy profiles live inside customer-controlled repositories or private workspaces."
+    },
+    {
+      "tier": "03",
+      "name": "Approved Tool & Pipeline Integration",
+      "isolation": "Permission-Gated Execution",
+      "computeProfile": "Runs against customer build/test/creative tools",
+      "whatItDoes": "Connects models safely to compilers, profilers, test suites, version control, asset validators, or external animation/audio pipelines under least-privilege rules.",
+      "dataBoundary": "Explicit allowlists and audit logs govern every tool call; no silent external egress."
+    },
+    {
+      "tier": "04",
+      "name": "Domain Adaptation / Fine-Tuning (Planned)",
+      "isolation": "Customer-Exclusive Adapter Weights",
+      "computeProfile": "Periodic GPU training run (LoRA/QLoRA or SFT)",
+      "whatItDoes": "Adapts an FDS specialist base model to a customer's cleared, rights-verified internal codebase or creative discipline when retrieval alone is insufficient.",
+      "dataBoundary": "Produced adapters belong exclusively to the customer deployment and are never merged back into public or multi-tenant checkpoints."
+    },
+    {
+      "tier": "05",
+      "name": "Dedicated Private Model Deployment (Planned)",
+      "isolation": "Single-Tenant / On-Premises or VPC",
+      "computeProfile": "Dedicated GPU inference nodes",
+      "whatItDoes": "Hosts certified specialist models and orchestration infrastructure inside a customer's private VPC or on-premises hardware with zero shared-endpoint exposure.",
+      "dataBoundary": "Deployment scope, security controls, and contractual SLAs are established only for verified, production-ready releases."
+    }
+  ],
+  "hackmaniteCommercial": {
+    "offerings": [
+      {
+        "name": "Hackmanite Game Engineer",
+        "audience": "Individual & Studio Developers",
+        "status": "Training Planned · Commercial Direction",
+        "summary": "Specialist coding, engine scripting, gameplay systems, shader drafting, and debugging intelligence built on Hackmanite Prime and Reasoning."
+      },
+      {
+        "name": "Hackmanite Gaming Assistant",
+        "audience": "Gamers & Content Creators",
+        "status": "Commercial Direction · Not Released",
+        "summary": "Deep game-mechanics reasoning, strategy breakdowns, build optimization, and structured gameplay analysis for competitive and casual players."
+      },
+      {
+        "name": "Hackmanite Studio",
+        "audience": "Indie, AA & AAA Game Studios",
+        "status": "Commercial Direction · Scoping Open",
+        "summary": "Multi-role studio AI workforce configured around a studio's engine, codebase, assets, QA harnesses, and production standards."
+      },
+      {
+        "name": "Hackmanite Enterprise",
+        "audience": "Publishers & Large Studios",
+        "status": "Commercial Direction · Scoping Open",
+        "summary": "Segregated private deployment, custom retrieval/adapter architecture, security-boundary governance, and commercial licensing."
+      },
+      {
+        "name": "Hackmanite Model API & SDK",
+        "audience": "Toolmakers & Engine Integrators",
+        "status": "Planned · No Live API Today",
+        "summary": "Programmatic developer access and engine-plugin SDKs for integrating certified Hackmanite models once public certification completes."
+      }
+    ],
+    "targetCustomers": [
+      "AAA & AA Game Studios",
+      "Independent Game Developers",
+      "Roblox Developers",
+      "Unreal Engine Developers",
+      "Unity Developers",
+      "Godot Developers",
+      "Custom Engine Developers",
+      "FiveM & RedM Developers",
+      "Modding Communities",
+      "Game Publishers",
+      "Gaming Content Creators",
+      "Competitive & Casual Gamers"
+    ],
+    "workforceRoles": [
+      { "id": "game-engineer", "role": "Game Engineer", "focus": "Gameplay systems, engine programming, C++/C#/Luau/GDScript implementation, and state-machine debugging.", "stack": "Hackmanite Prime + Repository Retrieval + Compiler/Test Tools" },
+      { "id": "world-architect", "role": "World Architect", "focus": "World building, level layout, spatial streaming budgets, procedural environment grammars, and open-world architecture.", "stack": "Hackmanite Reasoning + Engine Scene Schema + Spatial Validators" },
+      { "id": "technical-artist", "role": "Technical Artist", "focus": "PBR materials, HLSL/GLSL shaders, render-graph passes, asset pipeline automation, and LOD/draw-call budgets.", "stack": "Hackmanite Prime + Shader Docs Retrieval + Asset Validators" },
+      { "id": "animation-engineer", "role": "Animation Engineer", "focus": "Skeletal rigging, locomotion graphs, IK/FK blending, motion-matching architecture, and character movement feel.", "stack": "Hackmanite Prime + Rigging Spec Index + State Graph Checks" },
+      { "id": "multiplayer-engineer", "role": "Multiplayer Engineer", "focus": "Authoritative netcode, entity replication, client-side prediction, rollback, reconciliation, and bandwidth profiling.", "stack": "Hackmanite Reasoning + Protocol Specs + Determinism Harnesses" },
+      { "id": "performance-engineer", "role": "Performance Engineer", "focus": "Frame-time profiling, CPU/GPU bottleneck triage, memory-layout optimization, cache locality, and thermal budgets.", "stack": "Hackmanite Reasoning + Telemetry Parsers + Benchmark Diffing" },
+      { "id": "qa-engineer", "role": "QA Engineer", "focus": "Automated soak/regression testing, crash-dump triage, reproduction-step minimization, and build-gate validation.", "stack": "Hackmanite Prime + Test Runner Tools + Crash Log Retrieval" },
+      { "id": "narrative-designer", "role": "Narrative Designer", "focus": "Mission structures, branching dialogue graphs, faction lore consistency, character voices, and worldbuilding documentation.", "stack": "Hackmanite / Cinnabar Narrative Rubric + Lore Bible Retrieval" },
+      { "id": "security-engineer", "role": "Security Engineer", "focus": "Defensive anti-cheat architecture, server-authoritative validation, exploit-surface auditing, and multiplayer hardening.", "stack": "Hackmanite Reasoning + Defensive Security Checklists" },
+      { "id": "gaming-specialist", "role": "Gaming Specialist", "focus": "Game-systems mastery, tactical strategies, economy balancing, mechanics guides, and structured gameplay analysis.", "stack": "Hackmanite Prime + Game Mechanics Retrieval" }
+    ],
+    "studioPersonalization": [
+      "Proprietary codebase & custom engine forks",
+      "Historical commit patterns & architecture decisions",
+      "Asset pipelines, shader conventions & LOD budgets",
+      "Gameplay systems, balance tables & state machines",
+      "Internal technical documentation & wikis",
+      "Studio production, QA & security policies"
+    ]
+  },
+  "cinnabarCommercial": {
+    "domains": [
+      "Anime Production",
+      "Manga Creation",
+      "Webtoon Development",
+      "Cinematic Storytelling",
+      "Storyboarding",
+      "Character Design",
+      "Environment Design",
+      "Animation Principles",
+      "Combat Choreography",
+      "Camera Composition",
+      "Narrative Continuity",
+      "Dialogue Writing",
+      "Worldbuilding",
+      "Voice & Sound Production",
+      "Canon Research",
+      "Fictional Physics",
+      "Creative Production Workflows"
+    ],
+    "workforceRoles": [
+      { "id": "manga-specialist", "role": "Manga Specialist", "focus": "Panel composition, page-turn pacing, gutter rhythm, visual storytelling beats, and serialized chapter structure.", "stack": "Cinnabar Narrative Model + Series Bible Retrieval" },
+      { "id": "anime-director", "role": "Anime Director", "focus": "Scene direction, camera framing, lens/cut vocabulary, emotional timing, and episodic visual composition.", "stack": "Cinnabar Narrative Model + Shot-List & Storyboard Schemas" },
+      { "id": "animation-specialist", "role": "Animation Specialist", "focus": "Keyframe planning, spacing/timing principles, movement weight, sakuga beat planning, and production coordination with external animation software.", "stack": "Cinnabar Craft Model + External Pipeline Coordination (Not Native Video Gen)" },
+      { "id": "character-designer", "role": "Character Designer", "focus": "Original character silhouettes, visual motifs, costume logic, expression sheets, and cross-chapter design consistency documentation.", "stack": "Cinnabar Craft Model + Character Bible Retrieval" },
+      { "id": "combat-choreographer", "role": "Combat Choreographer", "focus": "Cinematic fight construction, spatial action readability, momentum transfer, and tactical fictional combat sequencing.", "stack": "Cinnabar Oracle + BattleVerse Spatial Rulesets" },
+      { "id": "story-architect", "role": "Story Architect", "focus": "Multi-arc worldbuilding, theme structure, faction dynamics, character development, and long-horizon plot architecture.", "stack": "Cinnabar Narrative Model + Timeline Graph Retrieval" },
+      { "id": "audio-director", "role": "Audio Director", "focus": "Dialogue cadence, voice-direction notes, leitmotif/music cue planning, and sound-design spotting sheets for external audio tools.", "stack": "Cinnabar Narrative Model + External Audio Production Specs" },
+      { "id": "continuity-specialist", "role": "Continuity Specialist", "focus": "Character state tracking, narrative timeline validation, canonical feat verification, and visual consistency auditing across arcs.", "stack": "Cinnabar Oracle + Canonical Version Tracker" }
+    ]
+  },
+  "battleverseDirections": {
+    "creatorStudioImage": "/images/forge/battleverse-creator-studio.webp",
+    "creatorStudioImageSm": "/images/forge/battleverse-creator-studio-sm.webp",
+    "creatorStudioImageAlt": "Original anime and manga creative production desk showing monochrome storyboard panels transitioning across a light table into cel-shaded vermilion and cobalt keyframes of an original armored swordsman.",
+    "creatorStudioImageLabel": "Creative Production Concept — Original FDS Character (Not Software Screenshot)",
+    "arenaAudiences": [
+      "Anime & Manga Enthusiasts",
+      "Powerscaling Communities",
+      "Entertainment Content Creators",
+      "YouTube Analytical Channels",
+      "Fictional-Universe Researchers",
+      "Structured Debate Communities"
+    ],
+    "arenaCapabilities": [
+      "Version-specific character profiles separating canon continuities",
+      "Canonical evidence citations with context & outlier flags",
+      "Source verification & independent claim auditing",
+      "Feat analysis with documented physical & mathematical models",
+      "Probability-based combat simulation (never single-verdict dogma)",
+      "Configurable cross-universe equalization & environment rules",
+      "1v1 and multi-character team scenario modeling",
+      "Detailed analytical reports with uncertainty intervals & shareable briefs"
+    ],
+    "arenaScenarios": [
+      {
+        "id": "aegis-vs-vesper",
+        "title": "Vanguard Unit-01 \"Aegis\" vs. Strider Unit-04 \"Vesper\"",
+        "category": "Illustrative 1v1 Scenario · Original FDS Test Silhouettes",
+        "environment": "Bounded 120m Industrial Courtyard · Standard Gravity (9.81 m/s²) · Equalized Sensor Ruleset",
+        "fighterA": {
+          "name": "Vanguard Unit-01 \"Aegis\"",
+          "profile": "Heavy kinetic shield frame · High structural durability · Short-burst thruster impulse",
+          "winBand": "58% ± 8%"
+        },
+        "fighterB": {
+          "name": "Strider Unit-04 \"Vesper\"",
+          "profile": "High-agility recon blade frame · Superior angular velocity · Mid-range arc lance",
+          "winBand": "42% ± 8%"
+        },
+        "canonicalEvidence": [
+          "Aegis [Spec Sheet v1.0, Sec. 3]: Absorbs 420 kJ localized kinetic impact without core breach.",
+          "Vesper [Spec Sheet v1.0, Sec. 2]: Peak lateral sprint 34 m/s across unobstructed terrain with 0.14 s reaction floor.",
+          "Excluded non-canon promotional line claiming 'infinite shield output' (flagged as hyperbole)."
+        ],
+        "mathAssumptions": [
+          "Momentum transfer modeled as inelastic collision (e = 0.35) under dry concrete friction (μ = 0.72).",
+          "Opening separation fixed at 35 m with neutral line of sight and zero external tactical intel.",
+          "Energy reserve decay modeled linearly across 180-second engagement cap."
+        ],
+        "uncertaintyNotes": [
+          "Outcome band shifts by ±11% if arena obstacles allow Vesper repeated vertical flank angles.",
+          "Illustrative demonstration only — NOT output from a live web simulation engine and NOT canonical fact."
+        ]
+      },
+      {
+        "id": "kestrel-vs-aegis",
+        "title": "Bastion Unit-07 \"Kestrel\" vs. Vanguard Unit-01 \"Aegis\"",
+        "category": "Illustrative Range-vs-Armor Scenario · Original FDS Test Silhouettes",
+        "environment": "Open 250m Coastal Causeway · Crosswind 14 m/s · Unmodified Equipment Loadout",
+        "fighterA": {
+          "name": "Bastion Unit-07 \"Kestrel\"",
+          "profile": "Long-range rail artillery frame · Thermal targeting array · Low close-quarters armor",
+          "winBand": "64% ± 9%"
+        },
+        "fighterB": {
+          "name": "Vanguard Unit-01 \"Aegis\"",
+          "profile": "Heavy kinetic shield frame · High structural durability · Short-burst thruster impulse",
+          "winBand": "36% ± 9%"
+        },
+        "canonicalEvidence": [
+          "Kestrel [Spec Sheet v1.0, Sec. 4]: Verified effective engagement envelope 80m–300m; 2.4 s capacitor recharge cycle.",
+          "Aegis [Spec Sheet v1.0, Sec. 3]: Directional frontal plating rated for two sequential high-velocity rail strikes before structural fatigue."
+        ],
+        "mathAssumptions": [
+          "Starting distance 220 m favors Kestrel for 3–4 firing windows before Aegis can close to melee range.",
+          "Crosswind drag coefficient applied to projectile dispersion model (±0.4 mrad variance)."
+        ],
+        "uncertaintyNotes": [
+          "If starting separation drops below 60 m, modeled win probability reverses in Aegis's favor.",
+          "Illustrative demonstration only — demonstrates BattleVerse's separation of evidence, assumptions, and uncertainty."
+        ]
+      }
+    ],
+    "creatorStudioCustomers": [
+      "Anime Studios",
+      "Manga Artists",
+      "Independent Animators",
+      "Webtoon Creators",
+      "Entertainment Publishers",
+      "Original Animation Creators",
+      "Game Studios"
+    ],
+    "creatorStudioWorkflows": [
+      { "title": "Story Development & Character Bibles", "detail": "Structured multi-arc outlining, character motivation tracking, voice rules, and world lore consistency." },
+      { "title": "Manga Chapter Planning & Pacing", "detail": "Beat-by-beat chapter breakdowns, page-turn hooks, panel hierarchy, and dialogue density checks." },
+      { "title": "Scene Direction & Storyboarding", "detail": "Camera framing guides, shot-list structure, lighting notes, and visual continuity metadata." },
+      { "title": "Animation Planning & Fight Choreography", "detail": "Action-beat sequencing, spatial readability checks, and keyframe timing briefs coordinated with external animation tools." },
+      { "title": "Continuity Auditing & Production Management", "detail": "Cross-episode timeline checks, character-design notes, and asset handoff tracking." },
+      { "title": "External Creative Tool Orchestration", "detail": "Designed to complement dedicated drawing, animation, compositing, and audio suites while keeping artists in control." }
+    ]
+  },
+  "jaspiliteCommercial": {
+    "image": "/images/forge/jaspilite-orchestration.webp",
+    "imageSm": "/images/forge/jaspilite-orchestration-sm.webp",
+    "imageAlt": "Minimalist architectural render of four obsidian metallic modules connected by brushed silver and deep crimson optical trace lines converging into a verified central lattice.",
+    "imageLabel": "Conceptual Architecture Visualization — Not a Live Desktop Screenshot",
+    "providerMaturityLadder": [
+      { "stage": "01", "tier": "Discovered Provider", "meaning": "Local runtime or external CLI/endpoint detected on the workstation; no credentials or execution tests yet." },
+      { "stage": "02", "tier": "Authenticated Provider", "meaning": "User-supplied account, local socket, or API key passes authentication check under the user's own terms." },
+      { "stage": "03", "tier": "Available Model", "meaning": "Model identifier is enumerated and reachable for basic prompt inspection within current account quotas." },
+      { "stage": "04", "tier": "Execution-Verified Route", "meaning": "End-to-end tool execution, structured diff edits, and command safety checks pass reproducible harness validation." },
+      { "stage": "05", "tier": "Production-Certified Integration", "meaning": "Publicly documented, legally clear, regression-tested connector approved by FDS for release support." }
+    ],
+    "architecturePillars": [
+      { "title": "User-Connected Accounts & Local Discovery", "detail": "Discovers local open-weight runtimes alongside user-authorized provider accounts—never pooling or bypassing third-party subscription terms." },
+      { "title": "Planning, Decomposition & Multi-Agent Execution", "detail": "Breaks complex repository goals into auditable tasks across Auto, Meld (lead/sidekick/specialist), and Solo execution flows." },
+      { "title": "Repository Awareness & Live Progress", "detail": "Tracks workspace files, git diffs, build outputs, and verification status continuously inside one unified engineering session." },
+      { "title": "Permissions, Cost Routing & Human Oversight", "detail": "Enforces workspace ownership, command approval gates, cost-aware model selection, and explicit human review before shipping." }
+    ],
+    "targetMarkets": [
+      "Individual Developers",
+      "Professional Engineering Teams",
+      "Independent Game & Software Studios",
+      "Enterprise Software Organizations"
+    ]
+  },
+  "alexandriteConvergence": {
+    "stages": [
+      { "step": "01", "title": "Specialist Research Grounds", "state": "Active", "detail": "Project Forge's 15 divisions curate rights-verified technical sources, engineering findings, and domain evaluation rubrics." },
+      { "step": "02", "title": "Independent Model Development", "state": "In Progress / Planned", "detail": "Domain specialists—Hackmanite for game engineering and Cinnabar for storytelling & animation craft—train and prove value independently." },
+      { "step": "03", "title": "Certified Knowledge Exports", "state": "Planned Gate", "detail": "Only independently evaluated specialist checkpoints with verified licensing and reproducible traces qualify as teacher inputs." },
+      { "step": "04", "title": "Collective Training", "state": "Not Started", "detail": "Dedicated cross-domain training run designed to unify reasoning across software, games, storytelling, and scientific domains." },
+      { "step": "05", "title": "Multi-Teacher Distillation", "state": "Not Started", "detail": "Structured transfer of verified specialist reasoning traces without naive weight averaging or unverified parameter merging." },
+      { "step": "06", "title": "Independent Evaluation", "state": "Not Started", "detail": "Holdout benchmarks across every source domain plus cross-domain synthesis, measuring raw vs. guarded reliability and regressions." },
+      { "step": "07", "title": "Future Commercial Deployment", "state": "Long-Term Vision", "detail": "Public availability, developer APIs, or studio licensing occur only after independent capability certification and owner approval." }
+    ],
+    "orchestrationVsCollective": [
+      {
+        "dimension": "Core Mechanism",
+        "orchestration": "Routes tasks dynamically across multiple separate models and tools at runtime (e.g., Jaspilite Auto & Meld modes).",
+        "collective": "Trains a single unified neural model via multi-teacher distillation and curated cross-domain training (Alexandrite vision)."
+      },
+      {
+        "dimension": "Cross-Domain Synthesis",
+        "orchestration": "Combines outputs via prompts, handoffs, and shared workspace state; each model still reasons inside its own weights.",
+        "collective": "Internalizes cross-domain abstractions (e.g., game physics + narrative staging + systems engineering) inside shared latent representations."
+      },
+      {
+        "dimension": "Why Naive Weight Merging Fails",
+        "orchestration": "Not applicable — models remain distinct weights invoked selectively.",
+        "collective": "Simply averaging unrelated weights or combining model names degrades coherence; disciplined distillation & holdout evals are mandatory."
+      },
+      {
+        "dimension": "Current FDS Status",
+        "orchestration": "Active platform development inside Jaspilite; does NOT depend on Alexandrite to deliver value.",
+        "collective": "Research vision; collective training has not started and no Alexandrite weights or API exist today."
+      }
+    ]
+  },
+  "projectForgeVisual": {
+    "src": "/images/forge/project-forge-lab.webp",
+    "mobileSrc": "/images/forge/project-forge-lab-sm.webp",
+    "alt": "Minimalist scientific visualization of dark optical glass prisms and milled graphite rails filtering geometric streams through molten amber light into structured verification lattices.",
+    "label": "Research Pipeline Visualization — Project Forge Architecture"
+  },
+  "inquiryTracks": [
+    {
+      "id": "developer-preview",
+      "label": "Developer Preview Interest",
+      "audience": "Individual developers, game devs & preview testers",
+      "subjectPrefix": "[FDS Developer Preview]",
+      "description": "Register interest for future Jaspilite, Hackmanite, BattleVerse Arena, or FDS API/SDK developer previews once builds clear release gates."
+    },
+    {
+      "id": "studio-workforce",
+      "label": "Studio AI Workforce & Creative Production",
+      "audience": "Game studios, animation studios & creative teams",
+      "subjectPrefix": "[FDS Studio Inquiry]",
+      "description": "Discuss Hackmanite Studio, Cinnabar / BattleVerse Creator Studio workflows, or future personalized studio AI workforces."
+    },
+    {
+      "id": "enterprise",
+      "label": "Enterprise & Private AI Solutions",
+      "audience": "Enterprise technology & engineering leaders",
+      "subjectPrefix": "[FDS Enterprise Solutions]",
+      "description": "Scope future private AI deployments, segregated retrieval/agent architectures, and organizational governance requirements."
+    },
+    {
+      "id": "licensing",
+      "label": "Commercial Model Licensing & APIs",
+      "audience": "Toolmakers, publishers & platform integrators",
+      "subjectPrefix": "[FDS Commercial Licensing]",
+      "description": "Explore future commercial licensing pathways for certified Hackmanite or Cinnabar specialist models and upcoming SDK integrations."
+    },
+    {
+      "id": "research-partnership",
+      "label": "Research & Technology Partnerships",
+      "audience": "AI researchers, academics & technical collaborators",
+      "subjectPrefix": "[FDS Research Partnership]",
+      "description": "Connect with Project Forge regarding evaluation methodology, open-weight domain adaptation, or scientific collaboration."
+    },
+    {
+      "id": "general",
+      "label": "General, Press, Security & Corrections",
+      "audience": "Media, security researchers & community members",
+      "subjectPrefix": "[FDS General Inquiry]",
+      "description": "Reach FDS for factual accuracy corrections, security disclosures, ForgerEMS feedback, press inquiries, or hardware donations."
+    }
+  ]
+}

@@ -109,6 +109,7 @@ const VALID_CATEGORIES = new Set([
   'ai-model-family',
   'ai-model',
   'application',
+  'commercial-direction',
   'research-infrastructure',
   'original-production',
   'legacy-product',
@@ -116,37 +117,52 @@ const VALID_CATEGORIES = new Set([
 
 const VALID_DEV_STATUSES = new Set([
   'research-vision',
+  'active-research',
   'foundation-available',
   'training-planned',
   'training-in-progress',
   'fine-tuning-completed',
+  'experimental-checkpoint',
   'experimental',
+  'internal-evaluation',
   'evaluated',
   'capability-certified',
   'active-development',
+  'private-alpha',
+  'private-beta',
   'private-development',
+  'commercial-direction',
   'public-preview',
   'public-release',
+  'commercially-available',
   'deprecated',
 ]);
 
 const VALID_AVAILABILITY = new Set([
   'not-publicly-available',
   'research-only',
+  'private-development',
+  'early-interest-open',
   'downloads-paused',
   'public-preview',
   'public-release',
-  'private-development',
+  'commercially-available',
 ]);
 
 const UNRELEASED_STATUSES = new Set([
   'research-vision',
+  'active-research',
   'foundation-available',
   'training-planned',
   'training-in-progress',
+  'experimental-checkpoint',
   'experimental',
+  'internal-evaluation',
   'active-development',
+  'private-alpha',
+  'private-beta',
   'private-development',
+  'commercial-direction',
 ]);
 
 const PRIVATE_LEAK_PATTERNS = [
@@ -155,6 +171,7 @@ const PRIVATE_LEAK_PATTERNS = [
   { label: 'Internal desktop username path', regex: /Daddy_FDS/i },
   { label: 'Unverified SOC 2 / ISO compliance claim', regex: /\b(?:SOC\s*2\s*(?:Type|certified|compliant)|ISO\s*27001\s*certified|HIPAA\s*compliant)\b/i },
   { label: 'Secret API key pattern', regex: /\b(?:sk-or-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{30,})\b/ },
+  { label: 'Unapproved internal revenue scenario figure', regex: /\$39,957\.50|\$479,490/ },
 ];
 
 const registryPath = join(root, 'content/public-status/registry.json');
@@ -189,7 +206,7 @@ if (!existsSync(registryPath)) {
       if (!VALID_AVAILABILITY.has(entry.availability)) err(`registry.json [${entry.id}]: invalid availability "${entry.availability}"`);
       if (entry.approved_for_publication !== true) err(`registry.json [${entry.id}]: unapproved entry cannot exist in public registry`);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.last_verified || '')) err(`registry.json [${entry.id}]: invalid last_verified date`);
-      if (UNRELEASED_STATUSES.has(entry.development_status) && (entry.availability === 'public-release' || entry.availability === 'public-preview')) {
+      if (UNRELEASED_STATUSES.has(entry.development_status) && (entry.availability === 'public-release' || entry.availability === 'public-preview' || entry.availability === 'commercially-available')) {
         err(`registry.json [${entry.id}]: unsupported availability "${entry.availability}" for status "${entry.development_status}"`);
       }
     }

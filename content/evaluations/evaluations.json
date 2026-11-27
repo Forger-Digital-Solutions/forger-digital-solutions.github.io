@@ -1,27 +1,28 @@
 {
   "last_updated": "2026-11-26",
-  "policy": "FDS publishes numerical benchmark scores ONLY when backed by an owner-approved public evaluation export specifying exact model version, benchmark version, test count, evaluation conditions (raw vs. guarded), baseline, uncertainty, and known limitations. Unrelated benchmarks are never aggregated, and no frontier-model outperformance claim is made without valid comparative evidence.",
+  "policy": "FDS publishes numerical benchmark scores ONLY when backed by an owner-approved public evaluation export specifying exact model version, base-model identity, benchmark version, evaluation date, test count, evaluation conditions (raw vs. guarded), comparison baseline, uncertainty, and known limitations. Website tests, application regression tests, model evaluations, and commercial certification are never conflated.",
   "required_fields": [
     "Model Name & Version",
+    "Base-Model Identity",
     "Benchmark Name & Version",
+    "Evaluation Date",
     "Test Case Count (n)",
     "Evaluation Conditions",
     "Raw Result",
     "Guarded Result",
     "Comparison Baseline",
     "Uncertainty / Confidence Interval",
-    "Known Limitations",
-    "Evaluation Date & Status"
+    "Known Limitations"
   ],
   "records": [
     {
       "id": "fds-site-kayla-golden",
-      "model": "Kayla Copilot Local Canonical Router (Website Build)",
-      "benchmark": "FDS Kayla Golden Query Regression Suite v1",
-      "testCases": 345,
+      "model": "Kayla Copilot Local Canonical Router (Website Build — Not a Foundation Model)",
+      "benchmark": "FDS Kayla Golden Query Regression Suite v2",
+      "testCases": 365,
       "conditions": "Offline deterministic local routing (no external LLM provider); Tier 1/2/3 invariant verification",
       "rawResult": "Not applicable (deterministic canonical lookup)",
-      "guardedResult": "345 / 345 invariants passing in CI",
+      "guardedResult": "365 / 365 invariants passing in CI",
       "baseline": "Target thresholds: Tier 1 = 100%, Tier 2 >= 95%, Tier 3 >= 90%",
       "uncertainty": "Deterministic suite (0% sampling variance); measures repository-fact recall only, not open-ended reasoning",
       "limitations": "Evaluates local canonical routing and safety invariants on this public website only; does not benchmark general LLM intelligence.",
