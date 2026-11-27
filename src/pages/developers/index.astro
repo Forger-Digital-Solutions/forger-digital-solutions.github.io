@@ -2,11 +2,34 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StatusPill from '../../components/StatusPill.astro';
 import { siteConfig } from '../../config/site';
+
+const plannedInterfaces = [
+  {
+    surface: 'Hackmanite Model API & Game-Engine SDK',
+    status: 'Planned · Not Live Today',
+    scope: 'Programmatic coding, shader, netcode, and physics reasoning interfaces for Unreal, Unity, Godot, Roblox, and custom toolchains once Hackmanite models complete certification.',
+  },
+  {
+    surface: 'Cinnabar Narrative & Continuity API',
+    status: 'Commercial Direction · Research Only',
+    scope: 'Structured continuity auditing, character bible retrieval, and external pipeline coordination endpoints for creative tools and BattleVerse Creator Studio.',
+  },
+  {
+    surface: 'Jaspilite Local & Multi-Provider SDK',
+    status: 'Active Platform Development',
+    scope: 'Repository-aware orchestration hooks, local open-weight runtime discovery, and explicit permission gates across Auto, Meld, and Solo modes.',
+  },
+  {
+    surface: 'Commercial Model Licensing & Private Inference',
+    status: 'Commercial Direction · Scoping Open',
+    scope: 'Dedicated VPC/on-premises deployment specifications and Apache-2.0-grounded commercial adaptation licensing for studios and enterprise engineering teams.',
+  },
+];
 ---
 
 <BaseLayout
-  title="Developers — Technical Platform & Integration Hub"
-  description="Developer documentation, model specifications, verifiable release artifacts, and honest public API status from Forger Digital Solutions."
+  title="Developers — Documentation, Planned APIs & Verified Releases"
+  description="Developer documentation, planned model APIs and SDKs, structured model cards, verifiable SHA-256 software releases, and honest API availability from Forger Digital Solutions."
   accent="fds-cobalt"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -16,23 +39,61 @@ import { siteConfig } from '../../config/site';
 
   <header class="page-head">
     <div class="dev-meta">
-      <p class="page-eyebrow">FDS Developers // Engineering Platform</p>
+      <p class="page-eyebrow">FDS Developers // Engineering &amp; Integration Hub</p>
       <StatusPill label="No Public Inference API Yet" tone="private" />
     </div>
     <h1 class="page-title">Built for engineers who verify before they ship.</h1>
     <p class="page-description">
-      Access model documentation, architecture specifications, verifiable software artifacts, and public repository sources across the Forger Digital Solutions ecosystem.
+      Inspect model architectures, Apache-2.0 foundation provenance, planned developer APIs and SDKs, verifiable software binaries, and public repositories across the Forger Digital Solutions ecosystem.
     </p>
+    <div class="head-actions">
+      <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Interest in Developer Preview <span aria-hidden="true">→</span></a>
+      <a href="/docs/" class="btn btn-outline">Browse Documentation</a>
+      <a href="/contact/?track=licensing" class="btn btn-ghost">Commercial API &amp; Licensing</a>
+    </div>
   </header>
 
   <section class="page-section page-section--tight" aria-labelledby="dev-api-status-title">
     <div class="fds-callout">
-      <strong id="dev-api-status-title">Public API &amp; Hosted Inference Availability:</strong>
-      Forger Digital Solutions does <strong>not</strong> currently operate a public hosted model API, commercial API key portal, metered billing console, or live inference playground. We will never publish fake key generators or non-functional sandboxes. When public developer endpoints or downloadable specialist weights are approved and certified, they will appear here and in our <a href="/releases/">Release Index</a>.
+      <strong id="dev-api-status-title">Public API, Playground &amp; Billing Honesty:</strong>
+      Forger Digital Solutions does <strong>not</strong> currently operate a public hosted model API, commercial API key portal, metered billing console, or live inference playground. We will never publish fake key generators, mock checkout pages, or non-functional sandboxes. When public developer endpoints or certified weights launch, they will appear here and in our <a href="/releases/">Release Index</a>.
     </div>
   </section>
 
-  <section class="page-section page-section--surface" aria-labelledby="dev-surfaces-title">
+  <!-- Planned Commercial APIs & SDK Roadmap -->
+  <section class="page-section page-section--surface" aria-labelledby="dev-roadmap-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Planned Developer Surfaces</p>
+        <h2 id="dev-roadmap-title">Upcoming APIs, SDKs, and commercial integration pathways.</h2>
+        <p>Every integration surface below is tracked honestly against our certification gates before commercial availability.</p>
+      </div>
+      <a href="/solutions/software-engineering/" class="text-link">Software Team Solutions <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Planned Interface</th>
+            <th scope="col">Current Status</th>
+            <th scope="col">Intended Engineering Scope</th>
+          </tr>
+        </thead>
+        <tbody>
+          {plannedInterfaces.map((item) => (
+            <tr>
+              <th scope="row">{item.surface}</th>
+              <td><strong>{item.status}</strong></td>
+              <td>{item.scope}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="dev-surfaces-title">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Available Today</p>
@@ -51,7 +112,7 @@ import { siteConfig } from '../../config/site';
       <article class="fds-panel dev-card">
         <span class="dev-card__kicker">MODEL SPECIFICATIONS</span>
         <h3>Model Cards &amp; Lineages</h3>
-        <p>Structured model cards disclosing base architectures, parameter targets, modalities, licensing context, known limitations, and explicit non-claims for every FDS model family.</p>
+        <p>Structured model cards disclosing base architectures, Apache-2.0 upstream licenses, parameter targets, modalities, known limitations, and explicit non-claims.</p>
         <a href="/model-cards/" class="text-link">View Model Cards <span aria-hidden="true">→</span></a>
       </article>
 
@@ -65,7 +126,7 @@ import { siteConfig } from '../../config/site';
       <article class="fds-panel dev-card">
         <span class="dev-card__kicker">AUTONOMOUS DEVELOPMENT</span>
         <h3>Jaspilite Platform Architecture</h3>
-        <p>Explore how Jaspilite organizes provider-agnostic model orchestration across Auto, Meld, and Solo modes while keeping developers in control of local repositories.</p>
+        <p>Explore how Jaspilite organizes provider-agnostic model orchestration across Auto, Meld, and Solo modes plus our 5-tier provider verification ladder.</p>
         <a href="/products/jaspilite/" class="text-link">Explore Jaspilite <span aria-hidden="true">→</span></a>
       </article>
 
@@ -85,7 +146,7 @@ import { siteConfig } from '../../config/site';
     </div>
   </section>
 
-  <section class="page-section" aria-labelledby="dev-verify-title">
+  <section class="page-section page-section--surface" aria-labelledby="dev-verify-title">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Release Integrity</p>
@@ -108,6 +169,7 @@ import { siteConfig } from '../../config/site';
 <style>
   .dev-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
   .dev-meta .page-eyebrow { margin: 0; }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
 
   .dev-grid {
     display: grid;
@@ -127,8 +189,8 @@ import { siteConfig } from '../../config/site';
     font-weight: 600;
     letter-spacing: 0.12em;
   }
-  .dev-card h3 { margin: 0; font-size: 1.1rem; }
-  .dev-card p { margin: 0; color: var(--color-text-muted); font-size: 0.89rem; line-height: 1.6; flex: 1; }
+  .dev-card h3 { margin: 0; font-size: 1.12rem; }
+  .dev-card p { margin: 0 0 auto; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.6; padding-bottom: 0.5rem; }
 
   .code-box {
     border: 1px solid var(--color-border-structural);
@@ -140,24 +202,15 @@ import { siteConfig } from '../../config/site';
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 0.5rem 1rem;
-    padding: 0.75rem 1.15rem;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
     border-bottom: 1px solid var(--color-border);
-    background: var(--color-bg-secondary);
     color: var(--color-text-subtle);
     font-family: var(--font-mono);
     font-size: 0.72rem;
   }
-  .code-box pre {
-    margin: 0;
-    padding: 1.15rem;
-    overflow-x: auto;
-    color: var(--color-brand-silver);
-    font-family: var(--font-mono);
-    font-size: 0.84rem;
-    line-height: 1.65;
-  }
+  .code-box pre { margin: 0; padding: 1.1rem; overflow-x: auto; }
+  .code-box code { color: var(--color-brand-silver); font-family: var(--font-mono); font-size: 0.82rem; }
 
-  @media (max-width: 960px) { .dev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 640px) { .dev-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) { .dev-grid { grid-template-columns: 1fr; } }
 </style>

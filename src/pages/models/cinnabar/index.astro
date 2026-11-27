@@ -3,22 +3,17 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import StatusPill from '../../../components/StatusPill.astro';
 import SpecimenMedia from '../../../components/SpecimenMedia.astro';
 import ModelCardPanel from '../../../components/ModelCardPanel.astro';
-import { getRegistryEntry, modelFamiliesData } from '../../../data/registry';
+import SpecialistWorkforceExplorer from '../../../components/SpecialistWorkforceExplorer.astro';
+import { getRegistryEntry, modelFamiliesData, solutionsData } from '../../../data/registry';
 
 const entry = getRegistryEntry('cinnabar');
 const cinData = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
-
-const domains = [
-  { title: 'Anime & Manga Craft', detail: 'Panel rhythm, visual pacing, episode structure, storyboarding conventions, and terminology.' },
-  { title: 'Character & Narrative Design', detail: 'Long-form character arcs, voice consistency, dialogue cadence, and multi-arc continuity tracking.' },
-  { title: 'Worldbuilding & Cinematography', detail: 'Internal rule systems, camera framing vocabulary, lighting cues, and scene composition analysis.' },
-  { title: 'Canonical Intelligence & Combat Analysis', detail: 'Source-grounded feat verification, continuity versioning, and structured fictional combat reasoning through Oracle lineages.' },
-];
+const { domains, workforceRoles } = solutionsData.cinnabarCommercial;
 ---
 
 <BaseLayout
-  title="Cinnabar — Anime, Manga & Animation Intelligence"
-  description="Cinnabar is Forger Digital Solutions' specialized AI model family for anime, manga, animation workflows, worldbuilding, canonical intelligence, and fictional combat analysis."
+  title="Cinnabar — Anime, Manga & Animation Production Intelligence"
+  description="Cinnabar is Forger Digital Solutions' specialized AI model family for anime, manga, animation craft, cinematic storytelling, narrative continuity, and Oracle fictional intelligence."
   accent="cinnabar"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -35,9 +30,16 @@ const domains = [
       </div>
       <h1 class="page-title">Cinnabar</h1>
       <p class="model-hero__tagline">Intelligence for the art of storytelling.</p>
-      <p class="page-description">{cinData.summary}</p>
+      <p class="page-description">
+        Cinnabar is FDS's dedicated anime, manga, animation, cinematic-production, and fictional-intelligence model family—built for professional creative workflows far beyond powerscaling, while preserving the documented <strong>Oracle v1–v4.1</strong> fictional-intelligence lineages.
+      </p>
+      <div class="hero-actions">
+        <a href="/products/battleverse/creator-studio/" class="btn btn-primary">Explore Creator Studio <span aria-hidden="true">→</span></a>
+        <a href="/models/cinnabar/oracle/" class="btn btn-outline">Inspect Oracle v1–v4.1</a>
+        <a href="/solutions/animation-studios/" class="btn btn-ghost">Animation Studio Solutions</a>
+      </div>
       <div class="fds-callout">
-        <strong>Modality &amp; IP Integrity:</strong> Cinnabar Oracle models are text-based analytical and storytelling models — <strong>not</strong> native video or animation generators. Creative rendering and animation production rely on explicitly identified external tools. FDS never uses copyrighted anime footage or unlicensed manga scans as website artwork.
+        <strong>Modality &amp; IP Integrity:</strong> Cinnabar language models coordinate specialized external image, animation, video, and audio tools—they are <strong>not</strong> native video or animation generators. FDS uses only original or appropriately licensed artwork and respects creator intellectual property.
       </div>
     </div>
     <div class="model-hero__visual">
@@ -51,39 +53,62 @@ const domains = [
     </div>
   </header>
 
+  <!-- Interactive 8-Role Professional Creative Workforce -->
+  <section class="page-section page-section--surface" aria-labelledby="cin-workforce-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Professional Creative Workforce</p>
+        <h2 id="cin-workforce-heading">Eight specialized creative roles supporting human directors and artists.</h2>
+        <p>
+          Explore how Cinnabar's storytelling, choreography, continuity, and direction capabilities map onto real anime, manga, and webtoon production roles.
+        </p>
+      </div>
+      <a href="/solutions/anime-manga-creators/" class="text-link">Anime &amp; Manga Creators <span aria-hidden="true">→</span></a>
+    </div>
+
+    <SpecialistWorkforceExplorer
+      idPrefix="cin-wf"
+      eyebrow="CINNABAR // 8-ROLE PROFESSIONAL CREATIVE WORKFORCE"
+      accent="cinnabar"
+      roles={workforceRoles}
+      architectureNote="Architectural honesty: creative roles combine Cinnabar language models, studio continuity retrieval, and external drawing/animation/audio tool coordination—never falsely claiming native video synthesis from text checkpoints."
+    />
+  </section>
+
+  <!-- 17 Research & Development Domains -->
   <section class="page-section" aria-labelledby="domains-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Creative Specializations</p>
-        <h2 id="domains-heading">Built around narrative discipline and production craft.</h2>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research &amp; Development Scope</p>
+        <h2 id="domains-heading">Seventeen craft and narrative domains across anime, manga, and animation.</h2>
       </div>
-      <a href="/models/cinnabar/oracle/" class="btn btn-outline">Inspect Oracle v1–v4.1 Lineages <span aria-hidden="true">→</span></a>
+      <a href="/research/animation/" class="text-link">Animation Research Track <span aria-hidden="true">→</span></a>
     </div>
 
-    <div class="domain-grid">
-      {domains.map((d, idx) => (
-        <article class="domain-cell">
-          <span class="domain-cell__idx">0{idx + 1}</span>
-          <h3>{d.title}</h3>
-          <p>{d.detail}</p>
-        </article>
+    <div class="domain-chips">
+      {domains.map((dom, idx) => (
+        <span class="domain-chip">
+          <span class="domain-chip__idx">{String(idx + 1).padStart(2, '0')}</span>
+          <span>{dom}</span>
+        </span>
       ))}
     </div>
   </section>
 
+  <!-- Oracle Lineages Distinction -->
   <section class="page-section page-section--surface" aria-labelledby="oracle-overview-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Documented Oracle Lineages</p>
-        <h2 id="oracle-overview-heading">Progressive refinement from Oracle v1 to v4.1.</h2>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Oracle Lineages vs. Broader Cinnabar Family</p>
+        <h2 id="oracle-overview-heading">Documented Oracle v1–v4.1 fictional-intelligence progression.</h2>
         <p>
-          Cinnabar is the model family; <a href="/products/battleverse/">Forge BattleVerse</a> is a separate standalone application engineered to integrate with Cinnabar Oracle for structured canonical analysis.
+          Oracle is Cinnabar's fictional-intelligence and canonical-analysis specialization; the broader Cinnabar family targets anime, manga, and animation creative workflows. <a href="/products/battleverse/">Forge BattleVerse</a> is a separate application platform designed to integrate with Cinnabar across both <a href="/products/battleverse/arena/">Arena</a> and <a href="/products/battleverse/creator-studio/">Creator Studio</a>.
         </p>
       </div>
       <a href="/models/cinnabar/oracle/" class="text-link">Full Oracle lineage table <span aria-hidden="true">→</span></a>
     </div>
 
-    <div class="fds-table-wrap">
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
       <table class="fds-table">
         <thead>
           <tr>
@@ -124,35 +149,28 @@ const domains = [
   .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
   .hero-badges .page-eyebrow { margin: 0; }
   .model-hero__tagline { margin: 0.45rem 0 0; color: var(--accent-cinnabar); font-family: var(--font-serif); font-style: italic; font-size: 1.55rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
   .model-hero .fds-callout { margin-top: 1.4rem; }
 
-  .domain-grid {
+  .domain-chips {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  .domain-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.8rem 1rem;
     border: 1px solid var(--color-border-structural);
-    border-radius: var(--radius-md);
-    background: var(--color-border);
-    overflow: hidden;
-  }
-
-  .domain-cell {
-    padding: 1.5rem;
+    border-radius: var(--radius-sm);
     background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-size: 0.9rem;
   }
+  .domain-chip__idx { color: var(--accent-cinnabar); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; flex-shrink: 0; }
 
-  .domain-cell__idx {
-    color: var(--accent-cinnabar);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 600;
-  }
-
-  .domain-cell h3 { margin: 0.5rem 0 0.4rem; font-size: 1.1rem; }
-  .domain-cell p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
-
-  @media (max-width: 900px) {
-    .model-hero,
-    .domain-grid { grid-template-columns: 1fr; }
+  @media (max-width: 960px) {
+    .model-hero, .domain-chips { grid-template-columns: 1fr; }
   }
 </style>

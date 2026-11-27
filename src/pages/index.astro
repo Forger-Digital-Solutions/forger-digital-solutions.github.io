@@ -13,6 +13,7 @@ import {
   modelFamiliesData,
   projectForgeData,
   newsUpdatesData,
+  solutionsData,
 } from '../data/registry';
 
 const alexandrite = getRegistryEntry('alexandrite');
@@ -28,15 +29,15 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
 ---
 
 <BaseLayout
-  description="Forger Digital Solutions is an independent AI research and engineering studio developing specialized models (Alexandrite, Hackmanite, Cinnabar), autonomous platforms (Jaspilite, Forge BattleVerse), Project Forge research infrastructure, and original worlds (State Lines)."
+  description="Forger Digital Solutions is an independent AI research laboratory, commercial AI technology provider, autonomous software engineering company, and original entertainment studio building Alexandrite, Hackmanite, Cinnabar, Jaspilite, Forge BattleVerse, Project Forge, and State Lines."
 >
   <!-- Section A: Compact factual announcement strip -->
   <div class="announce-strip" role="region" aria-label="Latest update">
     <span class="announce-strip__tag">Update</span>
     <p class="announce-strip__text">
-      FDS public ecosystem modernized around our seven flagship technologies · ForgerEMS v1.2.4-preview.1 remains available for Windows.
+      FDS Commercial AI &amp; Studio Solutions pathways open for early scoping · ForgerEMS v1.2.4-preview.1 remains publicly available for Windows.
     </p>
-    <a class="announce-strip__link" href="/downloads/">View releases <span aria-hidden="true">→</span></a>
+    <a class="announce-strip__link" href="/solutions/">Explore Solutions <span aria-hidden="true">→</span></a>
   </div>
 
   <!-- Section B: Editorial Hero with Bespoke Computational Convergence Visual -->
@@ -60,7 +61,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     <div class="hero__inner">
       <p class="fds-eyebrow">
         <span class="fds-eyebrow__rule"></span>
-        Forger Digital Solutions · AI Research &amp; Engineering Studio
+        Forger Digital Solutions · Commercial AI, Research &amp; Original Studio
       </p>
       <h1 id="hero-heading" class="hero__title">
         Specialized intelligence.<br />Extraordinary worlds.
@@ -70,8 +71,8 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
       </p>
       <div class="hero__actions">
         <a href="/models/" class="btn btn-primary">Explore Our Models <span aria-hidden="true">→</span></a>
-        <a href="/research/" class="btn btn-outline">Discover Our Research</a>
-        <a href="/trust/" class="btn btn-ghost">Truth &amp; Governance</a>
+        <a href="/solutions/" class="btn btn-outline">Studio &amp; Enterprise Solutions</a>
+        <a href="/research/" class="btn btn-ghost">Discover Our Research</a>
       </div>
       <p class="hero__heritage">
         <span>Studio Creed</span>
@@ -95,10 +96,10 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
   <section class="page-section" aria-labelledby="models-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Intelligence · AI Model Families</p>
-        <h2 id="models-heading">Focused intelligence, built for demanding domains.</h2>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Intelligence · Commercial &amp; Research Model Families</p>
+        <h2 id="models-heading">Focused intelligence, built for the worlds we create.</h2>
         <p>
-          Rather than chasing generic all-purpose claims, FDS develops domain-specialized model families grounded in verified engineering, gaming, and storytelling disciplines — converging long-term toward collective intelligence.
+          Rather than chasing generic all-purpose claims, FDS develops specialized AI model families for game engineering, anime and animation production, and long-term collective convergence—backed by verified Apache-2.0 open-weight foundations and Project Forge research.
         </p>
       </div>
       <div class="head-links">
@@ -265,14 +266,48 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
         </p>
         <div class="flagship-actions">
           <a href="/products/battleverse/" class="btn btn-outline">Explore BattleVerse <span aria-hidden="true">→</span></a>
-          <a href="/trust/" class="text-link">Scientific integrity policy</a>
+          <a href="/products/battleverse/arena/" class="text-link">Arena</a>
+          <a href="/products/battleverse/creator-studio/" class="text-link">Creator Studio</a>
         </div>
       </div>
     </article>
   </section>
 
+  <!-- Section E2: Studio & Enterprise Commercial Solutions -->
+  <section class="page-section page-section--surface" aria-labelledby="solutions-home-heading">
+    <div class="solutions-feature">
+      <div class="solutions-feature__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Commercial Solutions · Studio &amp; Enterprise AI</p>
+        <h2 id="solutions-home-heading">Personalized AI workforces built for your codebase, engine, and creative pipeline.</h2>
+        <p class="flagship-body">
+          Whether you are an independent game developer, an animation studio protecting original IP, or an enterprise engineering organization seeking customer-segregated AI, FDS architects specialized retrieval, multi-agent roles, and private deployment pathways tailored to real production workflows.
+        </p>
+        <div class="solutions-pill-links" aria-label="Commercial solution pathways">
+          {solutionsData.audienceSolutions.map((sol) => (
+            <a href={`/solutions/${sol.slug}/`} class="sol-chip">{sol.name} →</a>
+          ))}
+        </div>
+        <div class="flagship-actions">
+          <a href="/solutions/" class="btn btn-primary">Explore Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
+          <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
+        </div>
+        <p class="flagship-boundary">
+          Private deployments and commercial model licensing are active commercial directions with strict customer data segregation — no unverified turnkey SLA or SOC 2/ISO badge is claimed today.
+        </p>
+      </div>
+      <div class="solutions-feature__visual">
+        <SpecimenMedia
+          src={solutionsData.heroVisual.src}
+          mobileSrc={solutionsData.heroVisual.mobileSrc}
+          alt={solutionsData.heroVisual.alt}
+          label={solutionsData.heroVisual.label}
+        />
+      </div>
+    </div>
+  </section>
+
   <!-- Section F: Project Forge Research Foundation -->
-  <section class="page-section page-section--surface" data-accent="project-forge" aria-labelledby="forge-heading">
+  <section class="page-section" data-accent="project-forge" aria-labelledby="forge-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>FDS Research · Project Forge</p>
@@ -291,7 +326,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
   </section>
 
   <!-- Section G: State Lines Cinematic Original Entertainment Showcase -->
-  <section class="page-section" data-accent="state-lines" aria-labelledby="statelines-heading">
+  <section class="page-section page-section--surface" data-accent="state-lines" aria-labelledby="statelines-heading">
     <div class="statelines-banner">
       <div class="statelines-banner__media">
         <picture>
@@ -329,7 +364,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
   </section>
 
   <!-- Section H: Newsroom & Research Updates Ledger -->
-  <section class="page-section page-section--surface" aria-labelledby="updates-heading">
+  <section class="page-section" aria-labelledby="updates-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Newsroom &amp; Engineering Journal</p>
@@ -358,7 +393,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
   </section>
 
   <!-- Section I: Responsible Development & Non-Conflation Transparency -->
-  <section class="page-section" aria-labelledby="transparency-heading">
+  <section class="page-section page-section--surface" aria-labelledby="transparency-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Responsible Development &amp; Trust</p>
@@ -378,6 +413,25 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
           <p>{axiom.explanation}</p>
         </article>
       ))}
+    </div>
+  </section>
+
+  <!-- Section J: Commercial Engagement & Partnership Pathways -->
+  <section class="page-section" aria-labelledby="commercial-cta-heading">
+    <div class="commercial-band">
+      <div class="commercial-band__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Work With Forger Digital Solutions</p>
+        <h2 id="commercial-cta-heading">Build with specialized intelligence — on evidence, not hype.</h2>
+        <p>
+          Register interest for upcoming developer previews, scope personalized gaming or animation studio AI workforces, discuss future model licensing, or connect with Project Forge research.
+        </p>
+      </div>
+      <div class="commercial-band__actions">
+        <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Interest in Developer Preview <span aria-hidden="true">→</span></a>
+        <a href="/contact/?track=studio-workforce" class="btn btn-outline">Register Studio Interest</a>
+        <a href="/contact/?track=enterprise" class="btn btn-outline">Discuss Enterprise Solutions</a>
+        <a href="/contact/?track=research-partnership" class="btn btn-ghost">Explore Research Partnerships</a>
+      </div>
     </div>
   </section>
 
@@ -978,6 +1032,74 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     gap: 0.75rem;
   }
 
+  .solutions-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 2.25rem;
+    align-items: center;
+  }
+
+  .solutions-feature__copy h2 {
+    margin: 0.45rem 0 0.75rem;
+    font-size: clamp(1.6rem, 2.9vw, 2.25rem);
+    letter-spacing: -0.03em;
+  }
+
+  .solutions-pill-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.15rem 0 1.4rem;
+  }
+
+  .sol-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.34rem 0.72rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+
+  .sol-chip:hover {
+    border-color: var(--color-brand-cobalt-bright);
+    color: var(--color-brand-cobalt-bright);
+  }
+
+  .commercial-band {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.15rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(59, 123, 248, 0.06) 0%, var(--color-bg-secondary) 60%);
+  }
+
+  .commercial-band__copy h2 {
+    margin: 0.4rem 0 0.55rem;
+    font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+    letter-spacing: -0.03em;
+  }
+
+  .commercial-band__copy p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.96rem;
+    line-height: 1.65;
+    max-width: 52rem;
+  }
+
+  .commercial-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
   .support-close__body {
     max-width: 56rem;
     margin: 0;
@@ -997,6 +1119,7 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     .specialist-grid,
     .app-feature,
     .app-feature--reverse,
+    .solutions-feature,
     .distribution-portal {
       grid-template-columns: 1fr;
     }
@@ -1019,7 +1142,8 @@ const cinModel = modelFamiliesData.find((f) => f.id === 'cinnabar')!;
     .division-rail__item {
       border-right: 0;
     }
-    .distribution-portal {
+    .distribution-portal,
+    .commercial-band {
       padding: 1.35rem;
     }
   }

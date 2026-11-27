@@ -1,23 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
 import JaspiliteWorkbench from '../../components/JaspiliteWorkbench.astro';
-import { getRegistryEntry, flagshipAppsData } from '../../data/registry';
+import { getRegistryEntry, flagshipAppsData, solutionsData } from '../../data/registry';
 
 const entry = getRegistryEntry('jaspilite');
 const jaspData = flagshipAppsData.find((p) => p.id === 'jaspilite')!;
-
-const capabilities = [
-  { title: 'Project-Aware Sessions', detail: 'Keeps repository files, diffs, test outputs, and session history anchored to the codebase rather than disconnected chat windows.' },
-  { title: 'Autonomous Planning & Verification', detail: 'Structured lifecycle spanning task planning, bounded code edits, debugging, automated testing, and developer review.' },
-  { title: 'Multi-Agent Collaboration', detail: 'Coordinates specialist roles concurrently in Meld mode while preserving file-ownership boundaries and conflict inspection.' },
-  { title: 'Unified Local & Connected Routing', detail: 'Designed to route between locally hosted open-weight models and user-provided model subscriptions under explicit governance rules.' },
-];
+const { image, imageSm, imageAlt, imageLabel, providerMaturityLadder, architecturePillars, targetMarkets } = solutionsData.jaspiliteCommercial;
 ---
 
 <BaseLayout
-  title="Jaspilite — Autonomous AI Development Platform"
-  description="Jaspilite is Forger Digital Solutions' autonomous software development and multi-agent orchestration workspace featuring Auto, Meld, and Solo operating modes."
+  title="Jaspilite — Autonomous AI Software Engineering Platform"
+  description="Jaspilite is Forger Digital Solutions' commercial autonomous software development and multi-agent orchestration application featuring Auto, Meld, and Solo modes, local model discovery, and user-connected accounts."
   accent="jaspilite"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -35,36 +30,49 @@ const capabilities = [
       <h1 class="page-title">Jaspilite</h1>
       <p class="jasp-tagline">Your intelligence. One development workspace.</p>
       <p class="page-description">
-        An autonomous AI development and multi-agent orchestration platform engineered for real repository work — planning, coding, debugging, testing, and model routing inside one black-and-crimson governed developer workspace.
+        An independent autonomous development and multi-agent orchestration application engineered for repository-scale planning, execution, debugging, verification, and cost-aware routing across local open-weight models and user-connected accounts.
       </p>
-      <div class="fds-callout">
-        <strong>Availability &amp; Build Honesty:</strong> Jaspilite is in active platform development. Private unsigned desktop builds remain unpublished until installer verification and signing policies are cleared by the owner. No fabricated UI screenshots are used on this page.
+      <div class="hero-actions">
+        <a href="/contact/?track=developer-preview" class="btn btn-primary">Express Preview Interest <span aria-hidden="true">→</span></a>
+        <a href="/solutions/software-engineering/" class="btn btn-outline">Engineering Team Solutions</a>
       </div>
+      <div class="fds-callout">
+        <strong>Build &amp; Provider Honesty:</strong> Jaspilite is in active development with private Windows builds only; no public installer is distributed today. Jaspilite connects to local models and user-supplied provider accounts—it never bundles unlimited third-party subscriptions or bypasses provider restrictions.
+      </div>
+    </div>
+    <div class="jasp-hero__visual">
+      <SpecimenMedia
+        src={image}
+        mobileSrc={imageSm}
+        alt={imageAlt}
+        label={imageLabel}
+        eager
+      />
     </div>
   </header>
 
-  <section class="page-section page-section--tight" aria-labelledby="modes-heading">
+  <section class="page-section page-section--surface" aria-labelledby="modes-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Operating Modes</p>
         <h2 id="modes-heading">Three explicit modes: Auto, Meld, and Solo.</h2>
-        <p>Select a mode below to inspect how Jaspilite structures model routing, concurrency, and human governance.</p>
+        <p>Select a mode below to inspect how Jaspilite structures adaptive routing, lead/sidekick/specialist multi-agent execution, and single-model precision.</p>
       </div>
     </div>
 
     <JaspiliteWorkbench />
   </section>
 
-  <section class="page-section page-section--surface" aria-labelledby="jasp-cap-heading">
+  <section class="page-section" aria-labelledby="jasp-arch-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Core Capabilities</p>
-        <h2 id="jasp-cap-heading">Built for governed repository execution.</h2>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Intended Engineering Architecture</p>
+        <h2 id="jasp-arch-heading">Governed execution from planning to verified diff.</h2>
       </div>
     </div>
 
     <div class="cap-grid">
-      {capabilities.map((cap, idx) => (
+      {architecturePillars.map((cap, idx) => (
         <article class="cap-cell">
           <span class="cap-idx">0{idx + 1}</span>
           <h3>{cap.title}</h3>
@@ -72,20 +80,58 @@ const capabilities = [
         </article>
       ))}
     </div>
+
+    <div class="markets-strip">
+      <h3>Intended Commercial Markets</h3>
+      <div class="market-chips">
+        {targetMarkets.map((m) => (
+          <span class="market-chip">{m}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-Tier Provider Verification Ladder -->
+  <section class="page-section page-section--surface" aria-labelledby="ladder-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Provider Verification Standard</p>
+        <h2 id="ladder-heading">Five distinct tiers of provider maturity — never conflated.</h2>
+        <p>Detecting a CLI or local endpoint is never marketed as a production-certified integration. Jaspilite tracks every connector through five explicit readiness stages.</p>
+      </div>
+    </div>
+
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
+      <table class="fds-table">
+        <thead>
+          <tr>
+            <th scope="col">Stage</th>
+            <th scope="col">Maturity Tier</th>
+            <th scope="col">Exact Engineering Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          {providerMaturityLadder.map((row) => (
+            <tr>
+              <th scope="row">{row.stage}</th>
+              <td><strong>{row.tier}</strong></td>
+              <td>{row.meaning}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="page-section" aria-labelledby="providers-heading">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Provider Integration Boundaries</p>
-        <h2 id="providers-heading">Clear distinction between local models, subscriptions, and planned routes.</h2>
-        <p>
-          Jaspilite never promises unlimited third-party subscription usage and never implies official commercial partnerships with external model providers unless legally established.
-        </p>
+        <h2 id="providers-heading">Local models, user subscriptions, and planned connectors.</h2>
       </div>
     </div>
 
-    <div class="fds-table-wrap">
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
       <table class="fds-table">
         <thead>
           <tr>
@@ -116,10 +162,17 @@ const capabilities = [
 </BaseLayout>
 
 <style>
-  .jasp-hero { max-width: 56rem; padding: clamp(2.5rem, 5vw, 4rem) 0 2rem; }
+  .jasp-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
   .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
   .meta-bar .page-eyebrow { margin: 0; }
   .jasp-tagline { margin: 0.45rem 0 0; color: #f87171; font-family: var(--font-display); font-size: 1.3rem; font-weight: 500; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
   .jasp-hero .fds-callout { margin-top: 1.4rem; }
 
   .cap-grid {
@@ -131,10 +184,23 @@ const capabilities = [
     background: var(--color-border);
     overflow: hidden;
   }
-  .cap-cell { padding: 1.45rem; background: var(--color-bg); }
+  .cap-cell { padding: 1.45rem; background: var(--color-bg-secondary); }
   .cap-idx { color: #f87171; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; }
   .cap-cell h3 { margin: 0.45rem 0 0.35rem; font-size: 1.08rem; }
   .cap-cell p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+
+  .markets-strip { margin-top: 1.75rem; }
+  .markets-strip h3 { margin: 0 0 0.75rem; font-size: 0.98rem; color: var(--color-text); }
+  .market-chips { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  .market-chip {
+    padding: 0.35rem 0.78rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+  }
 
   .migration-box {
     margin-top: 1.75rem;
@@ -146,5 +212,7 @@ const capabilities = [
   .migration-box h3 { margin: 0 0 0.4rem; font-size: 1rem; }
   .migration-box p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
 
-  @media (max-width: 760px) { .cap-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) {
+    .jasp-hero, .cap-grid { grid-template-columns: 1fr; }
+  }
 </style>

@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import { getRegistryEntry, solutionsData } from '../../../data/registry';
+
+const entry = getRegistryEntry('battleverse-creator-studio');
+const {
+  creatorStudioImage,
+  creatorStudioImageSm,
+  creatorStudioImageAlt,
+  creatorStudioImageLabel,
+  creatorStudioCustomers,
+  creatorStudioWorkflows,
+} = solutionsData.battleverseDirections;
+---
+
+<BaseLayout
+  title="BattleVerse Creator Studio — Anime, Manga & Animation Production Direction"
+  description="BattleVerse Creator Studio is Forger Digital Solutions' proposed commercial application for anime studios, manga artists, independent animators, webtoon creators, and publishers powered by Cinnabar intelligence."
+  accent="cinnabar"
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/products/">Products</a><span aria-hidden="true">/</span>
+    <a href="/products/battleverse/">Forge BattleVerse</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Creator Studio</span>
+  </nav>
+
+  <header class="cs-hero" data-accent="cinnabar">
+    <div class="cs-hero__copy">
+      <div class="meta-bar">
+        <span class="page-eyebrow">Forge BattleVerse // Commercial Creative Direction</span>
+        <StatusPill status={entry.development_status} />
+      </div>
+      <h1 class="page-title">BattleVerse Creator Studio</h1>
+      <p class="cs-tagline">Creator-controlled storytelling, storyboarding, and production orchestration.</p>
+      <p class="page-description">
+        A proposed commercial application inside the Forge BattleVerse platform powered by Cinnabar's storytelling and craft intelligence—designed to strengthen manga artists, anime directors, independent animators, and production studios without overriding artistic authorship.
+      </p>
+      <div class="head-actions">
+        <a href="/contact/?track=studio-workforce" class="btn btn-primary">Register Studio Interest <span aria-hidden="true">→</span></a>
+        <a href="/models/cinnabar/" class="btn btn-outline">Explore Cinnabar Family</a>
+        <a href="/solutions/animation-studios/" class="btn btn-ghost">Animation Studio Solutions</a>
+      </div>
+      <div class="fds-callout">
+        <strong>Product Direction &amp; Modality Disclosure:</strong> BattleVerse Creator Studio is currently a <strong>commercial product direction</strong> with no released build yet. Cinnabar language models coordinate external drawing, animation, video, and audio production tools—they are <strong>not</strong> native video generators and never train on private customer IP without authorization.
+      </div>
+    </div>
+    <div class="cs-hero__visual">
+      <SpecimenMedia
+        src={creatorStudioImage}
+        mobileSrc={creatorStudioImageSm}
+        alt={creatorStudioImageAlt}
+        label={creatorStudioImageLabel}
+        eager
+      />
+    </div>
+  </header>
+
+  <section class="page-section page-section--surface" aria-labelledby="cs-workflows-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Proposed Production Workflows</p>
+        <h2 id="cs-workflows-heading">Structured support across every pre-production &amp; continuity stage.</h2>
+      </div>
+    </div>
+
+    <div class="wf-grid">
+      {creatorStudioWorkflows.map((item, idx) => (
+        <article class="fds-panel wf-card">
+          <span class="wf-idx">0{idx + 1}</span>
+          <h3>{item.title}</h3>
+          <p>{item.detail}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="cs-customers-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Intended Customers</p>
+        <h2 id="cs-customers-heading">Built for creators and studios who own their worlds.</h2>
+        <p>FDS positions Creator Studio around creator empowerment, original IP protection, and transparent provenance across every creative discipline.</p>
+      </div>
+      <a href="/contact/?track=studio-workforce" class="btn btn-outline">Discuss Creator Workflows <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="cust-chips">
+      {creatorStudioCustomers.map((c) => (
+        <span class="cust-chip">{c}</span>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cs-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
+  .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .meta-bar .page-eyebrow { margin: 0; }
+  .cs-tagline { margin: 0.45rem 0 0; color: var(--accent-cinnabar); font-family: var(--font-serif); font-style: italic; font-size: 1.48rem; }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.45rem; }
+  .cs-hero .fds-callout { margin-top: 1.4rem; }
+
+  .wf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+  }
+  .wf-card { padding: 1.45rem; }
+  .wf-idx { color: var(--accent-cinnabar); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; }
+  .wf-card h3 { margin: 0.45rem 0 0.4rem; font-size: 1.06rem; }
+  .wf-card p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.62; }
+
+  .cust-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .cust-chip {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-xs);
+    background: var(--color-bg-secondary);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 960px) {
+    .cs-hero, .wf-grid { grid-template-columns: 1fr; }
+  }
+</style>

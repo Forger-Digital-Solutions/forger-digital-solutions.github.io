@@ -1,15 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CommercialInquiryBuilder from '../../components/CommercialInquiryBuilder.astro';
 import { siteConfig } from '../../config/site';
 
 const channels = [
   {
-    kicker: 'DIRECT EMAIL',
-    title: 'General, Press, Security & Correction Inquiries',
+    kicker: 'DIRECT BUSINESS & TECHNICAL EMAIL',
+    title: 'Commercial, Preview, Press, Security & Accuracy Inquiries',
     detail: siteConfig.supportEmail,
-    body: 'Reach Forger Digital Solutions directly for technical support, public accuracy corrections, security disclosures, research collaboration, or media inquiries.',
+    body: 'Reach Forger Digital Solutions directly for developer preview interest, studio AI workforce scoping, enterprise solutions, commercial licensing, research partnerships, or accuracy corrections.',
     href: `mailto:${siteConfig.supportEmail}`,
-    cta: 'Email FDS',
+    cta: 'Email FDS Directly',
     external: false,
   },
   {
@@ -43,8 +44,8 @@ const channels = [
 ---
 
 <BaseLayout
-  title="Contact — Verified Channels & Inquiries"
-  description="Official verified contact channels for Forger Digital Solutions: email support, security reporting, hardware donations, Discord, GitHub, YouTube, and LinkedIn."
+  title="Contact & Commercial Inquiries — Forger Digital Solutions"
+  description="Connect directly with Forger Digital Solutions for developer preview interest, gaming and animation studio AI workforces, enterprise private AI scoping, commercial licensing, research partnerships, or support."
   accent="fds-cobalt"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -53,15 +54,28 @@ const channels = [
   </nav>
 
   <header class="page-head">
-    <p class="page-eyebrow">Forger Digital Solutions // Official Channels</p>
-    <h1 class="page-title">Contact &amp; Inquiries</h1>
+    <p class="page-eyebrow">Forger Digital Solutions // Commercial &amp; Verified Channels</p>
+    <h1 class="page-title">Contact &amp; Commercial Inquiries</h1>
     <p class="page-description">
-      Every contact channel listed below is officially operated by Forger Digital Solutions. We do not publish personal physical addresses or unverified third-party brokers.
+      Whether you are an independent developer registering preview interest, a studio exploring specialized AI workforces, an enterprise scoping segregated private deployments, or a researcher looking to collaborate, reach Forger Digital Solutions through verified direct channels.
     </p>
   </header>
 
-  <section class="page-section page-section--tight" aria-labelledby="contact-channels-title">
-    <h2 id="contact-channels-title" class="sr-only">Primary contact channels</h2>
+  <!-- Structured Zero-Deception Commercial Inquiry Composer -->
+  <section class="page-section page-section--tight" aria-labelledby="inquiry-composer-title">
+    <h2 id="inquiry-composer-title" class="sr-only">Structured commercial inquiry composer</h2>
+    <CommercialInquiryBuilder />
+  </section>
+
+  <!-- Primary Verified Channels -->
+  <section class="page-section page-section--surface" aria-labelledby="contact-channels-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Direct Verified Channels</p>
+        <h2 id="contact-channels-title">Every channel officially operated by Forger Digital Solutions.</h2>
+      </div>
+      <a href="/solutions/" class="text-link">Explore Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
+    </div>
 
     <div class="contact-grid">
       {channels.map((ch) => (
@@ -83,7 +97,7 @@ const channels = [
     </div>
   </section>
 
-  <section class="page-section page-section--surface" aria-labelledby="contact-social-title">
+  <section class="page-section" aria-labelledby="contact-social-title">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Additional Verified Profiles</p>
@@ -100,7 +114,7 @@ const channels = [
     </div>
 
     <div class="fds-callout contact-privacy">
-      <strong>Privacy Notice:</strong> Emails sent to <code>{siteConfig.supportEmail}</code> are used solely to respond to your inquiry or coordinate requested support. For complete data handling details, read our <a href="/privacy">Privacy Policy</a>.
+      <strong>Privacy Notice:</strong> Emails sent to <code>{siteConfig.supportEmail}</code> are used solely to respond to your inquiry or coordinate requested technical or commercial discussions. For complete data handling details, read our <a href="/privacy">Privacy Policy</a> and <a href="/trust/">Trust Center</a>.
     </div>
   </section>
 </BaseLayout>
@@ -125,7 +139,7 @@ const channels = [
     font-weight: 600;
     letter-spacing: 0.12em;
   }
-  .contact-card h3 { margin: 0; font-size: 1.2rem; }
+  .contact-card h3 { margin: 0; font-size: 1.18rem; }
   .contact-detail {
     margin: 0;
     color: var(--color-brand-silver);

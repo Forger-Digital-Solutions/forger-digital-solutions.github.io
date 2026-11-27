@@ -15,7 +15,7 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
   </nav>
 
   <header class="page-head">
-    <p class="page-eyebrow">Forger Digital Solutions // Independent Studio</p>
+    <p class="page-eyebrow">Forger Digital Solutions // AI Research, Commercial Technology &amp; Studio</p>
     <h1 class="page-title">{companyProfile.headline}</h1>
     <p class="page-description">{companyProfile.supportingCopy}</p>
   </header>
@@ -23,13 +23,19 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
   <section class="page-section page-section--tight" aria-labelledby="comp-mission-title">
     <div class="mission-grid">
       <div class="fds-panel mission-card">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Heritage Ethos</p>
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Commercial Identity &amp; Heritage</p>
         <h2 id="comp-mission-title">{companyProfile.heritageSlogan}</h2>
         <p>
-          Founded in {companyProfile.location} by {companyProfile.founder}, Forger Digital Solutions exists on one conviction: the strongest creative worlds are forged with purpose-built engineering tools, and the strongest specialized AI models are forged by people who actually ship software and stories.
+          Founded in {companyProfile.location} by {companyProfile.founder}, Forger Digital Solutions is building an independent AI research laboratory, commercial AI technology provider, autonomous software engineering company, and original entertainment studio—creating revenue both from the worlds we craft and the specialized intelligence others use to build theirs.
         </p>
+        <ul class="business-pillars" aria-label="Long-term FDS commercial model pillars">
+          {companyProfile.businessModelPillars.map((pillar) => (
+            <li>{pillar}</li>
+          ))}
+        </ul>
         <div class="mission-links">
-          <a href="/about" class="text-link">Founder &amp; Studio Background <span aria-hidden="true">→</span></a>
+          <a href="/solutions/" class="btn btn-primary">Studio &amp; Enterprise Solutions <span aria-hidden="true">→</span></a>
+          <a href="/about" class="text-link">Founder &amp; Background <span aria-hidden="true">→</span></a>
           <a href="/trust/" class="text-link">Public Trust Center <span aria-hidden="true">→</span></a>
         </div>
       </div>
@@ -49,12 +55,12 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
             <dd>{companyProfile.location}</dd>
           </div>
           <div>
-            <dt>Structure</dt>
-            <dd>Independent AI research, engineering &amp; original entertainment studio</dd>
+            <dt>Commercial Direction</dt>
+            <dd>Specialized AI models, autonomous engineering, studio workforces, licensing &amp; original games</dd>
           </div>
           <div>
             <dt>Governance</dt>
-            <dd>Schema-validated public registry · Zero fabricated benchmarks</dd>
+            <dd>Schema-validated public registry · Customer data segregation · Zero fabricated benchmarks</dd>
           </div>
         </dl>
       </div>
@@ -93,7 +99,7 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
       <a href="/contact/" class="btn btn-secondary">Contact FDS</a>
     </div>
 
-    <div class="fds-table-wrap">
+    <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
       <table class="fds-table">
         <thead>
           <tr>
@@ -127,8 +133,9 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
   .mission-card,
   .mission-facts { padding: 1.75rem; }
   .mission-card h2 { margin: 0 0 0.85rem; font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.03em; }
-  .mission-card p { margin: 0 0 1.25rem; color: var(--color-text-muted); font-size: 0.96rem; line-height: 1.7; }
-  .mission-links { display: flex; flex-wrap: wrap; gap: 0.65rem 1.4rem; }
+  .mission-card p { margin: 0 0 1.05rem; color: var(--color-text-muted); font-size: 0.96rem; line-height: 1.7; }
+  .business-pillars { margin: 0 0 1.35rem; padding-left: 1.1rem; display: grid; gap: 0.35rem; color: var(--color-text); font-size: 0.89rem; line-height: 1.5; }
+  .mission-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.4rem; }
 
   .mission-facts dl { margin: 0; display: grid; gap: 0.95rem; }
   .mission-facts dt {

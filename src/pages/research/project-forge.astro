@@ -1,15 +1,31 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StatusPill from '../../components/StatusPill.astro';
+import SpecimenMedia from '../../components/SpecimenMedia.astro';
 import ProjectForgeGraph from '../../components/ProjectForgeGraph.astro';
-import { getRegistryEntry, projectForgeData } from '../../data/registry';
+import { getRegistryEntry, projectForgeData, solutionsData } from '../../data/registry';
 
 const entry = getRegistryEntry('project-forge');
+const { src, mobileSrc, alt, label } = solutionsData.projectForgeVisual;
+
+const foundationChain = [
+  'Research Grounds',
+  'Knowledge Acquisition',
+  'Source Verification',
+  'Engineering Experimentation',
+  'Dataset Development',
+  'Retrieval Infrastructure',
+  'Training Grounds',
+  'Model Development',
+  'Independent Evaluation',
+  'Capability Certification',
+  'Application Integration',
+];
 ---
 
 <BaseLayout
-  title="Project Forge — Research & Engineering Intelligence Laboratory"
-  description="Project Forge is Forger Digital Solutions' permanent 15-division research foundation turning verified research into specialist AI models through controlled training and independent evaluation."
+  title="Project Forge — Permanent Research & Engineering Foundation"
+  description="Project Forge is Forger Digital Solutions' permanent 15-division research laboratory turning verified knowledge into specialist AI models through legitimate sourcing, controlled training, and independent evaluation."
   accent="project-forge"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -18,34 +34,58 @@ const entry = getRegistryEntry('project-forge');
     <span aria-current="page">Project Forge</span>
   </nav>
 
-  <header class="page-head">
-    <div class="meta-bar">
-      <p class="page-eyebrow">FDS Research // Permanent Laboratory Infrastructure</p>
-      <StatusPill status={entry.development_status} label="Active Infrastructure" tone="dev" />
-    </div>
-    <h1 class="page-title">Project Forge</h1>
-    <p class="pf-tagline">Research that becomes capability.</p>
-    <p class="page-description">
-      Project Forge is the permanent research and engineering intelligence foundation supporting FDS's specialist model families and development platforms. It is shared research infrastructure — not a public inference model.
-    </p>
-  </header>
-
-  <section class="page-section page-section--tight" aria-labelledby="pf-lifecycle-title">
-    <div class="fds-section-head">
-      <div class="fds-section-head__copy">
-        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research-to-Capability Lifecycle</p>
-        <h2 id="pf-lifecycle-title">Eight governed stages from source study to certification.</h2>
+  <header class="pf-hero" data-accent="project-forge">
+    <div class="pf-hero__copy">
+      <div class="meta-bar">
+        <span class="page-eyebrow">FDS Research // Permanent Intellectual Foundation</span>
+        <StatusPill status={entry.development_status} label="Active Research Foundation" tone="research" />
+      </div>
+      <h1 class="page-title">Project Forge</h1>
+      <p class="pf-tagline">Research that becomes capability.</p>
+      <p class="page-description">
+        Project Forge is the permanent research and engineering laboratory behind Forger Digital Solutions. Its mandate is to acquire, verify, understand, experiment with, retrieve, train, and independently evaluate technical knowledge—turning disciplined science into commercial capability without blurring research into unverified product claims.
+      </p>
+      <div class="hero-actions">
+        <a href="/research/publications/" class="btn btn-primary">Publications &amp; Notes <span aria-hidden="true">→</span></a>
+        <a href="/evaluations/" class="btn btn-outline">Evaluation Center</a>
+        <a href="/contact/?track=research-partnership" class="btn btn-ghost">Research Partnerships</a>
       </div>
     </div>
-    <ProjectForgeGraph />
+    <div class="pf-hero__visual">
+      <SpecimenMedia src={src} mobileSrc={mobileSrc} alt={alt} label={label} eager />
+    </div>
+  </header>
+
+  <section class="page-section page-section--surface" aria-labelledby="pf-chain-title">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>End-to-End Scientific Architecture</p>
+        <h2 id="pf-chain-title">Eleven governed stages connecting research grounds to commercial applications.</h2>
+        <p>Every stage enforces strict provenance separation: Research ≠ Training, Training ≠ Evaluation, Evaluation ≠ Certification, and Certification ≠ Public Availability.</p>
+      </div>
+      <a href="/model-cards/" class="text-link">Public Model Cards <span aria-hidden="true">→</span></a>
+    </div>
+
+    <ol class="chain-strip" aria-label="Project Forge end-to-end architecture chain">
+      {foundationChain.map((step, idx) => (
+        <li class="chain-node">
+          <span class="chain-node__idx">{String(idx + 1).padStart(2, '0')}</span>
+          <span class="chain-node__name">{step}</span>
+        </li>
+      ))}
+    </ol>
+
+    <div class="pf-graph-wrap">
+      <ProjectForgeGraph />
+    </div>
   </section>
 
-  <section class="page-section page-section--surface" aria-labelledby="pf-divisions-title">
+  <section class="page-section" aria-labelledby="pf-divisions-title">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Research Taxonomy</p>
         <h2 id="pf-divisions-title">All fifteen Project Forge research divisions.</h2>
-        <p>Every division maintains explicit source provenance and keeps internal research archives separate from cleared model-training corpora.</p>
+        <p>Every division maintains explicit source provenance and keeps internal research archives strictly separate from cleared model-training corpora.</p>
       </div>
     </div>
 
@@ -60,11 +100,11 @@ const entry = getRegistryEntry('project-forge');
     </div>
   </section>
 
-  <section class="page-section" aria-labelledby="pf-metrics-title">
+  <section class="page-section page-section--surface" aria-labelledby="pf-metrics-title">
     <div class="fds-section-head">
       <div class="fds-section-head__copy">
         <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Metric &amp; Provenance Governance</p>
-        <h2 id="pf-metrics-title">Public-safe reporting discipline.</h2>
+        <h2 id="pf-metrics-title">Reproducible public-safe reporting discipline.</h2>
       </div>
       <a href="/trust/" class="text-link">Read full Trust Center <span aria-hidden="true">→</span></a>
     </div>
@@ -76,9 +116,39 @@ const entry = getRegistryEntry('project-forge');
 </BaseLayout>
 
 <style>
+  .pf-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 2.25rem;
+    align-items: center;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  }
   .meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
   .meta-bar .page-eyebrow { margin: 0; }
   .pf-tagline { margin: 0.45rem 0 0; color: var(--accent-project-forge); font-family: var(--font-display); font-size: 1.28rem; font-weight: 500; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+
+  .chain-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin: 0 0 1.6rem;
+    padding: 0;
+    list-style: none;
+  }
+  .chain-node {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.72rem 0.85rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+  }
+  .chain-node__idx { color: var(--accent-project-forge); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; flex-shrink: 0; }
+  .chain-node__name { color: var(--color-text); font-size: 0.84rem; font-weight: 500; }
+
+  .pf-graph-wrap { margin-top: 0.5rem; }
 
   .divisions-grid {
     display: grid;
@@ -89,13 +159,18 @@ const entry = getRegistryEntry('project-forge');
     background: var(--color-border);
     overflow: hidden;
   }
-  .division-card { padding: 1.3rem; background: var(--color-bg); }
+  .division-card { padding: 1.3rem; background: var(--color-bg-secondary); }
   .division-num { color: var(--accent-project-forge); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; }
   .division-card h3 { margin: 0.45rem 0 0.35rem; font-size: 1rem; }
   .division-card h3 a { color: var(--color-text); }
   .division-card h3 a:hover { color: var(--accent-project-forge); }
   .division-card p { margin: 0; color: var(--color-text-muted); font-size: 0.85rem; line-height: 1.56; }
 
-  @media (max-width: 960px) { .divisions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 600px) { .divisions-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) {
+    .pf-hero { grid-template-columns: 1fr; }
+    .chain-strip, .divisions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .chain-strip, .divisions-grid { grid-template-columns: 1fr; }
+  }
 </style>
