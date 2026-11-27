@@ -35,12 +35,15 @@
     "kayla:task-eval": "node scripts/kayla-task-eval.mjs",
     "kayla:perf": "node scripts/kayla-perf.mjs",
     "kayla:load-test": "node scripts/kayla-load-test.mjs",
-    "kayla:do-race": "node scripts/kayla-do-race.mjs"
-    ,"kayla:conversation-eval": "node scripts/kayla-conversation-eval.mjs"
+    "kayla:do-race": "node scripts/kayla-do-race.mjs",
+    "kayla:conversation-eval": "node scripts/kayla-conversation-eval.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
     "astro": "^7.0.0"
   },
   "devDependencies": {
