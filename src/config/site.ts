@@ -27,6 +27,27 @@ export const siteConfig = {
   cashAppUrl: "https://cash.app/$ForgerDigital",
   supportEmail: "forgerdigisolsupport@gmail.com",
 
+  // --- Studio Intelligence Hub Pilot Booking ---
+  // Free-tier Cal.com or Calendly URL supplied or authorized by the owner.
+  // Intentionally empty until the owner activates and confirms the live booking
+  // destination — never assume or fabricate a booking account URL. When empty,
+  // booking CTAs route cleanly to /contact/?track=studio-intelligence-hub with
+  // a direct email fallback to supportEmail.
+  pilotBookingUrl: "",
+  pilotEmailSubject: "FDS Studio Intelligence Hub — Pilot Call Request",
+  pilotEmailBody: `Hi FDS,
+
+I'd like to schedule a call to discuss a four-week FDS Studio Intelligence Hub pilot.
+
+Studio / Team Name:
+Primary Engine (Roblox Studio / Unreal Engine / Other):
+Team Size:
+Knowledge Sources in Scope (source code, technical docs, design docs):
+Interested in Founding Studio Program (first 5 studios — 50% off applicable pilot fee): Yes / No
+Preferred Call Times (with time zone):
+
+Top engineering questions we'd like developers to answer faster:`,
+
   // --- Hardware donations ("Give Your Old Tech a Second Life") ---
   // Routed through the public support email. No physical address is ever
   // published; logistics are coordinated privately after initial contact.

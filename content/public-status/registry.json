@@ -1,7 +1,51 @@
 {
   "schema_version": "1.1.0",
-  "last_updated": "2026-11-26",
+  "last_updated": "2026-11-27",
   "entries": [
+    {
+      "id": "studio-intelligence-hub",
+      "name": "FDS Studio Intelligence Hub",
+      "category": "commercial-direction",
+      "division": "FDS Commercial Solutions",
+      "flagship": true,
+      "version": "Managed Four-Week Pilot Service",
+      "development_status": "commercial-direction",
+      "availability": "early-interest-open",
+      "base_architecture": "Project Forge retrieval & indexing pipeline connected to external MCP-compatible developer tools",
+      "parameter_count": null,
+      "modalities": ["Source Code (Luau / Unreal C++)", "Technical & Design Docs", "MCP Investigation Workflows", "Scoped Engine References (In Development)"],
+      "license_info": "Managed four-week pilot engagement (exact scope and pricing confirmed during pilot assessment; Founding Studio cohort receives 50% off applicable pilot fee)",
+      "commercial_direction": "FDS's lead commercial offering: a managed four-week engineering intelligence pilot for independent Roblox Studio and Unreal Engine game studios.",
+      "verified_capabilities": [
+        "Defined four-week managed pilot engagement structure (Assessment -> Indexing -> Investigations -> Review & Handoff)",
+        "Cannot modify customer repositories — read-only by design, with isolated per-project data, customer-owned AI provider API keys, and defined data-deletion procedures",
+        "Designed to operate with existing external MCP-compatible development tools without requiring Jaspilite"
+      ],
+      "planned_capabilities": [
+        "Completion of forge-hub runtime test suite across FDS's own Roblox Studio and Unreal Engine projects",
+        "Scoped engine reference packs for Roblox Studio and Unreal Engine (in development)",
+        "Unreal Engine Blueprint visual logic indexing once implemented and tested",
+        "Broader studio workflow integrations informed directly by Founding Studio pilot feedback"
+      ],
+      "known_limitations": [
+        "Pilot scope is currently in testing on FDS's own Roblox and Unreal projects; runtime capabilities are not claimed as certified until forge-hub runtime tests pass",
+        "Managed pilot service—not a finished, generally available self-serve SaaS platform",
+        "Scoped engine references are in development; Unreal Engine pilots cover C++ source code and written technical/design documentation (Blueprint visual logic indexing is not yet implemented)",
+        "AI-assisted investigation outputs require human engineering review against cited sources; 100% answer accuracy is never promised"
+      ],
+      "non_claims": [
+        "Not claiming runtime capabilities are certified before forge-hub runtime tests pass; not a finished commercial SaaS platform or multi-tenant hosting service",
+        "Does not advertise complete Blueprint understanding, finished engine reference packs, universal engine support, or fully autonomous development",
+        "Cannot modify your repository — read-only by design; does not claim SOC 2 / ISO 27001 certifications or 100% answer accuracy",
+        "Does not bundle AI inference or route consumer AI subscriptions; customers supply their own API keys and pay their AI provider directly"
+      ],
+      "public_summary": "A managed four-week engineering intelligence pilot—currently in testing on FDS's own Roblox and Unreal projects—connecting source code and studio technical/design documentation (with scoped engine references in development) for grounded, source-referenced AI investigation.",
+      "public_evidence": "Authoritative FDS Phase III-C Studio Intelligence Hub pilot scope, read-only boundaries, and Roblox/Unreal scope documented November 27, 2026; forge-hub runtime testing in progress.",
+      "route": "/solutions/studio-intelligence-hub/",
+      "accent": "fds-cobalt",
+      "last_verified": "2026-11-27",
+      "approved_for_publication": true
+    },
     {
       "id": "alexandrite",
       "name": "Alexandrite",

@@ -1,6 +1,16 @@
 {
-  "last_updated": "2026-11-26",
+  "last_updated": "2026-11-27",
   "updates": [
+    {
+      "id": "studio-intelligence-hub-pilot",
+      "date": "2026-11-27",
+      "category": "Commercial Pilot",
+      "title": "Introducing FDS Studio Intelligence Hub — Four-Week Managed Pilots for Game Studios",
+      "summary": "Forger Digital Solutions introduces its first commercial offering: a managed four-week engineering intelligence pilot powered by Project Forge—currently in testing on FDS's own Roblox and Unreal projects—connecting Roblox Studio (Luau) and Unreal Engine (C++) codebases with technical documentation and design specs (scoped engine references in development). Founding Studio cohort open for the first five studio partners.",
+      "readingTime": "3 min read",
+      "related": ["FDS Studio Intelligence Hub", "Project Forge"],
+      "href": "/solutions/studio-intelligence-hub/"
+    },
     {
       "id": "operation-digital-forge-ii",
       "date": "2026-11-26",

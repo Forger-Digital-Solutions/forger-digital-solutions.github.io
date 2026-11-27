@@ -28,6 +28,7 @@ const CAPTURES_DIR = resolve('shots-ci');
 const CERTIFICATION_WIDTHS = [390, 768, 1440, 1920];
 const CAPTURE_PAGES = [
   { path: '/', name: 'homepage' },
+  { path: '/solutions/studio-intelligence-hub/', name: 'studio-intelligence-hub' },
   { path: '/models/', name: 'models' },
   { path: '/solutions/', name: 'solutions' },
   { path: '/products/jaspilite/', name: 'jaspilite' },

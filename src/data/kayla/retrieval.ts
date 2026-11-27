@@ -439,8 +439,9 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
     weight: 1.0
   });
 
-  // Operation Digital Forge II flagship models, applications, research & studio records
+  // Flagship commercial services, models, applications, research & studio records
   const flagshipRegistryIds = new Set([
+    'studio-intelligence-hub',
     'alexandrite',
     'hackmanite',
     'hackmanite-prime',
@@ -470,10 +471,10 @@ function buildEntityIndex(): Map<string, KaylaDocument> {
   addDoc({
     id: 'fds-solutions',
     type: 'general',
-    title: 'Studio & Enterprise Solutions',
-    text: 'Forger Digital Solutions designs commercial pathways and future personalized AI workforces for game developers, gaming studios, anime and manga creators, animation studios, software engineering teams, and enterprises. Five customization layers (Customer Retrieval, Agent Configuration, Tool Integration, Domain Adaptation, Dedicated Deployment) keep customer data strictly segregated and never automatically used to train shared models.',
+    title: 'Studio Intelligence Hub & Commercial Solutions',
+    text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ lead commercial offering: a managed four-week engineering intelligence pilot powered by Project Forge for Roblox Studio (Luau) and Unreal Engine (C++) studios, currently in testing on FDS’s own Roblox and Unreal projects. It connects source code, technical documentation, and design specs (scoped engine references are in development) via external MCP-compatible tools without requiring Jaspilite. Cannot modify your repository — read-only by design, with isolated project data and customer-owned API keys. Blueprint logic indexing is not yet implemented. First five Founding Studios receive 50% off the applicable pilot fee; pricing is discussed during the pilot assessment.',
     route: '/solutions/',
-    tags: ['solutions', 'studio', 'enterprise', 'private ai', 'workforce', 'gaming studio', 'animation studio'],
+    tags: ['solutions', 'studio intelligence hub', 'pilot', 'founding studio', 'roblox', 'unreal', 'studio', 'enterprise', 'private ai', 'workforce', 'gaming studio', 'animation studio'],
     weight: 1.0
   });
 

@@ -2,13 +2,18 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CommercialInquiryBuilder from '../../components/CommercialInquiryBuilder.astro';
 import { siteConfig } from '../../config/site';
+import { getPilotBookingDestination, getPilotMailtoHref } from '../../lib/booking';
+
+const pilotBooking = getPilotBookingDestination('pilot');
+const pilotMailto = getPilotMailtoHref('pilot');
+const foundingMailto = getPilotMailtoHref('founding');
 
 const channels = [
   {
     kicker: 'DIRECT BUSINESS & TECHNICAL EMAIL',
-    title: 'Commercial, Preview, Press, Security & Accuracy Inquiries',
+    title: 'Pilot Calls, Commercial, Preview, Security & Accuracy Inquiries',
     detail: siteConfig.supportEmail,
-    body: 'Reach Forger Digital Solutions directly for developer preview interest, studio AI workforce scoping, enterprise solutions, commercial licensing, research partnerships, or accuracy corrections.',
+    body: 'Reach Forger Digital Solutions directly to book an FDS Studio Intelligence Hub pilot assessment, apply for the Founding Studio cohort, or discuss engineering and research partnerships.',
     href: `mailto:${siteConfig.supportEmail}`,
     cta: 'Email FDS Directly',
     external: false,
@@ -44,8 +49,8 @@ const channels = [
 ---
 
 <BaseLayout
-  title="Contact & Commercial Inquiries — Forger Digital Solutions"
-  description="Connect directly with Forger Digital Solutions for developer preview interest, gaming and animation studio AI workforces, enterprise private AI scoping, commercial licensing, research partnerships, or support."
+  title="Book a Pilot Call & Contact"
+  description="Book an FDS Studio Intelligence Hub pilot call for Roblox Studio or Unreal Engine studios, apply for the Founding Studio Program, or contact Forger Digital Solutions through verified channels."
   accent="fds-cobalt"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -54,15 +59,45 @@ const channels = [
   </nav>
 
   <header class="page-head">
-    <p class="page-eyebrow">Forger Digital Solutions // Commercial &amp; Verified Channels</p>
-    <h1 class="page-title">Contact &amp; Commercial Inquiries</h1>
+    <p class="page-eyebrow">Forger Digital Solutions // Pilot Booking &amp; Verified Channels</p>
+    <h1 class="page-title">Book a Pilot Call &amp; Contact FDS</h1>
     <p class="page-description">
-      Whether you are an independent developer registering preview interest, a studio exploring specialized AI workforces, an enterprise scoping segregated private deployments, or a researcher looking to collaborate, reach Forger Digital Solutions through verified direct channels.
+      Schedule a technical assessment for a four-week <a href="/solutions/studio-intelligence-hub/">FDS Studio Intelligence Hub</a> pilot, apply for one of our first five Founding Studio spots (50% off the applicable pilot fee), or connect with FDS through our verified channels.
     </p>
   </header>
 
   <!-- Structured Zero-Deception Commercial Inquiry Composer -->
   <section class="page-section page-section--tight" aria-labelledby="inquiry-composer-title">
+    <div class="fds-callout contact-booking-note" role="region" aria-label="Studio Intelligence Hub pilot scheduling">
+      {pilotBooking.isLiveCalendar ? (
+        <div class="booking-bar">
+          <div>
+            <strong>Direct Calendar Booking Available:</strong> Book your Studio Intelligence Hub pilot assessment directly via our live scheduling link, or use the structured email fallback below.
+          </div>
+          <div class="booking-bar__actions">
+            <a href={pilotBooking.href} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              Open Booking Calendar <span aria-hidden="true">↗</span>
+            </a>
+            <a href={pilotMailto} class="btn btn-outline">Email Fallback</a>
+          </div>
+        </div>
+      ) : (
+        <div class="booking-bar">
+          <div>
+            <strong>Request a Studio Intelligence Hub Pilot Call:</strong> Use the one-click email request below or complete the structured inquiry composer to share your engine (Roblox Studio or Unreal Engine), project scope, and preferred call times. Pricing is discussed transparently during your pilot assessment call.
+          </div>
+          <div class="booking-bar__actions">
+            <a href={pilotMailto} class="btn btn-primary">
+              Email Pilot Request <span aria-hidden="true">→</span>
+            </a>
+            <a href={foundingMailto} class="btn btn-outline">
+              Founding Studio Email
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+
     <h2 id="inquiry-composer-title" class="sr-only">Structured commercial inquiry composer</h2>
     <CommercialInquiryBuilder />
   </section>
@@ -120,6 +155,24 @@ const channels = [
 </BaseLayout>
 
 <style>
+  .contact-booking-note {
+    margin: 0 0 1.25rem;
+  }
+  .booking-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+  }
+  .booking-bar > div:first-child {
+    flex: 1 1 24rem;
+  }
+  .booking-bar__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
   .contact-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

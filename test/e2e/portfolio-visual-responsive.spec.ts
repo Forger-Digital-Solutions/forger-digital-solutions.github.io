@@ -1,23 +1,62 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test.describe('Operation Digital Forge visual & interactive system', () => {
-  test('presents the 7-flagship AI ecosystem, honest model boundaries, and heritage slogan', async ({ page }) => {
+test.describe('Phase III-C Studio Intelligence Hub & FDS visual system', () => {
+  test('leads homepage with Studio Intelligence Hub while preserving the FDS ecosystem and heritage slogan', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('#hero-heading')).toContainText('Specialized intelligence.');
-    await expect(page.locator('#hero-heading')).toContainText('Extraordinary worlds.');
+    await expect(page.locator('#hero-heading')).toContainText("Your Game Studio's Knowledge.");
+    await expect(page.locator('#hero-heading')).toContainText('Connected.');
     await expect(page.locator('.hero__heritage')).toContainText('Build the tools. Build the worlds.');
+    await expect(page.locator('[data-pilot-booking-cta]').first()).toBeVisible();
 
     const main = page.locator('main');
-    for (const flagship of ['Alexandrite', 'Hackmanite', 'Cinnabar', 'Jaspilite', 'BattleVerse', 'Project Forge', 'State Lines']) {
+    for (const flagship of [
+      'Studio Intelligence Hub',
+      'Roblox Studio',
+      'Unreal Engine',
+      'Founding Studio',
+      'Hackmanite',
+      'BattleVerse',
+      'Jaspilite',
+      'Project Forge',
+      'Alexandrite',
+      'Cinnabar',
+      'State Lines',
+    ]) {
       await expect(main).toContainText(flagship);
     }
     await expect(main).toContainText('Qwen/Qwen3.8-27B');
     await expect(main).toContainText('openai/gpt-oss-120b');
     await expect(main).toContainText('Concept Art — Work in Progress (Not Gameplay');
+    // Verify internal pilot prices never appear on the rendered homepage
+    const bodyText = await main.innerText();
+    expect(bodyText).not.toMatch(/\$(?:1,500|750|2,500|1,250|3,500|1,750)\b/);
+  });
+
+  test('Studio Intelligence Hub investigation explorer switches between Roblox Luau and Unreal C++ questions cleanly', async ({ page }) => {
+    await page.goto('/solutions/studio-intelligence-hub/');
+    await expect(page.locator('main h1')).toContainText("Your Game Studio's Knowledge. Connected.");
+    await expect(page.locator('main')).toContainText('Blueprint');
+    await expect(page.locator('main')).toContainText('50% off');
+
+    const trace = page.locator('[data-hub-trace]').first();
+    await expect(trace).toBeVisible();
+
+    const firstTab = trace.locator('#hub-page-q-tab-combat-damage');
+    const secondTab = trace.locator('#hub-page-q-tab-vehicle-dependencies');
+    await expect(firstTab).toHaveAttribute('aria-selected', 'true');
+    await expect(trace.locator('#hub-page-q-panel-combat-damage')).toBeVisible();
+
+    await secondTab.click();
+    await expect(secondTab).toHaveAttribute('aria-selected', 'true');
+    await expect(trace.locator('#hub-page-q-panel-vehicle-dependencies')).toBeVisible();
+    await expect(trace.locator('#hub-page-q-panel-combat-damage')).toBeHidden();
   });
 
   test('Jaspilite workbench switches cleanly between Auto, Meld, and Solo modes', async ({ page }) => {
+    await page.addInitScript(() => {
+      try { window.localStorage.setItem('fds_support_dismissed_at', String(Date.now())); } catch { /* ignore */ }
+    });
     await page.goto('/');
     const bench = page.locator('[data-jasp-bench]').first();
     await expect(bench).toBeVisible();
@@ -57,22 +96,23 @@ test.describe('Operation Digital Forge visual & interactive system', () => {
     await expect(page.locator('#docs-empty-state')).toBeHidden();
   });
 
-  test('maintains zero horizontal overflow across mobile, tablet, laptop, and desktop viewports', async ({ page }) => {
+  test('maintains zero horizontal overflow across mobile, tablet, laptop, and desktop viewports on homepage and Hub landing page', async ({ page }) => {
     test.setTimeout(90_000);
-    await page.goto('/');
-
-    for (const width of [360, 390, 768, 1024, 1280, 1440, 1920]) {
-      await page.setViewportSize({ width, height: 900 });
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth
-      );
-      expect(overflow, `homepage horizontal overflow at ${width}px`).toBeLessThanOrEqual(1);
+    for (const route of ['/', '/solutions/studio-intelligence-hub/']) {
+      await page.goto(route);
+      for (const width of [360, 390, 768, 1024, 1280, 1440, 1920]) {
+        await page.setViewportSize({ width, height: 900 });
+        const overflow = await page.evaluate(
+          () => document.documentElement.scrollWidth - document.documentElement.clientWidth
+        );
+        expect(overflow, `${route} horizontal overflow at ${width}px`).toBeLessThanOrEqual(1);
+      }
     }
   });
 
-  test('passes serious WCAG 2.2 AA accessibility checks across homepage, Solutions, BattleVerse Arena, and Contact', async ({ page }) => {
+  test('passes serious WCAG 2.2 AA accessibility checks across homepage, Studio Intelligence Hub, Solutions, BattleVerse Arena, and Contact', async ({ page }) => {
     test.setTimeout(90_000);
-    for (const route of ['/', '/solutions/', '/products/battleverse/arena/', '/contact/']) {
+    for (const route of ['/', '/solutions/studio-intelligence-hub/', '/solutions/', '/products/battleverse/arena/', '/contact/']) {
       await page.goto(route);
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa'])
@@ -108,6 +148,14 @@ test.describe('Operation Digital Forge visual & interactive system', () => {
     await page.locator('#arena-tab-kestrel-vs-aegis').click();
     await expect(page.locator('#arena-panel-kestrel-vs-aegis')).toBeVisible();
     await expect(page.locator('#arena-panel-aegis-vs-vesper')).toBeHidden();
+
+    // Commercial Inquiry Composer honors ?track=founding-studio query parameter
+    await page.goto('/contact/?track=founding-studio');
+    const hubTrack = page.locator('[data-track-id="studio-intelligence-hub"]');
+    await expect(hubTrack).toHaveAttribute('aria-checked', 'true');
+    const foundingMailto = await page.locator('[data-inquiry-mailto]').getAttribute('href');
+    expect(foundingMailto).toContain('mailto:forgerdigisolsupport@gmail.com');
+    expect(foundingMailto).toContain('Founding');
 
     // Commercial Inquiry Composer honors ?track=enterprise query parameter
     await page.goto('/contact/?track=enterprise');

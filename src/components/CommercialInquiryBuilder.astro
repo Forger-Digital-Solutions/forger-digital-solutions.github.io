@@ -43,6 +43,8 @@ const tracks = solutionsData.inquiryTracks;
     <div class="inquiry-field">
       <label for="inq-focus">Primary Interest Area</label>
       <select id="inq-focus">
+        <option value="Studio Intelligence Hub — 4-Week Managed Pilot (Roblox / Unreal)">Studio Intelligence Hub — 4-Week Managed Pilot (Roblox / Unreal)</option>
+        <option value="Founding Studio Pilot Program (50% Off — First 5 Studios)">Founding Studio Pilot Program (50% Off — First 5 Studios)</option>
         <option value="Hackmanite (Gaming AI / Studio Workforce)">Hackmanite (Gaming AI / Studio Workforce)</option>
         <option value="Cinnabar & BattleVerse Creator Studio">Cinnabar &amp; BattleVerse Creator Studio</option>
         <option value="BattleVerse Arena (Preview Interest)">BattleVerse Arena (Preview Interest)</option>
@@ -59,7 +61,7 @@ const tracks = solutionsData.inquiryTracks;
       <textarea
         id="inq-summary"
         rows="3"
-        placeholder="Briefly describe your team size, engine or production pipeline, or questions for Forger Digital Solutions..."
+        placeholder="Briefly share your game engine (Roblox Studio / Unreal Engine), team size, codebase/doc scope, and preferred call times with time zone..."
       ></textarea>
     </div>
   </div>
@@ -101,7 +103,7 @@ const tracks = solutionsData.inquiryTracks;
       const trackLabel = activeBtn?.querySelector('.track-pill__label')?.textContent?.trim() || 'FDS Inquiry';
       const org = orgInput?.value.trim() || '(Not specified)';
       const focus = focusSelect?.value || '(Not specified)';
-      const details = summaryInput?.value.trim() || '(Add workflow, team, or partnership details here)';
+      const details = summaryInput?.value.trim() || '(Add studio engine, team size, project scope, or preferred call times here)';
       return [
         `Inquiry Track: ${trackLabel}`,
         `Organization / Name: ${org}`,
@@ -146,7 +148,13 @@ const tracks = solutionsData.inquiryTracks;
     try {
       const params = new URLSearchParams(window.location.search);
       const requested = params.get('track');
-      if (requested) {
+      if (requested === 'founding-studio') {
+        const match = trackBtns.find((b) => b.dataset.trackId === 'studio-intelligence-hub');
+        if (focusSelect) {
+          focusSelect.value = 'Founding Studio Pilot Program (50% Off — First 5 Studios)';
+        }
+        if (match) selectTrack(match);
+      } else if (requested) {
         const match = trackBtns.find((b) => b.dataset.trackId === requested);
         if (match) selectTrack(match);
       }

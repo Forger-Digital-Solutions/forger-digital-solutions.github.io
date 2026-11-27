@@ -1,0 +1,880 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import StatusPill from '../../../components/StatusPill.astro';
+import SpecimenMedia from '../../../components/SpecimenMedia.astro';
+import HubArchitectureFlow from '../../../components/HubArchitectureFlow.astro';
+import HubInvestigationPreview from '../../../components/HubInvestigationPreview.astro';
+import PilotBookingActions from '../../../components/PilotBookingActions.astro';
+import { siteConfig } from '../../../config/site';
+import { studioIntelligenceHubData } from '../../../data/registry';
+import { hasVerifiedBookingUrl } from '../../../lib/booking';
+
+const hub = studioIntelligenceHubData;
+const liveBooking = hasVerifiedBookingUrl();
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: hub.name,
+  serviceType: 'Managed Engineering Intelligence Pilot for Game Studios',
+  provider: {
+    '@type': 'Organization',
+    name: siteConfig.name,
+    url: siteConfig.siteUrl,
+  },
+  url: new URL(hub.route, siteConfig.siteUrl).href,
+  description:
+    'A managed four-week engineering intelligence pilot powered by Project Forge (in testing on FDS’s own Roblox and Unreal projects) that connects a game studio’s Roblox Studio (Luau) or Unreal Engine (C++) source code with technical documentation and design specs; scoped engine references are in development.',
+  audience: {
+    '@type': 'Audience',
+    audienceType: 'Independent Game Development Studios (Roblox Studio & Unreal Engine)',
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: hub.faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="FDS Studio Intelligence Hub — Game Studio Engineering Intelligence Pilot"
+  description="Connect your game studio's source code, technical documentation, and design knowledge (with scoped engine references in development). Managed four-week engineering intelligence pilot for Roblox Studio (Luau) and Unreal Engine (C++) teams."
+  ogImage={hub.hero.image}
+  accent="fds-cobalt"
+  jsonLd={[serviceSchema, faqSchema]}
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true">/</span>
+    <a href="/solutions/">Solutions</a><span aria-hidden="true">/</span>
+    <span aria-current="page">Studio Intelligence Hub</span>
+  </nav>
+
+  <!-- 1. Hero -->
+  <header class="hub-hero">
+    <div class="hub-hero__copy">
+      <div class="hub-meta-bar">
+        <span class="page-eyebrow">{hub.eyebrow}</span>
+        <StatusPill status="commercial-direction" label={hub.statusLabel} />
+      </div>
+      <h1 class="page-title">{hub.hero.headline}</h1>
+      <p class="page-description">{hub.hero.supportingCopy}</p>
+
+      <div class="hub-hero__cta">
+        <PilotBookingActions
+          variant="pilot"
+          primaryLabel="Book a Pilot Call"
+          secondaryLabel="See Four-Week Pilot Process"
+          secondaryHref="#pilot-process"
+          showEmailFallback
+        />
+      </div>
+
+      <div class="fds-callout hub-hero__callout">
+        <strong>Managed Pilot Service — In Testing, Not a Finished SaaS Product:</strong> FDS Studio Intelligence Hub is delivered as a scoped four-week managed pilot currently in testing on FDS's own Roblox and Unreal projects. Exact scope and pricing are discussed during your initial technical assessment call; customers supply their own AI provider API keys.
+      </div>
+    </div>
+
+    <div class="hub-hero__visual">
+      <SpecimenMedia
+        src={hub.hero.image}
+        mobileSrc={hub.hero.imageSm}
+        alt={hub.hero.imageAlt}
+        label={hub.hero.imageLabel}
+        eager
+      />
+      <dl class="hub-facts-strip" aria-label="Studio Intelligence Hub pilot overview">
+        <div>
+          <dt>Engagement</dt>
+          <dd>Four-week managed pilot</dd>
+        </div>
+        <div>
+          <dt>Supported Engines</dt>
+          <dd>Roblox Studio (Luau) &amp; Unreal Engine (C++)</dd>
+        </div>
+        <div>
+          <dt>Tooling</dt>
+          <dd>External MCP tools · Jaspilite not required</dd>
+        </div>
+      </dl>
+    </div>
+  </header>
+
+  <!-- 2. Customer Problem -->
+  <section class="page-section page-section--surface" aria-labelledby="problem-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>{hub.problem.eyebrow}</p>
+        <h2 id="problem-heading">{hub.problem.headline}</h2>
+        <p>{hub.problem.lead}</p>
+      </div>
+    </div>
+
+    <ol class="problem-ledger">
+      {hub.problem.painPoints.map((pt) => (
+        <li class="problem-ledger__row">
+          <span class="problem-ledger__idx">{pt.code}</span>
+          <h3 class="problem-ledger__title">{pt.title}</h3>
+          <p class="problem-ledger__detail">{pt.detail}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- 3. Product Explanation & Differentiator -->
+  <section class="page-section" aria-labelledby="product-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Why the Hub Is Different</p>
+        <h2 id="product-heading">Code connected to the documentation and decisions that explain it.</h2>
+        <p>
+          Generic AI coding tools can inspect an open file, but they cannot explain why a combat formula was designed a certain way, which design doc governs an inventory migration, or which engine behaviors apply in your studio's version.
+        </p>
+      </div>
+      <a href="/research/project-forge/" class="text-link">Inspect Project Forge foundation <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="diff-grid">
+      <article class="diff-cell">
+        <span class="diff-cell__tag">DIFFERENTIATOR 01</span>
+        <h3>Unified Code + Documentation Context</h3>
+        <p>
+          Rather than isolating code search from wikis and design docs, the Hub links implementation files directly to technical specs and gameplay design notes (with scoped engine reference packs in development) so engineers see the full picture.
+        </p>
+      </article>
+
+      <article class="diff-cell">
+        <span class="diff-cell__tag">DIFFERENTIATOR 02</span>
+        <h3>Grounded Evidence Over Guesswork</h3>
+        <p>
+          Every investigation points back to concrete file paths and documentation sections inside your project—enabling fast human inspection instead of blind trust in ungrounded chat responses.
+        </p>
+      </article>
+
+      <article class="diff-cell">
+        <span class="diff-cell__tag">DIFFERENTIATOR 03</span>
+        <h3>Works With Your Existing MCP Tools</h3>
+        <p>
+          Project Forge operates through existing external MCP-compatible development environments using your studio's own API keys. You do <strong>not</strong> need to adopt <a href="/products/jaspilite/">Jaspilite</a> or replace your studio's IDE to run a pilot.
+        </p>
+      </article>
+
+      <article class="diff-cell">
+        <span class="diff-cell__tag">DIFFERENTIATOR 04</span>
+        <h3>Managed Four-Week Delivery</h3>
+        <p>
+          You do not buy an unfinished SaaS subscription or spend weeks fighting indexing infrastructure. FDS handles scoping, configuration, coverage checks, and live workflow walkthroughs with your engineers across four structured weeks.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 4. Project Forge Architecture -->
+  <section class="page-section page-section--surface" id="architecture" aria-labelledby="arch-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>{hub.architecture.eyebrow}</p>
+        <h2 id="arch-heading">{hub.architecture.headline}</h2>
+        <p>{hub.architecture.lead}</p>
+      </div>
+    </div>
+
+    <HubArchitectureFlow showBoundaries />
+  </section>
+
+  <!-- 5. Example Developer Questions -->
+  <section class="page-section" id="developer-questions" aria-labelledby="questions-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>What Developers Can Ask</p>
+        <h2 id="questions-heading">Real engineering investigations — answered with project evidence.</h2>
+        <p>
+          Select an engineering question below to inspect how the Studio Intelligence Hub links source files, technical documentation, and design specs (with scoped engine reference packs in development) across Roblox Studio and Unreal Engine projects.
+        </p>
+      </div>
+    </div>
+
+    <HubInvestigationPreview idPrefix="hub-page-q" />
+  </section>
+
+  <!-- 6 & 7. Roblox Studio & Unreal Engine Support -->
+  <section class="page-section page-section--surface" id="supported-engines" aria-labelledby="engines-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Supported Project Configurations</p>
+        <h2 id="engines-heading">Focused pilots for Roblox Studio and Unreal Engine teams.</h2>
+        <p>
+          We concentrate on two real game-development stacks—currently in testing on FDS's own Roblox and Unreal projects—and we state technical boundaries and in-development items upfront before any pilot starts.
+        </p>
+      </div>
+    </div>
+
+    <div class="engines-grid">
+      {hub.supportedEngines.map((eng) => (
+        <article class="fds-panel engine-panel" data-accent={eng.accent}>
+          <div class="engine-panel__top">
+            <span class="engine-panel__badge">{eng.badge}</span>
+            <StatusPill status="commercial-direction" label="Pilot Scope · In Testing" />
+          </div>
+          <h3>{eng.name}</h3>
+          <p class="engine-panel__summary">{eng.summary}</p>
+          <p class="engine-panel__list-label">What the pilot covers</p>
+          <ul class="engine-panel__list">
+            {eng.covered.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <div class="fds-callout engine-panel__boundary">
+            <strong>Scope Boundary:</strong> {eng.honestyBoundary}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- 8. Four-Week Pilot Process -->
+  <section class="page-section" id="pilot-process" aria-labelledby="pilot-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>How the Pilot Works</p>
+        <h2 id="pilot-heading">A structured, four-week managed engagement.</h2>
+        <p>
+          Every engagement runs on a clear four-week cadence with measurable checkpoints. Exact repository boundaries, document sets, and success questions are agreed in writing before Week 1 begins.
+        </p>
+      </div>
+    </div>
+
+    <ol class="timeline-grid">
+      {hub.pilotWeeks.map((step) => (
+        <li class="timeline-cell">
+          <span class="timeline-cell__week">{step.week}</span>
+          <h3>{step.title}</h3>
+          <p>{step.summary}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="fds-callout pilot-scope-note">
+      <strong>Commercial Terms &amp; Transparency:</strong> Exact scope, deliverables, and pilot pricing are agreed during your pilot assessment call before kickoff. Your studio pays its chosen AI provider directly through customer-owned API keys.
+    </div>
+  </section>
+
+  <!-- 9. Security & Privacy -->
+  <section class="page-section page-section--surface" id="security" aria-labelledby="security-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Security, Privacy &amp; Studio Control</p>
+        <h2 id="security-heading">Cannot modify your repository — read-only by design.</h2>
+        <p>
+          Game studios protect unannounced IP and proprietary tooling. Every Studio Intelligence Hub pilot enforces explicit technical and operational boundaries—without claiming certifications we have not earned.
+        </p>
+      </div>
+      <a href="/trust/" class="text-link">Read FDS Trust Center <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="security-grid">
+      {hub.securityControls.map((ctrl) => (
+        <article class="security-cell">
+          <span class="security-cell__code">{ctrl.code}</span>
+          <h3>{ctrl.title}</h3>
+          <p>{ctrl.detail}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="fds-callout security-honesty">
+      <strong>Governance Honesty:</strong> FDS only makes security commitments that our actual technical implementation supports. We do <strong>not</strong> claim SOC 2, ISO 27001, HIPAA, or third-party enterprise security certifications, and we do not advertise multi-tenant SaaS hosting.
+    </div>
+  </section>
+
+  <!-- 10. Founding Studio Program -->
+  <section class="page-section" id="founding-studios" aria-labelledby="founding-heading">
+    <div class="founding-banner">
+      <div class="founding-banner__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>{hub.foundingProgram.eyebrow}</p>
+        <h2 id="founding-heading">{hub.foundingProgram.headline}</h2>
+        <p class="founding-banner__lead">{hub.foundingProgram.summary}</p>
+        <p class="founding-banner__benefit">
+          <strong>Founding Studio Benefit:</strong> {hub.foundingProgram.benefit}
+        </p>
+        <p class="founding-banner__pricing">{hub.foundingProgram.pricingNote}</p>
+      </div>
+
+      <div class="founding-banner__action">
+        <div class="founding-cohort-box">
+          <span class="founding-cohort-box__kicker">INITIAL COHORT</span>
+          <p class="founding-cohort-box__stat">5 Founding Studios</p>
+          <p class="founding-cohort-box__meta">50% off applicable pilot fee · Structured feedback exchange · Pricing reviewed during pilot assessment</p>
+          <PilotBookingActions
+            variant="founding"
+            primaryLabel={hub.foundingProgram.ctaLabel}
+            showEmailFallback
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Frequently Asked Questions -->
+  <section class="page-section page-section--surface" id="faq" aria-labelledby="faq-heading">
+    <div class="fds-section-head">
+      <div class="fds-section-head__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Frequently Asked Questions</p>
+        <h2 id="faq-heading">Straight answers before we start.</h2>
+        <p>Direct technical and commercial details for studio leads, technical directors, and gameplay engineers.</p>
+      </div>
+    </div>
+
+    <div class="hub-faq-list">
+      {hub.faqs.map((item, idx) => (
+        <details class="hub-faq-item" open={idx === 0}>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- 12. Final Booking CTA -->
+  <section class="page-section" id="book-pilot" aria-labelledby="final-cta-heading">
+    <div class="fds-panel final-cta-panel">
+      <div class="final-cta-panel__copy">
+        <p class="fds-eyebrow"><span class="fds-eyebrow__rule"></span>Start Your Pilot Assessment</p>
+        <h2 id="final-cta-heading">Let's Make Your Studio's Engineering Knowledge Work Harder.</h2>
+        <p>
+          Book a technical pilot call to walk through your Roblox Studio or Unreal Engine project structure, review what is in pilot scope, and discuss pilot pricing and Founding Studio availability.
+        </p>
+        <p class="final-cta-panel__fallback">
+          {liveBooking
+            ? <>Prefer email first? Write directly to <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a>.</>
+            : <>Use the structured pilot call request below or email <a href={`mailto:${siteConfig.supportEmail}`}>{siteConfig.supportEmail}</a> directly with your studio engine and preferred call times.</>}
+        </p>
+      </div>
+
+      <div class="final-cta-panel__actions">
+        <PilotBookingActions
+          variant="pilot"
+          primaryLabel="Book a Pilot Call"
+          secondaryLabel="Apply as Founding Studio"
+          secondaryHref="/contact/?track=founding-studio"
+          showEmailFallback
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hub-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.98fr);
+    gap: 2.25rem 2.75rem;
+    align-items: start;
+    padding: clamp(2.25rem, 4.5vw, 3.75rem) 0 3rem;
+  }
+
+  .hub-meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .hub-meta-bar .page-eyebrow {
+    margin: 0;
+  }
+
+  .hub-hero__cta {
+    margin-top: 1.65rem;
+  }
+
+  .hub-hero__callout {
+    margin-top: 1.5rem;
+  }
+
+  .hub-hero__visual {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .hub-facts-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .hub-facts-strip div {
+    padding: 0.85rem 0.95rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .hub-facts-strip dt {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .hub-facts-strip dd {
+    margin: 0.25rem 0 0;
+    color: var(--color-text);
+    font-size: 0.84rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Problem Ledger */
+  .problem-ledger {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border-structural);
+    list-style: none;
+  }
+
+  .problem-ledger__row {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 18rem) minmax(0, 1fr);
+    gap: 0.6rem 1.75rem;
+    align-items: baseline;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .problem-ledger__idx {
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .problem-ledger__title {
+    margin: 0;
+    font-size: 1.06rem;
+    line-height: 1.35;
+  }
+
+  .problem-ledger__detail {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.62;
+  }
+
+  /* Differentiators Grid */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .diff-cell {
+    padding: 1.55rem 1.65rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .diff-cell__tag {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .diff-cell h3 {
+    margin: 0.45rem 0 0.5rem;
+    font-size: 1.14rem;
+  }
+
+  .diff-cell p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.64;
+  }
+
+  /* Engines */
+  .engines-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .engine-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 1.7rem;
+    border-top: 2px solid var(--page-accent);
+  }
+
+  .engine-panel__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .engine-panel__badge {
+    color: var(--page-accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .engine-panel h3 {
+    margin: 0;
+    font-size: 1.55rem;
+    letter-spacing: -0.028em;
+  }
+
+  .engine-panel__summary {
+    margin: 0.65rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.64;
+  }
+
+  .engine-panel__list-label {
+    margin: 1.25rem 0 0.55rem;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .engine-panel__list {
+    display: grid;
+    gap: 0.48rem;
+    margin: 0 0 1.35rem;
+    padding-left: 1.15rem;
+    color: var(--color-text);
+    font-size: 0.88rem;
+    line-height: 1.56;
+    flex: 1;
+  }
+
+  .engine-panel__boundary {
+    margin: 0;
+    font-size: 0.84rem;
+  }
+
+  /* 4-Week Pilot Timeline */
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .timeline-cell {
+    padding: 1.5rem 1.35rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .timeline-cell__week {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .timeline-cell h3 {
+    margin: 0.55rem 0 0.55rem;
+    font-size: 1.04rem;
+    line-height: 1.34;
+  }
+
+  .timeline-cell p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.87rem;
+    line-height: 1.6;
+  }
+
+  .pilot-scope-note {
+    margin-top: 1.5rem;
+  }
+
+  /* Security Grid */
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+
+  .security-cell {
+    padding: 1.4rem 1.45rem;
+    background: var(--color-bg);
+  }
+
+  .security-cell:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 16rem) minmax(0, 1fr);
+    gap: 0.4rem 1.5rem;
+    align-items: baseline;
+  }
+
+  .security-cell:last-child h3 {
+    margin: 0;
+  }
+
+  .security-cell__code {
+    display: inline-block;
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .security-cell h3 {
+    margin: 0.45rem 0 0.45rem;
+    font-size: 1.02rem;
+  }
+
+  .security-cell p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.87rem;
+    line-height: 1.6;
+  }
+
+  .security-honesty {
+    margin-top: 1.5rem;
+  }
+
+  /* Founding Studio Banner */
+  .founding-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+    gap: 2rem 2.5rem;
+    align-items: center;
+    padding: clamp(1.6rem, 3.5vw, 2.5rem);
+    border: 1px solid var(--color-border-structural);
+    border-top: 2px solid var(--accent-project-forge);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-secondary);
+    box-shadow: var(--surface-highlight);
+  }
+
+  .founding-banner h2 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .founding-banner__lead {
+    margin: 0.85rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.98rem;
+    line-height: 1.66;
+  }
+
+  .founding-banner__benefit {
+    margin: 1rem 0 0;
+    color: var(--color-text);
+    font-size: 0.94rem;
+    line-height: 1.62;
+  }
+
+  .founding-banner__pricing {
+    margin: 0.75rem 0 0;
+    color: var(--color-text-subtle);
+    font-size: 0.86rem;
+    line-height: 1.58;
+  }
+
+  .founding-cohort-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+  }
+
+  .founding-cohort-box__kicker {
+    color: var(--accent-project-forge);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .founding-cohort-box__stat {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  .founding-cohort-box__meta {
+    margin: 0 0 0.65rem;
+    color: var(--color-text-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  /* FAQ */
+  .hub-faq-list {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .hub-faq-item {
+    border: 1px solid var(--color-border-structural);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+
+  .hub-faq-item summary {
+    padding: 1.1rem 1.3rem;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .hub-faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .hub-faq-item summary::after {
+    content: '+';
+    color: var(--color-accent-bright);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .hub-faq-item[open] summary::after {
+    content: '−';
+  }
+
+  .hub-faq-item p {
+    margin: 0;
+    padding: 0 1.3rem 1.2rem;
+    color: var(--color-text-muted);
+    font-size: 0.93rem;
+    line-height: 1.68;
+    max-width: 56rem;
+  }
+
+  /* Final CTA */
+  .final-cta-panel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.75rem 2.5rem;
+    padding: clamp(1.65rem, 3.5vw, 2.5rem);
+  }
+
+  .final-cta-panel__copy {
+    max-width: 40rem;
+  }
+
+  .final-cta-panel h2 {
+    margin: 0;
+    font-size: clamp(1.55rem, 2.8vw, 2.15rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+
+  .final-cta-panel p {
+    margin: 0.75rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+
+  .final-cta-panel__fallback {
+    font-size: 0.86rem;
+    color: var(--color-text-subtle);
+  }
+
+  @media (max-width: 1040px) {
+    .hub-hero,
+    .engines-grid,
+    .founding-banner {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .security-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .hub-facts-strip,
+    .problem-ledger__row,
+    .diff-grid,
+    .timeline-grid,
+    .security-grid,
+    .security-cell:last-child {
+      grid-template-columns: 1fr;
+    }
+
+    .problem-ledger__row {
+      gap: 0.35rem;
+    }
+  }
+</style>

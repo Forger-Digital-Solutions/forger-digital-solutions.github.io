@@ -68,6 +68,7 @@ describe('Operation Digital Forge II — Commercial & Kayla Verification Suite',
       const text = readFileSync(file, 'utf8');
       expect(text, `Unapproved revenue scenario leak in ${file}`).not.toMatch(/\$39,957\.50|\$479,490/);
       expect(text, `Unapproved public tier price leak in ${file}`).not.toMatch(/\$9\.99|\$19\.99|\$49\.99|\$299\+|\$1,999\+/);
+      expect(text, `Internal Studio Intelligence Hub pilot price leak in ${file}`).not.toMatch(/\$(?:1,500|750|2,500|1,250|3,500|1,750)\b/);
       expect(
         text,
         `Disallowed Jaspilite user-subscription wording in ${file}`
@@ -75,8 +76,10 @@ describe('Operation Digital Forge II — Commercial & Kayla Verification Suite',
     }
   });
 
-  it('answers all 15 commercial & flagship Kayla queries truthfully with valid canonical actions', () => {
+  it('answers all commercial & flagship Kayla queries truthfully with valid canonical actions', () => {
     const queries = [
+      'What is the FDS Studio Intelligence Hub?',
+      'How does the Founding Studio pilot program work?',
       'What is Alexandrite?',
       'Is Hackmanite available?',
       'What is Cinnabar?',

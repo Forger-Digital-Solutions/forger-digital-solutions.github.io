@@ -1,0 +1,83 @@
+---
+import { siteConfig } from '../config/site';
+import {
+  getPilotBookingDestination,
+  getPilotMailtoHref,
+  type PilotBookingVariant,
+} from '../lib/booking';
+
+interface Props {
+  variant?: PilotBookingVariant;
+  primaryLabel?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  showEmailFallback?: boolean;
+  align?: 'left' | 'center';
+}
+
+const {
+  variant = 'pilot',
+  primaryLabel = variant === 'founding' ? 'Apply for a Founding Studio Pilot' : 'Book a Pilot Call',
+  secondaryLabel,
+  secondaryHref,
+  showEmailFallback = true,
+  align = 'left',
+} = Astro.props;
+
+const booking = getPilotBookingDestination(variant);
+const mailtoHref = getPilotMailtoHref(variant);
+---
+
+<div class:list={['pilot-cta-block', align === 'center' && 'pilot-cta-block--center']}>
+  <div class="pilot-cta-block__buttons">
+    <a
+      href={booking.href}
+      class="btn btn-primary"
+      target={booking.external ? '_blank' : undefined}
+      rel={booking.external ? 'noopener noreferrer' : undefined}
+      data-pilot-booking-cta
+    >
+      {primaryLabel} <span aria-hidden="true">{booking.external ? '↗' : '→'}</span>
+    </a>
+
+    {secondaryLabel && secondaryHref && (
+      <a href={secondaryHref} class="btn btn-outline">
+        {secondaryLabel}
+      </a>
+    )}
+
+    {showEmailFallback && (
+      <a href={mailtoHref} class="btn btn-ghost pilot-cta-block__mail">
+        Email {siteConfig.supportEmail}
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .pilot-cta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .pilot-cta-block--center {
+    align-items: center;
+  }
+
+  .pilot-cta-block__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .pilot-cta-block--center .pilot-cta-block__buttons {
+    justify-content: center;
+  }
+
+  .pilot-cta-block__mail {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+</style>

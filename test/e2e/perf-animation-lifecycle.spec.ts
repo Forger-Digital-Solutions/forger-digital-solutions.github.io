@@ -4,7 +4,7 @@ test.describe('Animation Performance & Lifecycle Regression Gates', () => {
   test('flagship surfaces and ecosystem architecture do not run continuous background animations', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
     const animationNames = await page
-      .locator('.hero, .eco-arch, .specialist-panel, .app-feature, .statelines-banner')
+      .locator('.hero, .hub-trace, .founding-banner, .eco-arch, .specialist-panel, .app-feature')
       .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).animationName));
     expect(animationNames.length).toBeGreaterThanOrEqual(6);
     expect(animationNames.every((name) => name === 'none')).toBe(true);

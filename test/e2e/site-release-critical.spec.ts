@@ -58,6 +58,9 @@ test.describe('Site release-critical surfaces', () => {
   });
 
   test('C. interactive ecosystem graph nodes are keyboard-inspectable and update live inspector', async ({ page }) => {
+    await page.addInitScript(() => {
+      try { window.localStorage.setItem('fds_support_dismissed_at', String(Date.now())); } catch { /* ignore */ }
+    });
     await page.goto('/');
 
     const graph = page.locator('.eco-arch');
@@ -111,6 +114,7 @@ test.describe('Site release-critical surfaces', () => {
       { path: '/products/battleverse/arena/', text: 'BattleVerse Arena' },
       { path: '/products/battleverse/creator-studio/', text: 'Creator Studio' },
       { path: '/solutions/', text: 'Personalized AI workforces' },
+      { path: '/solutions/studio-intelligence-hub/', text: 'Studio Intelligence Hub' },
       { path: '/solutions/gaming-studios/', text: 'Gaming Studios' },
       { path: '/solutions/enterprise-private-ai/', text: 'Enterprise' },
       { path: '/research/project-forge/', text: 'Project Forge' },
@@ -136,7 +140,7 @@ test.describe('Site release-critical surfaces', () => {
 
   test('F. accessibility smoke on flagship and portfolio pages', async ({ page }) => {
     test.setTimeout(90_000);
-    for (const path of ['/models/', '/projects', '/docs/']) {
+    for (const path of ['/solutions/studio-intelligence-hub/', '/models/', '/projects', '/docs/']) {
       await page.goto(path);
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa'])
