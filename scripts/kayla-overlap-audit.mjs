@@ -32,6 +32,11 @@ let checks = 0;
 
 for (const width of WIDTHS) {
   const context = await browser.newContext({ viewport: { width, height: 900 } });
+  // The homepage support dialog opens on scroll and, being modal, intercepts the launcher click. Mark it as
+  // dismissed before any page script runs (same key SupportDialog.astro reads), as the Playwright specs do.
+  await context.addInitScript(() => {
+    try { window.localStorage.setItem('fds_support_dismissed_at', String(Date.now())); } catch { /* ignore */ }
+  });
   const page = await context.newPage();
   for (const route of PAGES) {
     await page.goto(BASE + route, { waitUntil: 'networkidle' });
