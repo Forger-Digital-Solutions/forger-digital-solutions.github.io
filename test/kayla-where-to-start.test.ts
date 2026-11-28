@@ -93,7 +93,9 @@ describe('Where should I start? — deterministic Hub-first answer', () => {
     expect(text).toMatch(/in testing on FDS’s own projects/);
     expect(text).toMatch(/Read-only by design/);
     expect(text).toMatch(/its own AI provider API keys/);
-    expect(text).toMatch(/Cursor MCP connection has been tested, while the full end-to-end workflow is still in testing/);
+    expect(text).toMatch(/Claude Code has been tested end to end/);
+    expect(text).toMatch(/running queries from Cursor is still being tested/);
+    expect(text).not.toMatch(/Cursor MCP connection has been tested/);
     expect(text).toMatch(/Blueprint logic indexing is not yet implemented/);
     expect(text).toMatch(/Forge Control is a separate FDS product in active development with no public release/);
     expect(text).not.toMatch(/\$\s?\d|per month|pricing is|price is/i);

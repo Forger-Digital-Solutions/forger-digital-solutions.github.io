@@ -18,7 +18,7 @@
       "commercial_direction": "FDS's lead commercial offering: a managed four-week engineering intelligence pilot for independent Roblox Studio and Unreal Engine game studios.",
       "verified_capabilities": [
         "Defined four-week managed pilot engagement structure (Assessment -> Indexing -> Investigations -> Review & Handoff)",
-        "Cannot modify customer repositories — read-only by design, with isolated per-project data, customer-owned AI provider API keys, and defined data-deletion procedures",
+        "Cannot modify customer repositories — read-only by design, with isolated per-project data, customer-owned AI provider API keys, and data-deletion steps agreed in writing at pilot kickoff",
         "Designed to operate with existing external MCP-compatible development tools without requiring Jaspilite"
       ],
       "planned_capabilities": [
