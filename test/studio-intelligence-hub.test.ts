@@ -1,10 +1,11 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { getRegistryEntry, studioIntelligenceHubData } from '../src/data/registry';
 import { getPilotBookingDestination, getPilotMailtoHref } from '../src/lib/booking';
 
-const repoRoot = new URL('..', import.meta.url).pathname;
+const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 
 function walkFiles(dir: string, acc: string[] = []): string[] {
   for (const name of readdirSync(dir)) {

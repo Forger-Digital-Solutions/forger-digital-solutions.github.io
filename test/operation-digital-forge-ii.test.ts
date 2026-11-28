@@ -1,12 +1,13 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { publicRegistry, solutionsData, getRegistryEntry } from '../src/data/registry';
 import { canonicalAnswer } from '../src/data/kayla/answers';
 import { verifyAgainstCanon } from '../src/lib/kayla/verify';
 import { validateSafeAction } from '../src/lib/kayla/action-validator';
 
-const repoRoot = new URL('..', import.meta.url).pathname;
+const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 
 function walkFiles(dir: string, acc: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
