@@ -229,7 +229,7 @@
     {
       "code": "01",
       "title": "Read-Only Project Access",
-      "detail": "Pilot ingestion operates strictly on read-only snapshots or read-only access scopes approved by your studio."
+      "detail": "The Hub has no write tools and never writes into your repository. Pilots also run it against a read-only copy of your approved branches, enforced by the operating system, so connected AI tools cannot change it either."
     },
     {
       "code": "02",
@@ -249,17 +249,17 @@
     {
       "code": "05",
       "title": "Isolated Project Data",
-      "detail": "Each pilot's indexed source code, design documents, and notes remain logically isolated per project and are never commingled across studios."
+      "detail": "Each pilot gets its own install, index, and report folders, kept separate from your source and from every other studio."
     },
     {
       "code": "06",
       "title": "No Training Without Written Permission",
-      "detail": "Your studio's code, design documents, and technical knowledge are never used to train FDS or shared AI models without explicit written authorization."
+      "detail": "FDS never uses your studio's code, documents, or questions to train FDS models without your explicit written permission. Whether your AI provider may use conversations for training is controlled by your provider account settings, which we review with you before the pilot."
     },
     {
       "code": "07",
-      "title": "Defined Data-Deletion Procedures",
-      "detail": "Clear retention boundaries and documented deletion procedures are established at pilot kickoff and executed upon request or pilot closeout."
+      "title": "Agreed Data-Deletion Steps",
+      "detail": "Retention boundaries and data-deletion steps are agreed in writing at pilot kickoff and carried out on request or at pilot closeout."
     }
   ],
   "foundingProgram": {
@@ -293,7 +293,7 @@
     },
     {
       "q": "How does FDS protect our unannounced game code and design documents?",
-      "a": "The Hub cannot modify your repository — it is read-only by design. Pilots use isolated per-project data, customer-owned API keys, defined data-deletion procedures, and zero training on customer data without explicit written permission. We also stay honest about governance: FDS does not claim SOC 2, ISO 27001, or third-party enterprise compliance certifications."
+      "a": "The Hub cannot modify your repository — it is read-only by design. Pilots use isolated per-project data and customer-owned API keys; data-deletion steps are agreed in writing at kickoff, and FDS never trains FDS models on your data without explicit written permission. We also stay honest about governance: FDS does not claim SOC 2, ISO 27001, or third-party enterprise compliance certifications."
     },
     {
       "q": "Does the Hub promise 100% accurate AI answers?",
