@@ -290,35 +290,35 @@ export function getStartersForContext(): string[] {
   const ctx = getPageContext();
   const starters: Record<string, string[]> = {
     home: [
-      'Where should I start?',
-      'What can I use now?',
-      'Explore the projects',
-      'What is Forge Control?',
-      'Try CodeForge',
-      'Support FDS'
+      'What is the Studio Intelligence Hub?',
+      'How does a pilot work?',
+      'Is my code safe?',
+      'Book a pilot call',
+      'Does it work with Cursor?',
+      'Where should I start?'
     ],
     forged: [
       'What can I use now?',
-      'Tell me about CodeForge',
+      'What is the Studio Intelligence Hub?',
       'Where do I download releases?',
       'Support FDS'
     ],
     projects: [
+      'What is the Studio Intelligence Hub?',
       'Which FDS project should I explore?',
-      'Tell me about CodeForge',
-      'What is Dead Trails West?',
-      'Where do I start?'
+      'What can I use now?',
+      'Where should I start?'
     ],
     support: [
       'How can I support FDS?',
       'What hardware can I donate?',
-      'How do I sponsor FDS on GitHub?',
+      'What is the Studio Intelligence Hub?',
       'Explore the projects'
     ],
     downloads: [
       'What can I download right now?',
-      'Where do I get CodeForge?',
-      'How do I install CodeForge?',
+      'What is the Studio Intelligence Hub?',
+      'Where do I download ForgerEMS?',
       'Support FDS'
     ]
   };
@@ -340,8 +340,8 @@ export function getStartersForContext(): string[] {
         'What version is this?'
       ],
       'forge-control': [
+        'What is Jaspilite?',
         'What is Forge Control?',
-        'Is Forge Control available?',
         'Explore the projects'
       ],
       'dead-trails-west': [
@@ -382,26 +382,35 @@ export function getFollowUpSuggestions(lastQuery: string, actions?: KaylaSafeAct
 }
 
 function computeFollowUpSuggestions(q: string, actions?: KaylaSafeAction[]): string[] {
+  if (q.includes('hub') || q.includes('pilot') || q.includes('founding') || q.includes('roblox') || q.includes('unreal')) {
+    return ['How does a pilot work?', 'Is my code safe?', 'Book a pilot call'];
+  }
+  if (q.includes('safe') || q.includes('security') || q.includes('soc') || q.includes('certif') || q.includes('trust')) {
+    return ['How does a pilot work?', 'Does it work with Cursor?', 'Book a pilot call'];
+  }
+  if (q.includes('cursor') || q.includes('mcp')) {
+    return ['Is my code safe?', 'How does a pilot work?', 'Book a pilot call'];
+  }
   if (q.includes('codeforge')) {
     return ['See the release', 'How does it compare?', 'Explore other projects'];
   }
   if (q.includes('support') || q.includes('donate') || q.includes('contribute') || q.includes('hardware')) {
-    return ['What hardware can I donate?', 'Explore active projects', 'Where should I start?'];
+    return ['What hardware can I donate?', 'What is the Studio Intelligence Hub?', 'Where should I start?'];
   }
   if (q.includes('start') || q.includes('new here') || q.includes('what is fds') || q.includes('mission')) {
-    return ['What can I use now?', 'Explore the projects', 'How can I support FDS?'];
+    return ['What is the Studio Intelligence Hub?', 'What can I use now?', 'Explore the projects'];
   }
   if (q.includes('download') || q.includes('release') || q.includes('use now') || q.includes('available')) {
-    return ['Try CodeForge', 'What is Forge Control?', 'Where should I start?'];
+    return ['What is the Studio Intelligence Hub?', 'Explore the projects', 'Where should I start?'];
   }
   if (actions && actions.length > 0) {
     const hasProjectsAction = actions.some(a => a.href === '/projects');
     if (hasProjectsAction) {
-      return ['What can I use now?', 'What is Dead Trails West?', 'Support FDS'];
+      return ['What is the Studio Intelligence Hub?', 'What can I use now?', 'Explore the projects'];
     }
-    return ['See the release', 'What can I use now?', 'Explore the projects'];
+    return ['How does a pilot work?', 'Is my code safe?', 'Book a pilot call'];
   }
-  return ['Where should I start?', 'What can I use now?', 'Explore the projects'];
+  return ['What is the Studio Intelligence Hub?', 'How does a pilot work?', 'Explore the projects'];
 }
 
 /** A query that failed and can be resent — surfaced as a "Retry" chip. */
@@ -753,7 +762,7 @@ function newChat(): void {
 }
 
 function addGreeting(): void {
-  addMessage('kayla', "Hi, I'm Kayla, the AI assistant from Forger Digital Solutions. Ask me anything — everyday questions, coding help, explanations, or questions about FDS and its projects.");
+  addMessage('kayla', "Hi, I'm Kayla, the AI assistant for Forger Digital Solutions. Ask me about the FDS Studio Intelligence Hub pilot, code security, supported tools like Cursor, our models and products, or verified releases.");
 }
 
 /** Grow the composer to fit pasted or multi-line text, bounded. */

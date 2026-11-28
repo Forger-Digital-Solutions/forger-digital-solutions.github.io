@@ -27,6 +27,9 @@
         [
           "engineering",
           "AI"
+        ],
+        [
+          "Studio Intelligence Hub"
         ]
       ],
       "forbid": [
@@ -6368,6 +6371,238 @@
         "$750",
         "$1,250",
         "$1,750"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-hub-03",
+      "tier": 1,
+      "category": "commercial-pilot",
+      "question": "How does a pilot work?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "four-week"
+        ],
+        [
+          "Week 01"
+        ],
+        [
+          "Week 04"
+        ],
+        [
+          "50% off"
+        ]
+      ],
+      "forbid": [
+        "$1,500",
+        "$750",
+        "self-serve SaaS product today"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-hub-04",
+      "tier": 1,
+      "category": "trust-security",
+      "question": "Is my code safe?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "read-only"
+        ],
+        [
+          "isolated"
+        ],
+        [
+          "API keys"
+        ],
+        [
+          "/trust/"
+        ]
+      ],
+      "forbid": [
+        "SOC 2 certified",
+        "ISO 27001 certified",
+        "without explicit developer action"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-hub-05",
+      "tier": 1,
+      "category": "commercial-pilot",
+      "question": "Book a pilot call",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "/contact/?track=studio-intelligence-hub"
+        ],
+        [
+          "{{site.email}}"
+        ],
+        [
+          "Founding Studio"
+        ]
+      ],
+      "forbid": [
+        "$1,500",
+        "$750"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-hub-06",
+      "tier": 1,
+      "category": "commercial-pilot",
+      "question": "Does it work with Cursor?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "MCP-compatible"
+        ],
+        [
+          "Cursor"
+        ],
+        [
+          "tested"
+        ],
+        [
+          "still in testing"
+        ]
+      ],
+      "forbid": [
+        "production-proven",
+        "Jaspilite is required"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-trust-01",
+      "tier": 1,
+      "category": "trust-security",
+      "question": "Are you SOC 2 certified?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "does not claim"
+        ],
+        [
+          "SOC 2"
+        ],
+        [
+          "/trust/"
+        ]
+      ],
+      "forbid": [
+        "we are SOC 2 certified",
+        "SOC 2 Type II"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-trust-02",
+      "tier": 1,
+      "category": "trust-security",
+      "question": "Do you have ISO 27001 or HIPAA certifications?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "does not claim"
+        ],
+        [
+          "ISO 27001"
+        ],
+        [
+          "HIPAA"
+        ],
+        [
+          "/trust/"
+        ]
+      ],
+      "forbid": [
+        "ISO 27001 certified",
+        "HIPAA compliant"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-fds-hub-01",
+      "tier": 1,
+      "category": "identity",
+      "question": "Tell me about the company",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Forger Digital Solutions"
+        ],
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "Roblox Studio"
+        ],
+        [
+          "Unreal Engine"
+        ]
+      ],
+      "forbid": [
+        "five ecosystems"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-offtopic-01",
+      "tier": 1,
+      "category": "scope-boundary",
+      "question": "Write me a poem about space.",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Forger Digital Solutions"
+        ],
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "cannot help with poems"
+        ]
+      ],
+      "forbid": [
+        "roses are red",
+        "stars shine bright"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-offtopic-02",
+      "tier": 1,
+      "category": "scope-boundary",
+      "question": "Can you do my algebra homework?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Forger Digital Solutions"
+        ],
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "homework"
+        ]
+      ],
+      "forbid": [
+        "solve for x",
+        "step 1"
       ],
       "expectActions": true,
       "expectSources": true

@@ -227,17 +227,15 @@ describe('Support and navigation use canonical configuration', () => {
   });
 
   it('links only to real site routes', async () => {
-    const known = new Set([
-      '/', '/about', '/projects', '/forged', '/lab', '/notes', '/technology',
-      '/support', '/support/hardware', '/community-impact', '/faq', '/privacy', '/terms',
-      ...projects.map((p) => `/projects/${p.slug}`)
-    ]);
+    const { CANONICAL_INTERNAL_ROUTES } = await import('../src/data/kayla/canonical-registry');
+    const known = new Set<string>(CANONICAL_INTERNAL_ROUTES);
     const queries = ['Where can I learn more about GEMS?', 'Where are the downloads?', 'How can I support FDS?', 'What is CodeForge?', 'What is KyraBlox?', 'Which page has the projects?'];
     for (const query of queries) {
       const result = await ask(query);
       for (const action of result.actions || []) {
         if (!action.href || !action.href.startsWith('/')) continue;
-        expect(known.has(action.href), `${query} -> ${action.href}`).toBe(true);
+        const normalized = action.href.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+        expect(known.has(normalized), `${query} -> ${action.href}`).toBe(true);
       }
     }
   });

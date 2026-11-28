@@ -69,7 +69,10 @@ const columns: { title: string; links: { label: string; href: string; external?:
   <div class="footer-container">
     <div class="footer-brand">
       <a href="/" class="footer-mark" aria-label="Forger Digital Solutions home">
-        <img src="/images/brand/fds-logo.png" width="34" height="34" alt="" loading="lazy" />
+        <picture class="footer-mark__pic">
+          <source srcset="/images/brand/fds-logo-sm.webp" type="image/webp" />
+          <img src="/images/brand/fds-logo-sm.png" width="34" height="34" alt="" loading="lazy" decoding="async" />
+        </picture>
         <span>Forger Digital Solutions</span>
       </a>
       <p class="footer-slogan">Build the tools. Build the worlds.</p>
@@ -152,6 +155,11 @@ const columns: { title: string; links: { label: string; href: string; external?:
     font-size: 0.96rem;
     font-weight: 600;
     letter-spacing: -0.02em;
+  }
+
+  .footer-mark__pic {
+    display: inline-flex;
+    flex-shrink: 0;
   }
 
   .footer-mark img {
@@ -268,13 +276,45 @@ const columns: { title: string; links: { label: string; href: string; external?:
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 768px) {
+    .footer {
+      margin-top: 2rem;
+      padding: 1.75rem 0 calc(4.75rem + env(safe-area-inset-bottom, 0px));
+    }
     .footer-container {
+      width: calc(100% - 1.5rem);
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.1rem 1rem;
+      padding-bottom: 1.25rem;
+    }
+    .footer-slogan {
+      margin-top: 0.55rem;
+      font-size: 0.86rem;
+    }
+    .footer-description {
+      margin-top: 0.35rem;
+      font-size: 0.78rem;
+      line-height: 1.46;
+    }
+    .footer-social {
+      margin-top: 0.7rem;
+    }
+    .footer-links h3 {
+      margin-bottom: 0.45rem;
+    }
+    .footer-links li {
+      margin-bottom: 0.25rem;
+    }
+    .footer-links a {
+      font-size: 0.78rem;
     }
     .footer-bottom {
+      width: calc(100% - 1.5rem);
+      margin-top: 0.9rem;
       padding-inline-end: 0;
-      padding-bottom: 4rem;
+      padding-bottom: 0.4rem;
+      gap: 0.45rem 1rem;
+      font-size: 0.74rem;
     }
   }
 </style>

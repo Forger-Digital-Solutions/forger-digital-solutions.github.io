@@ -58,8 +58,16 @@ describe('Kayla browser UI contract', () => {
     expect(controller).toContain('el.offsetParent !== null');
   });
 
-  it('preserves starters and mobile/reduced-motion behavior', () => {
+  it('preserves Hub-first starters and mobile/reduced-motion behavior without covering body text', () => {
     expect(component.match(/class="kayla-starter"/g)?.length).toBeGreaterThanOrEqual(6);
+    expect(component).toContain('What is the Studio Intelligence Hub?');
+    expect(component).toContain('How does a pilot work?');
+    expect(component).toContain('Is my code safe?');
+    expect(component).toContain('Book a pilot call');
+    expect(component).toContain('Does it work with Cursor?');
+    expect(component).not.toContain('What is Forge Control?');
+    expect(component).not.toContain('Try CodeForge');
+    expect(component).toContain('@media (max-width: 768px)');
     expect(component).toContain('@media (max-width: 480px)');
     expect(component).toContain('@media (prefers-reduced-motion: reduce)');
   });

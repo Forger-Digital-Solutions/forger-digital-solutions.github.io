@@ -885,20 +885,24 @@ function navigationAnswer(entityId?: string, query?: string): CanonicalAnswer | 
   }
   if (query && /\b(start here|where (should|do) i start|new (here|to fds)|newcomer|give me a tour|best place to start|tour of fds)\b/i.test(query)) {
     return {
-      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Software you can use now: Forged (/forged) has the current public ForgerEMS preview build. CodeForge remains a released free-first developer workbench, but its website installer and portable downloads are temporarily paused.\n• AI research: GEMS Training Grounds (/projects/gems-training-grounds) covers our 4 specialized foundation lineages.\n• Full catalog: Projects (/projects) displays everything FDS is building across developer tools, AI, publishing, and community.\n• Company story: About (/about) explains the engineering philosophy and founder background.',
+      text: 'Welcome to Forger Digital Solutions. Here is the best way to get oriented:\n\n• Lead commercial offering: FDS Studio Intelligence Hub (/solutions/studio-intelligence-hub/) — our managed four-week engineering intelligence pilot for Roblox Studio and Unreal Engine studios (currently in testing on FDS’s own projects).\n• AI models & research: Models (/models/) and Project Forge (/research/project-forge/) document Hackmanite, Cinnabar, and Alexandrite alongside our Trust Center (/trust/).\n• Software you can use now: Forged (/forged) and Downloads (/downloads/) list the current public ForgerEMS preview build. CodeForge remains a released free-first developer workbench, with website installer downloads temporarily paused.\n• Full catalog & story: Products (/products/), Projects (/projects), and Company (/company/) cover standalone apps, original games, and studio philosophy.',
       actions: [
+        { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
         { type: 'OPEN_FORGED', label: 'See Available Software', href: '/forged' },
-        { type: 'SHOW_APPS', label: 'Explore Projects', href: '/projects' },
-        { type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }
+        { type: 'SHOW_APPS', label: 'Explore Projects', href: '/projects' }
       ],
-      sources: ['site-navigation', 'forged-page'],
+      sources: ['site-navigation', 'fds-solutions', 'forged-page'],
       intent: 'navigation',
       settled: true
     };
   }
   return {
-    text: 'The main sections are Projects (/projects), Forged for downloadable software (/forged), Lab for the engineering method (/lab), Notes for build logs (/notes), Technology (/technology), About (/about), and Support (/support).',
-    actions: [{ type: 'SHOW_APPS', label: 'View Projects' }, { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }],
+    text: 'The main sections are Studio Intelligence Hub (/solutions/studio-intelligence-hub/), Models (/models/), Products (/products/), Research (/research/), Newsroom (/news/), Trust Center (/trust/), Downloads & Releases (/downloads/ and /forged), Projects (/projects), and Company (/company/).',
+    actions: [
+      { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+      { type: 'SHOW_APPS', label: 'View Projects' },
+      { type: 'OPEN_FORGED', label: 'Visit Forged', href: '/forged' }
+    ],
     sources: ['site-navigation'],
     intent: 'navigation'
   };
@@ -936,15 +940,18 @@ function assistantIdentityAnswer(query: string): CanonicalAnswer {
   const publisherConfusion = /\b(kayla ai publisher|kayla publisher|the publisher|publish|manuscript|book|novel|chapter)\b/.test(text);
   if (publisherConfusion) {
     return {
-      text: `No — I'm Kayla, the AI assistant on the Forger Digital Solutions website. I can help with general questions and with public information about FDS.\n\nKayla AI Publisher is a separate FDS product: a creative workspace for manuscripts, revision, visual storytelling, and publishing preparation. It is in ${project('kayla-ai-publisher')?.status || 'active development'} with no public release, and I cannot edit or publish anything for you.`,
+      text: `No — I'm Kayla, the AI assistant on the Forger Digital Solutions website. I help visitors with public information about FDS, including the Studio Intelligence Hub pilot, code security, models, products, and verified releases.\n\nKayla AI Publisher is a separate FDS product: a creative workspace for manuscripts, revision, visual storytelling, and publishing preparation. It is in ${project('kayla-ai-publisher')?.status || 'active development'} with no public release, and I cannot edit or publish anything for you.`,
       actions: [{ type: 'OPEN_APP', label: 'View Kayla AI Publisher', href: '/projects/kayla-ai-publisher' }],
       sources: ['kayla-copilot', 'app-kayla-ai-publisher'],
       intent: 'assistant_identity'
     };
   }
   return {
-    text: `I am Kayla, the AI assistant from Forger Digital Solutions. I can help with everyday questions — explanations, writing, coding, planning, and brainstorming — as well as public information about FDS, its projects, releases, research, and support. Kayla AI Publisher is a separate creative product.`,
-    actions: [{ type: 'SHOW_APPS', label: 'View Projects' }],
+    text: `I am Kayla, the AI assistant for Forger Digital Solutions. I can help with public information about FDS—especially the FDS Studio Intelligence Hub pilot for Roblox Studio and Unreal Engine studios, code security and our Trust Center, MCP-compatible tools like Cursor, our AI models and standalone products, verified releases, and support. Kayla AI Publisher is a separate creative product.`,
+    actions: [
+      { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+      { type: 'SHOW_APPS', label: 'View Projects' }
+    ],
     sources: ['kayla-copilot'],
     intent: 'assistant_identity'
   };
@@ -959,13 +966,18 @@ function founderAnswer(): CanonicalAnswer {
   };
 }
 
-function companyAnswer(): CanonicalAnswer {
+function companyAnswer(settled = false): CanonicalAnswer {
   return {
-    text: `Forger Digital Solutions (FDS) is an independent AI and software company. ${fds.mission} ${fds.vision.current}`,
-    actions: [{ type: 'OPEN_PAGE', label: 'About FDS', href: '/about' }, { type: 'SHOW_APPS', label: 'View Projects' }],
+    text: `Forger Digital Solutions (FDS) is an ${fds.mission.charAt(0).toLowerCase()}${fds.mission.slice(1)} ${fds.vision.current}`,
+    title: 'Forger Digital Solutions',
+    actions: [
+      { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+      { type: 'OPEN_PAGE', label: 'Company & Mission', href: '/company/' }
+    ],
     sources: ['fds-company', 'fds-mission'],
     intent: 'identity',
-    entityId: 'fds'
+    entityId: 'fds',
+    ...(settled ? { settled: true } : {})
   };
 }
 
@@ -1355,13 +1367,145 @@ export function archiveIntegrityAnswer(query: string): CanonicalAnswer | undefin
   return undefined;
 }
 
+/**
+ * Deterministically steer clearly off-topic creative-writing, homework, and
+ * entertainment requests back to Forger Digital Solutions topics so they never
+ * spend the shared zero-cost daily AI allowance.
+ */
+function offTopicRedirectAnswer(query: string): CanonicalAnswer | undefined {
+  const q = normalize(query);
+  // Never intercept queries that mention an FDS entity, product, or Hub topic.
+  if (matchEntities(query).length > 0) return undefined;
+  if (/\b(fds|forger|studio\s+intelligence\s+hub|pilot|project\s+forge|hackmanite|cinnabar|alexandrite|jaspilite|battle\s?verse|state\s+lines|codeforge|forgerems|forge\s+control|dead\s+trails|kayla\s+ai\s+publisher|farmstand|we\s+the\s+people|roblox|unreal|cursor|mcp|soc\s*2|trust\s+center)\b/.test(q)) {
+    return undefined;
+  }
+
+  const isPoemOrCreative =
+    /\b(write|compose|create|make|give|tell|recite)\s+(?:me\s+)?(?:an?\s+|some\s+)?(?:short\s+|funny\s+|silly\s+|quick\s+|bedtime\s+|love\s+|original\s+)?(poem|poetry|haiku|limerick|sonnet|ballad|ode|rhyme|song|lyrics?|rap|joke|riddle|knock\s+knock|bedtime\s+story|fairy\s+tale|short\s+story|fanfic(?:tion)?|recipe)\b/.test(q)
+    || /\b(poem|haiku|limerick|sonnet)\s+(about|for|on)\b/.test(q)
+    || /\brecipe\s+for\b/.test(q);
+
+  const isHomeworkOrSchool =
+    /\b(do|help\s+(?:me\s+)?with|finish|complete|solve|write)\s+(?:me\s+)?(?:my\s+|this\s+|an?\s+|the\s+)?(?:math\s+|algebra\s+|calculus\s+|physics\s+|chemistry\s+|biology\s+|history\s+|english\s+|science\s+|school\s+|class\s+)?(homework|assignment|book\s+report|essay|term\s+paper|research\s+paper|worksheet|quiz|exam)\b/.test(q)
+    || /\b(my\s+)?homework\b/.test(q)
+    || /\bwrite\s+(?:me\s+)?(?:an?\s+)?(?:\d+\s+(?:word|paragraph)\s+|short\s+|long\s+)?essay\b/.test(q);
+
+  if (!isPoemOrCreative && !isHomeworkOrSchool) return undefined;
+
+  return {
+    text: 'I focus on Forger Digital Solutions topics—I cannot help with poems, homework, or unrelated off-topic requests here so we can keep Kayla available for visitors exploring FDS. Ask me about the FDS Studio Intelligence Hub four-week pilot (for Roblox Studio and Unreal Engine teams), code security and our Trust Center, MCP-compatible tools like Cursor, our AI models and products, or verified releases.',
+    title: 'Scope & FDS Topics',
+    actions: [
+      { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+      { type: 'OPEN_PAGE', label: 'Explore Products', href: '/products/' },
+      { type: 'OPEN_PAGE', label: 'Book a Pilot Call', href: '/contact/?track=studio-intelligence-hub' }
+    ],
+    sources: ['scope-boundary'],
+    intent: 'unsupported_task',
+    settled: true
+  };
+}
+
 function flagshipPortfolioAnswer(query: string): CanonicalAnswer | undefined {
   const q = normalize(query);
+
+  // 0a. SOC 2 / Security & Compliance Certification Honesty (explicitly link /trust/)
+  if (/\b(soc\s*2|soc2|iso\s*27001|iso27001|hipaa|fedramp|pci\s*dss)\b/.test(q)
+    || /\b(security|compliance|enterprise|third\s*party|audit)\s+(?:certif\w*|attestation|accreditation|compliance)\b/.test(q)
+    || /\b(are\s+you|is\s+(?:fds|the\s+hub|studio\s+intelligence\s+hub))\s+(?:soc\s*2|iso|hipaa|fedramp|certified|compliant)\b/.test(q)
+    || /\b(what|which|any)\s+(?:security\s+|compliance\s+)?certifications?\b/.test(q)) {
+    return {
+      text: 'No — Forger Digital Solutions does not claim SOC 2, ISO 27001, HIPAA, FedRAMP, or any third-party enterprise security certifications. We only describe controls our implementation actually enforces: read-only project access (the Studio Intelligence Hub cannot modify your repository), isolated per-project data, customer-owned AI provider API keys, zero training on studio code or documentation without explicit written permission, and defined data-deletion procedures. Full governance and compliance honesty disclosures are published in the FDS Trust Center (/trust/).',
+      title: 'FDS Trust Center',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'FDS Trust Center', href: '/trust/' },
+        { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' }
+      ],
+      sources: ['fds-trust', 'registry-studio-intelligence-hub'],
+      intent: 'privacy',
+      entityId: 'studio-intelligence-hub',
+      settled: true
+    };
+  }
+
+  // 0b. Cursor & MCP-Compatible Tool Integration
+  if (/\bcursor\b/.test(q)
+    || /\bmcp\b|\bmodel\s+context\s+protocol\b/.test(q)) {
+    return {
+      text: 'FDS Studio Intelligence Hub connects into existing external MCP-compatible development tools—Jaspilite is not required. The Cursor MCP connection has been tested, while the full end-to-end Studio Intelligence Hub workflow is still in testing on FDS’s own Roblox and Unreal projects. Your studio keeps its existing editor and uses customer-owned AI provider API keys, with exact tool hooks confirmed during Week 1 of the four-week pilot.',
+      title: 'FDS Studio Intelligence Hub',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Explore Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+        { type: 'OPEN_PAGE', label: 'Book a Pilot Call', href: '/contact/?track=studio-intelligence-hub' }
+      ],
+      sources: ['registry-studio-intelligence-hub', 'fds-solutions'],
+      intent: 'capability',
+      entityId: 'studio-intelligence-hub',
+      settled: true
+    };
+  }
+
+  // 0c. Code Safety, Security & Repository Protection ("Is my code safe?")
+  if (/\b(?:is\s+(?:my|our)\s+(?:code|codebase|repo|repository|source|ip|project)\s+safe)\b/.test(q)
+    || /\b(?:how\s+(?:do\s+you|does\s+(?:fds|the\s+hub))\s+protect\s+(?:my|our)\s+(?:code|codebase|repo|repository|ip|data))\b/.test(q)
+    || /\b(?:train|training)\s+on\s+(?:my|our|customer|studio)\s+(?:code|codebase|data|docs|documents)\b/.test(q)
+    || /\b(?:modify|change|write\s+to)\s+(?:my|our)\s+(?:repo|repository|codebase)\b/.test(q)) {
+    return {
+      text: 'The FDS Studio Intelligence Hub is built around strict studio control: it cannot modify your repository — it is read-only by design. Pilots keep your approved source code and documentation logically isolated per project, use your studio’s own AI provider API keys, never train FDS or shared AI models on studio data without explicit written permission, and follow defined data-deletion procedures at pilot closeout. FDS does not claim SOC 2, ISO 27001, or third-party enterprise certifications—see the FDS Trust Center (/trust/) for complete governance disclosures.',
+      title: 'FDS Trust Center',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'FDS Trust Center', href: '/trust/' },
+        { type: 'OPEN_PAGE', label: 'Hub Security Details', href: '/solutions/studio-intelligence-hub/#security' }
+      ],
+      sources: ['fds-trust', 'registry-studio-intelligence-hub'],
+      intent: 'capability',
+      entityId: 'studio-intelligence-hub',
+      settled: true
+    };
+  }
+
+  // 0d. How a Four-Week Pilot Works
+  if (/\bhow\s+does\s+(?:a|the)\s+pilot\s+work\b|\bwhat\s+happens\s+(?:in|during)\s+(?:a|the)\s+pilot\b|\bpilot\s+(?:process|steps|timeline|weeks?)\b/.test(q)) {
+    return {
+      text: 'FDS Studio Intelligence Hub runs as a structured four-week managed pilot (currently in testing on FDS’s own Roblox and Unreal projects—not a self-serve SaaS product):\n\n• Week 01: Project assessment, read-only access boundaries, and isolated environment setup.\n• Week 02: Indexing approved Roblox Luau or Unreal C++ source files and studio technical/design docs through Project Forge, plus initial coverage checks.\n• Week 03: Real engineering questions, dependency traces, and workflow demos through external MCP-compatible tools (Jaspilite is not required).\n• Week 04: Results review, documentation recommendations, and clean handoff or data deletion.\n\nExact scope and pricing are discussed during the pilot assessment call, and the first five Founding Studios receive 50% off the applicable pilot fee.',
+      title: 'FDS Studio Intelligence Hub',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'See Pilot Details', href: '/solutions/studio-intelligence-hub/#pilot-process' },
+        { type: 'OPEN_PAGE', label: 'Book a Pilot Call', href: '/contact/?track=studio-intelligence-hub' }
+      ],
+      sources: ['registry-studio-intelligence-hub', 'fds-solutions'],
+      intent: 'capability',
+      entityId: 'studio-intelligence-hub',
+      settled: true
+    };
+  }
+
+  // 0e. Book / Schedule a Pilot Call
+  if (/\b(?:book|schedule|request|set\s+up|apply\s+for)\s+(?:a\s+)?(?:pilot|assessment|founding\s+studio)\b/.test(q) || q === 'book a pilot call') {
+    return {
+      text: `You can book a technical pilot assessment call through the Contact page (/contact/?track=studio-intelligence-hub) or email ${siteConfig.supportEmail} with your studio name, primary engine (Roblox Studio or Unreal Engine), team size, and preferred call times. During the assessment call, FDS engineering confirms what fits current four-week pilot scope, discusses pricing transparently, and checks Founding Studio Program availability (50% off the applicable pilot fee for the first five studios).`,
+      title: 'Book a Pilot Call',
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Book a Pilot Call', href: '/contact/?track=studio-intelligence-hub' },
+        { type: 'OPEN_CONTACT', label: 'Email FDS', href: `mailto:${siteConfig.supportEmail}` }
+      ],
+      sources: ['fds-contact', 'registry-studio-intelligence-hub'],
+      intent: 'contact',
+      entityId: 'studio-intelligence-hub',
+      settled: true
+    };
+  }
+
+  // 0f. Generic "Tell me about the company" / "What is this company?" (Hub-first company overview)
+  if (/\b(?:tell\s+me\s+about\s+the\s+company|about\s+the\s+company|what\s+is\s+(?:this|the)\s+company|who\s+is\s+this\s+company)\b/.test(q)) {
+    return companyAnswer(true);
+  }
 
   // 0. FDS Studio Intelligence Hub (Lead Commercial Managed Pilot Service)
   if (/\bstudio\s+intelligence\s+hub\b|\bfounding\s+studio\b|\b4[\s-]week\s+pilot\b|\bfour[\s-]week\s+pilot\b|\bpilot\s+(?:call|program|service|pricing|cost)\b/.test(q)) {
     return {
-      text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ managed four-week engineering intelligence pilot service for Roblox Studio (Luau) and Unreal Engine (C++) game studios—not a finished self-serve SaaS product. Pilot scope is currently in testing on FDS’s own Roblox and Unreal projects (no runtime capability is claimed as ready until forge-hub runtime tests pass). Powered by Project Forge, it connects approved source code, technical documentation, and design specs (scoped engine references are in development) so developers can investigate through existing external MCP-compatible tools without requiring Jaspilite. The Hub cannot modify your repository — it is read-only by design, with isolated project data and customer-owned AI provider API keys; Unreal Blueprint logic indexing is not yet implemented. Exact scope and pricing are discussed during the pilot assessment call, and the first five Founding Studios receive 50% off the applicable pilot fee in exchange for structured feedback.',
+      text: 'FDS Studio Intelligence Hub is Forger Digital Solutions’ managed four-week engineering intelligence pilot service for Roblox Studio (Luau) and Unreal Engine (C++) game studios—not a finished self-serve SaaS product. Pilot scope is currently in testing on FDS’s own Roblox and Unreal projects (no runtime capability is claimed as ready until forge-hub runtime tests pass). Powered by Project Forge, it connects approved source code, technical documentation, and design specs (scoped engine references are in development) so developers can investigate through existing external MCP-compatible tools (Cursor connection has been tested while the full workflow is still in testing) without requiring Jaspilite. The Hub cannot modify your repository — it is read-only by design, with isolated project data and customer-owned AI provider API keys; Unreal Blueprint logic indexing is not yet implemented. Exact scope and pricing are discussed during the pilot assessment call, and the first five Founding Studios receive 50% off the applicable pilot fee in exchange for structured feedback.',
+      title: 'FDS Studio Intelligence Hub',
       actions: [
         { type: 'OPEN_PAGE', label: 'Explore Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
         { type: 'OPEN_PAGE', label: 'Book a Pilot Call', href: '/contact/?track=studio-intelligence-hub' }
@@ -1682,6 +1826,11 @@ export function canonicalAnswer(
       if (answer) return { ...answer, settled: true };
     }
   }
+
+  // Deterministically steer clearly off-topic creative-writing / homework requests
+  // back to FDS topics before spending the free daily AI provider budget.
+  const offTopic = offTopicRedirectAnswer(query);
+  if (offTopic) return offTopic;
 
   // Operation Digital Forge II flagship models, applications, studio solutions & commercial inquiries.
   const flagship = flagshipPortfolioAnswer(query);

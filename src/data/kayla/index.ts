@@ -22,8 +22,11 @@ function knownAnswer(query: string, context?: KaylaPageContext): { text: string;
 
   if (q === 'what is fds' || q.includes('what is forger digital solutions') || q === 'forger digital solutions') {
     return {
-      text: `${fds.name} (FDS) is ${fds.mission.charAt(0).toLowerCase()}${fds.mission.slice(1)} ${fds.vision.current}`,
-      actions: [{ type: 'OPEN_PAGE', label: 'Explore FDS', href: '/about' }],
+      text: `${fds.name} (FDS) is an ${fds.mission.charAt(0).toLowerCase()}${fds.mission.slice(1)} ${fds.vision.current}`,
+      actions: [
+        { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+        { type: 'OPEN_PAGE', label: 'Company & Mission', href: '/company/' }
+      ],
       sources: ['fds-company', 'fds-mission']
     };
   }

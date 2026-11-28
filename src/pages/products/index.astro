@@ -14,7 +14,7 @@ const extended = projects.filter((p) => !['dead-trails-west'].includes(p.slug));
 
 <BaseLayout
   title="Products & Platforms"
-  description="Explore Forger Digital Solutions software applications: Jaspilite autonomous development workspace, Forge BattleVerse fictional intelligence platform, ForgerEMS preview, and CodeForge."
+  description="Explore FDS software platforms: Jaspilite coding workspace, Forge BattleVerse fictional intelligence, ForgerEMS preview, and CodeForge."
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Products</span>
@@ -38,6 +38,9 @@ const extended = projects.filter((p) => !['dead-trails-west'].includes(p.slug));
         <h2><a href="/products/jaspilite/">Jaspilite</a></h2>
         <p class="tagline">Your intelligence. One development workspace.</p>
         <p class="desc">{jaspilite.public_summary}</p>
+        <p class="boundary">
+          <strong>Independent from the Hub:</strong> Jaspilite is <em>not</em> a prerequisite for the <a href="/solutions/studio-intelligence-hub/">Studio Intelligence Hub</a>—Project Forge operates through your studio's existing external MCP-compatible development tools.
+        </p>
         <div class="actions">
           <a href="/products/jaspilite/" class="btn btn-primary">Explore Jaspilite <span aria-hidden="true">→</span></a>
           <a href="/projects/forge-control" class="text-link">Forge Control migration note</a>
@@ -82,7 +85,10 @@ const extended = projects.filter((p) => !['dead-trails-west'].includes(p.slug));
         <h2 id="verified-software-heading">Current downloads and preserved FDS software.</h2>
         <p>Legacy and specialized FDS applications remain accessible with transparent availability and SHA-256 verification.</p>
       </div>
-      <a href="/downloads/" class="btn btn-outline">Open Downloads &amp; Releases <span aria-hidden="true">→</span></a>
+      <div class="head-actions">
+        <a href="/downloads/" class="btn btn-outline">Downloads &amp; Releases <span aria-hidden="true">→</span></a>
+        <a href="/forged" class="btn btn-ghost">Open Releases (Forged)</a>
+      </div>
     </div>
 
     <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
@@ -128,7 +134,10 @@ const extended = projects.filter((p) => !['dead-trails-west'].includes(p.slug));
   .product-row h2 a { color: var(--color-text); }
   .tagline { margin: 0.3rem 0 0; color: var(--color-brand-silver); font-weight: 500; }
   .desc { margin: 0.8rem 0 0; color: var(--color-text-muted); font-size: 0.94rem; line-height: 1.66; }
+  .boundary { margin: 0.9rem 0 0; padding-left: 0.85rem; border-left: 2px solid var(--color-border-strong); color: var(--color-text-subtle); font-size: 0.84rem; line-height: 1.55; }
+  .boundary strong { color: var(--color-text-muted); }
   .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.3rem; margin-top: 1.4rem; }
+  .head-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.65rem; }
   @media (max-width: 960px) {
     .product-row, .product-row--reverse { grid-template-columns: 1fr; }
     .product-row--reverse .product-row__visual { order: 2; }

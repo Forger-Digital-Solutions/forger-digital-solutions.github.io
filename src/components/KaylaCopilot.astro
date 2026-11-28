@@ -38,12 +38,12 @@
     <div id="kayla-conversation" class="kayla-conversation" aria-live="polite" aria-relevant="additions text" tabindex="0"></div>
 
     <div id="kayla-starters" class="kayla-starters">
+      <button class="kayla-starter" type="button" data-query="What is the Studio Intelligence Hub?">What is the Studio Intelligence Hub?</button>
+      <button class="kayla-starter" type="button" data-query="How does a pilot work?">How does a pilot work?</button>
+      <button class="kayla-starter" type="button" data-query="Is my code safe?">Is my code safe?</button>
+      <button class="kayla-starter" type="button" data-query="Book a pilot call">Book a pilot call</button>
+      <button class="kayla-starter" type="button" data-query="Does it work with Cursor?">Does it work with Cursor?</button>
       <button class="kayla-starter" type="button" data-query="Where should I start?">Where should I start?</button>
-      <button class="kayla-starter" type="button" data-query="What can I use now?">What can I use now?</button>
-      <button class="kayla-starter" type="button" data-query="Explore the projects">Explore the projects</button>
-      <button class="kayla-starter" type="button" data-query="What is Forge Control?">What is Forge Control?</button>
-      <button class="kayla-starter" type="button" data-query="Try CodeForge">Try CodeForge</button>
-      <button class="kayla-starter" type="button" data-query="Support FDS">Support FDS</button>
     </div>
 
     <div class="kayla-input-row">
@@ -126,7 +126,7 @@
   .kayla-launcher__tooltip {
     display: none;
   }
-  @media (min-width: 480px) {
+  @media (min-width: 769px) {
     .kayla-launcher__tooltip {
       display: inline;
     }
@@ -515,6 +515,25 @@
     51%, 100% { opacity: 0; }
   }
 
+  @media (max-width: 768px) {
+    .kayla-launcher {
+      right: .75rem;
+      bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+      width: 2.75rem;
+      height: 2.75rem;
+      padding: 0;
+      gap: 0;
+      justify-content: center;
+      font-size: .74rem;
+    }
+    .kayla-launcher__icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: transparent;
+      font-size: .88rem;
+    }
+  }
+
   @media (max-width: 480px) {
     .kayla-panel {
       right: 0;
@@ -525,16 +544,6 @@
       max-height: min(85dvh, 38rem);
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       border-bottom: 0;
-    }
-    .kayla-launcher {
-      right: 1rem;
-      /* env() keeps the launcher clear of the iOS/Android home-indicator bar;
-         the 0px fallback covers browsers without the variable. */
-      bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-      /* Slightly smaller resting footprint so bottom-of-page CTAs stay
-         readable around it; the tooltip is hidden at this width anyway. */
-      padding: .55rem .85rem;
-      font-size: .72rem;
     }
   }
 

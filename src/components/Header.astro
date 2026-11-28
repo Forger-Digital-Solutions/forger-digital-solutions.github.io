@@ -133,7 +133,10 @@ const isGroupActive = (group: NavGroup): boolean => {
   <nav class="navbar" aria-label="Main navigation">
     <div class="nav-container">
       <a href="/" class="logo" aria-label="Forger Digital Solutions home">
-        <img src="/images/brand/fds-logo.png" width="38" height="38" alt="" />
+        <picture class="logo-mark">
+          <source srcset="/images/brand/fds-logo-sm.webp" type="image/webp" />
+          <img src="/images/brand/fds-logo-sm.png" width="38" height="38" alt="" decoding="async" />
+        </picture>
         <span class="logo-text">
           <span class="logo-system">Forger Digital Solutions</span>
         </span>
@@ -272,6 +275,11 @@ const isGroupActive = (group: NavGroup): boolean => {
     align-items: center;
     gap: 0.65rem;
     color: var(--color-text);
+    flex-shrink: 0;
+  }
+
+  .logo-mark {
+    display: inline-flex;
     flex-shrink: 0;
   }
 

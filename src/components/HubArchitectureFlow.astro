@@ -11,7 +11,7 @@ const { stages, pilotScopeVsDeveloping, boundaryNote } = studioIntelligenceHubDa
 
 <div class="hub-arch">
   <div class="hub-arch__chain" role="region" aria-label="Project Forge Studio Intelligence Hub architecture flow">
-    <ol class="hub-arch__steps">
+    <ol class="hub-arch__steps" tabindex="0" aria-label="Studio Intelligence Hub architecture stages">
       {stages.map((stage, idx) => (
         <li class="hub-arch__step">
           <div class="hub-arch__node">
@@ -211,17 +211,54 @@ const { stages, pilotScopeVsDeveloping, boundaryNote } = studioIntelligenceHubDa
   }
 
   @media (max-width: 640px) {
+    .hub-arch {
+      gap: 0.8rem;
+    }
+
     .hub-arch__chain {
-      padding: 1rem;
+      padding: 0.75rem;
     }
 
     .hub-arch__steps {
-      grid-template-columns: 1fr;
-      gap: 0;
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      gap: 0.6rem;
+      padding-bottom: 0.25rem;
+    }
+
+    .hub-arch__step {
+      flex: 0 0 82%;
+      scroll-snap-align: start;
+    }
+
+    .hub-arch__node {
+      gap: 0.3rem;
+      padding: 0.8rem 0.85rem;
+    }
+
+    .hub-arch__node h3 {
+      font-size: 0.92rem;
+    }
+
+    .hub-arch__node p {
+      font-size: 0.8rem;
+      line-height: 1.44;
+    }
+
+    .hub-arch__note {
+      padding: 0.75rem 0.85rem;
+      font-size: 0.78rem;
+      line-height: 1.46;
     }
 
     .hub-arch__connector {
-      display: flex;
+      display: none;
+    }
+
+    .hub-boundary-col {
+      padding: 0.95rem 0.9rem;
     }
   }
 </style>

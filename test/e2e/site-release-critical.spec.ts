@@ -61,7 +61,7 @@ test.describe('Site release-critical surfaces', () => {
     await page.addInitScript(() => {
       try { window.localStorage.setItem('fds_support_dismissed_at', String(Date.now())); } catch { /* ignore */ }
     });
-    await page.goto('/');
+    await page.goto('/company/');
 
     const graph = page.locator('.eco-arch');
     await expect(graph).toBeVisible();

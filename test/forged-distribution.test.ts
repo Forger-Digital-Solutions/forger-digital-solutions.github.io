@@ -7,17 +7,17 @@ const forgedPage = readFileSync(new URL('../src/pages/forged.astro', import.meta
 const productCard = readFileSync(new URL('../src/components/ProductCard.astro', import.meta.url), 'utf8');
 
 describe('FDS Software Distribution Architecture', () => {
-  it('ensures homepage is not a raw download directory and links to /forged', () => {
+  it('ensures homepage is not a raw download directory and links to /forged via the Also from FDS strip', () => {
     // Old raw available list should not be present
     expect(homepage).not.toContain('class="available"');
     expect(homepage).not.toContain('class="available__list"');
     expect(homepage).not.toContain("import { products } from '../data/products'");
 
-    // New distribution portal section should guide users to /forged
-    expect(homepage).toContain('class="distribution-portal"');
+    // Compact Also from FDS strip guides visitors to /products/ and /forged
+    expect(homepage).toContain('id="also-from-fds"');
     expect(homepage).toContain('href="/forged"');
-    expect(homepage).toContain('Releases // Distribution');
-    expect(homepage).toContain('Open Releases');
+    expect(homepage).toContain('Releases (Forged)');
+    expect(homepage).toContain('/products/');
   });
 
   it('validates truthful allowlisted products metadata', () => {

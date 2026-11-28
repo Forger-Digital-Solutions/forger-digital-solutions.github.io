@@ -12,11 +12,21 @@ export function getStaticPaths() {
 
 const { solution } = Astro.props;
 const others = solutionsData.audienceSolutions.filter((s) => s.slug !== solution.slug);
+
+const solutionMetaDescriptions: Record<string, string> = {
+  'animation-studios': 'Cinnabar creative specialist roles and BattleVerse Creator Studio for pre-production, continuity, and segregated studio IP.',
+  'anime-manga-creators': 'Narrative architecture, storyboarding, combat choreography, and continuity tools for manga, webtoon, and indie animation.',
+  'enterprise-private-ai': 'Private enterprise AI workforces, model licensing, and planned APIs built on strict data isolation and Apache-2.0 bases.',
+  'game-developers': 'Domain-grounded AI tooling for Unreal, Unity, Godot, Roblox, FiveM/RedM, and custom C++/Rust solo and indie developers.',
+  'gaming-studios': 'Hackmanite Studio and Jaspilite architectures for private studio AI roles with strict IP segregation from shared models.',
+  'software-engineering': 'Jaspilite Auto, Meld, and Solo multi-agent coding workflows with repository awareness, tests, and explicit human control.',
+};
+const metaDescription = solutionMetaDescriptions[solution.slug] ?? solution.summary.slice(0, 157);
 ---
 
 <BaseLayout
   title={`${solution.name} — FDS Solutions`}
-  description={solution.summary}
+  description={metaDescription}
   accent={solution.accent as RegistryAccent}
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">

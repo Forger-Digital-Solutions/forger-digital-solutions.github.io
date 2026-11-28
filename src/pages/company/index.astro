@@ -1,12 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StatusPill from '../../components/StatusPill.astro';
+import EcosystemGraph from '../../components/EcosystemGraph.astro';
 import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data/registry';
 ---
 
 <BaseLayout
   title="Company — Mission, Divisions & Studio Philosophy"
-  description="Forger Digital Solutions is an independent AI research lab, specialized model developer, autonomous software engineering company, and original entertainment studio."
+  description="Forger Digital Solutions is an independent AI research and software engineering studio building the Studio Intelligence Hub, models, and original games."
   accent="fds-cobalt"
 >
   <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -99,6 +100,10 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
       <a href="/contact/" class="btn btn-secondary">Contact FDS</a>
     </div>
 
+    <div class="comp-eco-wrap">
+      <EcosystemGraph />
+    </div>
+
     <div class="fds-table-wrap" tabindex="0" role="region" aria-label="Scrollable data table">
       <table class="fds-table">
         <thead>
@@ -125,6 +130,9 @@ import { companyProfile, flagshipEntries, statusDisplayLabels } from '../../data
 </BaseLayout>
 
 <style>
+  .comp-eco-wrap {
+    margin-bottom: 2.5rem;
+  }
   .mission-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
