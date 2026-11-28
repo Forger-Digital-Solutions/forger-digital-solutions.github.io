@@ -1368,6 +1368,44 @@ export function archiveIntegrityAnswer(query: string): CanonicalAnswer | undefin
 }
 
 /**
+ * The "Where should I start?" starter chip and its plain paraphrases. The
+ * whole (normalized) question must be the start phrase, optionally addressed
+ * to the site or a newcomer, so "Where do I start learning C++?" or "Where
+ * should I start with CodeForge?" keep their own routing.
+ */
+const WHERE_TO_START_PATTERN = new RegExp(
+  '^(?:(?:hi|hey|hello|ok|okay|so)\\s+)?(?:kayla\\s+)?'
+  + '(?:where\\s+(?:should|do|can|would)\\s+i\\s+(?:start|begin)'
+  + '|how\\s+(?:do|should|can)\\s+i\\s+(?:get\\s+started|start|begin)'
+  + '|what\\s+(?:s|is)\\s+the\\s+best\\s+(?:place|way)\\s+to\\s+(?:start|begin)'
+  + '|where\\s+to\\s+(?:start|begin))'
+  + '(?:\\s+(?:here|on\\s+(?:this|the)\\s+(?:site|website)|with\\s+(?:fds|forger(?:\\s+digital\\s+solutions)?|this\\s+site|the\\s+site)))?'
+  + '(?:\\s+if\\s+i\\s+(?:am|m)\\s+new(?:\\s+(?:here|to\\s+fds))?)?$'
+);
+
+/**
+ * Deterministic, Hub-first answer for the "Where should I start?" starter
+ * chip. Without it the chip fell through to the live provider, spending the
+ * daily AI allowance and degrading to a generic fallback when rate-limited.
+ */
+function whereToStartAnswer(query: string): CanonicalAnswer | undefined {
+  if (!WHERE_TO_START_PATTERN.test(normalize(query))) return undefined;
+  return {
+    text: 'Start with the FDS Studio Intelligence Hub (/solutions/studio-intelligence-hub/), our lead offering: a managed four-week pilot for Roblox Studio (Luau) and Unreal Engine (C++) studios. It is currently in testing on FDS’s own projects, not a finished self-serve product.\n\n• Read-only by design: the Hub cannot modify your repository, and your studio uses its own AI provider API keys.\n• It works through existing MCP-compatible tools: the Cursor MCP connection has been tested, while the full end-to-end workflow is still in testing.\n• Unreal Blueprint logic indexing is not yet implemented.\n• Next steps: book a pilot assessment call (/contact/?track=studio-intelligence-hub) and review our governance disclosures in the Trust Center (/trust/).\n\nForge Control is a separate FDS product in active development with no public release. For everything else, Projects (/projects) and Forged (/forged) list our other work and current releases.',
+    title: 'Where to Start',
+    actions: [
+      { type: 'OPEN_PAGE', label: 'Studio Intelligence Hub', href: '/solutions/studio-intelligence-hub/' },
+      { type: 'OPEN_PAGE', label: 'Book a Pilot Call', href: '/contact/?track=studio-intelligence-hub' },
+      { type: 'OPEN_PAGE', label: 'Trust Center', href: '/trust/' }
+    ],
+    sources: ['registry-studio-intelligence-hub', 'fds-trust', 'site-navigation'],
+    intent: 'navigation',
+    entityId: 'studio-intelligence-hub',
+    settled: true
+  };
+}
+
+/**
  * Deterministically steer clearly off-topic creative-writing, homework, and
  * entertainment requests back to Forger Digital Solutions topics so they never
  * spend the shared zero-cost daily AI allowance.
@@ -1831,6 +1869,10 @@ export function canonicalAnswer(
   // back to FDS topics before spending the free daily AI provider budget.
   const offTopic = offTopicRedirectAnswer(query);
   if (offTopic) return offTopic;
+
+  // The "Where should I start?" starter chip is answered locally, Hub-first.
+  const whereToStart = whereToStartAnswer(query);
+  if (whereToStart) return whereToStart;
 
   // Operation Digital Forge II flagship models, applications, studio solutions & commercial inquiries.
   const flagship = flagshipPortfolioAnswer(query);

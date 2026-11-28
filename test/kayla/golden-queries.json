@@ -6606,6 +6606,204 @@
       ],
       "expectActions": true,
       "expectSources": true
+    },
+    {
+      "id": "t1-start-01",
+      "tier": 1,
+      "category": "navigation",
+      "question": "Where should I start?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "four-week"
+        ],
+        [
+          "Roblox Studio"
+        ],
+        [
+          "Unreal Engine"
+        ],
+        [
+          "read-only"
+        ],
+        [
+          "Forge Control"
+        ],
+        [
+          "no public release"
+        ]
+      ],
+      "forbid": [
+        "SOC 2 certified",
+        "ISO 27001 certified",
+        "$",
+        "per month",
+        "price is",
+        "generally available"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-start-02",
+      "tier": 1,
+      "category": "navigation",
+      "question": "Where should I begin?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "four-week"
+        ],
+        [
+          "Roblox Studio"
+        ],
+        [
+          "Unreal Engine"
+        ],
+        [
+          "read-only"
+        ],
+        [
+          "Forge Control"
+        ],
+        [
+          "no public release"
+        ]
+      ],
+      "forbid": [
+        "SOC 2 certified",
+        "ISO 27001 certified",
+        "$",
+        "per month",
+        "price is",
+        "generally available"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-start-03",
+      "tier": 1,
+      "category": "navigation",
+      "question": "How do I get started?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "four-week"
+        ],
+        [
+          "Roblox Studio"
+        ],
+        [
+          "Unreal Engine"
+        ],
+        [
+          "read-only"
+        ],
+        [
+          "Forge Control"
+        ],
+        [
+          "no public release"
+        ]
+      ],
+      "forbid": [
+        "SOC 2 certified",
+        "ISO 27001 certified",
+        "$",
+        "per month",
+        "price is",
+        "generally available"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-start-04",
+      "tier": 1,
+      "category": "navigation",
+      "question": "Where should I start if I'm new?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "four-week"
+        ],
+        [
+          "Roblox Studio"
+        ],
+        [
+          "Unreal Engine"
+        ],
+        [
+          "read-only"
+        ],
+        [
+          "Forge Control"
+        ],
+        [
+          "no public release"
+        ]
+      ],
+      "forbid": [
+        "SOC 2 certified",
+        "ISO 27001 certified",
+        "$",
+        "per month",
+        "price is",
+        "generally available"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-start-neg-01",
+      "tier": 1,
+      "category": "navigation",
+      "question": "Where should I start with CodeForge?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "CodeForge"
+        ]
+      ],
+      "forbid": [
+        "Start with the FDS Studio Intelligence Hub",
+        "Book a Pilot Call"
+      ],
+      "expectActions": true,
+      "expectSources": true
+    },
+    {
+      "id": "t1-start-neg-02",
+      "tier": 1,
+      "category": "navigation",
+      "question": "How do I get started with the Studio Intelligence Hub?",
+      "expectRouteMode": "deterministic",
+      "require": [
+        [
+          "Studio Intelligence Hub"
+        ],
+        [
+          "four-week"
+        ]
+      ],
+      "forbid": [
+        "Start with the FDS Studio Intelligence Hub"
+      ],
+      "expectActions": true,
+      "expectSources": true
     }
   ]
 }
